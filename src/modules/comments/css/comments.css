@@ -1,0 +1,35 @@
+
+.commentsPanel {
+    margin-bottom: 5px;
+    
+}
+.commentsAvatar {
+    min-height: 64px;
+    width: 100px;
+    float: left;
+    border: 0px 1px 0px 1px solid silver;
+    background: url('../../../resource/img/icons/User.png') no-repeat;
+    background-position: 10px 10px;
+}
+.commentsBody {
+    padding-left: 100px;
+    border: 1px solid silver;
+    background: url('../img/page_gradient.gif') repeat-x bottom white;
+}
+.commentsHeader {
+    padding: 10px;
+    border-bottom: 1px solid silver;
+}
+.commentsComment {
+    padding: 10px;
+    border-bottom: 1px solid silver;
+}
+.commentsCaptcha {
+    padding: 10px;
+}
+.commentsButtons {
+    text-align: right;
+    padding: 10px;
+    
+}
+             

@@ -1,0 +1,72 @@
+#cmsBodyDiv {
+    margin: 0px;
+    margin-top:40px;
+    
+}
+
+
+td {
+    color: white;
+}
+td div {
+    color: white;
+}
+.panel {
+    color: white;
+}
+.panel b, h3, h2, h1 {
+    color: white;
+}
+.panel a {
+    color: white;
+}
+
+
+body {
+    background-color:rgb(200,200,200);
+    margin:0px;
+    font:arial;
+}
+#frameDiv {
+    width: 500px;
+}
+#headerDiv {
+    height: 60px;
+    margin-top: 10px;
+}
+#headerDivMargin {
+    margin:3px;
+}
+#contentDiv {
+    color: white;
+    background-color: black;
+    margin-top: 20px;
+}
+#contentMargin {
+    margin:20px;
+    min-height: 100px;
+}
+.roundedBorder {
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border: 1px solid silver;
+}
+.transparent {
+    filter: alpha(opacity=90);
+    opacity: 0.9;
+    -moz-opacity: 0.9;
+    -khtml-opacity: 0.9;
+}
+.imageLink {
+    border: 0px none;
+}
+
+#loginDiv {
+    float:right;
+}
+#logoDiv {
+    background-image: url(../img/vbmscmslogo.png);
+    float:right;
+    width: 225px;
+    height: 52px;
+}

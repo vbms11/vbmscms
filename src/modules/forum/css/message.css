@@ -1,0 +1,12 @@
+
+.messageDiv {
+    border: 1px solid silver;
+}
+.messageTitleDiv {
+    border-bottom: 1px solid silver;
+    background-color: rgb(235,235,235);
+    padding: 10px;
+}
+.messageTextDiv {
+    padding: 10px;
+}

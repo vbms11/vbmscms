@@ -1,0 +1,12 @@
+
+.newsletterPreview {
+	margin-top: 10px;
+	border: 1px dashed silver;
+	padding:20px;
+}
+
+.newsletterButtons {
+}
+.newsletterButtons td {
+	white-space:nowrap;
+}

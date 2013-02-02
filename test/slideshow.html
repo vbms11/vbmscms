@@ -1,0 +1,100 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="jquery/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="jquery/resize.js"></script>
+    <style>
+        #slideshow {
+            width: 100%;
+            height: 300px;
+            border: 1px dashed silver;
+            overflow: hidden;
+            position:absolute;
+        }
+        #slideshow img {
+            display: none;
+            width: 100%;
+            height: auto;
+            position: absolute;
+            top: 0px;
+        }
+    </style>
+  </head>
+  <body>
+
+    <div id="slideshow">
+        <img src="a168031_rdwh.jpg" alt=""/>
+        <img src="a168038_nywh.jpg" alt=""/>
+        <img src="bb_a164500_motionfz_rd_970x970.jpg" alt=""/>
+        <img src="bb_a164518_profilebatting_ny_970x970.jpg" alt=""/>
+    </div>
+
+    <script>
+        // centers an element relative to parent
+        function center (img) {
+            img.css("top", -((img.height() / 2) - (img.parent().height() / 2)));
+        }
+        function swapImages (current,nextImage) {
+            center(nextImage);
+            nextImage.css("z-index", current.css("z-index")+1);
+            nextImage.fadeIn(1000, function () {
+                current.css("display", "none");
+                nextImage.css("display", "block");
+            });
+            return false;
+        }
+        // swap current image to next image
+        function animateSlideshow (selector) {
+            var first = null;
+            var current = null;
+            var imgLen = $(selector+" img").length;
+            $(selector+" img").each(function (index,object) {
+                if (index == 0) {
+                    first = $(object);
+                }
+                if (current != null) {
+                    swapImages(current,$(object));
+                    return false;
+                }
+                if (current == null && $(object).css("display") == "block") {
+                    current = $(object);
+                    if (index == imgLen-1) {
+                        swapImages(current,first);
+                        return false;
+                    }
+                }
+            });
+        }
+        // start slideshow timer
+        function startSlideshow () {
+            window.setInterval("animateSlideshow('#slideshow');", 3000);
+        }
+        // when element resizes find current image and center it
+        $("#slideshow").resize(function () {
+            $("#slideshow img").each(function (index,object) {
+                if ($(object).css("display") == "block") {
+                    center($(object));
+                }
+            });
+        });
+        // setup slideshow and show first image
+        var len = $("#slideshow img").length + 1;
+        $("#slideshow img").each(function (index, object) {
+            var img = $(object);
+            img.css("z-index", len - index);
+            if (index == 0) {
+                center(img);
+                img.css("display","block");
+                startSlideshow();
+            }
+        });
+    </script>
+
+  </body>
+</html>

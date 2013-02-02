@@ -1,0 +1,87 @@
+
+
+
+
+@font-face {
+    font-family: 'Deutsch';
+    src: url('fonts/Deutsch.eot');
+    src: url('fonts/Deutsch.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Deutsch.woff') format('woff'),
+         url('fonts/Deutsch.ttf') format('truetype'),
+         url('fonts/Deutsch.svg#DeutschNormal') format('svg'),
+   url('fonts/Deutsch.otf') format('opentype'); /* everyone else take this */
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1.fontface_Deutsch {
+font: 60px/68px 'Deutsch', Arial, sans-serif;
+letter-spacing: 0;
+}
+
+p.style_Deutsch {
+font: 18px/27px 'Deutsch', Arial, sans-serif;
+}
+
+@font-face {
+    font-family: 'ChopinScript';
+    src: url('fonts/ChopinScript.eot');
+    src: url('fonts/ChopinScript.eot?#iefix') format('embedded-opentype'),
+         url('fonts/ChopinScript.woff') format('woff'),
+         url('fonts/ChopinScript.ttf') format('truetype'),
+         url('fonts/ChopinScript.svg#ChopinScriptNormal') format('svg'),
+   url('fonts/ChopinScript.otf') format('opentype'); /* everyone else take this */
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1.fontface_ChopinScript {
+font: 60px/68px 'OptimusPrinceps', Arial, sans-serif;
+letter-spacing: 0;
+}
+
+p.style_ChopinScript {
+font: 18px/27px 'OptimusPrinceps', Arial, sans-serif;
+}
+
+@font-face {
+    font-family: 'OptimusPrinceps';
+    src: url('fonts/OptimusPrinceps.eot');
+    src: url('fonts/OptimusPrinceps.eot?#iefix') format('embedded-opentype'),
+         url('fonts/OptimusPrinceps.woff') format('woff'),
+         url('fonts/OptimusPrinceps.ttf') format('truetype'),
+         url('fonts/OptimusPrinceps.svg#OptimusPrincepsNormal') format('svg'),
+   url('fonts/OptimusPrinceps.otf') format('opentype'); /* everyone else take this */
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1.fontface_OptimusPrinceps {
+font: 60px/68px 'OptimusPrinceps', Arial, sans-serif;
+letter-spacing: 0;
+}
+
+p.style_OptimusPrinceps {
+font: 18px/27px 'OptimusPrinceps', Arial, sans-serif;
+}
+
+@font-face {
+    font-family: 'OptimusPrincepsSemiBold';
+    src: url('fonts/OptimusPrincepsSemiBold.eot');
+    src: url('fonts/OptimusPrincepsSemiBold.eot?#iefix') format('embedded-opentype'),
+         url('fonts/OptimusPrincepsSemiBold.woff') format('woff'),
+         url('fonts/OptimusPrincepsSemiBold.ttf') format('truetype'),
+         url('fonts/OptimusPrincepsSemiBold.svg#OptimusPrincepsSemiBoldNormal') format('svg'),
+   url('fonts/OptimusPrincepsSemiBold.otf') format('opentype'); /* everyone else take this */
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1.fontface_OptimusPrincepsSemiBold {
+font: 60px/68px 'OptimusPrincepsSemiBold', Arial, sans-serif;
+letter-spacing: 0;
+}
+
+p.style_OptimusPrincepsSemiBold {
+font: 18px/27px 'OptimusPrincepsSemiBold', Arial, sans-serif;
+}

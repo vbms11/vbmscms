@@ -1,0 +1,27 @@
+
+.searchBoxPanel {
+    float: right;
+    border: 1px 0px 1px 1px solid silver;
+    background-image: url(../img/menu_grad.png);
+    background-color: white;
+}
+
+.searchFeild {
+    color: #000000;
+    border: 0px none;
+    height: 18px;
+    float: right;
+}
+
+.searchButton {
+    float: left;
+    height: 18px;
+    padding: 2px 4px 0px 4px;
+    color: #000000;
+    text-decoration: none;
+    border: 0px none;
+    font: bold 11px Arial;
+}
+
+.searchButton:hover {
+}

@@ -1,0 +1,142 @@
+body {
+    background: url('mainBackground.jpg') repeat;
+	margin: 0px;
+    padding: 0px;
+}
+#topBodyBackground {
+    
+    padding: 10px 100px 20px 100px;
+}
+#topBodyMarginDiv {
+    margin: 0% 5%;
+    min-width: 800px;
+}
+#topMenuDiv {
+float:right;
+    height: 25px;
+}
+#headerDiv {
+}
+#headerContentDiv {
+}
+#headerMenuDiv {
+    
+    height: 30px;
+}
+#bodyDiv {
+background: url('bodyBackground.png') repeat-x;
+    padding: 18px 10px;
+}
+#bodyLeftDiv {
+    float: left;
+    margin: 0px 0px 0px 0px;
+    /* padding: 10px; */
+    min-height: 360px;
+    width: 200px;
+    background-color:white;
+    border: 1px solid silver;
+}
+#bodyCenterDiv {
+    margin: 0px 0px 0px 210px; 
+    /* padding: 10px 10px 0px 0px;*/
+    min-height: 360px;
+    background-color:white;
+    border: 1px solid silver;
+}
+#bodyCenterDiv .marginDiv {
+    margin: 10px;
+}
+#bodyFullDiv {
+    margin: 0px 0px 0px 0px; 
+    min-height: 360px;
+    background-color:white;
+    border: 1px solid silver;
+    background-color:white;
+}
+#bodyFullDiv .marginDiv {
+    margin: 10px;
+}
+#footerDiv {
+    min-height: 30px;
+    background: rgb(191,21,34);
+}
+#footerMenuDiv {
+
+}
+
+
+#cmsBodyDiv {
+    margin-bottom: 0px;
+}
+
+
+
+/* top menu*/
+
+#topMenuDiv .sddm div {
+    float: right;
+}
+#topMenuDiv .sddm div {
+    float: right;
+}
+#topMenuDiv .sddm div a {
+    color: #ffffff;
+	background: none repeat scroll 0 0 #BF1522;
+}
+#topMenuDiv .sddm div a:hover {
+    color: rgb(80,80,180);
+}
+
+/* header menu */
+
+#headerMenuDiv .sddm div {
+    margin: 0px 0px 5px 5px;
+    padding: 2px;
+    background: rgb(210,210,210);
+}
+#headerMenuDiv .sddm div a {
+    color: rgb(80,80,80);
+}
+#headerMenuDiv .sddm div a:hover {
+    color: rgb(80,80,180);
+}
+
+/* footer menu */
+
+#footerMenuDiv .sddm div {
+    margin-top: 2px;
+}
+#footerMenuDiv .sddm div {
+    float: right;
+}
+
+/* menu common*/
+
+.sddm .sddmButton a {
+    padding: 0px;
+}
+.sddm .sddmButton {
+    padding: 0px;
+    background: none;
+}
+
+/*  */
+
+#bodyLeftDiv .sddm div {
+    float:none;
+}
+#bodyLeftDiv .sddm div a {
+    text-align:left;
+}
+
+
+
+/* langage selection */
+
+#langSelect {
+    float:left;
+}
+.langSelectLink {
+    
+}
+

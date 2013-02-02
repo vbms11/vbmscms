@@ -1,0 +1,56 @@
+
+# block directorys and files
+
+#<DirectoryMatch core/ > 
+#    order allow, deny
+#    deny from all
+#</DirectoryMatch>
+<Files config.php>
+    deny from all
+</Files>
+
+# limit to only get and post
+
+#<Limit GET POST>
+#    order deny,allow
+#    allow from all
+#</Limit> 
+#<LimitExcept GET POST>
+#    order deny,allow
+#    deny from all
+#</LimitExcept>
+
+# allow search machine resources to be found
+
+<files robots.txt>
+    RewriteEngine   on 
+    RewriteCond     %{REQUEST_URI}      /robots.txt$
+    RewriteCond     ^(.+)robots.txt     !-f 
+    RewriteRule     ^(.*)$              /?service=seo&action=robots.txt [L]
+</files>
+<files sitemap.xml>
+    RewriteEngine   on 
+    RewriteCond     %{REQUEST_URI}      /sitemap.xml$
+    RewriteCond     ^(.+)sitemap.xml    !-f 
+    RewriteRule     ^(.*)$              /?service=seo&action=sitemap.xml [L]
+</files>
+
+#<directory /files/backup>
+#    order deny,allow
+#    deny from all
+#</directory>
+
+
+# set error types
+
+ErrorDocument 404 /
+#ErrorDocument 400 index.php
+#ErrorDocument 401 index.php?name=error
+#ErrorDocument 403 index.php?name=error
+#ErrorDocument 405 index.php?name=error
+#ErrorDocument 406 index.php?name=error
+#ErrorDocument 409 index.php?name=error
+#ErrorDocument 413 index.php?name=error
+#ErrorDocument 414 index.php?name=error
+#ErrorDocument 500 index.php?name=error
+#ErrorDocument 501 index.php?name=error

@@ -1,0 +1,67 @@
+body {
+	padding:0px;
+	margin:0px;
+}    
+.frameDiv {
+	min-width: 800px;
+}
+.headerDiv {
+	min-height: 60px;
+	margin: 10px;
+	border: 1px dashed silver;
+        background: url('gradBig.gif') white repeat-x;
+}
+.headerMarginDiv {
+	background: url('logo.jpg') right no-repeat;
+        height: 70px;
+        margin: 5px;
+}
+.menuDiv {
+	min-height: 30px;
+	margin: 10px 10px 0px 10px;
+	border: 1px dashed silver;
+        background: url('gradSmall.gif') white repeat-x;
+}
+.menuMarginDiv {
+	margin: 5px;
+}
+.rightBodyDiv {
+	width: 200px;
+	float: right;
+	margin: 10px;
+	min-height: 200px;
+	border: 1px dashed silver;
+        background: url('gradBig.gif') white repeat-x;
+}
+.rightBodyMarginDiv {
+	margin: 10px;
+}
+.leftBodyDiv {
+	width: 200px;
+	float: left;
+	margin: 10px;
+	min-height: 200px;
+	border: 1px dashed silver;
+        background: url('gradBig.gif') white repeat-x;
+}
+.leftBodyMarginDiv {
+	margin: 10px;
+}
+.bodyDiv {
+	margin: 10px 220px;
+	border: 1px dashed silver;
+	min-height: 200px;
+        background: url('gradBig.gif') white repeat-x;
+}
+.bodyMarginDiv {
+	margin:10px;
+}
+.footerDiv {
+	margin:10px;
+	min-height: 20px;
+	border: 1px dashed silver;
+        background: url('gradSmall.gif') white repeat-x;
+}
+.footerMarginDiv {
+	margin:5px;
+}
