@@ -159,8 +159,7 @@ class ShopBasketView extends XModule {
                             if (!empty($order->distributorid)) {
                                 $email = UsersModel::getUserEmailById($order->distributorid);
                                 EmailUtil::sendHtmlEmail($email, parent::param("emailSubject"), $emailText, parent::param("emailSender"));
-                            }
-                            else {
+                            } else {
                                 echo "Error: Could not sent email to distributor.";
                             }
                         }
@@ -621,8 +620,8 @@ class ShopBasketView extends XModule {
                                                 <td><?php echo ($product->price * $product->quantity).Config::getCurrency(); ?></td>
                                                 <td>
                                                 <?php
-                                                    if (parent::param("sihppingMode") == self::shipping_total) {
-                                                        echo $product->shipping * $product->quantity.Config::getCurrency();
+                                                    if (parent::param("shippingMode") == self::shipping_total) {
+                                                        echo ($product->shipping * $product->quantity).Config::getCurrency();
                                                     }
                                                 ?>
                                                 </td>
@@ -645,7 +644,7 @@ class ShopBasketView extends XModule {
                                             <td><b><?php echo $priceTotal.Config::getCurrency(); ?></b></td>
                                             <td><b>
                                             <?php
-                                                if (parent::param("shippingModel") == self::shipping_highest) {
+                                                if (parent::param("shippingMode") == self::shipping_highest) {
                                                     $shippingTotal = $shippingMax;
                                                 }
                                                 echo $shippingTotal.Config::getCurrency();

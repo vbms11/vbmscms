@@ -112,7 +112,19 @@ class EditableTemplate extends XTemplate {
         return array("template.css");
     }
     
-    
+    /**
+     * returns the codes of the static modules
+     */
+    function getStaticModules () {
+        $staticModules = array();
+        foreach ($this->areas as $area) {
+            switch ($area->type) {
+                case "menu":
+                    $staticModules[] = $area->name;
+            }
+        }
+        return $staticModules;
+    }
 }
 
 ?>

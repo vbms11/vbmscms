@@ -53,18 +53,59 @@ class TemplateModel {
         Database::query("delete from t_templatearea where id = '$moduleId'");
     }
 
-    static function getAreaModules ($pageId, $teplateArea) {
+    static function getAreaModules ($pageId, $teplateArea = null, $staticModules = null) {
+        
+        // make are modules condition
+        if (empty($teplateArea)) {
+            $teplateArea = "";
+        } elseif (is_array($teplateArea)) {
+            foreach ($teplateArea as $key => $area) {
+                $teplateArea[$key] = mysql_real_escape_string($area);
+            }
+            $teplateArea = "a.name in ('".implode("','", $teplateArea)."') ";
+        } else {
+            $teplateArea = "a.name = '".mysql_real_escape_string($teplateArea)."' ";
+        }
+        
+        // make static modules condition
+        if (empty($staticModules)) {
+            $staticModules = "";
+        } elseif (is_array($staticModules)) {
+            foreach ($staticModules as $key => $area) {
+                $staticModules[$key] = mysql_real_escape_string($area);
+            }
+            $staticModules = "a.code in ('".implode("','", $staticModules)."') ";
+        } else {
+            $staticModules = "a.code = '".mysql_real_escape_string($staticModules)."' ";
+        }
+
+        // make the condition
+        $conditionSql = "";
+        if (!empty($teplateArea) && !empty($staticModules)) {
+            $conditionSql = "((a.pageid = '$pageId' and $teplateArea) or $staticModules)";
+        } elseif (!empty($teplateArea)) {
+            $conditionSql = "(a.pageid = '$pageId' and $teplateArea)";
+        } elseif (!empty($staticModules)) {
+            $conditionSql = "$staticModules";
+        }
+
+        // 
         $pageId = mysql_real_escape_string($pageId);
-        $teplateArea = mysql_real_escape_string($teplateArea);
-        $result = Database::query("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename
+        $moduleIncludes = Database::queryAsArray("select a.id, a.name as name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename, a.code
             from t_templatearea a
             left join t_module pt on pt.id = a.type
-            where a.pageid = '$pageId' and a.name = '$teplateArea'
+            where $conditionSql
             order by a.position asc");
-        $res = array();
-        while ($obj = mysql_fetch_object($result))
-            $res[] = $obj;
-        return $res;
+
+	// if no area name exists use code instead, this is for static modules
+	foreach ($moduleIncludes as $moduleInclude) {
+		$areaName = trim($moduleInclude->name);
+		if (empty($areaName) && !empty($moduleInclude->code)) {
+			$moduleInclude->name = $moduleInclude->code;
+		}
+	}
+
+	return $moduleIncludes;
     }
 
     static function getStaticModule ($code, $sysName) {
@@ -144,9 +185,6 @@ class TemplateModel {
     }
 
     static function createTemplateAreas ($pageId,$areas) {
-        //stophack
-        //if (1==1) 
-        //    return;
         $pageId = mysql_real_escape_string($pageId);
         foreach ($areas as $name => $type) {
             $name = mysql_real_escape_string($name);

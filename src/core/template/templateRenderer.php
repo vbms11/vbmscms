@@ -27,21 +27,22 @@ class TemplateRenderer {
     function renderTemplateArea ($pageId, $teplateArea) {
         
         echo "<div class='vcms_area' id='vcms_area_$teplateArea' >";
-        $areaModules = TemplateModel::getAreaModules($pageId, $teplateArea);
-        $modulesCount = count($areaModules);
-        for ($i=0; $i<$modulesCount; $i++) {
-                ModuleModel::renderModule($areaModules[$i]);
+
+        $areaModules = Context::getModules($teplateArea);
+        if (count($areaModules) > 0) {
+            foreach ($areaModules as $areaModule) {
+                ModuleModel::renderModuleObject($areaModule);
             }
+        } else {
             if (Context::hasRole("pages.edit")) {
                 ?>
-                <div class="toolButtonDiv <?php echo ($modulesCount > 0 ? "hide" : "show"); ?>">
+                <div class="toolButtonDiv show">
                     <a class="toolButtonSpacinng" href="<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$teplateArea,"position"=>-1)); ?>"><img src="resource/img/new.png" class="imageLink" alt="" title="Neues Modul einpflegen" /></a>
                 </div>
                 <?php
             }
-            ?>
-        </div>
-        <?php
+        }
+        
         if (Context::hasRole("pages.edit")) {
             ?>
             <script>
@@ -57,8 +58,10 @@ class TemplateRenderer {
                 $(this).removeClass("vcms_area_show_border");
             });
             </script>
-        <?php
+            <?php
         }
+        
+        echo "</div>";
     }
 
     /**
@@ -68,13 +71,11 @@ class TemplateRenderer {
      */
     function renderMainTemplateArea ($pageId, $teplateArea) {
         
-        
         $focusedModuleId = Context::getFocusedArea();
         if ($focusedModuleId != null) {
             echo "<div id='vcms_area_$teplateArea' >";
             Context::setIsFocusedArea(true);
-            $module = TemplateModel::getTemplateModule($focusedModuleId);
-            ModuleModel::renderModule($module);
+            ModuleModel::renderModuleObject(Context::getModule($focusedModuleId));
             Context::setIsFocusedArea(false);
             echo "</div>";
         } else {
@@ -82,11 +83,13 @@ class TemplateRenderer {
         }
         
     }
-
+    
     function renderMenu($pageId, $menuName) {
+
         echo "<div id='vcms_area_$menuName' >";
-        $module = TemplateModel::getStaticModule($menuName, "menu");
-        ModuleModel::renderModule($module);
+	foreach (Context::getModules($menuName) as $module) {
+		ModuleModel::renderModuleObject($module);
+	}
         echo "</div>";
     }
 

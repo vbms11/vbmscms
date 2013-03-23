@@ -16,14 +16,14 @@ class InstallView extends XModule {
 				$link = @mysql_connect($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword']);
 				if (!$link) {
 					$_SESSION['installMsg'] = "Unable to connect to the database!";
-					NavigationModel::redirect("?action=dbConfig",false);
+					NavigationModel::redirect("?action=dbConfig&session=nodb",false);
 				} else {
 					$check = @mysql_select_db($_SESSION['database']);
 					if (!$check) {
 						$_SESSION['installMsg'] = "Connection established but invalid database name!";
-						NavigationModel::redirect("?action=dbConfig",false);
+						NavigationModel::redirect("?action=dbConfig&session=nodb",false);
 					} else {
-						NavigationModel::redirect("?action=printInstallingView",false);
+						NavigationModel::redirect("?action=printInstallingView&session=nodb",false);
 					}
 				}
 				break;
@@ -35,7 +35,7 @@ class InstallView extends XModule {
 				$_SESSION['password'] = $_POST['password'];
 				$_SESSION['email'] = $_POST['email'];
 				$_SESSION['birthdate'] = $_POST['birthdate'];
-				NavigationModel::redirect("?action=dbConfig",false);
+				NavigationModel::redirect("?action=dbConfig&session=nodb",false);
 				break;
 			case "install":
 				// create config file
@@ -46,7 +46,7 @@ class InstallView extends XModule {
 				// create initial user
 				InstallerModel::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate']);
 				// redirect to startpage
-				NavigationModel::redirect("",false);
+				NavigationModel::redirect("?session=nodb",false);
 				break;
 			case "progress":
 				echo $_SESSION['installProgress'];
@@ -83,19 +83,19 @@ class InstallView extends XModule {
 			<div id="progressbar"></div>
 			<script>
 			$("#progressbar").progressbar({
-				value: 100,
+				value: 100
 				
 			});
 			function gotoLogin (data) {
 				callUrl("");
 			}
 			$.ajax({
-            			"url": "?action=install&<?php echo session_name()."=".session_id(); ?>",
-            			"context": document.body,
-            			"success": function(data){
-                			gotoLogin(data);
-            			}
-        		});
+                    "url": "?action=install&<?php echo session_name()."=".session_id(); ?>",
+                    "context": document.body,
+                    "success": function(data){
+                        gotoLogin(data);
+                    }
+            });
 			</script>
 		</div>
 		<?php
@@ -108,7 +108,7 @@ class InstallView extends XModule {
 			<h2>Create Admin User</h2>
 			Fill in the details for the initial user. This user will then have all system rights.
 			<hr/>
-			<form method="post" action="?action=setInitialUser">
+			<form method="post" action="?action=setInitialUser&session=nodb">
 				<table class="expand"><tr>
 				<td class="contract">Username: </td>
 				<td class="expand"><?php InputFeilds::printTextFeild("username","","expand"); ?></td>
@@ -152,7 +152,7 @@ class InstallView extends XModule {
 			</div>
 			<script>
 			$(".btnInstallNext").button().click(function(e){
-				callUrl('?action=initialUser');
+				callUrl('?action=initialUser&session=nodb');
 			});
 			</script>
 		</div>
@@ -172,7 +172,7 @@ class InstallView extends XModule {
 				echo "</span><hr/>";
 			}
 			?>
-			<form method="post" action="?action=saveDbConfig">
+			<form method="post" action="?action=saveDbConfig&session=nodb">
 				<table class="expand"><tr>
 				<td class="contract">Hostname: </td>
 				<td class="expand"><?php InputFeilds::printTextFeild("hostname",isset($_POST['hostname']) ? $_POST['hostname'] : "","expand"); ?></td>

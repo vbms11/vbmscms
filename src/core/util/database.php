@@ -31,14 +31,15 @@ class Database {
     }
     
     static function query ($query) {
-        // Log::info("query: $query");
         $result = Database::getDataSource()->query($query) or die(Database::getDataSource()->getError());
+        Context::$queryLog[] = $query;
         return $result;
     }
     
     static function queryAsObject ($query) {
         $result = Database::getDataSource()->query($query) or die(Database::getDataSource()->getError());
         $obj = Database::getDataSource()->fetchObject($result);
+        Context::$queryLog[] = $query;
         return $obj;
     }
     
@@ -58,8 +59,8 @@ class Database {
     }
 
     static function getLastInsertId ($tableName) {
-	$lastInsertId = Database::getDataSource()->fetchObject("select last_insert_id() as id from 0x".bin2hex($tableName));
-	return $lastInsertId->id;
+        $lastInsertId = Database::getDataSource()->query("select last_insert_id() as id from 0x".bin2hex($tableName));
+        return $lastInsertId->id;
     }
 }
 
@@ -78,8 +79,9 @@ interface IDataSource {
 class MysqlDataSource implements IDataSource {
     
     function query ($query) {
-        // echo $query."<br/><br/>";
-        // $_SESSION['database.querys'][] = $query;
+        if (Config::getQueryLog()) {
+             Context::addQueryToLog($query);
+        }
         $result = mysql_query($query) or die(mysql_error());
         return $result;
     }
@@ -121,7 +123,6 @@ class SqliteDataSource implements IDataSource {
     private $error = null;
     
     function query ($query) {
-        // echo "$query <br/><br/>";
         $result = $this->database->queryExec($query, $this->error);
         if(!$result) {
             return null;

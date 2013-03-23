@@ -43,8 +43,6 @@ class ModuleModel {
         return $newObj->lastid;
     }
     
-    
-    
     static function addModule ($siteId,$moduleId) {
         $siteId = mysql_real_escape_string($siteId);
         $moduleId = mysql_real_escape_string($moduleId);
@@ -65,6 +63,9 @@ class ModuleModel {
         require_once($moduleObj->include);
         $className = $moduleObj->interface;
         $obj = eval("return new $className();");
+        $obj->moduleId = $moduleObj->id;
+        $obj->moduleAreaName = $moduleObj->name;
+        $obj->modulePosition = $moduleObj->position;
         // add the translations
         if (in_array("Translatable", class_implements($obj))) {
             TranslationsModel::addTranslations($obj->getTranslations());
@@ -73,14 +74,23 @@ class ModuleModel {
     }
 
     static function processModule ($moduleId) {
-        
+
         $module = TemplateModel::getTemplateModule($moduleId);
-        if ($module != null) {
-            Context::setIsFocusedArea(true);
+        if (!empty($module)) {
             $moduleClass = ModuleModel::getModuleClass($module);
             $moduleParams = ModuleModel::getModuleParams($moduleId);
             $moduleClass->setParams($moduleParams);
-            $moduleClass->process($module->id);
+            self::processModuleObject($moduleClass);
+        } else {
+            //log("invalid moduleId: $moduleId");
+        }
+    }
+    
+    static function processModuleObject ($moduleObject) {
+
+        if (!empty($moduleObject)) {
+            Context::setIsFocusedArea(true);
+            $moduleObject->process($module->id);
             Context::setIsFocusedArea(false);
         } else {
             //log("invalid moduleId: $moduleId");
@@ -89,57 +99,59 @@ class ModuleModel {
 
     static function renderModule ($moduleObj) {
 
-        $moduleClass = ModuleModel::getModuleClass($moduleObj);
-        $contextMenu = false;
-        $page = Context::getPage();
-        
-        if (!Context::isAjaxRequest() || Context::isRenderRequest()) {
-            $roles = $moduleClass->getRoles();
-            if (Context::hasRole($roles) && Context::getFocusedArea() != $moduleObj->id) {
-                $contextMenu = true;
-            }
-        }
-
-        ?>
-        <div class="vcms_module" id="vcms_module_<?php echo $moduleObj->id; ?>">
+        $moduleObj = ModuleModel::getModuleClass($moduleObj);
+        $moduleParams = ModuleModel::getModuleParams($moduleObj->getId());
+        $moduleObj->setParams($moduleParams);
+        self::renderModuleObject($moduleObj);
+    }
+    
+    static function renderModuleObject ($moduleClass) {
+	?>
+        <div class="vcms_module" id="vcms_module_<?php echo $moduleClass->getId(); ?>">
             <?php
-            $moduleParams = ModuleModel::getModuleParams($moduleObj->id);
-            $moduleClass->setParams($moduleParams);
-            $moduleClass->view($moduleObj->id);
+            $moduleClass->view($moduleClass->getId());
             ?>
         </div>
         <?php
-	
-        if ($contextMenu == true) {
-            ?>
-            <script>
-            var moduleMenuDiv = $('#vcms_module_<?php echo $moduleObj->id; ?>');
-	    moduleMenuDiv.contextMenu([
-                {'Edit Module':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createModuleLink($moduleObj->id,array("action"=>"edit"),false); ?>'); }},
-                {'Insert Module':function (menuItem,menu) { callUrl('<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$moduleObj->name,"position"=>$moduleObj->position),false); ?>'); }},
-                {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }},
-                $.contextMenu.separator,                
-                {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleObj->id),false); ?>'); }},
-                {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleObj->id),false); ?>'); }},
-                <?php
-		if ($page->codeid !== $moduleObj->id) {
-			?>
-			$.contextMenu.separator,
-                	{'Delete Module':function (menuItem,menu) { doIfConfirm('Wollen Sie wirklich dieses Modul l&ouml;schen?','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$moduleObj->id),false); ?>'); }}
-			<?php
-		}
-		?>
-		],
-                {theme:'vista'});
-	    moduleMenuDiv.mouseover(function(){ 
-		$(this).addClass("vcms_module_show_border");
-	    });
-	    moduleMenuDiv.mouseout(function(){ 
-		$(this).removeClass("vcms_module_show_border");
- 	    });
-            </script>
-            <?php
+        
+        if (!Context::isAjaxRequest() || Context::isRenderRequest()) {
+            $roles = $moduleClass->getRoles();
+            if (Context::hasRole($roles) && Context::getFocusedArea() != $moduleClass->getId()) {
+                self::renderContextMenu($moduleClass);
+            }
         }
+    }
+
+    static function renderContextMenu ($moduleClass) {
+
+        $page = Context::getPage();
+        ?>
+        <script>
+        var moduleMenuDiv = $('#vcms_module_<?php echo $moduleClass->getId(); ?>');
+        moduleMenuDiv.contextMenu([
+            {'Edit Module':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createModuleLink($moduleClass->getId(),array("action"=>"edit"),false); ?>'); }},
+            {'Insert Module':function (menuItem,menu) { callUrl('<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$moduleClass->getAreaName(),"position"=>$moduleClass->getPosition()),false); ?>'); }},
+            {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }},
+            $.contextMenu.separator,
+            {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleClass->getId()),false); ?>'); }},
+            {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleClass->getId()),false); ?>'); }},
+            <?php
+            if ($page->codeid !== $moduleClass->getId()) {
+                ?>
+                $.contextMenu.separator,
+                {'Delete Module':function (menuItem,menu) { doIfConfirm('Wollen Sie wirklich dieses Modul l&ouml;schen?','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$moduleClass->getId()),false); ?>'); }}
+                <?php
+            }
+            ?>
+            ],{theme:'vista'});
+        moduleMenuDiv.mouseover(function(){
+            $(this).addClass("vcms_module_show_border");
+        });
+        moduleMenuDiv.mouseout(function(){
+            $(this).removeClass("vcms_module_show_border");
+        });
+        </script>
+        <?php
     }
     
     /*
@@ -213,21 +225,20 @@ class ModuleModel {
 
     static function processActions () {
         
-        $moduleId = Context::getModuleId();
-
         // decide if to unfocus the main content area
+        $moduleId = Context::getModuleId();
         if (Context::getFocusedArea() != $moduleId || $moduleId == null) {
             Context::setFocusedArea(null);
         }
 
         // process system or module actions
         if ($moduleId != null) {
-            ModuleModel::processModule($moduleId);
+            ModuleModel::processModuleObject(Context::getModule($moduleId));
         } else {
             ModuleModel::processAction();
         }
     }
-    
+
     static function getModuleParams ($moduleId) {
         $moduleId = mysql_real_escape_string($moduleId);
         $ret = array();
@@ -236,6 +247,18 @@ class ModuleModel {
             $ret[$param->name] = unserialize($param->value);
         }
         return $ret;
+    }
+
+    static function getAreaModuleParams ($name) {
+        if (is_array($name)) {
+            foreach ($name as $key => $value) {
+                $name[$key] = mysql_real_escape_string($value);
+            }
+            $name = " in ('".implode("','",$name)."') ";
+        } else {
+            $name = " = '".mysql_real_escape_string($name)."' ";
+        }
+        return Database::queryAsArray("select * from t_module_instance_params where instanceid $name");
     }
     
     static function setModuleParam ($moduleId,$name,$value) {

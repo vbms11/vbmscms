@@ -397,7 +397,7 @@ class NavigationModel {
         } else if (isset($_GET['static'])) {
             $page = PagesModel::getStaticPage($_GET['static'], Context::getLang());
             Context::setModuleId($page->codeid);
-	    NavigationModel::addToHistory();
+            NavigationModel::addToHistory();
             // NavigationModel::clearSecureLinks();
         } else if (isset($_GET['service'])) {
             Context::setService($_GET['service']);

@@ -1,45 +1,48 @@
 body {
-	padding:0px;
-	margin:0px;
-}    
-.frameDiv {
-	min-width: 800px;
+    margin: 0px;
+    background: black;
 }
-.headerDiv {
-	min-height: 60px;
-	margin: 10px;
-	border: 1px dashed silver;
-	background: url('gradBig.gif') white repeat-x;
+#pageFrameDiv {
+    min-width:1000px;
 }
-.headerMarginDiv {
-	background: url('logo.jpg') right no-repeat;
-        height: 70px;
-        margin: 5px;
+#headerDiv {
+    background: url('menta_bike_transparent.png') no-repeat black;
+    background-position: 60px 0px;
+    height: 75px;
 }
-.menuDiv {
-	min-height: 30px;
-	margin: 10px 10px 0px 10px;
-	border: 1px dashed silver;
-	background: url('gradSmall.gif') white repeat-x;
+#topMenuDiv {
+    background: url('menuGrad.png') black;
+    height: 32px;
 }
-.menuMarginDiv {
-	margin: 5px;
+#bodyTopDiv {
+
 }
-.bodyDiv {
-	margin: 10px;
-	border: 1px dashed silver;
-	min-height: 200px;
-	background: url('gradBig.gif') white repeat-x;
+#bodyDiv {
+    min-height: 200px;
+    background: url('bg.jpg') repeat;
+    padding: 40px 0px;
 }
-.bodyMarginDiv {
-	margin:10px;
+#bodyMarginDiv {
+    margin: 0px 60px;
 }
-.footerDiv {
-	margin:10px;
-	min-height: 20px;
-	border: 1px dashed silver;
-	background: url('gradSmall.gif') white repeat-x;
+#socialDiv {
+
 }
-.footerMarginDiv {
-	margin:5px;
+#socialMarginDiv {
+    margin:20px;
+}
+#bottomMenuDiv {
+    background: url('menuBottomGrad.png') black;
+    height: 48px;
+}
+#copyRightDiv {
+    min-height: 20px;
+}
+#headerToolsDiv {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+}
+#headerToolsMenu, #headerMenuSearch, #headerLangsMenu {
+    float:left;
 }

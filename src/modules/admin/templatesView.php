@@ -70,28 +70,12 @@ class TemplatesView extends XModule {
             <form id="<?php echo parent::alias("templatesForm"); ?>" action="<?php echo parent::link(array("action"=>$actionName,"id"=>$templateId)); ?>" method="post">
                 <div id="tabs">
                     <ul>
-                        <li><a href="#tabs-1">Info</a></li>
                         <li><a href="#tabs-2">Editor</a></li>
                         <li><a href="#tabs-3">Styles</a></li>
                         <li><a href="#tabs-4">Scripts</a></li>
                         <li><a href="#tabs-5">Files</a></li>
+                        <li><a href="#tabs-1">Info</a></li>
                     </ul>
-                    <div id="tabs-1">
-                        <h3>Template Info</h3>
-                        <table><tr><td>
-                            Template Name:
-                        </td><td>
-                            <?php InputFeilds::printTextFeild("name", $template->name); ?>    
-                        </td></tr><tr><td>
-                             Template Path:
-                        </td><td>
-                            <?php InputFeilds::printTextFeild("include", $template->template); ?>
-                        </td></tr><tr><td>
-                            Template Inpterface:
-                        </td><td>
-                            <?php InputFeilds::printTextFeild("interface", $template->interface); ?>
-                        </td></tr></table>
-                    </div>
                     <div id="tabs-2">
                         <h3>Template Editor</h3>
                         <?php
@@ -102,13 +86,13 @@ class TemplatesView extends XModule {
                     <div id="tabs-3">
                         <h3>Template Styles</h3>
                         <?php
-                        InputFeilds::printTextArea("css", $template->css,"expand",10);
+                        InputFeilds::printTextArea("css", $template->css,"expand",20);
                         ?>
                     </div>
                     <div id="tabs-4">
                         <h3>Template Scripts</h3>
                         <?php
-                        InputFeilds::printTextArea("js",$template->js,"expand",10);
+                        InputFeilds::printTextArea("js",$template->js,"expand",20);
                         ?>
                     </div>
                     <div id="tabs-5">
@@ -124,6 +108,22 @@ class TemplatesView extends XModule {
                         })
                         $('#myelfinder').elfinder("open");
                         </script>
+                    </div>
+                    <div id="tabs-1">
+                        <h3>Template Info</h3>
+                        <table><tr><td>
+                            Template Name:
+                        </td><td>
+                            <?php InputFeilds::printTextFeild("name", $template->name); ?>
+                        </td></tr><tr><td>
+                             Template Path:
+                        </td><td>
+                            <?php InputFeilds::printTextFeild("include", $template->template); ?>
+                        </td></tr><tr><td>
+                            Template Inpterface:
+                        </td><td>
+                            <?php InputFeilds::printTextFeild("interface", $template->interface); ?>
+                        </td></tr></table>
                     </div>
                 </div>
                 <hr/>

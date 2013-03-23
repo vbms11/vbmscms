@@ -71,6 +71,14 @@ abstract class XModule implements IModule, Translatable {
     public $params = array();
     public $tanslations = array();
     public $paramsDirty = false;
+    public $moduleAreaName;
+    public $modulePosition;
+    function getAreaName () {
+        return $this->moduleAreaName;
+    }
+    function getPosition () {
+        return $this->modulePosition;
+    }
     function getId () {
         return $this->moduleId;
     }
@@ -99,7 +107,7 @@ abstract class XModule implements IModule, Translatable {
     }
     function setParams ($params) {
         $this->params = $params;
-        $this->paramsDirty = true;        
+	$this->paramsDirty = false;
     }
     function getParams () {
         return  $this->params;

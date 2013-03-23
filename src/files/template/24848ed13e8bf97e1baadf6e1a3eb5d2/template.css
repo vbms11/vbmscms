@@ -1,49 +1,48 @@
 body {
-	padding:0px;
-	margin:0px;
-}    
-.frameDiv {
-	min-width: 800px;
+    margin: 0px;
+    background: black;
 }
-.headerDiv {
-	min-height: 60px;
-	margin: 10px;
-	border: 1px dashed silver;
+#pageFrameDiv {
+    min-width:1000px;
 }
-.headerMarginDiv {
-	margin: 10px;
+#headerDiv {
+    background: url('menta_bike_transparent.png') no-repeat black;
+    background-position: 60px 0px;
+    height: 75px;
 }
-.menuDiv {
-	min-height: 30px;
-	margin: 10px 10px 0px 10px;
-	border: 1px dashed silver;
+#topMenuDiv {
+    background: url('menuGrad.png') black;
+    height: 32px;
 }
-.menuMarginDiv {
-	margin: 5px;
+#bodyTopDiv {
+
 }
-.rightBodyDiv {
-	width: 240px;
-	float: right;
-	margin: 10px;
-	min-height: 200px;
-	border: 1px dashed silver;
+#bodyDiv {
+    min-height: 200px;
+    background: url('bg.jpg') repeat;
+    padding: 40px 0px;
 }
-.rightBodyMarginDiv {
-	margin: 10px;
+#bodyMarginDiv {
+    margin: 0px 60px;
 }
-.bodyDiv {
-	margin: 10px 260px 10px 10px;
-	border: 1px dashed silver;
-	min-height: 200px;
+#socialDiv {
+
 }
-.bodyMarginDiv {
-	margin:10px;
+#socialMarginDiv {
+    margin:20px;
 }
-.footerDiv {
-	margin:10px;
-	min-height: 20px;
-	border: 1px dashed silver;
+#bottomMenuDiv {
+    background: url('menuBottomGrad.png') black;
+    height: 48px;
 }
-.footerMarginDiv {
-	margin:5px;
+#copyRightDiv {
+    min-height: 20px;
+}
+#headerToolsDiv {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+}
+#headerToolsMenu, #headerMenuSearch, #headerLangsMenu {
+    float:left;
 }

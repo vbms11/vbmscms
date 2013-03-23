@@ -4,6 +4,8 @@ require_once 'core/model/rolesModel.php';
 
 class Context {
 
+    static $queryLog;
+
     // user attribs
 
     static function setUser ($userId,$username) {
@@ -185,67 +187,173 @@ class Context {
         return $_SESSION["req.site"]->siteid;
     }
 
+    // renderer
+
+    static function loadRenderer () {
+        $templateClass = null;
+        if (Common::isEmpty(self::getPage()->html)) {
+            $templateClass = TemplateModel::getTemplateObj(self::getPage());
+        } else {
+            $templateClass = new EditableTemplate();
+            $templateClass->setData(self::getPage()->html);
+        }
+        Context::setRenderer($templateClass);
+    }
+
+    static function setRenderer ($templateObj) {
+        $_REQUEST["req.renderer"] = $templateObj;
+    }
+
+    static function getRenderer () {
+        return isset($_REQUEST["req.renderer"]) ? $_REQUEST["req.renderer"] : null;
+    }
+
     // modules in this page
 
-    static function addModule ($moduleObj) {
-        $modules = array();
-        if (!isset($_SESSION['req.modules']))
-            $_SESSION['req.modules'] = $modules;
-        $modules[] = $moduleObj;
+    static function loadModules () {
+
+        // get static modules
+        $staticModules = self::getRenderer()->getStaticModules();
+        $templateAreas = self::getRenderer()->getAreas();
+
+        // load the modules
+        $pageModules = TemplateModel::getAreaModules(self::getPageId(), $templateAreas, $staticModules);
+        $pageAreaNames = array();
+        foreach ($pageModules as $module) {
+            self::addModule($module);
+            $pageAreaNames[$module->id] = $module->name;
+        }
+        
+        // load the module parameters
+        $instanceParams = array();
+        $allParams = ModuleModel::getAreaModuleParams(array_keys($pageAreaNames));
+        foreach ($allParams as $param) {
+            if (!isset($instanceParams[$module->id])) {
+                $instanceParams[$module->id] = array();
+            }
+            $instanceParams[$module->id][$param->name] = $param->value;
+        }
+        self::setModuleParams($instanceParams);
     }
 
-    static function getModules () {
-        $modules = array();
-        if (isset($_SESSION['req.modules']))
-            $modules = $_SESSION['req.modules'];
-        return $modules;
+    static function getPageModules () {
+        if (!isset($_REQUEST['req.modules'])) {
+            self::loadModules();
+        }
+        return $_REQUEST['req.modules'];
     }
+    
+    static function setModuleParams ($instanceParams) {
+        foreach ($instanceParams as $instanceId => $params) {
+            $module = &self::getModule($instanceId);
+            $module->setParams($params);
+        }
+    }
+    
+    static function addModule ($module) {
+        if (!isset($_REQUEST['req.modules'])) {
+            $_REQUEST['req.modules'] = array();
+        }
+        if (!isset($modules[$module->name])) {
+            $_REQUEST['req.modules'][$module->name] = array();
+        }
+        $_REQUEST['req.modules'][$module->name][$module->id] = &ModuleModel::getModuleClass($module);
+    }
+
+    static function getModules ($areaName) {
+        $modules = self::getPageModules();
+        if (isset($modules[$areaName])) {
+            return $modules[$areaName];
+        }
+        return null;
+    }
+    
+    static function getModule ($id) {
+        $modules = &self::getPageModules();
+        foreach ($modules as $areaName => $modules) {
+            if (isset($modules[$id])) {
+                return $modules[$id];
+            }
+        }
+        return null;
+    }
+
+    static function getAreaNames () {
+        return array_keys(self::getPageModules());
+    }
+    static function addQueryToLog ($query) {
+		self::$queryLog[] = $query;
+	}
 
     // methods called at the start and end of the context
 
     static function startRequest () {
 
-	if (!@include_once('config.php')) {
-		Session::startDefaultSession();
-	} else {
+        if (Config::getQueryLog()) {
+            self::$queryLog = array();
+        }
 
-        Session::useSession();
-        NavigationModel::startRequest();
-        
-        // set the language
-        $lang = "de";
-        if (isset($_GET['changelang'])) {
-            $lang = $_GET['changelang'];
-        } else if (isset($_SESSION["req.lang"])) {
-            $lang = $_SESSION["req.lang"];
+        if (!@include_once('config.php')) {
+            Session::startDefaultSession();
         } else {
-            if (isset($_REQUEST['local'])) {
-                switch ($_REQUEST['local']) {
-                    case "en_us":
-                        $lang = $_SESSION["req.lang"] = "en";
-                    case "es_sp":
-                        $lang = $_SESSION["req.lang"] = "sp";
+
+            Session::useSession();
+            NavigationModel::startRequest();
+
+            // set the language
+            $lang = "de";
+            if (isset($_GET['changelang'])) {
+                $lang = $_GET['changelang'];
+            } else if (isset($_SESSION["req.lang"])) {
+                $lang = $_SESSION["req.lang"];
+            } else {
+                if (isset($_REQUEST['local'])) {
+                    switch ($_REQUEST['local']) {
+                        case "en_us":
+                            $lang = $_SESSION["req.lang"] = "en";
+                        case "es_sp":
+                            $lang = $_SESSION["req.lang"] = "sp";
+                    }
                 }
             }
+            unset($_SESSION["req.returnValue"]);
+            $_SESSION["req.lang"] = $lang;
+
+            // set the siteid
+            $_SESSION["req.site"] = DomainsModel::getCurrentSite();
+
+            // set the selected page
+            $page = NavigationModel::selectPage();
+            if ($page != null) {
+                $_SESSION["req.page"] = $page;
+                $_SESSION["req.pageId"] = $page->id;
+                $_SESSION["req.pageName"] = $page->name;
+                $_SESSION["req.pageCode"] = $page->code;
+                self::loadRenderer();
+                self::loadModules();
+            }
         }
-        unset($_SESSION["req.returnValue"]);
-        $_SESSION["req.lang"] = $lang;
-        
-        // set the siteid
-        $_SESSION["req.site"] = DomainsModel::getCurrentSite();
-        
-        // set the selected page
-        $page = NavigationModel::selectPage();
-        if ($page != null) {
-            $_SESSION["req.page"] = $page;
-            $_SESSION["req.pageId"] = $page->id;
-            $_SESSION["req.pageName"] = $page->name;
-            //$_SESSION["req.pageCode"] = $page->code;
-        }
-	}
     }
     
     static function endRequest () {
+
+        // write the query log
+        if (Config::getQueryLog()) {
+            $queryHtml = "<html><head></head><body>";
+            foreach (self::$queryLog as $key => $query) {
+                $queryHtml .= "<div class='query' style='background-color:rgb(".($key % 2 == 0 ? "230,230,230" : "245,245,245").")'>";
+                $queryHtml .= $key." : ".$query;
+                $queryHtml .= "</div></br>";
+            }
+		$filename = session_id()."_query.html";
+            $queryHtml .= "</body></html>";
+		if (file_exists($filename)) {
+			unlink($filename);
+		}
+            file_put_contents($filename, $queryHtml);
+        }
+
+        // unset session request data
         $_SESSION["req.page"] = null;
         $_SESSION["req.pageId"] = null;
         $_SESSION["req.pageName"] = null;
@@ -299,14 +407,7 @@ class Context {
     static function post ($varName) {
         return isset($_POST[$varName]) ? $_POST[$varName] : null;
     }
-    
-    static function setRenderer ($templateObj) {
-        $_REQUEST["req.renderer"] = $templateObj;
-    }
-    
-    static function getRenderer () {
-        return isset($_REQUEST["req.renderer"]) ? $_REQUEST["req.renderer"] : null;
-    }
+
 }
 
 class Config {
@@ -318,10 +419,21 @@ class Config {
     static function getWeight () {
         return $GLOBALS['weightUnit'];
     }
+
+    static function getQueryLog () {
+        if (!isset($GLOBALS['queryLog'])) {
+            return true;
+        }
+        return $GLOBALS['queryLog'];
+    }
 }
 
 class Session {
-    
+
+    static function getSessionKeysString () {
+        return isset($_SESSION["session.started"]) ? $_SESSION["session.started"]."-".session_id() : "";
+    }
+
     static function getSessionKeysArray () {
         return isset($_SESSION["session.started"]) ? array("k"=>$_SESSION["session.started"],session_name()=>session_id()) : array();
     }
@@ -352,8 +464,6 @@ class Session {
             $sessionKey = $_POST["k"];
         }
         
-        
-        
         // validate keys
         if (Common::isEmpty($sessionId)  || strlen($sessionId)  != 40 || 
             Common::isEmpty($sessionKey) || strlen($sessionKey) != 40) {
@@ -363,8 +473,7 @@ class Session {
             $sessionValid = false;
             
         } else {
-            
-		
+
             // try starting session
             $sessionValid = Session::startSession("s",$sessionId);
             
