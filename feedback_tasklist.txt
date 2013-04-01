@@ -1,0 +1,45 @@
+Silvester:
+
+// • Preis sollte in der Galerieansicht sichtbar sein
+// • Preise im Warenkorb – auf 2 Stellen nach dem Komma
+// • als wer bin ich im login? – anziegen oben rechts in Leiste
+// • Neuer User anlegen, Geburtstag kann man nicht gut auswählen
+// • Menüleiste – Räder wird nicht richtig angezeigt
+// • Haken setzen mit Agbs einverstanden
+// • von Orders direkt auf Admin geht nicht
+
+
+
+• wenn ich bereits eingeloggt bin, möchte ich bei zur Kasse gehen und nicht wieder all meine
+Daten eingeben müssen.
+
+
+
+
+• Bei mehreren Bestellungen funktioniert nur der untereste „zur Kasse“ Button
+• bei Einstellunf „Deutsch“ sind viele Buttons noch engl beschriftet
+
+
+
+• ich kann als Testuser1, also nicht Admin bei Profil auf mein Profilbild klicken und insert
+Module auswählen
+
+
+• Neue Category für Galerie anlegen funktioniert nicht
+• Bilder in der Galerie können nicht in der Anordnung geändert werden.
+• Back-Button in der Galerie, wenn ich ein Bild auswähle
+
+
+• menta Logo, favicon in den Reiter vom Brpwser sichtbar machen
+• Zusätzliche Bilder in der Slideshow werden schwarz angezeigt
+• erstes Bild in der Slideshow wird immer nur halb angezeigt, wenn es zum ersten Mal
+angezeigt wird
+
+• mehrere Bilder sollen pro Produkt eingestellt werden können
+
+• Schritte anzeigen wie weit man bei einer Bestellung ist.
+• bei „verbindlich bestellen ! Nochmal eine Gesamtübersicht der bestellten Artikel anzeigen
+
+
+
+

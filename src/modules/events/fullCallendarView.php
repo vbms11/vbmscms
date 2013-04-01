@@ -169,6 +169,7 @@ class FullCallendarView extends XModule {
         </div>
         <script>
         $("#date").datepicker();
+        $("#date").datepicker({changeMonth: true, changeYear: true});
         $("#date").datepicker("option", "showAnim", "blind");
         $("#date").datepicker("option", "dateFormat", "yy-mm-dd");
         $("#date").datepicker("setDate", "<?php echo Common::htmlEscape(($event == null ? "" : $event->date)); ?>");

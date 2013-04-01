@@ -114,6 +114,7 @@ class EventsListView extends XModule {
         $("#date").datepicker();
         $("#date").datepicker("option", "showAnim", "blind");
         $("#date").datepicker("option", "dateFormat", "yy-mm-dd");
+        $("#date").datepicker({changeMonth: true, changeYear: true});
         $("#date").datepicker("setDate", "<?php echo Common::htmlEscape(($event == null ? "" : $event->date)); ?>");
         $(".alignRight input").button();
         </script>

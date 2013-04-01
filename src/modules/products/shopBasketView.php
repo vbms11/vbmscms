@@ -617,11 +617,11 @@ class ShopBasketView extends XModule {
                                                 <td class='nowrap' style='text-align:right;'><b><?php echo $product->quantity; ?> x </b></td>
                                                 <td><?php echo $product->titel; ?></td>
                                                 <td><img class="cartProductImage" src="<?php echo ResourcesModel::createResourceLink("products", $product->img); ?>" alt=""/></td>
-                                                <td><?php echo ($product->price * $product->quantity).Config::getCurrency(); ?></td>
+                                                <td><?php echo number_format($product->price * $product->quantity, 2).Config::getCurrency(); ?></td>
                                                 <td>
                                                 <?php
                                                     if (parent::param("shippingMode") == self::shipping_total) {
-                                                        echo ($product->shipping * $product->quantity).Config::getCurrency();
+                                                        echo number_format($product->shipping * $product->quantity, 2) .Config::getCurrency();
                                                     }
                                                 ?>
                                                 </td>
@@ -647,10 +647,10 @@ class ShopBasketView extends XModule {
                                                 if (parent::param("shippingMode") == self::shipping_highest) {
                                                     $shippingTotal = $shippingMax;
                                                 }
-                                                echo $shippingTotal.Config::getCurrency();
+                                                echo number_format($shippingTotal, 2).Config::getCurrency();
                                             ?>
                                             </b></td>
-                                            <td><b><?php echo ($shippingTotal + $priceTotal).Config::getCurrency(); ?></b></td>
+                                            <td><b><?php echo number_format($shippingTotal + $priceTotal, 2).Config::getCurrency(); ?></b></td>
                                             <td></td>
                                         </tr>
                                         </table>

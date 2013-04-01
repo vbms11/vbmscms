@@ -348,8 +348,8 @@ class UsersPageView extends XModule {
             }
         });
         $( "#birthDate" ).datepicker();
-        $( "#birthDate" ).datepicker( "option", "showAnim", "blind" );
-
+        $( "#birthDate" ).datepicker("option", "showAnim", "blind");
+        $( "#birthDate" ).datepicker({changeMonth: true, changeYear: true});
         </script>
         <?php
     }

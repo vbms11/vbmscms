@@ -182,9 +182,9 @@ class MenuModel {
             $siteId = "= '".mysql_real_escape_string($siteId->siteid)."'";
         }
         $query = "select p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, t.template as templateinclude, t.interface as interface
-            from t_menu m
+            from t_menu m 
             inner join t_page as p on p.id = m.page and p.siteid $siteId 
-            left join t_template t on p.template = t.id
+            left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
             where m.type = '$type'";
         if ($active)

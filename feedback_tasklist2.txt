@@ -1,0 +1,48 @@
+menta:
+
+• Home Text fehlt
+• Produktbilder einzeln zu
+• bei der engl. Version sind
+• deutsch bzw oder Englisch
+DENGLISCH
+[11:30:15] Reinhold Müller:
+Rechnungsemail
+• in der Bestätigungsmail
+• nach Newsletter bestellen,
+• AGBs fehlen noch
+
+
+
+• Wenn man in der Menüleiste z.B. „Rahmen“ auswählt, sollten die Unterprodukte verlinkt
+auf der Seite erscheinen
+
+das muss man als wysiwyg page machen. ich hab fur rahmen eine vorlage gemacht.
+
+
+
+// not sure about:
+
+
+• Anzahl der Artikel mit welchem Preis habe ich im Warenkorb – anzeigen oben rechts in
+Leiste
+
+its not a good idea, or it has to be thought out better and a custom shopping basket module made that can then be included where you want it.
+
+• Deutschland per Dropdown auswählen
+
+this can be done in the forms editor view admin->forms. by selecting the type to be a dropdown. you would need all contries or most of the in that list otherwise the customer would only be able to select that he lives in germany and without the contry you wouldnt be able to deliver.
+
+• Bekomme 2 Emails ohne Betreff und ohne Inhalt nach verbindlichen Bestellung
+• hi ich habe gerade fünf Bestellungen von bites.menta.de bekommen
+[11:28:30] Reinhold Müller: das Template müßte unbedingt angepasst werden
+[11:28:38] Reinhold Müller: Bestellung menta Absenderinfos und Logo
+[11:28:46] Reinhold Müller: Preis mit Versandkosten
+
+these mails have to be configured in the edit mode of that module. for example right click on the payment method module the email can be edited there. if you do not configure the emails then they are just blank, things like list of products can be done with place holders that are replaced with the coresponding content.
+
+• in der engl. Version kann man Admin nicht aufklappen
+
+da soll die rebeka in die sprache english auswahlen und biem menu verwalten fur jede seite in den admin menu soll der hackchen gesetzt sien 'site in die actuelle sprache anzeigen' das muss immer gemacht werden vor die site in die actuelle sprache angezeigt wird.
+
+
+

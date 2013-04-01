@@ -442,7 +442,7 @@ class MenuView extends XModule {
                             if (!Common::isEmpty($page->page->name)) {
                                 ?>
                                 <div>
-                                    <a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>" onmouseover="mopen('<?php echo $levelId; ?>');" onmouseout="mclosetime('<?php echo $levelId; ?>')" ><?php echo $page->page->name; ?></a>
+                                    <a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>" onmouseover="mopen('<?php echo $levelId; ?>');" onmouseout="mclosetime('<?php echo $levelId; ?>')" ><?php echo Context::htmlEntities($page->page->name); ?></a>
                                     <?php
                                     $this->printMenuNode($page,array($levelId));
                                     ?>
