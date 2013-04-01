@@ -25,6 +25,7 @@ include_once 'core/model/moduleModel.php';
 include_once 'core/model/usersModel.php';
 include_once 'core/model/eventsModel.php';
 include_once 'core/model/languagesModel.php';
+include_once 'core/model/logDataModel.php';
 include_once 'core/util/infoMessages.php';
 include_once 'core/util/captcha.php';
 include_once 'core/ddm/dmObject.php';

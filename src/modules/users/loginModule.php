@@ -30,6 +30,7 @@ class LoginModule extends XModule {
                     parent::focus();
                     parent::redirect(array("action"=>"bad"));
                 }
+                exit;
                 break;
             case "logout":
                 parent::focus();

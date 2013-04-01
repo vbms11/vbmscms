@@ -8,9 +8,13 @@ require_once 'core/model/templateModel.php';
 // start the request context
 Context::startRequest();
 
+//UsersModel::setPassword(1, "menta01");
+//echo "password reset";
+//exit;
+
 // show the page the user is on
 if (Context::getPage() != null) {
-
+    
     // process any module or system actions that need to be run
     ModuleModel::processActions();
     
@@ -20,7 +24,7 @@ if (Context::getPage() != null) {
         echo Context::getReturnValue();
     } else {
         // render the page using selected template
-        TemplateModel::renderTemplate(Context::getPage());
+        Context::getRenderer()->invokeRender();
     }
 
 } else if (Context::getService() != null) {

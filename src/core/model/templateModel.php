@@ -26,7 +26,7 @@ class TemplateModel {
         }
         return $templateClass;
     }
-    
+    /*
     static function renderTemplate ($page) {
         $templateClass = null;
         if (Common::isEmpty($page->html)) {
@@ -38,7 +38,7 @@ class TemplateModel {
         Context::setRenderer($templateClass);
         $templateClass->invokeRender();
     }
-
+*/
     static function getAreaNames ($pageId) {
         $templateObj = TemplateModel::getTemplateObj($pageId);
         return $templateObj->getAreas();

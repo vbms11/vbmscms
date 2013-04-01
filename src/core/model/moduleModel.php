@@ -87,10 +87,9 @@ class ModuleModel {
     }
     
     static function processModuleObject ($moduleObject) {
-
         if (!empty($moduleObject)) {
             Context::setIsFocusedArea(true);
-            $moduleObject->process($module->id);
+            $moduleObject->process($moduleObject->getId());
             Context::setIsFocusedArea(false);
         } else {
             //log("invalid moduleId: $moduleId");
@@ -105,19 +104,18 @@ class ModuleModel {
         self::renderModuleObject($moduleObj);
     }
     
-    static function renderModuleObject ($moduleClass) {
-	?>
-        <div class="vcms_module" id="vcms_module_<?php echo $moduleClass->getId(); ?>">
+    static function renderModuleObject ($moduleObject) {
+        ?>
+        <div class="vcms_module" id="vcms_module_<?php echo $moduleObject->getId(); ?>">
             <?php
-            $moduleClass->view($moduleClass->getId());
+            $moduleObject->view($moduleObject->getId());
             ?>
         </div>
         <?php
-        
         if (!Context::isAjaxRequest() || Context::isRenderRequest()) {
-            $roles = $moduleClass->getRoles();
-            if (Context::hasRole($roles) && Context::getFocusedArea() != $moduleClass->getId()) {
-                self::renderContextMenu($moduleClass);
+            $roles = $moduleObject->getRoles();
+            if (Context::hasRole($roles) && Context::getFocusedArea() != $moduleObject->getId()) {
+                self::renderContextMenu($moduleObject);
             }
         }
     }
@@ -216,8 +214,11 @@ class ModuleModel {
                     TemplateModel::moveTemplateModuleDown(Context::getPageId(),$id);
                     break;
                 case "movemodule":
-		    TemplateModel::moveTemplateModule(Context::getPageId(),$_GET["id"],$_GET["area"],$_GET["pos"]);
-		    Context::returnValue("");
+                    TemplateModel::moveTemplateModule(Context::getPageId(),$_GET["id"],$_GET["area"],$_GET["pos"]);
+                    Context::returnValue("");
+                    break;
+                case "logdata":
+                    LogDataModel::logThis($_GET['data']);
                 default:
             }
         }

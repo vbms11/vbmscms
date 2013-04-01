@@ -87,9 +87,9 @@ class TemplateRenderer {
     function renderMenu($pageId, $menuName) {
 
         echo "<div id='vcms_area_$menuName' >";
-	foreach (Context::getModules($menuName) as $module) {
-		ModuleModel::renderModuleObject($module);
-	}
+        foreach (Context::getModules($menuName) as $module) {
+            ModuleModel::renderModuleObject($module);
+        }
         echo "</div>";
     }
 
@@ -129,8 +129,8 @@ class TemplateRenderer {
         <script type="text/javascript" src="resource/js/multiselect/js/ui.multiselect.js"></script>
         <script type="text/javascript" src="resource/js/smefcms/smefcms.js"></script>
         <!-- elRTE -->
-	<script src="resource/js/elrte/js/elrte.min.js" type="text/javascript" charset="utf-8"></script>
-	<link rel="stylesheet" href="resource/js/elrte/css/elrte.min.css" type="text/css" media="screen" charset="utf-8"/>
+        <script src="resource/js/elrte/js/elrte.min.js" type="text/javascript" charset="utf-8"></script>
+        <link rel="stylesheet" href="resource/js/elrte/css/elrte.min.css" type="text/css" media="screen" charset="utf-8"/>
         <script src="resource/js/elrte/js/i18n/elrte.en.js" type="text/javascript" charset="utf-8"></script>
         <!-- elFinder -->
         <link rel="stylesheet" href="resource/js/elfinder/css/elfinder.css" type="text/css" media="screen" title="no title" charset="utf-8"/>
@@ -336,54 +336,54 @@ class TemplateRenderer {
             echo '</div>'.PHP_EOL;
             // $this->renderFooter();
 	    
-	    if (Context::hasRole("pages.edit")) {
-		
-		echo '<script>'.PHP_EOL;
-		?>
-		$("body").contextMenu([
-        		{'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }}],
-        		{theme:'vista'});
+            if (Context::hasRole("pages.edit")) {
+
+                echo '<script>'.PHP_EOL;
+                ?>
+                $("body").contextMenu([
+                    {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }}],
+                    {theme:'vista'});
 
                 <?php /*
-		var vcmsArea = $(".vcms_area")
-		$.each(vcmsArea,function (index,object) {
-			$(object).sortable({
-				connectWith: ".vcms_area, .toolButtonDiv",
-				cancel: ".toolButtonDiv, form, input, textarea, button",
-				update: function(event, ui) {
-					var areaId = $(object).attr("id").substr(10);
-					var moduleId = ui.item.attr("id");
-					$("#vcms_area_"+areaId+" #"+moduleId).each(function (index,o) {
-						$(object).find(".vcms_module").each(function (i,child) {
-							if (moduleId == $(child).attr("id")) {
-								 ajaxRequest('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movemodule"),false); ?>',function(data){},{"id":moduleId.substr(12),"area":areaId,"pos":i}); 
-							}
-						});
-					});
-					var toolbar = $("#vcms_area_"+areaId+", .toolButtonDiv");
-					if ($("#vcms_area_"+areaId+" .vcms_module").length > 0) {
-						if (toolbar.hasClass("show")) {
-							toolbar.fadeOut("fast", function () {
-								toolbar.addClass("hide");
-								toolbar.removeClass("show");
-							});
-						}
-					} else if (toolbar.hasClass("hide")) {
-						toolbar.fadeIn("fast", function () {
-							toolbar.addClass("show");
-							toolbar.removeClass("hide");
-						});
-					}
-				}
-			});
-		});
+                var vcmsArea = $(".vcms_area")
+                $.each(vcmsArea,function (index,object) {
+                    $(object).sortable({
+                        connectWith: ".vcms_area, .toolButtonDiv",
+                        cancel: ".toolButtonDiv, form, input, textarea, button",
+                        update: function(event, ui) {
+                            var areaId = $(object).attr("id").substr(10);
+                            var moduleId = ui.item.attr("id");
+                            $("#vcms_area_"+areaId+" #"+moduleId).each(function (index,o) {
+                                $(object).find(".vcms_module").each(function (i,child) {
+                                    if (moduleId == $(child).attr("id")) {
+                                         ajaxRequest('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movemodule"),false); ?>',function(data){},{"id":moduleId.substr(12),"area":areaId,"pos":i});
+                                    }
+                                });
+                            });
+                            var toolbar = $("#vcms_area_"+areaId+", .toolButtonDiv");
+                            if ($("#vcms_area_"+areaId+" .vcms_module").length > 0) {
+                                if (toolbar.hasClass("show")) {
+                                    toolbar.fadeOut("fast", function () {
+                                        toolbar.addClass("hide");
+                                        toolbar.removeClass("show");
+                                    });
+                                }
+                            } else if (toolbar.hasClass("hide")) {
+                                toolbar.fadeIn("fast", function () {
+                                    toolbar.addClass("show");
+                                    toolbar.removeClass("hide");
+                                });
+                            }
+                        }
+                    });
+                });
                  *
                  */
                 ?>
-		<?php
-		echo '</script>'.PHP_EOL;
-	    }
-	    $this->renderTrackerScript(Context::getPage());
+                <?php
+                echo '</script>'.PHP_EOL;
+            }
+            $this->renderTrackerScript(Context::getPage());
             echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
         }
     }

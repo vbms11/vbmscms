@@ -190,14 +190,7 @@ class Context {
     // renderer
 
     static function loadRenderer () {
-        $templateClass = null;
-        if (Common::isEmpty(self::getPage()->html)) {
-            $templateClass = TemplateModel::getTemplateObj(self::getPage());
-        } else {
-            $templateClass = new EditableTemplate();
-            $templateClass->setData(self::getPage()->html);
-        }
-        Context::setRenderer($templateClass);
+        Context::setRenderer(TemplateModel::getTemplateObj(self::getPage()));
     }
 
     static function setRenderer ($templateObj) {
@@ -228,11 +221,12 @@ class Context {
         $instanceParams = array();
         $allParams = ModuleModel::getAreaModuleParams(array_keys($pageAreaNames));
         foreach ($allParams as $param) {
-            if (!isset($instanceParams[$module->id])) {
-                $instanceParams[$module->id] = array();
+            if (!isset($instanceParams[$param->instanceid])) {
+                $instanceParams[$param->instanceid] = array();
             }
-            $instanceParams[$module->id][$param->name] = $param->value;
+            $instanceParams[$param->instanceid][$param->name] = unserialize($param->value);
         }
+
         self::setModuleParams($instanceParams);
     }
 
@@ -345,11 +339,11 @@ class Context {
                 $queryHtml .= $key." : ".$query;
                 $queryHtml .= "</div></br>";
             }
-		$filename = session_id()."_query.html";
+            $filename = "logs/".session_id()."_query.html";
             $queryHtml .= "</body></html>";
-		if (file_exists($filename)) {
-			unlink($filename);
-		}
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
             file_put_contents($filename, $queryHtml);
         }
 
@@ -508,10 +502,10 @@ class Session {
             setcookie("k",$sessionKey);
             setcookie("s",$sessionId);
 	    
-	    // start database session
+            // start database session
             Database::getDataSource();
 	    
-	    // start a clean session in the model
+            // start a clean session in the model
             Context::clear();
             SessionModel::startSession($sessionId, $sessionKey, $_SERVER['REMOTE_ADDR']);
             Context::addDefaultRoles();

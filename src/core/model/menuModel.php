@@ -87,12 +87,12 @@ class MenuModel {
     
     static function getPagesInMenu ($siteId=null, $active=true, $lang=null) {
         
-        if ($siteId == null) {
-            $site = DomainsModel::getCurrentSite();
-            if ($site == null) {
+        if (empty($siteId)) {
+            $siteId = Context::getSiteId();
+            if (empty($siteId)) {
                 $siteId = "null";
             } else {
-                $siteId = "'".mysql_real_escape_string($site->siteid)."'";
+                $siteId = "'".mysql_real_escape_string($siteId)."'";
             }
         } else {
             $siteId = "'".mysql_real_escape_string($siteId)."'";
@@ -101,6 +101,8 @@ class MenuModel {
         $lang = mysql_real_escape_string($lang);
         
         if (count(Context::getRoleGroups()) < 1) {
+            echo "No role Groups:";
+            exit;
             return array();
         }
         //

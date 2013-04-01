@@ -83,9 +83,9 @@ class MenuView extends XModule {
             case "newStyle":
             case "selectStyle":
             case "edit":
-		if (Context::hasRole("menu.edit")) {
-                	$this->printEditView();
-		}
+                if (Context::hasRole("menu.edit")) {
+                    $this->printEditView();
+                }
                 break;
             default:
                 $this->printMenuView();
@@ -408,7 +408,7 @@ class MenuView extends XModule {
     
     function printMenuView () {
         $menuStyle = MenuModel::getMenuStyle(parent::param("selectedStyle"));
-	// styles
+        // styles
         $styles = MenuModel::getMenuStyles();
         $menuStyle = null;
         if ($menuStyle == null && count($styles) > 0) {
@@ -427,14 +427,13 @@ class MenuView extends XModule {
                     <?php
                     $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
                     // if no menu selected select the first menu if any exist
-                    // var_dump(parent::param("selectedMenu"));
-                    if (Common::isEmpty(parent::param("selectedMenu"))) {
-                    $menus = Context::getRenderer()->getMenus();
-                    $menuKeys = array_keys($menus);
-                    if (count($menuKeys) > 0) {
-                        parent::param("selectedMenu",$menuKeys[0]);
-                        $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
-                    }
+                    if (empty($menus)) {
+                        $menus = Context::getRenderer()->getMenus();
+                        $menuKeys = array_keys($menus);
+                        if (count($menuKeys) > 0) {
+                            parent::param("selectedMenu",$menuKeys[0]);
+                            $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
+                        }
                     }
                     $first = true;
                     if (!Common::isEmpty($menus)) {
