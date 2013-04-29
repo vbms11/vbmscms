@@ -97,8 +97,7 @@ class MenuView extends XModule {
     }
     
     function getStyles () {
-        //return array("styles.css.php");
-        return array();
+        return array("/?static=menuStyles");
     }
     
     function getScripts () {
@@ -125,10 +124,8 @@ class MenuView extends XModule {
                 parent::param("selectedMenu",$keys[0]);
             }
         }
-        
         // get pages to be shown
         $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$parent,false,Context::getLang());
-        
         // styles
         $styles = MenuModel::getMenuStyles();
         $selectedStyle = null;
@@ -442,7 +439,7 @@ class MenuView extends XModule {
                             if (!Common::isEmpty($page->page->name)) {
                                 ?>
                                 <div>
-                                    <a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>" onmouseover="mopen('<?php echo $levelId; ?>');" onmouseout="mclosetime('<?php echo $levelId; ?>')" ><?php echo Context::htmlEntities($page->page->name); ?></a>
+                                    <a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>" onmouseover="mopen('<?php echo $levelId; ?>');" onmouseout="mclosetime('<?php echo $levelId; ?>')" ><?php echo Common::htmlEntities($page->page->name); ?></a>
                                     <?php
                                     $this->printMenuNode($page,array($levelId));
                                     ?>

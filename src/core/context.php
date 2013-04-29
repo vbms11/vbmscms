@@ -254,8 +254,11 @@ class Context {
         $_REQUEST['req.modules'][$module->name][$module->id] = &ModuleModel::getModuleClass($module);
     }
 
-    static function getModules ($areaName) {
+    static function getModules ($areaName = null) {
         $modules = self::getPageModules();
+        if ($areaName == null) {
+            return $modules;
+        }
         if (isset($modules[$areaName])) {
             return $modules[$areaName];
         }
@@ -419,6 +422,10 @@ class Config {
             return true;
         }
         return $GLOBALS['queryLog'];
+    }
+
+    static function getShippingMode () {
+        return $GLOBALS['shippingMode'];
     }
 }
 

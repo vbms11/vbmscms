@@ -83,8 +83,14 @@ class TemplateRenderer {
         }
         
     }
-    
-    function renderMenu($pageId, $menuName) {
+
+    /**
+     * renders a menu in for the given area name
+     * 
+     * @param <type> $pageId
+     * @param <type> $menuName
+     */
+    function renderMenu ($pageId, $menuName) {
 
         echo "<div id='vcms_area_$menuName' >";
         foreach (Context::getModules($menuName) as $module) {
@@ -94,20 +100,39 @@ class TemplateRenderer {
     }
 
     /**
+     * renders a static module by sysname and area name
+     *
+     * @param <type> $pageId
+     * @param <type> $moduleName
+     * @param <type> $areaName
+     */
+    function renderStaticModule ($pageId, $moduleName, $areaName) {
+
+        echo "<div id='vcms_area_$areaName' >";
+        foreach (Context::getModules($areaName) as $areaModules) {
+            foreach ($areaModules as $areaModule) {
+                if ($areaModule->moduleAreaName == $areaName) {
+                    ModuleModel::renderModuleObject($module);
+                }
+            }
+        }
+        echo "</div>";
+    }
+
+    /**
      * renders the html header
      */
     function renderHtmlHeader () {
 
-        $keywords = ""; $title = ""; $description = "";
-
         $page = Context::getPage();
-
+        
+        // print page meta data
+        $keywords = ""; $title = ""; $description = "";
         if ($page != null) {
             $title = htmlentities($page->title, ENT_QUOTES);
             $keywords = htmlentities($page->keywords, ENT_QUOTES);
             $description = htmlentities($page->description, ENT_QUOTES);
         }
-
         ?>
         <title><?php echo $title; ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
@@ -116,6 +141,60 @@ class TemplateRenderer {
         <meta name="keywords" content="<?php echo $keywords; ?>" />
         <meta name="description" content="<?php echo $description; ?>" />
         <meta name="robots" content="index, follow" />
+        <?php
+
+        // print page resource links
+        $headerStyles = array();
+        $headerScripts = array();
+
+        // get module resouces
+        $modulesByArea = Context::getModules();
+        var_dump($modulesByArea);
+        foreach ($modulesByArea as $modulesInArea) {
+            foreach ($modulesInArea as $module) {
+                $scripts = $module->getScripts();
+                if (!empty($scripts)) {
+                    foreach ($scripts as $script) {
+                        if (strpos($script,'/') === false) {
+                            $link = ResourcesModel::createModuleResourceLink($module, $script);
+                        } else {
+                            $link = $script;
+                        }
+                        $headerScripts[$link] = $link;
+                    }
+                }
+                $styles = $module->getStyles();
+                if (!empty($styles)) {
+                    foreach ($styles as $style) {
+                        if (strpos($style,'/') === false) {
+                            $link = ResourcesModel::createModuleResourceLink($module, $style);
+                        } else {
+                            $link = $style;
+                        }
+                        $headerStyles[$link] = $link;
+                    }
+                }
+            }
+        }
+
+        // get template resources
+        $template = TemplateModel::getTemplateObj($page);
+        $styles = $template->getStyles();
+        if (!Common::isEmpty($styles)) {
+            $templateStylePaths = $template->getResourcePaths($styles);
+            foreach ($templateStylePaths as $templateStylePath) {
+                $headerStyles[$templateStylePath] = $templateStylePath;
+            }
+        }
+        $scripts = $template->getScripts();
+        if (!Common::isEmpty($scripts)) {
+            $templateScriptPaths = $template->getResourcePaths($scripts);
+            foreach ($templateScriptPaths as $templateScriptPath) {
+                $headerScripts[$templateScriptPath] = $templateScriptPath;
+            }
+        }
+
+        ?>
         <link rel="shortcut icon" href="<?php echo ResourcesModel::createTemplateResourceLink("favicon.ico"); ?>" type="image/x-icon" />
         <link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-1.6.2.min.js"></script>
@@ -135,83 +214,17 @@ class TemplateRenderer {
         <!-- elFinder -->
         <link rel="stylesheet" href="resource/js/elfinder/css/elfinder.css" type="text/css" media="screen" title="no title" charset="utf-8"/>
         <script src="resource/js/elfinder/js/elfinder.min.js" type="text/javascript" charset="utf-8"></script>
-	
         <link type="text/css" href="resource/js/valums-file-uploader/client/fileuploader.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/valums-file-uploader/client/fileuploader.js"></script>
-        
         <link type="text/css" href="resource/js/contextmenu/jquery.contextmenu.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/contextmenu/jquery.contextmenu.js"></script>
-        
-        
-        
         <?php
-        
-        $headerStyles = array();
-        $headerScripts = array();
-        
-        // get module resouces
-        $modulesByArea = TemplateModel::getTemplateAreas(Context::getPageId());
-        $modules = array();
-        foreach ($modulesByArea as $moduleArea) {
-            foreach ($moduleArea as $module) {
-                if (!isset($modules[$module->typeid])) {
-                    $modules[$module->typeid] = $module;
-                }
-            }
-        }
-        foreach ($modules as $module) {
-            $moduleObj = ModuleModel::getModuleClass($module);
-            $styles = $moduleObj->getStyles();
-            if ($styles != null || count($styles) != 0) {
-                foreach ($styles as $style) {
-                    $link = ResourcesModel::createModuleResourceLink($module, $style);
-                    $headerStyles[$link] = $link;
-                }
-            }
-            $scripts = $moduleObj->getScripts();
-            if ($scripts != null || count($scripts) != 0) {
-                foreach ($scripts as $script) {
-                    $link = ResourcesModel::createModuleResourceLink($module, $script);
-                    $headerScripts[$link] = $link;
-                }
-            }
-        }
 
-        // render module styles
+        // render style links
         foreach ($headerStyles as $style) {
             echo '<link rel="stylesheet" type="text/css" href="'.$style.'" />'.PHP_EOL.'        ';
         }
-        // render module scripts
-        foreach ($headerScripts as $script) {
-            echo '<script type="text/javascript" src="'.$script.'" ></script>'.PHP_EOL.'        ';
-        }
-        
-        // get template resources
-        $template = TemplateModel::getTemplateObj($page);
-        $styles = $template->getStyles();
-        if (!Common::isEmpty($styles)) {
-            $templateStylePaths = $template->getResourcePaths($styles);
-            foreach ($templateStylePaths as $templateStylePath) {
-                $headerStyles[$templateStylePath] = $templateStylePath;
-            }
-        }
-        $scripts = $template->getScripts();
-        if (!Common::isEmpty($scripts)) {
-            $templateScriptPaths = $template->getResourcePaths($scripts);
-            foreach ($templateScriptPaths as $templateScriptPath) {
-                $headerScripts[$templateScriptPath] = $templateScriptPath;
-            }
-        }
-        
-        // menu styles and scripts
-        echo '<link rel="stylesheet" type="text/css" href="modules/pages/styles.css.php" />'.PHP_EOL.'        ';
-        echo '<script type="text/javascript" src="modules/pages/js/menu.js" ></script>'.PHP_EOL.'        ';
-
-        // render template styles
-        foreach ($headerStyles as $style) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$style.'" />'.PHP_EOL.'        ';
-        }
-        // render template scripts
+        // render script links
         foreach ($headerScripts as $script) {
             echo '<script type="text/javascript" src="'.$script.'" ></script>'.PHP_EOL.'        ';
         }
@@ -278,9 +291,13 @@ class TemplateRenderer {
     }
     
     function renderTrackerScript ($page) {
-	// echo $page->pagetrackerscript.PHP_EOL;
-        // echo $page->sitetrackerscript.PHP_EOL;
-	// echo $page->domaintrackerscript.PHP_EOL;
+        if (!empty($page->pagetrackerscript) || !empty($page->sitetrackerscript) || !empty($page->domaintrackerscript)) {
+            echo "<script>";
+            // echo $page->pagetrackerscript.PHP_EOL;
+            // echo $page->sitetrackerscript.PHP_EOL;
+            // echo $page->domaintrackerscript.PHP_EOL;
+            echo "</script>";
+        }
     }
     
     function renderFooter () {

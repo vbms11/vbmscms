@@ -375,7 +375,7 @@ class PagesView extends XModule {
                             $name = ($pages[$i]->name == "") ? "Bitte Name vergeben" : $pages[$i]->name;
                             //if ($level < $_SESSION['levels']) {
                                 ?>
-                                <a href="<?php echo parent::link(array("menu"=>$menu,"parent"=>$pages[$i]->id)); ?>"><?php echo $name; ?></a>
+                            <a href="<?php echo parent::link(array("menu"=>$menu,"parent"=>$pages[$i]->id)); ?>"><?php echo Common::htmlEscape($name); ?></a>
                                 <?php
                             //} else {
                             //    echo $name;

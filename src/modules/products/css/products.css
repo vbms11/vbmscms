@@ -5,9 +5,6 @@
     height:100px;
 }
 
-
-
-
 .tableLabel {
     width: 250px;
     text-align: right;
@@ -75,20 +72,30 @@
 
 /* product page */
 
-.productPageSlideShow {
+.productPagePanel .productPageSlideShow {
 
 }
-.productPageRight {
+.productPagePanel .productImage {
+    max-width:300px;
+    max-height:300px;
+}
+.productPagePanel .productGalleryImages {
+    margin: 0 20px 20px 0;
+    width: 170px;
+    height: 170px;
+    float: left;
+}
+.productPagePanel .productPageRight {
     float:right;
     width: 250px;
 }
-.productPageRight h1 {
+.productPagePanel .productPageRight h1 {
     margin-bottom: 0px;
 }
-.productPageRight input {
+.productPagePanel .productPageRight input {
     margin-top: 10px;
 }
-.productPageRight button {
+.productPagePanel .productPageRight button {
     text-transform:uppercase;
     background: black;
     color: rgb(255, 221, 0);
@@ -98,20 +105,20 @@
     margin-top: 20px;
     font-weight: bold;
 }
-.productPageCenter {
+.productPagePanel .productPageCenter {
     margin-right: 350px;
 }
-.productsGroupTitle {
+.productPagePanel .productsGroupTitle {
     background: rgb(232, 232, 232);
     margin-bottom: 25px;
     padding: 3px 3px 3px 15px;
 }
-.productsGroupTitle h1 {
+.productPagePanel .productsGroupTitle h1 {
     margin: 0px;
     padding: 0px;
 }
 
-/* products module */
+/* products groups module */
 
 .productGroupsTable {
     margin-top: 10px;
@@ -135,5 +142,20 @@
     background: #f0f0f0;
 }
 
+/* order steps */
 
-
+.orderStepsPanel {
+    background: rgb(230,230,230);
+    border: 1px solid silver;
+}
+.orderStep {
+    background: rgb(220,220,220);
+    padding: 5px 10px;
+    margin: 5px 0 5px 5px;
+    float:left;
+    border: 1px solid silver;
+}
+.orderStepCurrent {
+    background: rgb(230,230,230);
+    border: 1px solid white;
+}

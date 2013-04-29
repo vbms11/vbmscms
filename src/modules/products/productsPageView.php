@@ -374,9 +374,27 @@ class ProductsPageView extends XModule {
     function printProductPage () {
         $product = ProductsPageModel::getProduct($_GET['id'], Context::getLang());
         ?>
-        <div class="panel">
+        <div class="productPagePanel">
             <div class="productPageSlideShow">
-                <img class="productsImage imageLink" src="<?php echo ResourcesModel::createResourceLink("products", $product->img); ?>" alt=""/>
+                <?php
+                if (!empty($product->gallery)) {
+                    $images = GalleryModel::getImages($product->galleryid);
+                    foreach ($images as $image) {
+                        $imageLink = ResourcesModel::createResourceLink("gallery",$image->image);
+                        ?>
+                        <div class="productGalleryImages shadow">
+                            <a href="<?php echo $imageLink; ?>">
+                                <img class="imageLink" width="170" height="170" src="<?php echo $imageLink; ?>" alt=""/>
+                            </a>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <img class="productImage shadow imageLink" src="<?php echo ResourcesModel::createResourceLink("products", $product->img); ?>" alt=""/>
+                    <?php
+                }
+                ?>
             </div>
             <div class="productPageRight">
                 <h1><?php echo Common::htmlEscape($product->price)." ".Config::getCurrency(); ?></h1>

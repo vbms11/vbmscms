@@ -12,6 +12,9 @@ class PaymentModule extends XModule {
     // mode
     const mode_test         = 1;
     const mode_live         = 2;
+    // shipping
+    const shipping_total = 1;
+    const shipping_highest = 2;
 
     function onProcess () {
         
@@ -49,6 +52,37 @@ class PaymentModule extends XModule {
                 $user = UsersModel::getUser($order->userid);
                 $orderSent = false;
                 $orderPayed = false;
+
+                // order info email
+                $emailText = "";
+                // product list
+                $ordersText = "<ul>";
+                foreach ($products as $product) {
+                    $quantity = Common::htmlEscape($product->quantity);
+                    $productName = Common::htmlEscape($product->titel);
+                    $ordersText .= "<li>$quantity x $productName</li>";
+                }
+                $ordersText .= "</ul>";
+                // order details
+                $detailsText = "<table>";
+                $table = VirtualDataModel::getTableById($order->orderform);
+                $columns = VirtualDataModel::getColumns($table->name);
+                $objectAttribs = VirtualDataModel::getRowByObjectIdAsArray($order->orderform, $order->objectid);
+                $rowNamesValues = array();
+                $oddColl = true;
+
+                foreach ($columns as $column) {
+                    if ($column->edittype == VirtualDataModel::$dm_type_boolean) {
+                        $detailsText .= "<tr " . ($oddColl ? "style='background-color:rgb(240,240,240)'" : "") . "><td style='text-align:right;'> </td><td>" . $objectAttribs[$column->name] . " - " . $column->name . "</td></tr>";
+                    } else {
+                        $detailsText .= "<tr " . ($oddColl ? "style='background-color:rgb(240,240,240)'" : "") . "><td style='text-align:right;'>" . $column->name . ": </td><td>" . $objectAttribs[$column->name] . "</td></tr>";
+                    }
+                    $oddColl = !$oddColl;
+                }
+                $detailsText .= "</table>";
+                // order link
+                $orderLink = "<a href='".NavigationModel::getSitePath().NavigationModel::createStaticPageLink("shopBasket", array("basket" => Context::getUserId()), false)."'>Click Here!</a>";
+                // payment information
                 switch ($_GET['type']) {
                     case self::type_creditcard:
                         // save info
@@ -59,17 +93,13 @@ class PaymentModule extends XModule {
                         OrdersModel::addOrderAttribute("payments.creditcard.number",            $_POST["number"],   $orderId);
                         // send email
                         $emailText = parent::param("payments.edit.creditcard.email");
-                        $detailsText = PaymentModule::getCreditCardText();
-                        $detailsText = str_replace("%details%", $detailsText, $emailText);
-                        EmailUtil::sendHtmlEmail($user->email, parent::param("emailSubject"), $emailText, parent::param("emailFrom"));
+                        $paymentDetails = PaymentModule::getCreditCardText();
                         $orderSent = true;
                         break;
                     case self::type_transfer:
                         // send email
                         $emailText = parent::param("payments.edit.transfer.email");
-                        $detailsText = PaymentModule::getDebitText();
-                        $detailsText = str_replace("%details%", $detailsText, $emailText);
-                        EmailUtil::sendHtmlEmail($user->email, parent::param("emailSubject"), $emailText, parent::param("emailFrom"));
+                        $paymentDetails = PaymentModule::getDebitText();
                         $orderSent = true;
                         break;
                     case self::type_paypal:
@@ -92,7 +122,6 @@ class PaymentModule extends XModule {
                                 if (strcmp ($res, "VERIFIED") == 0) {
                                     // PAYMENT VALIDATED & VERIFIED!
                                     $emailText = parent::param("payments.edit.paypal.email");
-                                    EmailUtil::sendHtmlEmail($user->email, parent::param("emailSubject"), $emailText, parent::param("emailFrom"));
                                     $orderSent = true;
                                     $orderPayed = true;
                                 } else if (strcmp ($res, "INVALID") == 0) {
@@ -111,12 +140,26 @@ class PaymentModule extends XModule {
                         // send email
                         $emailText = parent::param("payments.edit.debit.email");
                         $detailsText = PaymentModule::getDebitText();
-                        $detailsText = str_replace("%details%", $detailsText, "payments.edit.debit.email");
-                        EmailUtil::sendHtmlEmail($user->email, parent::param("emailSubject"), $emailText, parent::param("emailFrom"));
                         $orderSent = true;
                         break;
                 }
                 if ($orderSent) {
+                    // replace placeholders
+                    $emailText = str_replace("&lt;orderText&gt;", $ordersText, $emailText);
+                    $emailText = str_replace("&lt;detailText&gt;", $detailsText, $emailText);
+                    $emailText = str_replace("&lt;viewLink&gt;", $orderLink, $emailText);
+                    $detailsText = str_replace("&lt;paymentDetails&gt;", $detailsText, $emailText);
+                    // send the email
+                    if (!empty($order->roleid)) {
+                        // send to role group
+                        $emails = UsersModel::getUsersEmailsByCustomRoleId($order->roleid);
+                        foreach ($emails as $email) {
+                            EmailUtil::sendHtmlEmail($email, parent::param("emailSubject"), $emailText, parent::param("emailSender"));
+                        }
+                        // send to customer
+                        EmailUtil::sendHtmlEmail($user->email, parent::param("emailSubject"), $emailText, parent::param("emailFrom"));
+                    }
+                    // set order status
                     $status = 1;
                     if ($orderPayed) {
                         $status = 2;
@@ -130,9 +173,10 @@ class PaymentModule extends XModule {
                     NavigationModel::redirectStaticModule("shopBasket",array("action"=>"orderSent"));
                 }
                 break;
+            default:
         }
     }
-
+    
     function onView () {
 
         switch (parent::getAction()) {
@@ -269,6 +313,15 @@ class PaymentModule extends XModule {
             <form method="post" action="<?php echo parent::link(array("action"=>"update")); ?>">
                 <table class="expand">
                 <tr>
+                <td class="contract">
+                    <b>Shipping Mode: </b>
+                </td><td>
+                    <?php
+                    InputFeilds::printSelect("shippingMode", parent::param("shippingMode"), array(self::shipping_total=>"Total shipping",self::shipping_highest=>"Only Highest shipping"));
+                    ?>
+                </td>
+                </tr>
+                <tr>
                 <td class="contract"><?php echo parent::getTranslation("payments.paypal.mode"); ?></td>
                 <td><?php InputFeilds::printTextFeild("paypalUrl",parent::param("paypalUrl")); ?></td>
                 </tr>
@@ -292,6 +345,9 @@ class PaymentModule extends XModule {
                 <td><?php echo parent::getTranslation("payments.debit.number"); ?></td>
                 <td><?php InputFeilds::printTextFeild("payments_debit_number",parent::param("payments.debit.number")); ?></td>
                 </tr>
+                <tr><td colspan="2">
+                    Here you can edit the order email. the following placeholders will be replaced. &lt;orderText&gt; will be replaced with a list of the ordered products, &lt;detailText&gt; is replaced with the details entered in the order form, &lt;viewLink&gt; is replaced with a link to view the order, &lt;paymentDetails&gt; is replaced with the payment method details.
+                </td></tr>
                 <tr><td colspan="2"><?php echo parent::getTranslation("payments.edit.debit.email"); ?></td></tr>
                 <tr><td colspan="2"><?php InputFeilds::printHtmlEditor("payments_edit_debit_email",parent::param("payments.edit.debit.email")); ?></td></tr>
                 <tr><td colspan="2"><?php echo parent::getTranslation("payments.edit.transfer.email"); ?></td></tr>
@@ -314,9 +370,17 @@ class PaymentModule extends XModule {
     }
 
     function renderMainView() {
-        // $images = GalleryModel::getImages(parent::param("gallery"));
+        $orderId = $_GET['id'];
+        $order = OrdersModel::getOrder($orderId);
+        $products = OrdersModel::getOrderProducts($orderId);
         ?>
         <div class="panel paymentPanel">
+            <div class="orderStepsPanel">
+                <div class="orderStep"><?php echo parent::getTranslation("order.step.basket"); ?></div>
+                <div class="orderStep"><?php echo parent::getTranslation("order.step.details"); ?></div>
+                <div class="orderStep orderStepCurrent"><?php echo parent::getTranslation("order.step.payment"); ?></div>
+                <div class="clear"></div>
+            </div>
             <div class="paymentMethodSelection">
                 <table><tr><td>
                 <label for="paymentMethod"><?php echo parent::getTranslation("payments.payment.method"); ?></label>
@@ -352,6 +416,9 @@ class PaymentModule extends XModule {
                         break;
                 }
                 ?>
+            </div>
+            <div class="paymentBillPanel">
+                <?php $this->printBillView(); ?>
             </div>
         </div>
         <script>
@@ -512,6 +579,65 @@ class PaymentModule extends XModule {
             $(object).button();
         });
         </script>
+        <?php
+    }
+
+    function printBillView () {
+        $order = OrdersModel::getOrder($_GET['id']);
+        ?>
+        <table width="100%" class="shopBasketTable">
+            <tr>
+                <td class="contract"><b><?php echo parent::getTranslation("cart.quantity"); ?></b></td>
+                <td style="width:20%"><b><?php echo parent::getTranslation("cart.products"); ?></b></td>
+                <td style="width:20%"></td>
+                <td style="width:20%"><b><?php echo parent::getTranslation("cart.price"); ?></b></td>
+                <td style="width:20%"><b><?php echo parent::getTranslation("cart.shipping"); ?></b></td>
+                <td style="width:20%"></td>
+            </tr>
+            <?php
+            $priceTotal = 0;
+            $shippingMax = 0;
+            $shippingTotal = 0;
+            foreach ($order as $product) {
+                $priceTotal += $product->price * $product->quantity;
+                $shippingTotal += $product->shipping * $product->quantity;
+                if ($product->shipping > $shippingMax) {
+                    $shippingMax = $product->shipping;
+                }
+                ?>
+                <tr>
+                    <td class='nowrap' style='text-align:right;'><b><?php echo $product->quantity; ?> x </b></td>
+                    <td><?php echo $product->titel; ?></td>
+                    <td><img class="cartProductImage" src="<?php echo ResourcesModel::createResourceLink("products", $product->img); ?>" alt=""/></td>
+                    <td><?php echo number_format($product->price * $product->quantity, 2).Config::getCurrency(); ?></td>
+                    <td>
+                    <?php
+                        if (parent::param("shippingMode") == self::shipping_total) {
+                            echo number_format($product->shipping * $product->quantity, 2) .Config::getCurrency();
+                        }
+                    ?>
+                    </td>
+                    <td></td>
+                </tr>
+                <?php
+            }
+        ?>
+        <tr>
+            <td></td>
+            <td></td>
+            <td><b><?php echo parent::param("cart.total"); ?></b></td>
+            <td><b><?php echo $priceTotal.Config::getCurrency(); ?></b></td>
+            <td><b>
+            <?php
+                if (parent::param("shippingMode") == self::shipping_highest) {
+                    $shippingTotal = $shippingMax;
+                }
+                echo number_format($shippingTotal, 2).Config::getCurrency();
+            ?>
+            </b></td>
+            <td><b><?php echo number_format($shippingTotal + $priceTotal, 2).Config::getCurrency(); ?></b></td>
+        </tr>
+        </table>
         <?php
     }
 

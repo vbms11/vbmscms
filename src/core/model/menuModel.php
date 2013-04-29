@@ -194,7 +194,7 @@ class MenuModel {
         else if ($parent > -1)
             $query .= " and m.parent = '$parent'";
         $query .= " order by m.position asc";
-        //echo $query;
+ echo $query;
         $results = Database::queryAsArray($query);
         $pages = array();
         foreach ($results as $row) {
@@ -237,22 +237,21 @@ class MenuModel {
     static function createPageInMenu ($pageId,$menuType,$menuParent,$lang) {
         $pageId = mysql_real_escape_string($pageId);
         $menuType = mysql_real_escape_string($menuType);
-        $menuParent = mysql_real_escape_string($menuParent);
         $lang = mysql_real_escape_string($lang);
         // add page to menu
-        if ($menuParent == '' || $menuParent == null) {
+        if (empty($menuParent)) {
             $parentStr = "null";
         } else {
+            $menuParent = mysql_real_escape_string($menuParent);
             $parentStr = "'$menuParent'";
         }
-	$result = Database::queryAsArray("select 1 as doseexist from t_menu where page = '$pageId' and lang = '$lang'");
+        $result = Database::queryAsArray("select 1 as doseexist from t_menu where page = '$pageId' and lang = '$lang'");
         if (!Common::isEmpty($result)) {
-		// update t_menu
-	} else {
-		$nextPosition = MenuModel::getNextMenuPosition();
-        	Database::query("insert into t_menu(page,type,active,parent,lang,position) values('$pageId','$menuType','0',$parentStr,'$lang','$nextPosition')");
-	}
-	
+            // update t_menu
+        } else {
+            $nextPosition = MenuModel::getNextMenuPosition();
+                Database::query("insert into t_menu(page,type,active,parent,lang,position) values('$pageId','$menuType','0',$parentStr,'$lang','$nextPosition')");
+        }
     }
     
     static function updatePageInMenu ($pageId,$menuType,$menuParent,$lang) {

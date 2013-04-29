@@ -98,6 +98,9 @@ class ShopBasketView extends XModule {
                 break;
             case "sendOrder":
                 if (Context::hasRole("shop.basket.details.edit")) {
+
+
+
                     $products = OrdersModel::getOrderProducts($_GET['id']);
                     $order = OrdersModel::getOrder($_GET['id']);
 
@@ -112,59 +115,8 @@ class ShopBasketView extends XModule {
                         break;
                     } else {
                         unset($_SESSION['basket.order.send']);
-
-                        // send info mail
-                        $emailText = parent::param("emailText");
-
-                        $ordersText = "<ul>";
-                        foreach ($products as $product) {
-                            $quantity = Common::htmlEscape($product->quantity);
-                            $productName = Common::htmlEscape($product->titel);
-                            $ordersText .= "<li>$quantity x $productName</li>";
-                        }
-                        $ordersText .= "</ul>";
-
-                        //
-                        $detailsText = "<table>";
-                        $table = VirtualDataModel::getTableById($order->orderform);
-                        $columns = VirtualDataModel::getColumns($table->name);
-                        $objectAttribs = VirtualDataModel::getRowByObjectIdAsArray($order->orderform, $order->objectid);
-                        $rowNamesValues = array();
-                        $oddColl = true;
-
-                        foreach ($columns as $column) {
-                            if ($column->edittype == VirtualDataModel::$dm_type_boolean) {
-                                $detailsText .= "<tr " . ($oddColl ? "style='background-color:rgb(240,240,240)'" : "") . "><td style='text-align:right;'> </td><td>" . $objectAttribs[$column->name] . " - " . $column->name . "</td></tr>";
-                            } else {
-                                $detailsText .= "<tr " . ($oddColl ? "style='background-color:rgb(240,240,240)'" : "") . "><td style='text-align:right;'>" . $column->name . ": </td><td>" . $objectAttribs[$column->name] . "</td></tr>";
-                            }
-                            $oddColl = !$oddColl;
-                        }
-                        $detailsText .= "</table>";
-
-                        $orderLink = "<a href='".NavigationModel::getSitePath().NavigationModel::createStaticPageLink("shopBasket", array("basket" => Context::getUserId()), false)."'>Click Here!</a>";
-
-                        $emailText = str_replace("&lt;orderText&gt;", $ordersText, $emailText);
-                        $emailText = str_replace("&lt;detailText&gt;", $detailsText, $emailText);
-                        $emailText = str_replace("&lt;viewLink&gt;", $orderLink, $emailText);
-
-                        if ($order->distributorid == null) {
-                            // send to role group
-                            $emails = UsersModel::getUsersEmailsByCustomRoleId($order->roleid);
-                            foreach ($emails as $email) {
-                                EmailUtil::sendHtmlEmail($email, parent::param("emailSubject"), $emailText, parent::param("emailSender"));
-                            }
-                        } else {
-                            // send to user
-                            if (!empty($order->distributorid)) {
-                                $email = UsersModel::getUserEmailById($order->distributorid);
-                                EmailUtil::sendHtmlEmail($email, parent::param("emailSubject"), $emailText, parent::param("emailSender"));
-                            } else {
-                                echo "Error: Could not sent email to distributor.";
-                            }
-                        }
                         
-                        // redirect user to pay
+                        // redirect user to payment
                         NavigationModel::redirectStaticModule("payment",array("id"=>$_GET['id']));
                     }
                 }
@@ -427,45 +379,51 @@ class ShopBasketView extends XModule {
         $order = OrdersModel::getOrder($orderId);
         ?>
         <div class="panel">
-        <?php
-        $table = VirtualDataModel::getTableById($order->orderform);
-        if ($order->objectid == null) {
-            ?>
-            <form id="objectDetailsForm" method="post" action="<?php echo parent::link(array("action"=>"createObject", "id"=>$orderId)); ?>">
-                <div style="text-align: right;">
-                    <button class="btnSave"><?php echo parent::getTranslation("cart.send"); ?></button>
-                    <button class="btnCancel"><?php echo parent::getTranslation("cart.cancel"); ?></button>
-                </div>
-                <?php
-                DynamicDataView::renderCreateObject($table->name, parent::link(), parent::link(array("action" => "createObject", "id" => $orderId)));
-                ?>
-                <div style="text-align: right;">
-                    <button class="btnSave"><?php echo parent::getTranslation("cart.send"); ?></button>
-                    <button class="btnCancel"><?php echo parent::getTranslation("cart.cancel"); ?></button>
-                </div>
-            </form>
-            <script>
-            $(".btnSave").each(function(key,value){
-                $(value).button().click(function(e){
-                    if (validateForm(<?php echo DynamicDataView::renderValidateJs($table->name); ?>,'<?php echo parent::param("submitMessage")?>')) {
-                        $("#objectDetailsForm").submit();
-                    } else {
-                        e.preventDefault();
-                        return false;
-                    }
-                });
-            });
-            $(".btnCancel").each(function(key,value){
-                $(value).button().click(function(){
-                    callUrl("<?php echo parent::link(); ?>");
-                });
-            });
-            </script>
+            <div class="orderStepsPanel">
+                <div class="orderStep"><?php echo parent::getTranslation("order.step.basket"); ?></div>
+                <div class="orderStep orderStepCurrent"><?php echo parent::getTranslation("order.step.details"); ?></div>
+                <div class="orderStep"><?php echo parent::getTranslation("order.step.payment"); ?></div>
+                <div class="clear"></div>
+            </div>
             <?php
-        } else {
-            DynamicDataView::editObject($table->name, $order->objectid, "", $order->orderform, parent::link(array("action" => "editObject", "id" => $orderId)), parent::link(array("action" => "editObject", "id" => $orderId)));
-        }
-        ?>
+            $table = VirtualDataModel::getTableById($order->orderform);
+            if ($order->objectid == null) {
+                ?>
+                <form id="objectDetailsForm" method="post" action="<?php echo parent::link(array("action"=>"createObject", "id"=>$orderId)); ?>">
+                    <div style="text-align: right;">
+                        <button class="btnSave"><?php echo parent::getTranslation("cart.send"); ?></button>
+                        <button class="btnCancel"><?php echo parent::getTranslation("cart.cancel"); ?></button>
+                    </div>
+                    <?php
+                    DynamicDataView::renderCreateObject($table->name, parent::link(), parent::link(array("action" => "createObject", "id" => $orderId)));
+                    ?>
+                    <div style="text-align: right;">
+                        <button class="btnSave"><?php echo parent::getTranslation("cart.send"); ?></button>
+                        <button class="btnCancel"><?php echo parent::getTranslation("cart.cancel"); ?></button>
+                    </div>
+                </form>
+                <script>
+                $(".btnSave").each(function(key,value){
+                    $(value).button().click(function(e){
+                        if (validateForm(<?php echo DynamicDataView::renderValidateJs($table->name); ?>,'<?php echo parent::param("submitMessage")?>')) {
+                            $("#objectDetailsForm").submit();
+                        } else {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                });
+                $(".btnCancel").each(function(key,value){
+                    $(value).button().click(function(){
+                        callUrl("<?php echo parent::link(); ?>");
+                    });
+                });
+                </script>
+                <?php
+            } else {
+                DynamicDataView::editObject($table->name, $order->objectid, "", $order->orderform, parent::link(array("action" => "editObject", "id" => $orderId)), parent::link(array("action" => "editObject", "id" => $orderId)));
+            }
+            ?>
         </div>
         <?php
     }
@@ -640,7 +598,7 @@ class ShopBasketView extends XModule {
                                         <tr>
                                             <td></td>
                                             <td></td>
-                                            <td><b><?php echo parent::param("cart.total"); ?></b></td>
+                                            <td><b><?php echo parent::getTranslation("cart.total"); ?></b></td>
                                             <td><b><?php echo $priceTotal.Config::getCurrency(); ?></b></td>
                                             <td><b>
                                             <?php
