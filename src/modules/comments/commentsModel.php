@@ -8,28 +8,28 @@ class CommentsModel {
         return mysql_fetch_object($result);
     }
     
-    static function getComments ($moduleId,$page=0) {
-        $moduleId = mysql_real_escape_string($moduleId);
-        $page = mysql_real_escape_string($page);
-        $result = Database::query("select * from t_comment where moduleid = '$moduleId'");
-        $comments = array();
-        while ($obj = mysql_fetch_object($result)) {
-            $comments[] = $obj;
+    static function getComments ($dataType, $dataId = null) {
+        $dataType = mysql_real_escape_string($dataType);
+        if ($dataId != null) {
+            $dataId = mysql_real_escape_string($dataId);
+            return Database::queryAsArray("select * from t_comment where datatype = '$dataType' and dataid = '$dataId'");
         }
-        return $comments;
+        return Database::query("select * from t_comment where datatype = '$dataType'");
     }
     
-    static function saveComment ($moduleId,$id,$username,$comment) {
-        $moduleId = mysql_real_escape_string($moduleId);
-        $username = mysql_real_escape_string($username);
+    static function saveComment ($id,$dataType,$dataId,$userId,$comment) {
+        $dataId = mysql_real_escape_string($dataId);
+        $userId = mysql_real_escape_string($userId);
         $comment = mysql_real_escape_string($comment);
+        $dataType = mysql_real_escape_string($dataType);
         if ($id == null) {
-            Database::query("insert into t_comment (moduleid,name,comment,date)
-                values('$moduleId','$username','$comment',now())");
+            Database::query("insert into t_comment (datatype,dataid,userid,comment,date)
+                values('$dataType',$dataId','$userId','$comment',now())");
         } else {
             $id = mysql_real_escape_string($id);
             Database::query("update t_comment set 
-                name = '$username',  comment = '$comment' 
+                userid = '$userId',  comment = '$comment', 
+                datatype = '$dataType', dataid = '$dataId'
                 where id = '$id'");
         }
     }
@@ -37,6 +37,16 @@ class CommentsModel {
     static function deleteComment ($id) {
         $id = mysql_real_escape_string($id);
         Database::query("delete from t_comment where id = '$id'");
+    }
+    
+    static function deleteCommentByType ($dataType, $dataId = null) {
+        $dataType = mysql_real_escape_string($dataType);
+        if ($dataId != null) {
+            $dataId = mysql_real_escape_string($dataId);
+            Database::query("delete from t_comment where datatype = '$dataType' and dataid = '$dataId'");
+        } else {
+            Database::query("delete from t_comment where datatype = '$dataType'");
+        }
     }
 }
 

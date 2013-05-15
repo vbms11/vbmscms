@@ -68,6 +68,7 @@ interface Translatable {
  */
 abstract class XModule implements IModule, Translatable {
     public $moduleId;
+    public $include;
     public $params = array();
     public $tanslations = array();
     public $paramsDirty = false;
@@ -185,7 +186,43 @@ abstract class XModule implements IModule, Translatable {
     }
     // creates an alias for a value
     function alias ($var) {
-        return Common::hash($this->moduleId."_".$var);
+        return Common::hash($this->moduleId."_".$var,false,true);
+    }
+    function log ($message) {
+        Log::info($message);
+    }
+    function get ($name) {
+        $value = isset($_GET[$name]) ? $_GET[$name] : null;
+        if ($value == null) {
+            $value = isset($_GET[$this->moduleId.'_'.$name]) ? $_GET[$this->moduleId.'_'.$name] : null;
+        }
+        if ($value == null) {
+            $alias = $this->alias($name);
+            $value = isset($_GET[$alias]) ? $_GET[$alias] : null;
+        }
+        return $value;
+    }
+    function post ($name) {
+        $value = isset($_POST[$name]) ? $_POST[$name] : null;
+        if ($value == null) {
+            $value = isset($_POST[$this->moduleId.'_'.$name]) ? $_POST[$this->moduleId.'_'.$name] : null;
+        }
+        if ($value == null) {
+            $alias = $this->alias($name);
+            $value = isset($_POST[$alias]) ? $_POST[$alias] : null;
+        }
+        return $value;
+    }
+    function request ($name) {
+        $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : null;
+        if ($value == null) {
+            $value = isset($_REQUEST[$this->moduleId.'_'.$name]) ? $_REQUEST[$this->moduleId.'_'.$name] : null;
+        }
+        if ($value == null) {
+            $alias = $this->alias($name);
+            $value = isset($_REQUEST[$alias]) ? $_REQUEST[$alias] : null;
+        }
+        return $value;
     }
 }
 

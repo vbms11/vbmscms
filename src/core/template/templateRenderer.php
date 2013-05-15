@@ -5,9 +5,18 @@ class TemplateRenderer {
     /**
      * returns the pages in given menu
      */
-    function getMenu ($menu) {
+    function getMenu ($menu, $parent = null) {
         if ($this->menus == null) {
             $this->menus = MenuModel::getPagesInMenu();
+        }
+        if (!empty($parent)) {
+            $childs = array();
+            foreach ($this->menus as $menu) {
+                if ($menu->parent == $parent) {
+                    $childs[] = $menu;
+                }
+            }
+            return $childs;
         }
         return isset($this->menus[$menu]) ? $this->menus[$menu] : null;
     }
@@ -80,10 +89,9 @@ class TemplateRenderer {
             echo "</div>";
         } else {
             $this->renderTemplateArea($pageId, $teplateArea);
-        }
-        
+        }    
     }
-
+    
     /**
      * renders a menu in for the given area name
      * 
@@ -91,7 +99,20 @@ class TemplateRenderer {
      * @param <type> $menuName
      */
     function renderMenu ($pageId, $menuName) {
-
+        // get the menu module
+        $menuModule = null;
+        $menuAreaModules = Context::getModules($menuName);
+        foreach ($menuAreaModules as $module) {
+            if (isset($module->code) && $module->code == $menuName) {
+                $menuModule = $module;
+            }
+        }
+        // create it if it dose not exist
+        if ($menuModule == null) {
+            $menuModule = TemplateModel::getStaticModule($menuName,$menuName);
+            Context::addModule($menuModule);
+        }
+        // render the menu
         echo "<div id='vcms_area_$menuName' >";
         foreach (Context::getModules($menuName) as $module) {
             ModuleModel::renderModuleObject($module);
@@ -107,7 +128,6 @@ class TemplateRenderer {
      * @param <type> $areaName
      */
     function renderStaticModule ($pageId, $moduleName, $areaName) {
-
         echo "<div id='vcms_area_$areaName' >";
         foreach (Context::getModules($areaName) as $areaModules) {
             foreach ($areaModules as $areaModule) {
@@ -149,16 +169,17 @@ class TemplateRenderer {
 
         // get module resouces
         $modulesByArea = Context::getModules();
-        var_dump($modulesByArea);
         foreach ($modulesByArea as $modulesInArea) {
             foreach ($modulesInArea as $module) {
                 $scripts = $module->getScripts();
                 if (!empty($scripts)) {
                     foreach ($scripts as $script) {
-                        if (strpos($script,'/') === false) {
-                            $link = ResourcesModel::createModuleResourceLink($module, $script);
-                        } else {
+                        if (strpos($script,'http://') === 0 || strpos($script,'https://') === 0) {
                             $link = $script;
+                        } else if (strpos($script,'/') === 0) {
+                            $link = substr($script,1);
+                        } else {
+                            $link = ResourcesModel::createModuleResourceLink($module, $script);
                         }
                         $headerScripts[$link] = $link;
                     }
@@ -166,10 +187,12 @@ class TemplateRenderer {
                 $styles = $module->getStyles();
                 if (!empty($styles)) {
                     foreach ($styles as $style) {
-                        if (strpos($style,'/') === false) {
-                            $link = ResourcesModel::createModuleResourceLink($module, $style);
-                        } else {
+                        if (strpos($style,'http://') === 0 || strpos($style,'https://') === 0) {
                             $link = $style;
+                        } else if (strpos($style,'/') === 0) {
+                            $link = substr($style,1);
+                        } else {
+                            $link = ResourcesModel::createModuleResourceLink($module, $style);
                         }
                         $headerStyles[$link] = $link;
                     }

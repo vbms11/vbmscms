@@ -18,25 +18,26 @@ class GalleryModel {
 
     static function setCategoryOrderKey ($id, $orderKey) {
         $id = mysql_real_escape_string($id);
-        $oderKey = mysql_real_escape_string($orderKey);
+        $orderKey = mysql_real_escape_string($orderKey);
         Database::query("update t_gallery_category set orderkey='$orderKey' where id='$id'");
     }
 
     static function setImageOrderKey ($id, $orderKey) {
         $id = mysql_real_escape_string($id);
-        $oderKey = mysql_real_escape_string($orderKey);
+        $orderKey = mysql_real_escape_string($orderKey);
         Database::query("update t_gallery_image set orderkey='$orderKey' where id='$id'");
     }
 
     // acces
     
-    static function getGallery ($moduleIdOriginal) {
-        $moduleId = mysql_real_escape_string($moduleIdOriginal);
-        $gallery = Database::queryAsObject("select * from t_gallery_page where pageid = '$moduleId'");
+    static function getGallery ($theId, $galleryType = 'page') {
+        $moduleId = mysql_real_escape_string($theId);
+        $galleryType = mysql_real_escape_string($galleryType);
+        $gallery = Database::queryAsObject("select * from t_gallery_page where pageid = '$moduleId' and type = '$galleryType'");
         if ($gallery == null) {
             $rootCategory = GalleryModel::createCategory("root_$moduleId", "root_$moduleId", null, null);
-            Database::query("insert into t_gallery_page (pageid,rootcategory) values('$moduleId','$rootCategory')");
-            return GalleryModel::getGallery($moduleIdOriginal);
+            Database::query("insert into t_gallery_page (pageid,type,rootcategory) values('$moduleId','$type',$rootCategory')");
+            return GalleryModel::getGallery($theId, $galleryType);
         }
         return $gallery;
     }

@@ -5,11 +5,9 @@
 }
 .commentsAvatar {
     min-height: 64px;
-    width: 100px;
+    min-width: 100px;
     float: left;
-    border: 0px 1px 0px 1px solid silver;
-    background: url('../../../resource/img/icons/User.png') no-repeat;
-    background-position: 10px 10px;
+    margin: 10px;
 }
 .commentsBody {
     padding-left: 100px;

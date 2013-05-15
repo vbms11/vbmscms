@@ -53,40 +53,43 @@ class TemplateModel {
         Database::query("delete from t_templatearea where id = '$moduleId'");
     }
 
-    static function getAreaModules ($pageId, $teplateArea = null, $staticModules = null) {
+    static function getAreaModules ($pageId, $templateArea = null, $staticModules = null) {
         
         // make are modules condition
-        if (empty($teplateArea)) {
-            $teplateArea = "";
-        } elseif (is_array($teplateArea)) {
-            foreach ($teplateArea as $key => $area) {
-                $teplateArea[$key] = mysql_real_escape_string($area);
+        $templateAreaClean = null;
+        if (empty($templateArea)) {
+            $templateAreaClean = "";
+        } elseif (is_array($templateArea)) {
+            foreach ($templateArea as $key => $area) {
+                $templateAreaClean[$key] = mysql_real_escape_string($area);
             }
-            $teplateArea = "a.name in ('".implode("','", $teplateArea)."') ";
+            $templateAreaClean = "a.name in ('".implode("','", $templateAreaClean)."') ";
         } else {
-            $teplateArea = "a.name = '".mysql_real_escape_string($teplateArea)."' ";
+            $templateAreaClean = "a.name = '".mysql_real_escape_string($templateArea)."' ";
         }
         
         // make static modules condition
+        $staticModuleNames = array();
+        $staticModulesCondition = null;
         if (empty($staticModules)) {
-            $staticModules = "";
+            $staticModulesCondition = "";
         } elseif (is_array($staticModules)) {
-            foreach ($staticModules as $key => $area) {
-                $staticModules[$key] = mysql_real_escape_string($area);
+            foreach ($staticModules as $staticModule) {
+                $staticModuleNames[] = mysql_real_escape_string($staticModule['name']);
             }
-            $staticModules = "a.code in ('".implode("','", $staticModules)."') ";
+            $staticModulesCondition = "a.code in ('".implode("','", $staticModuleNames)."') ";
         } else {
-            $staticModules = "a.code = '".mysql_real_escape_string($staticModules)."' ";
+            $staticModulesCondition = "a.code = '".mysql_real_escape_string($staticModules['name'])."' ";
         }
 
         // make the condition
         $conditionSql = "";
-        if (!empty($teplateArea) && !empty($staticModules)) {
-            $conditionSql = "((a.pageid = '$pageId' and $teplateArea) or $staticModules)";
-        } elseif (!empty($teplateArea)) {
-            $conditionSql = "(a.pageid = '$pageId' and $teplateArea)";
+        if (!empty($templateAreaClean) && !empty($staticModules)) {
+            $conditionSql = "((a.pageid = '$pageId' and $templateAreaClean) or $staticModulesCondition)";
+        } elseif (!empty($templateAreaClean)) {
+            $conditionSql = "(a.pageid = '$pageId' and $templateAreaClean)";
         } elseif (!empty($staticModules)) {
-            $conditionSql = "$staticModules";
+            $conditionSql = $staticModulesCondition;
         }
 
         // 
@@ -96,36 +99,45 @@ class TemplateModel {
             left join t_module pt on pt.id = a.type
             where $conditionSql
             order by a.position asc");
-
-	// if no area name exists use code instead, this is for static modules
-	foreach ($moduleIncludes as $moduleInclude) {
-		$areaName = trim($moduleInclude->name);
-		if (empty($areaName) && !empty($moduleInclude->code)) {
-			$moduleInclude->name = $moduleInclude->code;
-		}
-	}
-
+        
+	// load static modules if needed (first time a page is loaded)
+        if (!empty($staticModules)) {
+            $staticModulesCreated = false;
+            foreach ($staticModules as $staticModule) {
+                $staticModuleExists = false;
+                foreach ($moduleIncludes as $moduleInclude) {
+                    if ($moduleInclude->code == $staticModule['name']) {
+                        $moduleInclude->name = $moduleInclude->code;
+                        $staticModuleExists = true;
+                    }
+                }
+                if (!$staticModuleExists) {
+                    TemplateModel::createStaticModule($staticModule['name'], $staticModule['type']);
+                    $staticModulesCreated = true;
+                }
+            }
+            if ($staticModulesCreated) {
+                return self::getAreaModules($pageId, $templateArea, $staticModules);
+            }
+        }
 	return $moduleIncludes;
     }
 
     static function getStaticModule ($code, $sysName) {
-        $code = mysql_real_escape_string($code);
-        $sysName = mysql_real_escape_string($sysName);
-        $result = Database::query("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename
+        $acode = mysql_real_escape_string($code);
+        $result = Database::queryAsObject("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename
             from t_templatearea a
             left join t_module pt on pt.id = a.type
-            where a.code = '$code'");
-        $res = mysql_fetch_object($result);
-        if ($res == null) {
+            where a.code = '$acode'");
+        if ($result == null) {
             TemplateModel::createStaticModule($code,$sysName);
             return TemplateModel::getStaticModule($code,$sysName);
         }
-        return $res;
+        return $result;
     }
-
+    
     static function createStaticModule ($code, $sysName) {
         $code = mysql_real_escape_string($code);
-        $sysName = mysql_real_escape_string($sysName);
         $module = ModuleModel::getModuleByName($sysName);
         if ($module == null) {
             return null;
@@ -223,23 +235,23 @@ class TemplateModel {
         }
     }
 
-	static function moveTemplateModule($pageId,$moduleId,$areaName,$position) {
-		$pageId = mysql_real_escape_string($pageId);
-		$moduleId = mysql_real_escape_string($moduleId);
-		$areaName = mysql_real_escape_string($areaName);
-		$position = mysql_real_escape_string($position);
-		// set the area
-		Database::query("update t_templatearea set name = '$areaName', position = '$position' where id = '$moduleId'");
-		// set the order
-		$modules = Database::queryAsArray("select a.id, a.name, a.position, a.pageid from t_templatearea a where a.pageid = '$pageId' and name = '$areaName' order by a.position asc");
-		foreach ($modules as $index => $module) {
-			$currentModuleId = $module->id;
-			if ($currentModuleId == $moduleId) {
-				continue;
-			}
-			Database::query("update t_templatearea set position = '$index' where id = '$currentModuleId'");
-		}
-	}
+    static function moveTemplateModule($pageId,$moduleId,$areaName,$position) {
+        $pageId = mysql_real_escape_string($pageId);
+        $moduleId = mysql_real_escape_string($moduleId);
+        $areaName = mysql_real_escape_string($areaName);
+        $position = mysql_real_escape_string($position);
+        // set the area
+        Database::query("update t_templatearea set name = '$areaName', position = '$position' where id = '$moduleId'");
+        // set the order
+        $modules = Database::queryAsArray("select a.id, a.name, a.position, a.pageid from t_templatearea a where a.pageid = '$pageId' and name = '$areaName' order by a.position asc");
+        foreach ($modules as $index => $module) {
+            $currentModuleId = $module->id;
+            if ($currentModuleId == $moduleId) {
+                continue;
+            }
+            Database::query("update t_templatearea set position = '$index' where id = '$currentModuleId'");
+        }
+    }
 
     static function setArea ($pageId,$name,$type) {
         $pageId = mysql_real_escape_string($pageId);

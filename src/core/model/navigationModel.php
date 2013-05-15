@@ -12,7 +12,6 @@ class NavigationModel {
     // saves next actions in nav.nextAction
 
     static function hasNextAction () {
-        // var_dump($_SESSION["nav.nextAction"]);
         if (isset($_SESSION["nav.nextAction"]) && count($_SESSION["nav.nextAction"]) > 0) {
             return true;
         }

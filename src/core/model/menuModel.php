@@ -189,10 +189,11 @@ class MenuModel {
             where m.type = '$type'";
         if ($active)
             $query .= " and m.active = '1'";
-        if ($parent == null || $parent == '')
+        if (empty($parent)) {
             $query .= " and m.parent is null";
-        else if ($parent > -1)
+        } else {
             $query .= " and m.parent = '$parent'";
+        }
         $query .= " order by m.position asc";
  echo $query;
         $results = Database::queryAsArray($query);

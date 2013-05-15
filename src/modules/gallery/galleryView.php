@@ -5,6 +5,11 @@ require_once('modules/gallery/galleryModel.php');
 
 class GalleryView extends XModule {
     
+    const modePageGallery = 1;
+    const modeUserGallery = 2;
+    const modeCurrentUserGallery = 3;
+    const modeSelectedUserGallery = 4;
+    
     function onProcess () {
         
         if (Context::hasRole("gallery.edit")) {
@@ -134,6 +139,20 @@ class GalleryView extends XModule {
         ?>
         <div class="galleryContainer">
             <?php
+            switch (parent::param("mode")) {
+                case self::modePageGallery:
+                    $galleryPage = GalleryModel::getGallery(parent::getId());
+                    break;
+                case self::modeUserGallery:
+                    // $galleryPage = UsersModel::getUserGallery($_GET['userid']);
+                    break;
+                case self::modeCurrentUserGallery:
+                    $galleryPage = UsersModel::getUserGallery(Context::getUserId());
+                    break;
+                case self::modeSelectedUserGallery:
+                    $galleryPage = UsersModel::getUserGallery(Context::getSelectedUserId());
+                    break;
+            }
             $galleryPage = GalleryModel::getGallery(parent::getId());
             $selCategory = isset($_GET['category']) ? $_GET['category'] : $galleryPage->rootcategory;
             $gallerypage = isset($_GET['gallerypage']) ? $_GET['gallerypage'] : 0;

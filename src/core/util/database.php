@@ -1,15 +1,31 @@
 <?php
 
-$dataSource = null;
-
 class Database {
     
-    static function getDataSource () {
-        global $dataSource;
-        if ($dataSource == null) {
-            $dataSource = DataSourceFactory::getDefaultDataSource();
+    private static $error = null;
+    private static $dataSource = null;
+    private static $defaultDataSourceName = null;
+    
+    static function getError () {
+        return Database::getDataSource()->getError();
+    }
+    
+    static function getTableNames () {
+        return Database::getDataSource()->getTableNames();
+    }
+    
+    static function getTableFeilds ($tableName) {
+        return Database::getDataSource()->getTableFeilds($tableName);
+    }
+    
+    static function getDataSource ($dataSourceName = null) {
+        if ($dataSourceName == null) {
+            $dataSourceName = self::$defaultDataSourceName;
         }
-        return $dataSource;
+        if (!isset(self::$dataSource[$dataSourceName])) {
+            self::$dataSource[$dataSourceName] = DataSourceFactory::getDataSource($dataSourceName);
+        }
+        return self::$dataSource[$dataSourceName];
     }
     
     static function escape (&$vars) {
@@ -31,15 +47,28 @@ class Database {
     }
     
     static function query ($query) {
-        $result = Database::getDataSource()->query($query) or die(Database::getDataSource()->getError());
-        Context::$queryLog[] = $query;
+        Log::query($query);
+        $result = Database::getDataSource()->query($query);
+        $error = Database::getError();
+        if ($error != null) {
+            Context::addError("database::query('".$query."') error: ".$error);
+        } else {
+            self::$error = null;
+        }
         return $result;
     }
     
     static function queryAsObject ($query) {
-        $result = Database::getDataSource()->query($query) or die(Database::getDataSource()->getError());
+        Log::query($query);
+        $result = Database::getDataSource()->query($query);
         $obj = Database::getDataSource()->fetchObject($result);
-        Context::$queryLog[] = $query;
+        $error = Database::getError();
+        if ($error != null) {
+            Context::addError("database::query('".$query."') error: ".$error);
+        } else {
+            self::$error = null;
+        }
+        // var_dump($obj);
         return $obj;
     }
     
@@ -55,6 +84,14 @@ class Database {
                 $ret[] = $obj;
             }
         }
+        $error = Database::getError();
+        if ($error != null) {
+            Context::addError("database::query('".$query."') error: ".$error);
+        } else {
+            self::$error = null;
+        }
+        Log::query($query);
+        // var_dump($ret);
         return $ret;
     }
 
@@ -74,15 +111,27 @@ interface IDataSource {
     function getError ();
     function isAvalible ();
     function connect ();
+    function isConnected ();
+    function getTableNames ();    
+    function getTableFeilds ($tableName);
 }
 
 class MysqlDataSource implements IDataSource {
     
+    private $connected = false;
+    private $error = null;
+    
+    function getTableNames () {
+        return Database::queryAsArray('select tablename from info_schema where database = datebase()');
+    }
+    
+    function getTableFeilds ($tableName) {
+        $tableName = mysql_real_escape_string($tableName);
+        return Database::queryAsArray("select * from info_schema where database = datebase() and tablename = '$tableName'");
+    }
+    
     function query ($query) {
-        if (Config::getQueryLog()) {
-             Context::addQueryToLog($query);
-        }
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysql_query($query) or $this->error = true;
         return $result;
     }
     
@@ -104,7 +153,15 @@ class MysqlDataSource implements IDataSource {
     }
     
     function getError () {
-        return mysql_error();
+        $error = mysql_error();
+        if ($this->error == null && empty($error)) {
+            $error = null;
+        } else {
+            if (empty($error)) {
+                $error = $this->error;
+            }
+        }
+        return $error;
     }
     
     function isAvalible () {
@@ -112,8 +169,18 @@ class MysqlDataSource implements IDataSource {
     }
     
     function connect () {
-        mysql_connect($GLOBALS['dbHost'],$GLOBALS['dbUser'],$GLOBALS['dbPass']) or die(mysql_error());
-        mysql_select_db($GLOBALS['dbName']) or die(mysql_error());
+        if (false !== mysql_connect($GLOBALS['dbHost'],$GLOBALS['dbUser'],$GLOBALS['dbPass']) 
+                && true === mysql_select_db($GLOBALS['dbName'])) {
+            $this->connected = true;
+        } else {
+            $this->connected = false;
+            Context::addError("database::connect() : failed to connect : ".$this->getError());
+        }
+        return $this->connected;
+    }
+    
+    function isConnected () {
+        return $this->connected;
     }
 }
 
@@ -121,6 +188,16 @@ class SqliteDataSource implements IDataSource {
     
     private $database = null;
     private $error = null;
+    private $connected = false;
+    
+    function getTableNames () {
+        return Database::queryAsArray('select tablename from info_schema where database = datebase()');
+    }
+    
+    function getTableFeilds ($tableName) {
+        $tableName = mysql_real_escape_string($tableName);
+        return Database::queryAsArray("select * from info_schema where database = datebase() and tablename = '$tableName'");
+    }
     
     function query ($query) {
         $result = $this->database->queryExec($query, $this->error);
@@ -161,10 +238,15 @@ class SqliteDataSource implements IDataSource {
     function connect () {
         try {
             $this->database = new SQLiteDatabase('myDatabase.sqlite', 0666, $this->error);
+            $this->connected = true;
         } catch(Exception $e) {
-            return false;
+            $this->connected = false;
         }
-        return true;
+        return $this->connected;
+    }
+    
+    function isConnected() {
+        return $this->connected;
     }
 }
 
@@ -174,11 +256,16 @@ class DataSourceFactory {
     
     static function getDefaultDataSource () {
         $dataSource = new MysqlDataSource();
-        if ($dataSource->isAvalible()) {
-            $dataSource->connect();
+        if ($dataSource->isAvalible() && $dataSource->connect()) {
             return $dataSource;
         }
         return $dataSource;
+    }
+    
+    static function getDataSource ($dataSourceName = null) {
+        if ($dataSourceName == null) {
+            return self::getDefaultDataSource();
+        }
     }
 }
 

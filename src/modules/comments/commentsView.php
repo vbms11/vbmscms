@@ -5,14 +5,22 @@ require_once('modules/comments/commentsModel.php');
 
 class CommentsView extends XModule {
 
+    const modePageComments = 1;
+    const modeCurrentUserComments = 2;
+    const modeSelectedUserComments = 3;
+    
     /**
      * called when page is viewed before output stream is filled
      */
     function onProcess () {
         
         switch (parent::getAction()) {
-
             case "save":
+                if (Context::hasRole("comment.edit")) {
+                    parent::param("mode",$_POST['mode']);
+                }
+                break;
+            case "saveComment":
                 if (isset($_GET['id']) && !Common::isEmpty($_GET['id'])) {
                     if (Context::hasRole("comment.edit")) {
                         CommentsModel::saveComment(parent::getId(), $_GET['id'], $_POST['name'], $_POST['comment']);
@@ -26,9 +34,9 @@ class CommentsView extends XModule {
                 }
                 parent::redirect();
                 break;
-            case "delete":
+            case "deleteComment":
                 if (Context::hasRole("comment.delete")) {
-                    CommentsModel::deleteComment($_GET['id']);
+                    CommentsModel::deleteComment(parent::get('id'));
                 }
                 break;
         }
@@ -49,9 +57,6 @@ class CommentsView extends XModule {
             default:
                 $this->renderMainView();
         }
-        
-        
-        
     }
 
     function getStyles () {
@@ -62,12 +67,59 @@ class CommentsView extends XModule {
         return array("comment.post","comment.edit","comment.delete");
     }
     
+    function getTranslations () {
+        return array(
+            "en" => array(
+                "comments.postedon" => "Posted on:",
+                "comments.by" => "by",
+                "comments.email" => "Email:",
+                "comments.name" => "Name (username):",
+                "comments.message" => "Your Comment:"
+            ),
+            "de" => array(
+                "comments.postedon" => "Posted am: ",
+                "comments.by" => "von",
+                "comments.email" => "E-Mail:",
+                "comments.name" => "Name (Benutzername):",
+                "comments.message" => "Dein Commentar:"
+            )
+        );
+    }
+    
+    function renderConfigView () {
+        ?>
+        <div class="panel commentsEditPanel">
+            <form method="post" action="<?php echo parent::link(array("action" => "save")); ?>">
+                <table><tr>
+                    <td><?php echo parent::getTranslation("comments.edit.mode"); ?></td>
+                    <td><?php InputFeilds::printSelect("mode", parent::param("mode"), array("Page Comments" => self::modePageComments, "Current User Comments" => self::modeCurrentUserComments, "Selected User Comments" => self::modeSelectedUserComments)); ?></td>
+                </tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+                </div>
+            </form>
+        </div>
+        <?php
+    }
+    
     function renderMainView () {
         
-        $page = isset($_GET['page']) ? $_GET['page'] : 0;
-        $comments = CommentsModel::getComments(parent::getId(),$page);
-        $pages = floor(count($comments) / 20);
+        $comments = array();
+        switch (parent::param("mode")) {
+            case self::modePageComments:
+                $comments = CommentsModel::getComments("t_moduleinstance", parent::get("id"));
+                break;
+            case self::modeCurrentUserComments:
+                $comments = CommentsModel::getComments("t_users", Context::getUserId());
+                break;
+            case self::modeSelectedUserComments:
+                $comments = CommentsModel::getComments("t_users", Context::getSelectedUserId());
+                break;
+        }
         
+        $page = isset($_GET['page']) ? $_GET['page'] : 0;
+        $pages = floor(count($comments) / 20);
         if ($pages > 1) {
             ?>
             <div class="commentsPages">
@@ -83,21 +135,36 @@ class CommentsView extends XModule {
         }
         if ($comments != null) {
             foreach ($comments as $comment) {
+                Context::getUserHome();
                 ?>
                 <div class="panel commentsPanel">
-                    <div class="commentsAvatar"></div>
+                    <div class="commentsAvatar">
+                        <a href="<?php echo Context::getUserHome($comment->userid); ?>" title="<?php echo $comment->username; ?>">
+                            <?php
+                            if (!empty($comment->userimage)) {
+                                ?>
+                                <img src="<?php echo ResourcesModel::createResourceLink("gallery/small", $comment->userimage); ?>" alt="<?php echo $comment->username; ?>" />
+                                <?php
+                            } else {
+                                ?>
+                                <img src="resouce/img/icons/User.png" alt="" />
+                                <?php
+                            }
+                            ?>
+                        </a>
+                    </div>
                     <div class="commentsBody">
                         <div class="commentsHeader">
                             <?php
                             if (Context::hasRole("comment.edit")) {
                                 ?>
                                 <div style="float: right;">
-                                    <a href="<?php echo parent::link(array("action"=>"editcomment","id"=>$comment->id)); ?>"><img src="resource/img/edit.png" alt=""/></a>
-                                    <a href="<?php echo parent::link(array("action"=>"delete","id"=>$comment->id)); ?>"><img src="resource/img/delete.png" alt=""/></a>
+                                    <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$comment->id)); ?>"><img src="resource/img/edit.png" alt=""/></a>
+                                    <a href="<?php echo parent::link(array("action"=>"deleteComment","id"=>$comment->id)); ?>"><img src="resource/img/delete.png" alt=""/></a>
                                 </div>
                                 <?php
                             }
-                            echo "Posted on: ".Common::htmlEscape($comment->date)." by ".Common::htmlEscape($comment->name);
+                            echo parent::getTranslation("comments.postedon")." ".Common::htmlEscape($comment->date)." ".parent::getTranslation("comments.by")." ".Common::htmlEscape($comment->name);
                             ?>
                         </div>
                         <div class="commentsComment">
@@ -110,19 +177,35 @@ class CommentsView extends XModule {
         }
         ?>
         <div class="panel commentsPanel">
-            <div class="commentsAvatar"></div>
+            <div class="commentsAvatar">
+                <?php
+                if (Context::isLoggedIn()) {
+                    ?>
+                    <img src="<?php echo ResourcesModel::createResourceLink("gallery/small", $comment->userimage); ?>" alt="<?php echo $comment->username; ?>" />
+                    <?php
+                } else {
+                    ?>
+                    <img src="resouce/img/icons/User.png" alt="" />
+                    <?php
+                }
+                ?>
+            </div>
             <div class="commentsBody">
                 <form id="commentForm" method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
                     <div class="commentsHeader">
-                        Your Name:<br/>
+                        <?php echo parent::getTranslation("comments.name"); ?><br/>
+                        <input type="textbox" name="name" class="expand" value=""/>
+                    </div>
+                    <div class="commentsHeader">
+                        <?php echo parent::getTranslation("comments.email"); ?><br/>
                         <input type="textbox" name="name" class="expand" value=""/>
                     </div>
                     <div class="commentsComment">
-                        Message:<br/>
+                        <?php echo parent::getTranslation("comments.comment"); ?><br/><br/>
                         <textarea name="comment" class="expand" rows="4" cols="3"></textarea>
                     </div>
                     <div class="commentsCaptcha">
-                        Confirm code:<br/>
+                        <?php echo parent::getTranslation("common.captcha"); ?><br/><br/>
                         <?php InputFeilds::printCaptcha("captcha"); ?>
                     </div>
                     <div class="commentsButtons">
@@ -163,20 +246,32 @@ class CommentsView extends XModule {
         }
         ?>
         <div class="panel commentsPanel">
-            <div class="commentsAvatar"></div>
+            <div class="commentsAvatar">
+                <?php
+                if (!empty($comment->userimage)) {
+                    ?>
+                    <img src="<?php echo ResourcesModel::createResourceLink("gallery/small", $comment->userimage); ?>" alt="<?php echo $comment->username; ?>" />
+                    <?php
+                } else {
+                    ?>
+                    <img src="resouce/img/icons/User.png" alt="" />
+                    <?php
+                }
+                ?>
+            </div>
             <div class="commentsBody">
-                <form id="commentForm" method="post" action="<?php echo parent::link(array("action"=>"save","id"=>$id)); ?>">
+                <form id="commentForm" method="post" action="<?php echo parent::link(array("action"=>"saveComment","id"=>$id)); ?>">
                     <div class="commentsHeader">
-                        Name:<br/>
-                        <input type="textbox" name="name" value="<?php if ($id!=null) echo Common::htmlEscape($comment->name); ?>" class="expand"/>
+                        <?php echo parent::getTranslation("comments.name"); ?><br/>
+                        <input type="textbox" name="name" class="expand" value="<?php echo $id != null ? Common::htmlEscape($comment->username) : ""; ?>" disabled="true"/>
                     </div>
                     <div class="commentsComment">
-                        Message:<br/>
-                        <textarea name="comment" class="expand" rows="4" cols="3"><?php if ($id!=null) echo Common::htmlEscape($comment->comment); ?></textarea>
+                        <?php echo parent::getTranslation("comments.comment"); ?><br/>
+                        <?php echo InputFeilds::printTextArea("comment", $id != null ? $comment->comment : ""); ?>
                     </div>
                     <div class="commentsButtons">
-                        <button id="sendComment">Save Comment</button>
-                        <button id="cancel">Cancel</button>
+                        <button id="sendComment"><?php echo parent::getTranslation("common.save"); ?></button>
+                        <button id="cancel"><?php echo parent::getTranslation("common.cancel"); ?></button>
                     </div>
                 </form>
             </div>
@@ -194,6 +289,7 @@ class CommentsView extends XModule {
         </script>
         <?php
     }
+    
 }
 
 ?>

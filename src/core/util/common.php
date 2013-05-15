@@ -7,10 +7,10 @@ $baseRand;
 class Common {
     
     static function isEmpty ($var) {
-        if (is_array($var)) {
-            return (count($var) < 1) ? true : false;
+        if (empty($var)) {
+            return true;
         }
-        if ($var == null || (is_string($var) && trim($var) == "")) {
+        if (is_string($var) && trim($var) == "") {
             return true;
         }
         return false;
@@ -124,6 +124,20 @@ class Common {
     
     static function getMonthNames () {
         return array(1=>"Januar",2=>"Februar",3=>"M&auml;rz",4=>"April",5=>"Mai",6=>"Juni",7=>"Juli",8=>"August",9=>"September",10=>"Oktober",11=>"November",12=>"Dezember");
+    }
+    
+    static function getBacktrace($ignore = 2) {
+        $trace = '';
+        foreach (debug_backtrace() as $k => $v) {
+            if ($k < $ignore) {
+                continue;
+            }
+            array_walk($v['args'], function (&$item, $key) {
+                $item = var_export($item, true);
+            });
+            $trace .= '#' . ($k - $ignore) . ' ' . $v['file'] . '(' . $v['line'] . '): ' . (isset($v['class']) ? $v['class'] . '->' : '') . $v['function'] . '(' . implode(', ', $v['args']) . ')' . PHP_EOL;
+        }
+        return $trace;
     }
 }
 
@@ -330,6 +344,12 @@ class Http {
 }
 
 class Log {
+    
+    static function query ($query) {
+        if (Config::getQueryLog()) {
+            Log::write("[query] ".$query);
+        }
+    }
     
     static function info ($text) {
         Log::write("[info]  ".$text);

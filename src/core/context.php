@@ -33,12 +33,28 @@ class Context {
         return null;
     }
     
-    static function getUserHome () {
+    static function getUserHome ($userId = null) {
+        if ($userId != null)
+            return "home/".Common::hash($userId);
         if (isset($_SESSION["userId"]) && !Common::isEmpty($_SESSION["userId"]))
             return "home/".Common::hash($_SESSION["userId"]);
         return null;
     }
-
+    
+    static function setSelectedUser ($userId) {
+        $_SESSION["context.selectedUser"] = $userId;
+    }
+    
+    static function getSelectedUserId () {
+        return isset($_SESSION["context.selectedUser"]) ? $_SESSION["context.selectedUser"] : null;
+    }
+    
+    static function getSelectedUserHome () {
+        if (isset($_SESSION["context.selectedUser"]) && !Common::isEmpty($_SESSION["context.selectedUser"]))
+            return "home/".Common::hash($_SESSION["context.selectedUser"]);
+        return null;
+    }
+    
     static function isLoggedIn () {
         return (isset($_SESSION["userLoggedin"]) && $_SESSION["userLoggedin"] == true) ? true : false;
     }
@@ -208,7 +224,7 @@ class Context {
         // get static modules
         $staticModules = self::getRenderer()->getStaticModules();
         $templateAreas = self::getRenderer()->getAreas();
-
+        
         // load the modules
         $pageModules = TemplateModel::getAreaModules(self::getPageId(), $templateAreas, $staticModules);
         $pageAreaNames = array();
@@ -248,7 +264,7 @@ class Context {
         if (!isset($_REQUEST['req.modules'])) {
             $_REQUEST['req.modules'] = array();
         }
-        if (!isset($modules[$module->name])) {
+        if (!isset($_REQUEST['req.modules'][$module->name])) {
             $_REQUEST['req.modules'][$module->name] = array();
         }
         $_REQUEST['req.modules'][$module->name][$module->id] = &ModuleModel::getModuleClass($module);
@@ -262,7 +278,7 @@ class Context {
         if (isset($modules[$areaName])) {
             return $modules[$areaName];
         }
-        return null;
+        return array();
     }
     
     static function getModule ($id) {
@@ -325,7 +341,7 @@ class Context {
                 $_SESSION["req.page"] = $page;
                 $_SESSION["req.pageId"] = $page->id;
                 $_SESSION["req.pageName"] = $page->name;
-                $_SESSION["req.pageCode"] = $page->code;
+                // $_SESSION["req.pageCode"] = $page->code;
                 self::loadRenderer();
                 self::loadModules();
             }
@@ -404,7 +420,23 @@ class Context {
     static function post ($varName) {
         return isset($_POST[$varName]) ? $_POST[$varName] : null;
     }
-
+    
+    static function addError ($message) {
+        $backtrace = Common::getBacktrace(3);
+        echo $message.$backtrace;
+        Log::error($message.$backtrace);
+        if (!isset($_REQUEST['context.errors'])) {
+            $_REQUEST['context.errors'] = array();
+        }
+        $_REQUEST['context.errors'][] = $message;
+    }
+    
+    static function addMessage ($message) {
+        if (!isset($_REQUEST['context.messages'])) {
+            $_REQUEST['context.messages'] = array();
+        }
+        $_REQUEST['context.messages'][] = $message;
+    }
 }
 
 class Config {

@@ -5,9 +5,8 @@ require_once 'core/model/moduleModel.php';
 class ModuleModel {
     
     static function getModule ($id) {
-        $id = mysql_real_escape_string($id);
-        $result = Database::query("select * from t_module where id = '$id'");
-        return mysql_fetch_object($result);
+        $aid = mysql_real_escape_string($id);
+        return Database::queryAsObject("select * from t_module where id = '$aid'");
     }
 
     static function getModules () {
@@ -66,6 +65,7 @@ class ModuleModel {
         $obj->moduleId = $moduleObj->id;
         $obj->moduleAreaName = $moduleObj->name;
         $obj->modulePosition = $moduleObj->position;
+        $obj->include = $moduleObj->include;
         // add the translations
         if (in_array("Translatable", class_implements($obj))) {
             TranslationsModel::addTranslations($obj->getTranslations());
@@ -74,13 +74,9 @@ class ModuleModel {
     }
 
     static function processModule ($moduleId) {
-
-        $module = TemplateModel::getTemplateModule($moduleId);
+        $module = Context::getModule($moduleId);
         if (!empty($module)) {
-            $moduleClass = ModuleModel::getModuleClass($module);
-            $moduleParams = ModuleModel::getModuleParams($moduleId);
-            $moduleClass->setParams($moduleParams);
-            self::processModuleObject($moduleClass);
+            self::processModuleObject($module);
         } else {
             //log("invalid moduleId: $moduleId");
         }

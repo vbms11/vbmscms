@@ -1,14 +1,41 @@
 <?php
 
-require_once 'core/plugin.php';
+/*
+ * ie:
+ * 
+ * template.area.left
+ * template.main.center
+ * template.menu.top
+ * template.wysiwyg.banner
+ * config.currencySign
+ * context.request.abc = $_REQUEST['abc']
+ * 
+ * $object->attribute;
+ */
 
-class EditableTemplate extends XTemplate {
+class PlaceholderReplacer {
     
+    // parsed template parts
     public $areas = null;
     public $parts = null;
     public $mainArea = null;
+    // 
+    public $objects = array();
     
-    function setData ($html) {
+    function renderValue ($name) {
+        $valid = (preg_match("[a-z0-9\.\-\>]", $name) === 1);
+        if ($valid) {
+            $parseValue = true;
+            $theObject = $this->objects[$name];
+            while ($parseValue) {
+                $nextToken = strpos($name, array("->","."));
+                $theObjectsVars = get_object_vars($theObject);
+            }
+        }
+        echo eval($name);
+    }
+    
+    function setTemplate ($html) {
         // parse the template to find parts and areas
         $this->parts = array();
         $this->areas = array();
@@ -27,25 +54,31 @@ class EditableTemplate extends XTemplate {
         }
         // find areas
         foreach ($tAreas as $area) {
-            $type = "";
+            $type = null;
+            $offset = "";
             if (stripos($area, "template.main") === 0) {
                 $type = "main";
+                $offset = 14;
             }
             if (stripos($area, "template.area") === 0) {
                 $type = "area";
+                $offset = 14;
             }
-            if (stripos($area, "template.menu") === 0) {
-                $type = "menu";
+            if (stripos($area, "$") === 0) {
+                $type = "value";
+                $offset = 1;
             }
-            $areaObj;
-            $areaNamePos = strripos($area, ".")+1;
-            if ($areaNamePos > 0 && !Common::isEmpty($type)) {
-                $areaName = substr($area, $areaNamePos);
-                $areaObj->name = $areaName;
+            if (stripos($area, "object") === 0) {
+                $type = "object";
+                $offset = 7;
+            }
+            if (empty($type)) {
+                $areaObj;
+                $areaObj->name = substr($area, $offset);
                 $areaObj->type = $type;
                 $this->areas[] = $areaObj;
+                unset($areaObj);
             }
-            unset($areaObj);
         }
     }
     
@@ -67,9 +100,10 @@ class EditableTemplate extends XTemplate {
         }
         return $retAreas;
     }
-
+    
     /**
-     * renders this template
+     * replaces the placeholders in the template
+     * @return string 
      */
     function render () {
         $cntParts = count($this->parts);
@@ -79,31 +113,20 @@ class EditableTemplate extends XTemplate {
                 $area = $this->areas[$i];
                 switch ($area->type) {
                     case "main":
-                        parent::renderMainTemplateArea(Context::getPageId(), $area->name);
+                        Context::getRenderer()->renderMainTemplateArea(Context::getPageId(), $area->name);
                         break;
                     case "area":
-                        parent::renderTemplateArea(Context::getPageId(), $area->name);
+                        Context::getRenderer()->renderTemplateArea(Context::getPageId(), $area->name);
                         break;
                     case "menu":
-                        parent::renderMenu(Context::getPageId(), $area->name);
+                        Context::getRenderer()->renderMenu(Context::getPageId(), $area->name);
+                        break;
+                    case "value":
+                        $this->renderValue($area->name);
                         break;
                 }
             }
         }
-    }
-
-    /**
-     * returns script used by this template
-     */
-    function getScripts () {
-        return array("template.js");
-    }
-
-    /**
-     * returns styles used by this template
-     */
-    function getStyles () {
-        return array("template.css");
     }
     
     /**
@@ -114,6 +137,7 @@ class EditableTemplate extends XTemplate {
         foreach ($this->areas as $area) {
             switch ($area->type) {
                 case "area":
+                case "value":
                 case "main":
                     break;
                 case "menu":
@@ -125,6 +149,22 @@ class EditableTemplate extends XTemplate {
             }
         }
         return $staticModules;
+    }
+    
+    /**
+     * returns name value array of objects
+     */
+    function getObjects () {
+        $this->objects;
+    }
+    
+    /**
+     * adds an object to get values from
+     * @param type $name
+     * @param type $value
+     */
+    function addObject ($name, $value) {
+        $this->objects[$name] = $value;
     }
 }
 
