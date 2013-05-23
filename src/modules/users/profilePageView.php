@@ -50,8 +50,6 @@ class ProfilePageView extends XModule {
      * called when page is viewed and html created
      */
     function onView () {
-
-        $this->getRequestVars();
         
         if (Context::hasRole("users.profile") && Context::isLoggedIn()) {
 

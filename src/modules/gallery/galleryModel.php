@@ -84,8 +84,7 @@ class GalleryModel {
         if ($parent == null) {
             $parent = "null";
         } else {
-            $parent = mysql_real_escape_string($parent);
-            $parent = "'$parent'";
+            $parent = "'".mysql_real_escape_string($parent)."'";
         }
         Database::query("INSERT INTO t_gallery_category(title,image,parent,orderkey,description) VALUES('$title','$image',$parent,'$nextOrderKey','$description');");
         $result = Database::query("SELECT LAST_INSERT_ID() as lastid");
@@ -247,7 +246,6 @@ class GalleryModel {
         $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
         $result = $uploader->handleUpload(ResourcesModel::getResourcePath("gallery/new"));
         
-        
         // create preview image
         $handle = opendir(ResourcesModel::getResourcePath("gallery/new"));
         while (false !== ($file = readdir($handle))) {
@@ -256,10 +254,9 @@ class GalleryModel {
             }
             $filename = substr($file, strrpos($file, "/"));
             copy(ResourcesModel::getResourcePath("gallery/new",$filename), ResourcesModel::getResourcePath("gallery",$filename));
-            GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$filename),170,170,
-                ResourcesModel::getResourcePath("gallery/small",$filename));
-            unlink(ResourcesModel::getResourcePath("gallery/new",$filename));
+            GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$filename),170,170,ResourcesModel::getResourcePath("gallery/small",$filename));
             
+            unlink(ResourcesModel::getResourcePath("gallery/new",$filename));
             GalleryModel::addImage($category,$filename,$filename,"");
         }
         

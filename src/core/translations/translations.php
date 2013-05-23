@@ -95,6 +95,12 @@ $ar_translations = array(
 ,'cart.total'=>'Total: '
 ,'cart.shipping'=>'Shipping'
 ,'register.captcha'=>'Captcha code invalid!'
+,'comments.postedon'=>'Posted on:'
+,'comments.by'=>'by'
+,'comments.email'=>'Email:'
+,'comments.name'=>'Name (username):'
+,'comments.message'=>'Your Comment:'
+,'users.image.edit.mode'=>'Display Mode:'
 ),'de'=>array(
 'payments.paypal.account'=>'PayPal Konto'
 ,'payments.paypal.mode'=>'PayPal Mode'
@@ -190,5 +196,11 @@ $ar_translations = array(
 ,'cart.total'=>'Total: '
 ,'cart.shipping'=>'Versand'
 ,'register.captcha'=>'Captcha code invalid!'
+,'comments.postedon'=>'Posted am: '
+,'comments.by'=>'von'
+,'comments.email'=>'E-Mail:'
+,'comments.name'=>'Name (Benutzername):'
+,'comments.message'=>'Dein Commentar:'
+,'users.image.edit.mode'=>'Anzige Modus:'
 )); 
 ?>

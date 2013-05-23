@@ -5,75 +5,75 @@ class MenuView extends XModule {
     function onProcess () {
 	if (Context::hasRole("menu.edit")) {
 	
-        switch (parent::getAction()) {
-            case "edit":
-                parent::focus();
-                break;
-            case "newMenu":
-                $newId = MenuModel::saveMenuInstance(null,$_POST['newMenuName']);
-                parent::param("selectedMenu",$newId);
-                parent::redirect(array("action"=>"edit"));
-                break;
-            case "editMenu":
-                MenuModel::saveMenuInstance(isset($_GET['id']) ? $_GET['id'] : null, $_POST['editMenuName']);
-                parent::redirect(array("action"=>"edit"));
-                break;
-            case "selectMenu":
-                parent::param("selectedMenu",$_GET['id']);
-                parent::redirect(array("action"=>"edit"));
-                break;
-            case "deleteMenu":
-                MenuModel::deleteMenuInstance($_GET['id']);
-                parent::redirect(array("action"=>"edit"));
-                break;
-            case "newStyle":
-                $newId = MenuModel::saveMenuStyle(null, $_POST['newStyleName'], "", "");
-                parent::param("selectedStyle",$newId);
-                parent::redirect(array("action"=>"edit"));
-                break;
-            case "editStyle":
-                MenuModel::saveMenuStyle($_GET['id'],$_POST['styleName'],$_POST['cssname'],$_POST['cssstyle']);
-                parent::redirect(array("action"=>"edit"));
-                break;
-            case "selectStyle":
-                parent::param("selectedStyle",$_GET['id']);
-                // parent::redirect(array("action"=>"edit"));
-                break;
-            case "deleteStyle":
-                MenuModel::deleteMenuStyle($_GET['id']);
-                parent::redirect(array("action"=>"edit"));
-                break;
-            case "deletepage":
-                PagesModel::deletePage($_GET['id']);
-                parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
-                break;
-            case "moveup":
-                $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$_GET['parent'],false,Context::getLang());
-                for ($i=0; $i<count($pages); $i++) {
-                    if ($pages[$i]->id == $_GET['id']) {
-                        if ($i != 0) {
-                            MenuModel::setPagePosition($pages[$i]->id,$pages[$i-1]->position);
-                            MenuModel::setPagePosition($pages[$i-1]->id,$pages[$i]->position);
-                            break;
+            switch (parent::getAction()) {
+                case "edit":
+                    parent::focus();
+                    break;
+                case "newMenu":
+                    $newId = MenuModel::saveMenuInstance(null, parent::post('newMenuName'));
+                    parent::param("selectedMenu",$newId);
+                    parent::redirect(array("action"=>"edit"));
+                    break;
+                case "editMenu":
+                    MenuModel::saveMenuInstance(parent::get('id'), parent::post('editMenuName'));
+                    parent::redirect(array("action"=>"edit"));
+                    break;
+                case "selectMenu":
+                    parent::param("selectedMenu",parent::get('id'));
+                    // parent::redirect(array("action"=>"edit"));
+                    break;
+                case "deleteMenu":
+                    MenuModel::deleteMenuInstance($_GET['id']);
+                    parent::redirect(array("action"=>"edit"));
+                    break;
+                case "newStyle":
+                    $newId = MenuModel::saveMenuStyle(null, $_POST['newStyleName'], "", "");
+                    parent::param("selectedStyle",$newId);
+                    parent::redirect(array("action"=>"edit"));
+                    break;
+                case "editStyle":
+                    MenuModel::saveMenuStyle($_GET['id'],$_POST['styleName'],$_POST['cssname'],$_POST['cssstyle']);
+                    parent::redirect(array("action"=>"edit"));
+                    break;
+                case "selectStyle":
+                    parent::param("selectedStyle",$_GET['id']);
+                    // parent::redirect(array("action"=>"edit"));
+                    break;
+                case "deleteStyle":
+                    MenuModel::deleteMenuStyle($_GET['id']);
+                    parent::redirect(array("action"=>"edit"));
+                    break;
+                case "deletepage":
+                    PagesModel::deletePage($_GET['id']);
+                    parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
+                    break;
+                case "moveup":
+                    $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$_GET['parent'],false,Context::getLang());
+                    for ($i=0; $i<count($pages); $i++) {
+                        if ($pages[$i]->id == $_GET['id']) {
+                            if ($i != 0) {
+                                MenuModel::setPagePosition($pages[$i]->id,$pages[$i-1]->position);
+                                MenuModel::setPagePosition($pages[$i-1]->id,$pages[$i]->position);
+                                break;
+                            }
                         }
                     }
-                }
-                parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
-                break;
-            case "movedown":
-                $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$_GET['parent'],false,Context::getLang());
-                for ($i=count($pages)-1; $i>-1; $i--) {
-                    if ($pages[$i]->id == $_GET['id']) {
-                        if (count($pages)-1 > $i) {
-                            MenuModel::setPagePosition($pages[$i]->id,$pages[$i+1]->position);
-                            MenuModel::setPagePosition($pages[$i+1]->id,$pages[$i]->position);
-                            break;
+                    parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
+                    break;
+                case "movedown":
+                    $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$_GET['parent'],false,Context::getLang());
+                    for ($i=count($pages)-1; $i>-1; $i--) {
+                        if ($pages[$i]->id == $_GET['id']) {
+                            if (count($pages)-1 > $i) {
+                                MenuModel::setPagePosition($pages[$i]->id,$pages[$i+1]->position);
+                                MenuModel::setPagePosition($pages[$i+1]->id,$pages[$i]->position);
+                                break;
+                            }
                         }
                     }
-                }
-                parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
-                break;
-        }
+                    parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
+                    break;
+            }
 	}
     }
     
@@ -81,6 +81,7 @@ class MenuView extends XModule {
         
         switch (parent::getAction()) {
             case "newStyle":
+            case "selectMenu":
             case "selectStyle":
             case "edit":
                 if (Context::hasRole("menu.edit")) {
@@ -97,7 +98,7 @@ class MenuView extends XModule {
     }
     
     function getStyles () {
-        return array("/?static=menuStyles");
+        return array("/?service=menuStyles");
     }
     
     function getScripts () {
@@ -105,13 +106,8 @@ class MenuView extends XModule {
     }
     
     function printEditView () {
-        
         // get parent
         $parent = (isset($_GET['parent']) ? $_GET['parent'] : null);
-        if (isset($_GET['menu'])) {
-            parent::param("selectedMenu",$_GET['menu']);
-        }
-        
         // menus
         $menus = MenuModel::getMenuInstances();
         $selectedMenuName = "";
@@ -332,6 +328,8 @@ class MenuView extends XModule {
             <script>
             $("#selectedMenu").change(function () {
                 callUrl("<?php echo parent::link(array("action"=>"selectMenu")); ?>",{"id":$("#selectedMenu").val()});
+                e.preventDefault();
+                return false;
             });
             $("#btn_newMenu").button().click(function () {
                 $("#new-menu-dialog").dialog("open");

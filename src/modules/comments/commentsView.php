@@ -67,7 +67,7 @@ class CommentsView extends XModule {
         return array("comment.post","comment.edit","comment.delete");
     }
     
-    function getTranslations () {
+    static function getTranslations () {
         return array(
             "en" => array(
                 "comments.postedon" => "Posted on:",

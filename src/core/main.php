@@ -28,11 +28,12 @@ if (Context::getPage() != null) {
     }
 
 } else if (Context::getService() != null) {
-    
     // run the service
     ModuleModel::processService(Context::getService());
-    if (Context::getReturnValue() != null) {
-        // render the return value
+    // render the return value or service
+    if (Common::isEmpty(Context::getReturnValue())) {
+        ModuleModel::renderService(Context::getService());
+    } else {
         echo Context::getReturnValue();
     }
     

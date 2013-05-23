@@ -120,23 +120,34 @@ class UsersModel {
         Database::query("update t_users set active = '$flag' where id = '$id'");
     }
 
-	static function getUserByEmail ($email) {
-		$email = mysql_real_escape_string($email);
-		return Database::queryAsObject("select * from t_users where email = '$email'");
-	}
-
-    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate) {
+    static function getUserByEmail ($email) {
+        $email = mysql_real_escape_string($email);
+        return Database::queryAsObject("select * from t_users where email = '$email'");
+    }
+    
+    static function setUserImage ($userId, $imageId) {
+        $userId = mysql_real_escape_string($userId);
+        $imageId = mysql_real_escape_string($imageId);
+        Database::query("update t_users set image = '$imageId' where id = '$userId'");
+    }
+    
+    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate, $profileImage = null) {
         $username = mysql_real_escape_string($username);
         $firstName = mysql_real_escape_string($firstName);
         $lastName = mysql_real_escape_string($lastName);
         $email = mysql_real_escape_string($email);
         $birthDate = mysql_real_escape_string($birthDate);
+        if ($profileImage == null) {
+            $profileImage = "null";
+        } else {
+            $profileImage = "'".mysql_real_escape_string($profileImage)."'";
+        }
         if ($id == null) {
             // create user objectid
             $objectId = DynamicDataView::createObject("userAttribs",false);
             // create user
-            Database::query("insert into t_users (username,firstname,lastname,email,birthdate,registerdate,objectid)
-                values ('$username','$firstName','$lastName','$email','$birthDate',now(),'$objectId')");
+            Database::query("insert into t_users (username,firstname,lastname,email,birthdate,registerdate,objectid,image)
+                values ('$username','$firstName','$lastName','$email','$birthDate',now(),'$objectId',$profileImage)");
             $result = Database::queryAsObject("select last_insert_id() as id from t_users");
             $id = $result->id;
             // set user password

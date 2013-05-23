@@ -149,10 +149,10 @@ class ModuleModel {
     }
     
     /*
-     * gets module class by name
+     * gets service module instance by service name
      */
     static function getServiceClass ($serviceName) {
-        return ModuleModel::getModuleBySysname($serviceName);
+        return self::getModuleClass(ModuleModel::getModuleBySysname($serviceName));
     }
     
     /*
@@ -269,7 +269,15 @@ class ModuleModel {
             Database::query("insert into t_module_instance_params (instanceid,name,value) values ('$moduleId','$name','$value')");
         }
     }
-
+    
+    static function saveModuleParams($moduleIdsValues) {
+        foreach ($moduleIdsValues as $moduleId => $moduleParams) {
+            foreach ($moduleParams as $paramName => $paramValue) {
+                self::setModuleParam($moduleId, $paramName, $paramValue);
+            }
+        }
+    }
+    
 }
 
 ?>

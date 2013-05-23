@@ -119,8 +119,8 @@ class Context {
 	Context::clearRoles();
     	$userRoles = RolesModel::getRoles(Context::getUserId());
         foreach ($userRoles as $userRole) {
-                Context::addRoleGroup($userRole->customrole, $userRole->rolegroup);
-                Context::addRole($userRole->customrole,$userRole->modulerole);
+            Context::addRoleGroup($userRole->customrole, $userRole->rolegroup);
+            Context::addRole($userRole->customrole,$userRole->modulerole);
         }
     }
 	
@@ -365,7 +365,19 @@ class Context {
             }
             file_put_contents($filename, $queryHtml);
         }
-
+        
+        // save module parameters
+        /*
+        $moduleParams = array();
+        $modules = self::getModules();
+        foreach ($modules as $module) {
+            if ($module->paramsDirty) {
+                $moduleParams[$module->getId()] = $module->params();
+            }
+        }
+        ModuleModel::saveModuleParams($moduleParams);
+        */
+        
         // unset session request data
         $_SESSION["req.page"] = null;
         $_SESSION["req.pageId"] = null;

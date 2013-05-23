@@ -195,7 +195,7 @@ class MenuModel {
             $query .= " and m.parent = '$parent'";
         }
         $query .= " order by m.position asc";
- echo $query;
+        
         $results = Database::queryAsArray($query);
         $pages = array();
         foreach ($results as $row) {

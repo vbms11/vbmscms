@@ -221,9 +221,9 @@ class TemplateRenderer {
         <link rel="shortcut icon" href="<?php echo ResourcesModel::createTemplateResourceLink("favicon.ico"); ?>" type="image/x-icon" />
         <link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-1.6.2.min.js"></script>
-        <script type="text/javascript" src="resource/js/main.js"></script>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-ui-1.8.15.custom.min.js"></script>
+        <script type="text/javascript" src="resource/js/main.js"></script>
+        
         <script type="text/javascript" src="resource/js/datatables/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="resource/js/lightbox/js/jquery.lightbox-0.5.pack.js"></script>
         <script type="text/javascript" src="resource/js/multiselect/js/plugins/localisation/jquery.localisation-min.js"></script>
@@ -241,6 +241,7 @@ class TemplateRenderer {
         <script type="text/javascript" src="resource/js/valums-file-uploader/client/fileuploader.js"></script>
         <link type="text/css" href="resource/js/contextmenu/jquery.contextmenu.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/contextmenu/jquery.contextmenu.js"></script>
+        
         <?php
 
         // render style links

@@ -249,9 +249,9 @@ class InputFeilds {
         }
     }
     
-    static function printMultiFileUpload ($name,$action,$values) {
+    static function printMultiFileUpload ($name,$action,$values=array()) {
         ?>
-        <div id="file-uploader">       
+        <div id="file-uploader-<?php echo $name; ?>">       
             <noscript>          
                 <p>Please enable JavaScript to use file uploader.</p>
                 <!-- or put a simple form for upload here -->
@@ -260,7 +260,7 @@ class InputFeilds {
         <script>
         var uploader = new qq.FileUploader({
             // pass the dom node (ex. $(selector)[0] for jQuery users)
-            element: document.getElementById('file-uploader'),
+            element: document.getElementById('file-uploader-<?php echo $name; ?>'),
             // path to server-side upload script
             action: '<?php echo $action; ?>'
         });
