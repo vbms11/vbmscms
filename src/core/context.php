@@ -206,13 +206,36 @@ class Context {
     // renderer
 
     static function loadRenderer () {
-        Context::setRenderer(TemplateModel::getTemplateObj(self::getPage()));
+        $mode = self::get("renderRequest");
+        if ($mode == null && self::get("ajax") == "1") {
+            $mode = "ajax";
+        }
+        switch ($mode) {
+            case "vcms":
+                $renderer = new VCmsRenderer(TemplateModel::getTemplateObj(self::getPage()));
+                break;
+            case "ajax":
+                $renderer = new AJaxRenderer(TemplateModel::getTemplateObj(self::getPage()));
+                break;
+            default:
+                $renderer = TemplateModel::getTemplateObj(self::getPage());
+                break;
+        }
+        Context::setRenderer($renderer);
     }
-
+    
+    /**
+     * 
+     * @param type $templateObj
+     */
     static function setRenderer ($templateObj) {
         $_REQUEST["req.renderer"] = $templateObj;
     }
-
+    
+    /**
+     * 
+     * @return TemplateRenderer
+     */
     static function getRenderer () {
         return isset($_REQUEST["req.renderer"]) ? $_REQUEST["req.renderer"] : null;
     }
@@ -269,6 +292,14 @@ class Context {
         }
         $_REQUEST['req.modules'][$module->name][$module->id] = &ModuleModel::getModuleClass($module);
     }
+    
+    static function removeModule ($moduleId) {
+        foreach (self::getPageModules() as $modules) {
+            if (isset($modules[$moduleId])) {
+                unset($modules[$moduleId]);
+            }
+        }
+    }
 
     static function getModules ($areaName = null) {
         $modules = self::getPageModules();
@@ -294,9 +325,10 @@ class Context {
     static function getAreaNames () {
         return array_keys(self::getPageModules());
     }
+    
     static function addQueryToLog ($query) {
-		self::$queryLog[] = $query;
-	}
+        self::$queryLog[] = $query;
+    }
 
     // methods called at the start and end of the context
 
@@ -561,12 +593,6 @@ class Session {
             SessionModel::startSession($sessionId, $sessionKey, $_SERVER['REMOTE_ADDR']);
             Context::addDefaultRoles();
         }
-        
-        $getParamsArray = array();
-        foreach ($_GET as $key => $value) {
-            $getParamsArray[] = $key.":".$value;
-        }
-        $getParamsArray = "{".implode(",",$getParamsArray)."}";
     }
     
     static function setUserFromContext () {

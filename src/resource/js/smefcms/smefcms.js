@@ -1,7 +1,4 @@
 
-
-
-
 // set opacity
 
 function alert (text) {
@@ -67,34 +64,41 @@ function callUrl (url,replace,anchor) {
 // close layer when click-out
 // document.onclick = mclose;
 
-
-
-
-
-
 /*
-
-// open hidden layer
-function mopen(id) {
-	// cancel close timer
-	mcancelclosetime();
-	// close old layer
-	if(ddmenuitem) { 
-        $(this).removeClass("sddmShow");
-        $(this).addClass("sddmHide");
-        }
-	// get new layer and show it
-	ddmenuitem = $("#"+id);
-	if(ddmenuitem) {
-             $(ddmenuitem).fadeIn("fast", function () {
-                 $(this).removeClass("sddmHide");
-                $(this).addClass("sddmShow");
-           });
-        }
-}
-
-*/
-
+                var vcmsArea = $(".vcms_area")
+                $.each(vcmsArea,function (index,object) {
+                    $(object).sortable({
+                        connectWith: ".vcms_area, .toolButtonDiv",
+                        cancel: ".toolButtonDiv, form, input, textarea, button",
+                        update: function(event, ui) {
+                            var areaId = $(object).attr("id").substr(10);
+                            var moduleId = ui.item.attr("id");
+                            $("#vcms_area_"+areaId+" #"+moduleId).each(function (index,o) {
+                                $(object).find(".vcms_module").each(function (i,child) {
+                                    if (moduleId == $(child).attr("id")) {
+                                         ajaxRequest('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movemodule"),false); ?>',function(data){},{"id":moduleId.substr(12),"area":areaId,"pos":i});
+                                    }
+                                });
+                            });
+                            var toolbar = $("#vcms_area_"+areaId+", .toolButtonDiv");
+                            if ($("#vcms_area_"+areaId+" .vcms_module").length > 0) {
+                                if (toolbar.hasClass("show")) {
+                                    toolbar.fadeOut("fast", function () {
+                                        toolbar.addClass("hide");
+                                        toolbar.removeClass("show");
+                                    });
+                                }
+                            } else if (toolbar.hasClass("hide")) {
+                                toolbar.fadeIn("fast", function () {
+                                    toolbar.addClass("show");
+                                    toolbar.removeClass("hide");
+                                });
+                            }
+                        }
+                    });
+                });
+                 *
+                 */
 
 
 

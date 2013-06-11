@@ -45,7 +45,7 @@ class TemplateModel {
     }
 
     static function deleteAreaModule ($moduleId) {
-        $moduleId = mysql_real_escape_string($moduleId);
+        Context::removeModule($moduleId);
         // call destroy on the module interface
         $moduleObj = TemplateModel::getTemplateModule($moduleId);
         ModuleModel::destroyModule($moduleObj);
@@ -175,7 +175,7 @@ class TemplateModel {
         Database::query("update t_templatearea set position = position + 1 where pageid = '$pageId' and name = '$area' and position >= '$fromPosition'");
     }
 
-    static function insertTemplateModule ($pageId,$area,$pageTypeId,$position) {
+    static function insertTemplateModule ($pageId,$area,$moduleId,$position = -1) {
         if ($position == -1) {
             TemplateModel::shiftTemplateModulesDown($pageId, $area, $position);
             $result = Database::queryAsObject("select min(position)-1 as max from t_templatearea where name = '$area' and pageid = '$pageId'");
@@ -186,12 +186,12 @@ class TemplateModel {
         }
         $pageId = mysql_real_escape_string($pageId);
         $area = mysql_real_escape_string($area);
-        $pageTypeId = mysql_real_escape_string($pageTypeId);
+        $moduleId = mysql_real_escape_string($moduleId);
         $position = mysql_real_escape_string($position);
         // stop hack
         //if (1==1) 
             //return;
-        Database::query("insert into t_templatearea(name,pageid,type,position) values('$area','$pageId','$pageTypeId','$position')");
+        Database::query("insert into t_templatearea(name,pageid,type,position) values('$area','$pageId','$moduleId','$position')");
         $result = Database::queryAsObject("select last_insert_id() as max from t_templatearea");
         return $result->max;
     }

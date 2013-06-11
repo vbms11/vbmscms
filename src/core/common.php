@@ -8,9 +8,9 @@ if (!defined("vbmscms_allowAccess") || vbmscms_allowAccess != true) {
 @set_magic_quotes_runtime(0);
 
 if (!@include_once('config.php')) {
-	$_GLOBALS['noDatabase'] = true;
+    $_GLOBALS['noDatabase'] = true;
 } else {
-	$_GLOBALS['noDatabase'] = false;
+    $_GLOBALS['noDatabase'] = false;
 }
 
 include_once 'core/util/common.php';
@@ -33,10 +33,10 @@ include_once 'core/ddm/dmSerializer.php';
 include_once 'core/ddm/dataModel.php';
 include_once 'core/ddm/dataView.php';
 include_once 'core/model/menuModel.php';
+include_once 'core/template/templateParser.php';
 include_once 'core/template/templateRenderer.php';
 include_once 'core/template/editableTemplate.php';
 include_once 'resource/js/valums-file-uploader/server/php.php';
 include_once 'core/model/installerModel.php';
-
 
 ?>

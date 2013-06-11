@@ -8,10 +8,6 @@ require_once 'core/model/templateModel.php';
 // start the request context
 Context::startRequest();
 
-//UsersModel::setPassword(1, "menta01");
-//echo "password reset";
-//exit;
-
 // show the page the user is on
 if (Context::getPage() != null) {
     
@@ -28,17 +24,19 @@ if (Context::getPage() != null) {
     }
 
 } else if (Context::getService() != null) {
+    
     // run the service
     ModuleModel::processService(Context::getService());
+    
     // render the return value or service
-    if (Common::isEmpty(Context::getReturnValue())) {
+    if (Context::getReturnValue() == null) {
         ModuleModel::renderService(Context::getService());
     } else {
         echo Context::getReturnValue();
     }
     
 } else {
-	
+    
     // if the user hasent set a startpage the help page is displayed
     TemplateModel::renderSetupPage();
 }

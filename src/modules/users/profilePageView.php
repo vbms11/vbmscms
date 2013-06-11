@@ -15,7 +15,7 @@ class ProfilePageView extends XModule {
      */
     function onProcess () {
         
-        if (Context::hasRole("users.profile") && Context::isLoggedIn()) {
+        if (Context::hasRole("user.info.owner") && Context::isLoggedIn()) {
 
             switch (parent::getAction()) {
                 case "save":
@@ -50,54 +50,53 @@ class ProfilePageView extends XModule {
      * called when page is viewed and html created
      */
     function onView () {
-        
-        if (Context::hasRole("users.profile") && Context::isLoggedIn()) {
-
-            switch (parent::getAction()) {
-                case "edit":
-                    if (Context::hasRole("user.info.edit")) {
-                        $this->printEditView();
-                    }
-                    break;
-                case "editAttribs":
-                    if ((parent::param("mode") == self::modeCurrentUser && Context::getUserId() == Context::getSelectedUserId()) || Context::hasRole("user.info.admin")) {
-                        DynamicDataView::editObject("userAttribs",$_GET['id'],Context::getUsername()." Attributes:",
-                            parent::link(array(),false), parent::link(array("action"=>"editAttribs","id"=>$_GET['id']),false));
-                    }
-                    break;
-                default:
-                    $this->printMainView();
-                    break;
-            }
+     
+        switch (parent::getAction()) {
+            case "edit":
+                if (Context::hasRole("user.info.edit")) {
+                    $this->printEditView();
+                }
+                break;
+            case "editAttribs":
+                if (Context::hasRole("user.info.owner") && (parent::param("mode") == self::modeCurrentUser && Context::getUserId() == Context::getSelectedUserId()) || Context::hasRole("user.info.admin")) {
+                    DynamicDataView::editObject("userAttribs",$_GET['id'],Context::getUsername()." Attributes:",
+                        parent::link(array(),false), parent::link(array("action"=>"editAttribs","id"=>$_GET['id']),false));
+                }
+                break;
+            default:
+                $this->printMainView();
+                break;
         }
-    }
-
-    /**
-     * called when module is installed
-     */
-    function install () {
-
     }
 
     /**
      * returns the roles defined by this module
      */
     function getRoles () {
-        return array("users.info.edit","users.info.admin","users.info.owner");
+        return array("user.info.edit","user.info.admin","user.info.owner");
     }
     
     function printEditView () {
         ?>
         <div class="panel usersInfoPanel">
-            <table><tr><td>
-                <?php echo parent::getTranslation("users.info.edit.mode"); ?>
-            </td><td>
-                <?php InputFeilds::printSelect("mode", parent::param("mode"), array("Current User" => self::modeCurrentUser, "Selected User" => self::modeSelectedUser)); ?>
-            </td></tr><tr><td>
-                
-            </td><td>
+            <form action="<?php echo parent::link(array("action"=>"save")); ?>" method="post">
+                <table><tr><td>
+                    <?php echo parent::getTranslation("users.info.edit.mode"); ?>
+                </td><td>
+                    <?php InputFeilds::printSelect("mode", parent::param("mode"), array("Current User" => self::modeCurrentUser, "Selected User" => self::modeSelectedUser)); ?>
+                </td></tr><tr><td>
 
-            </td></tr></table>
+                </td><td>
+
+                </td></tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit"><?php echo parent::getTranslation("common.save"); ?>
+                </div>
+            </form>
+            <script>
+            $(".usersInfoPanel button").button();
+            </script>
         </div>
         <?php
     }

@@ -20,9 +20,6 @@ class ResourcesModel {
             mkdir($resourcePath, 0777, true);
         if ($name != null)
             $resourcePath .= $name;
-        // echo "resourcePath:".$resourcePath."<br/>";
-        // echo "resourcePath:".realpath($resourcePath).'/'.$name."<br/>";
-        // return realpath($resourcePath).'/'.$name;
         return $resourcePath;
     }
 

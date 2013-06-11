@@ -121,18 +121,73 @@ class TemplateRenderer {
     }
 
     /**
-     * renders a static module by sysname and area name
+     * renders a static module area by sysname and area name
      *
      * @param <type> $pageId
      * @param <type> $moduleName
      * @param <type> $areaName
      */
-    function renderStaticModule ($pageId, $moduleName, $areaName) {
+    function renderStaticModule ($moduleSysName, $areaName = null, $pageId = null) {
+        $this->renderModule($moduleSysName,$areaName,true,$pageId);
+    }
+    
+    /**
+     * renders an instance module area by sysname and area name
+     *
+     * @param <type> $pageId
+     * @param <type> $moduleName
+     * @param <type> $areaName
+     */
+    function renderInstanceModule ($moduleSysName, $areaName = null, $pageId = null) {
+        $this->renderModule($moduleSysName,$areaName,false,$pageId);
+    }
+
+    /**
+     * renders a module by module type, template area name and static (false = new module instance per page)
+     * @param type $moduleType
+     * @param type $areaName
+     * @param type $static
+     * @param type $pageId
+     * @param type $targetOnly
+     */
+    function renderModule ($moduleType, $areaName = null, $static = false, $pageId = null, $targetOnly = false) {
+        if (empty($pageId)) {
+            $pageId = Context::getPageId();
+        }
+        if (empty($areaName)) {
+            $areaName = $moduleType;
+        }
+        // find target module
+        $modules = Context::getModules($areaName);
+        $targetModule = null;
+        foreach ($modules as $module) {
+            if ($module->sysname == $moduleType) {
+                $targetModule = $module;
+            }
+        }
+        // create module if it dose not exist
+        if (empty($targetModule)) {
+            if ($static) {
+                TemplateModel::createStaticModule($areaName, $moduleType);
+            } else {
+                $module = ModuleModel::getModuleByName($moduleType);
+                $newModuleId = TemplateModel::insertTemplateModule($pageId, $areaName, $module->id);
+                $newModule = ModuleModel::getModule($newModuleId);
+                Context::addModule($newModule);
+                $targetModule = $newModule;
+            }
+            $modules = Context::getModules($areaName);
+        }
+        // render area with module in it
         echo "<div id='vcms_area_$areaName' >";
-        foreach (Context::getModules($areaName) as $areaModules) {
-            foreach ($areaModules as $areaModule) {
-                if ($areaModule->moduleAreaName == $areaName) {
-                    ModuleModel::renderModuleObject($module);
+        if ($targetOnly) {
+            ModuleModel::renderModuleObject($targetModule);
+        } else {
+            foreach ($modules as $areaModules) {
+                foreach ($areaModules as $areaModule) {
+                    if ($areaModule->moduleAreaName == $areaName) {
+                        ModuleModel::renderModuleObject($module);
+                    }
                 }
             }
         }
@@ -376,51 +431,12 @@ class TemplateRenderer {
             $this->render();
             echo '</div>'.PHP_EOL;
             // $this->renderFooter();
-	    
             if (Context::hasRole("pages.edit")) {
-
                 echo '<script>'.PHP_EOL;
                 ?>
                 $("body").contextMenu([
                     {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }}],
                     {theme:'vista'});
-
-                <?php /*
-                var vcmsArea = $(".vcms_area")
-                $.each(vcmsArea,function (index,object) {
-                    $(object).sortable({
-                        connectWith: ".vcms_area, .toolButtonDiv",
-                        cancel: ".toolButtonDiv, form, input, textarea, button",
-                        update: function(event, ui) {
-                            var areaId = $(object).attr("id").substr(10);
-                            var moduleId = ui.item.attr("id");
-                            $("#vcms_area_"+areaId+" #"+moduleId).each(function (index,o) {
-                                $(object).find(".vcms_module").each(function (i,child) {
-                                    if (moduleId == $(child).attr("id")) {
-                                         ajaxRequest('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movemodule"),false); ?>',function(data){},{"id":moduleId.substr(12),"area":areaId,"pos":i});
-                                    }
-                                });
-                            });
-                            var toolbar = $("#vcms_area_"+areaId+", .toolButtonDiv");
-                            if ($("#vcms_area_"+areaId+" .vcms_module").length > 0) {
-                                if (toolbar.hasClass("show")) {
-                                    toolbar.fadeOut("fast", function () {
-                                        toolbar.addClass("hide");
-                                        toolbar.removeClass("show");
-                                    });
-                                }
-                            } else if (toolbar.hasClass("hide")) {
-                                toolbar.fadeIn("fast", function () {
-                                    toolbar.addClass("show");
-                                    toolbar.removeClass("hide");
-                                });
-                            }
-                        }
-                    });
-                });
-                 *
-                 */
-                ?>
                 <?php
                 echo '</script>'.PHP_EOL;
             }
@@ -431,12 +447,11 @@ class TemplateRenderer {
 
     function handelRenderRequest () {
         // get render request parameters
-        $areas = $_GET['reRender'];
-        $areas = explode(",",$areas);
+        $areas = explode(",",Context::get('reRender'));
         $animate = $_GET['animate'];
         $effect = $_GET['effect'];
         // set response type to xml
-        header ('Content-Type: text/xml; charset=utf-8');
+        header('Content-Type: text/xml; charset=utf-8');
         
         echo "<vcms>".PHP_EOL;
         
@@ -499,5 +514,4 @@ class TemplateRenderer {
     }
 
 }
-
 ?>

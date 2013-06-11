@@ -67,7 +67,7 @@ class ModuleModel {
         $obj->modulePosition = $moduleObj->position;
         $obj->include = $moduleObj->include;
         // add the translations
-        if (in_array("Translatable", class_implements($obj))) {
+        if (in_array("ITranslatable", class_implements($obj))) {
             TranslationsModel::addTranslations($obj->getTranslations());
         }
         return $obj;

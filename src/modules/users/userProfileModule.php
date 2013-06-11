@@ -14,25 +14,21 @@ class UserProfileModule extends XModule {
      * called when page is viewed before output stream is filled
      */
     function onProcess () {
-        
-        if (Context::hasRole("users.profile") && Context::isLoggedIn()) {
-
-            switch (parent::getAction()) {
-                case "save":
-                    if (Context::hasRole("user.info.edit")) {
-                        parent::param("mode",$_POST["mode"]);
-                        parent::param("userAttribs",$_POST["userAttribs"]);
-                        parent::param("profileTemplate",$_POST["profileTemplate"]);
-                    }
-                    parent::blur();
-                    parent::redirect();
-                    break;
-                case "edit":
-                    if (Context::hasRole("user.info.edit")) {
-                        parent::focus();
-                    }
-                    break;
-            }
+        switch (parent::getAction()) {
+            case "save":
+                if (Context::hasRole("user.profile.edit")) {
+                    parent::param("mode",$_POST["mode"]);
+                    parent::param("userAttribs",$_POST["userAttribs"]);
+                    parent::param("profileTemplate",$_POST["profileTemplate"]);
+                }
+                parent::blur();
+                parent::redirect();
+                break;
+            case "edit":
+                if (Context::hasRole("user.profile.edit")) {
+                    parent::focus();
+                }
+                break;
         }
     }
 
@@ -56,20 +52,13 @@ class UserProfileModule extends XModule {
     }
 
     /**
-     * called when module is installed
-     */
-    function install () {
-
-    }
-
-    /**
      * returns the roles defined by this module
      */
     function getRoles () {
-        return array("user.profile.edit","user.profile.view","user.profile.own");
+        return array("user.profile.edit","user.profile.view","user.profile.owner");
     }
     
-    function getTranslations() {
+    static function getTranslations() {
         return array(
             "en"=>array(
                 "users.profile.edit.mode" => "Display Mode:"
@@ -81,16 +70,26 @@ class UserProfileModule extends XModule {
     
     function printEditView () {
         ?>
-        <div class="panel usersInfoPanel">
-            <form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
+        <div class="panel usersProfilePanel">
+            <form action="<?php echo parent::link(array("action"=>"save")); ?>" method="post">
                 <table><tr><td>
                     <?php echo parent::getTranslation("users.profile.edit.mode"); ?>
                 </td><td>
-                    <?php InputFeilds::printSelect("mode", parent::param("mode"), array(parent::getTranslation("common.user.current") => self::modeCurrentUser, parent::getTranslation("common.user.selected") => self::modeSelectedUser)); ?>
-                </td></tr></table>
+                    <?php InputFeilds::printSelect("mode", parent::param("mode"), array(self::modeCurrentUser => parent::getTranslation("common.user.current"), self::modeSelectedUser => parent::getTranslation("common.user.selected"))); ?>
+                </td></tr><tr><td colspan="2">
+                    <?php echo parent::getTranslation("users.profile.edit.template"); ?>
+                </td></tr><tr><td colspan="2">
+                    <?php InputFeilds::printHtmlEditor("profileTemplate", parent::param("profileTemplate")); ?>
+                </td></tr>
+                </table>
                 <hr/>
-                <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+                <div class="alignRight">
+                    <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+                </div>
             </form>
+            <script>
+            $(".usersProfilePanel button").button();
+            </script>
         </div>
         <?php
     }
@@ -98,26 +97,32 @@ class UserProfileModule extends XModule {
     function printMainView () {
         ?>
         <div class="panel usersProfilePanel">
+            user profile:
             <?php
             $userId = null;
-            switch (parent::getParam("mode")) {
+            switch (parent::param("mode")) {
+                case self::modeSelectedUser:
+                    $userId = Context::getSelectedUserId();
+                    break;
+                default:
                 case self::modeCurrentUser:
                     if (Context::hasRole("user.profile.own")) {
                         $userId = Context::getUserId();
                     }
                     break;
-                case self::modeSelectedUser:
-                    $userId = Context::getSelectedUserId();
-                    break;
             }
-            $user = UsersModel::getUser($userId);
-            $user->profileImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
-            $userInfo = VirtualDataModel::getRowByObjectIds(parent::param("userAttribs"), $user->objectId);
-            $placeholderReplacer = new PlaceholderReplacer();
-            $placeholderReplacer->addObject("user", $user);
-            $placeholderReplacer->addObject("userInfo", $userInfo);
-            $placeholderReplacer->setTemplate(parent::param("profileTemplate"));
-            echo $placeholderReplacer->render();
+            if (!empty($userId)) {
+                $user = UsersModel::getUser($userId);
+                if (!empty($user)) {
+                    $user->profileImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
+                    $userInfo = VirtualDataModel::getRowByObjectIds(parent::param("userAttribs"), $user->objectId);
+                    $placeholderReplacer = new TemplateParser();
+                    $placeholderReplacer->addObject("user", $user);
+                    $placeholderReplacer->addObject("userInfo", $userInfo);
+                    $placeholderReplacer->setTemplate(parent::param("profileTemplate"));
+                    echo $placeholderReplacer->render();
+                }
+            }
             ?>
         </div>
         <?php

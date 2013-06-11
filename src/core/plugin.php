@@ -50,7 +50,7 @@ interface IModule {
     function search ($searchText, $lang);
 }
 
-interface Translatable {
+interface ITranslatable {
 
     /**
      * returns the translations for texts used in this module
@@ -66,7 +66,7 @@ interface Translatable {
 /*
  * extends IModule
  */
-abstract class XModule implements IModule, Translatable {
+abstract class XModule implements IModule, ITranslatable {
     public $moduleId;
     public $include;
     public $params = array();
@@ -191,36 +191,24 @@ abstract class XModule implements IModule, Translatable {
     function log ($message) {
         Log::info($message);
     }
+    function cookie ($name) {
+        return $this->request($name, $_COOKIE);
+    }
     function get ($name) {
-        $value = isset($_GET[$name]) ? $_GET[$name] : null;
-        if ($value == null) {
-            $value = isset($_GET[$this->moduleId.'_'.$name]) ? $_GET[$this->moduleId.'_'.$name] : null;
-        }
-        if ($value == null) {
-            $alias = $this->alias($name);
-            $value = isset($_GET[$alias]) ? $_GET[$alias] : null;
-        }
-        return $value;
+        return $this->request($name, $_GET);
     }
     function post ($name) {
-        $value = isset($_POST[$name]) ? $_POST[$name] : null;
-        if ($value == null) {
-            $value = isset($_POST[$this->moduleId.'_'.$name]) ? $_POST[$this->moduleId.'_'.$name] : null;
-        }
-        if ($value == null) {
-            $alias = $this->alias($name);
-            $value = isset($_POST[$alias]) ? $_POST[$alias] : null;
-        }
-        return $value;
+        return $this->request($name, $_POST);
     }
-    function request ($name) {
-        $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : null;
+    function request ($name, $object = null) {
+        $object = $object == null ? $_REQUEST : $object;
+        $value = isset($object[$name]) ? $object[$name] : null;
         if ($value == null) {
-            $value = isset($_REQUEST[$this->moduleId.'_'.$name]) ? $_REQUEST[$this->moduleId.'_'.$name] : null;
+            $value = isset($object[$this->moduleId.'_'.$name]) ? $object[$this->moduleId.'_'.$name] : null;
         }
         if ($value == null) {
             $alias = $this->alias($name);
-            $value = isset($_REQUEST[$alias]) ? $_REQUEST[$alias] : null;
+            $value = isset($object[$alias]) ? $object[$alias] : null;
         }
         return $value;
     }

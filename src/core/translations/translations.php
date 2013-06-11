@@ -101,6 +101,7 @@ $ar_translations = array(
 ,'comments.name'=>'Name (username):'
 ,'comments.message'=>'Your Comment:'
 ,'users.image.edit.mode'=>'Display Mode:'
+,'users.profile.edit.mode'=>'Display Mode:'
 ),'de'=>array(
 'payments.paypal.account'=>'PayPal Konto'
 ,'payments.paypal.mode'=>'PayPal Mode'
@@ -202,5 +203,6 @@ $ar_translations = array(
 ,'comments.name'=>'Name (Benutzername):'
 ,'comments.message'=>'Dein Commentar:'
 ,'users.image.edit.mode'=>'Anzige Modus:'
+,'users.profile.edit.mode'=>'Anzige Modus:'
 )); 
 ?>
