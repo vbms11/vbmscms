@@ -42,10 +42,10 @@ class InstallView extends XModule {
 				InstallerModel::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database']);
 				require_once('config.php');
 				// install datamodel
-				InstallerModel::installModel();
+                                InstallerModel::installModel();
 				// create initial user
-				InstallerModel::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate']);
-				// redirect to startpage
+                                InstallerModel::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate']);
+                                // redirect to startpage
 				NavigationModel::redirect("?session=nodb",false);
 				break;
 			case "progress":
@@ -81,6 +81,7 @@ class InstallView extends XModule {
 			The cms is installing the datamodel, This may take several minutes.
 			<hr/>
 			<div id="progressbar"></div>
+                        <a href="?action=install&<?php echo session_name()."=".session_id(); ?>">install</a>
 			<script>
 			$("#progressbar").progressbar({
 				value: 100
@@ -89,13 +90,13 @@ class InstallView extends XModule {
 			function gotoLogin (data) {
 				callUrl("");
 			}
-			$.ajax({
+		/*	$.ajax({
                     "url": "?action=install&<?php echo session_name()."=".session_id(); ?>",
                     "context": document.body,
                     "success": function(data){
                         gotoLogin(data);
                     }
-            });
+                });*/
 			</script>
 		</div>
 		<?php

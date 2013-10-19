@@ -52,6 +52,7 @@ class InstallerModel {
 	}
 
 	static function generateServerSecret () {
+                $GLOBALS['serverSecret'] = "";
 		return Common::randHash(128);
 	}
 

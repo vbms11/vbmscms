@@ -1,5 +1,5 @@
 <?php
-$GLOBALS['dbName'] = 'dating';
+$GLOBALS['dbName'] = 'vbmscms';
 $GLOBALS['dbHost'] = 'localhost';
 $GLOBALS['dbUser'] = 'root';
 $GLOBALS['dbPass'] = '';
@@ -12,7 +12,7 @@ $GLOBALS['cmsName'] = 'vbmscms';
 $GLOBALS['cmsVersion'] = '0.5';
 $GLOBALS['cmsLicese'] = '';
 $GLOBALS['cmsSecureLink'] = true;
-$GLOBALS['serverSecret'] = '+A8bQo8G9SaBM+344xRO1mwY9R4Ghq8IeLCZEv0aG0YboFnw3Al7cuGf07DaCdVnOjmioy/k6CqbDQECY7rJdbWK2ubaC38b2WuLkKnLmUavxoINaYj10u5MUWNbQgPk';
+$GLOBALS['serverSecret'] = 'vwNGyv8qIdtPi1AUtt6AFMSLRrstMQNUtWxu2amWF2SuJ/hBZg4Ja+k/A3TbSeRYtoG/ACXH0802uY2Krk3ULz4F4vKacYS5I1Cvk+i3Iw7Yo1U3PGgQ2g8+VgKVnYHj';
 $GLOBALS['serverPublicKey'] = '';
 $GLOBALS['serverPrivateKey'] = '';
 $GLOBALS['currencySymbol'] = '€';

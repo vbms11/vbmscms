@@ -970,6 +970,7 @@ CREATE TABLE `t_users` (
   `registerdate` date NOT NULL,
   `birthdate` date NOT NULL,
   `active` tinyint(1) NOT NULL,
+  `image` int(10) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 

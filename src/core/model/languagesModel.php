@@ -2,6 +2,26 @@
 
 class LanguagesModel {
     
+    static function selectLanguage () {
+        // set the language
+        $lang = "de";
+        if (isset($_GET['changelang'])) {
+            $lang = $_GET['changelang'];
+        } else if (isset($_SESSION["req.lang"])) {
+            $lang = $_SESSION["req.lang"];
+        } else {
+            if (isset($_REQUEST['local'])) {
+                switch ($_REQUEST['local']) {
+                    case "en_us":
+                        $lang = $_SESSION["req.lang"] = "en";
+                    case "es_sp":
+                        $lang = $_SESSION["req.lang"] = "sp";
+                }
+            }
+        }
+        $_SESSION["req.lang"] = $lang;
+    }
+    
     static function getLanguages () {
         return Database::queryAsArray("select * from t_language");
     }

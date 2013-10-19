@@ -28,7 +28,6 @@ class Common {
         }
         $baseRandPos = 0;
         $hash = "";
-        $baseRand;
         $baseRandLen = strlen($baseRand);
         $lastRand = Common::hash(microtime().Common::rand().$GLOBALS['serverSecret']);
         for ($i=0;$i<=ceil($len/6);$i++) {

@@ -1,9 +1,6 @@
 <?php
 
 require_once 'core/common.php';
-require_once 'core/model/pagesModel.php';
-require_once 'core/model/moduleModel.php';
-require_once 'core/model/templateModel.php';
 
 // start the request context
 Context::startRequest();

@@ -248,6 +248,8 @@ class Context {
         $staticModules = self::getRenderer()->getStaticModules();
         $templateAreas = self::getRenderer()->getAreas();
         
+        $_REQUEST['req.modules'] = array();
+        
         // load the modules
         $pageModules = TemplateModel::getAreaModules(self::getPageId(), $templateAreas, $staticModules);
         $pageAreaNames = array();
@@ -337,33 +339,16 @@ class Context {
         if (Config::getQueryLog()) {
             self::$queryLog = array();
         }
-
-        if (!@include_once('config.php')) {
+        
+        if (Config::getNoDatabase()) {
             Session::startDefaultSession();
         } else {
 
             Session::useSession();
             NavigationModel::startRequest();
-
-            // set the language
-            $lang = "de";
-            if (isset($_GET['changelang'])) {
-                $lang = $_GET['changelang'];
-            } else if (isset($_SESSION["req.lang"])) {
-                $lang = $_SESSION["req.lang"];
-            } else {
-                if (isset($_REQUEST['local'])) {
-                    switch ($_REQUEST['local']) {
-                        case "en_us":
-                            $lang = $_SESSION["req.lang"] = "en";
-                        case "es_sp":
-                            $lang = $_SESSION["req.lang"] = "sp";
-                    }
-                }
-            }
+            LanguagesModel::selectLanguage();
+            
             unset($_SESSION["req.returnValue"]);
-            $_SESSION["req.lang"] = $lang;
-
             // set the siteid
             $_SESSION["req.site"] = DomainsModel::getCurrentSite();
 
@@ -495,9 +480,16 @@ class Config {
 
     static function getQueryLog () {
         if (!isset($GLOBALS['queryLog'])) {
-            return true;
+            return false;
         }
         return $GLOBALS['queryLog'];
+    }
+    
+    static function getNoDatabase () {
+        if (!isset($GLOBALS['noDatabase'])) {
+            return true;
+        }
+        return $GLOBALS['noDatabase'];
     }
 
     static function getShippingMode () {

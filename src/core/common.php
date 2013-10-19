@@ -8,9 +8,9 @@ if (!defined("vbmscms_allowAccess") || vbmscms_allowAccess != true) {
 @set_magic_quotes_runtime(0);
 
 if (!@include_once('config.php')) {
-    $_GLOBALS['noDatabase'] = true;
+    $GLOBALS['noDatabase'] = true;
 } else {
-    $_GLOBALS['noDatabase'] = false;
+    $GLOBALS['noDatabase'] = false;
 }
 
 include_once 'core/util/common.php';
@@ -22,6 +22,8 @@ include_once 'core/model/navigationModel.php';
 include_once 'core/model/confirmModel.php';
 include_once 'core/model/domainsModel.php';
 include_once 'core/model/moduleModel.php';
+include_once 'core/model/pagesModel.php';
+include_once 'core/model/templateModel.php';
 include_once 'core/model/usersModel.php';
 include_once 'core/model/eventsModel.php';
 include_once 'core/model/languagesModel.php';
