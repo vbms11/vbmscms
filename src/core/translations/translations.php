@@ -102,6 +102,13 @@ $ar_translations = array(
 ,'comments.message'=>'Your Comment:'
 ,'users.image.edit.mode'=>'Display Mode:'
 ,'users.profile.edit.mode'=>'Display Mode:'
+,'gallery.category.description'=>'Edit information about this image category.'
+,'gallery.category.header'=>'Image Category'
+,'gallery.category.title'=>'Title of the image:'
+,'gallery.category.category'=>'Description of the category:'
+,'gallery.category.image'=>'Preview Image:'
+,'gallery.category.save'=>'Save'
+,'gallery.category.cancel'=>'Cancel'
 ),'de'=>array(
 'payments.paypal.account'=>'PayPal Konto'
 ,'payments.paypal.mode'=>'PayPal Mode'
@@ -204,5 +211,12 @@ $ar_translations = array(
 ,'comments.message'=>'Dein Commentar:'
 ,'users.image.edit.mode'=>'Anzige Modus:'
 ,'users.profile.edit.mode'=>'Anzige Modus:'
+,'gallery.category.description'=>'Information uber deise bild categorie editeiren.'
+,'gallery.category.header'=>'Bild Categorie'
+,'gallery.category.title'=>'Title von die categorie:'
+,'gallery.category.category'=>'Beshreibung von die categorie:'
+,'gallery.category.image'=>'Vorshau bild:'
+,'gallery.category.save'=>'Absenden'
+,'gallery.category.cancel'=>'Abbrechen'
 )); 
 ?>

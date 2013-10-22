@@ -134,6 +134,28 @@ class GalleryView extends XModule {
         return array("gallery.edit","gallery.view");
     }
     
+    static function getTranslations() {
+        return array(
+            "en" => array(
+                "gallery.category.description" => "Edit information about this image category.",
+                "gallery.category.header" => "Image Category",
+                "gallery.category.title" => "Title of the image:",
+                "gallery.category.category" => "Description of the category:",
+                "gallery.category.image" => "Preview Image:",
+                "gallery.category.save" => "Save",
+                "gallery.category.cancel" => "Cancel"
+            ),
+            "de" => array(
+                "gallery.category.description" => "Information uber deise bild categorie editeiren.",
+                "gallery.category.header" => "Bild Categorie",
+                "gallery.category.title" => "Title von die categorie:",
+                "gallery.category.category" => "Beshreibung von die categorie:",
+                "gallery.category.image" => "Vorshau bild:",
+                "gallery.category.save" => "Absenden",
+                "gallery.category.cancel" => "Abbrechen"
+            ));
+    }
+    
     function printGallery () {
         
         ?>
@@ -168,11 +190,15 @@ class GalleryView extends XModule {
             ?>
             <table cellpadding="0" cellspacing="0" border="0"><tr><td>
             <div class="galleryButtons">
-                <a href="<?php echo NavigationModel::createModuleLink($this->getId(),array()); ?>">Back</a> 
                 <?php
+                if (isset($_GET['category'])) {
+                    ?>
+                    <a href="<?php echo NavigationModel::createModuleLink($this->getId(),array()); ?>">Back</a>
+                    <?php
+                } 
                 if (Context::hasRole("gallery.edit")) {
                     ?>
-                    | <a href="<?php echo parent::link(array("action"=>"new","parent"=>$selCategory)); ?>">New Category</a> | 
+                    <a href="<?php echo parent::link(array("action"=>"new","parent"=>$selCategory)); ?>">New Category</a>
                     <a href="<?php echo parent::link(array("action"=>"new","category"=>$selCategory)); ?>">Bild hochladen</a>
                     <?php
                 }
@@ -403,7 +429,18 @@ class GalleryView extends XModule {
     
     
     function printEditCategory () {
-        $title = ""; $description = ""; $imageFile = ""; $category = null; $categoryId = ""; $images = array();
+        
+        $category = null; 
+        $categoryId = ""; 
+        $description = ""; 
+        $imageFile = ""; 
+        $images = array();
+        $title = ""; 
+        $parent = null;
+        
+        if (isset($_GET['parent'])) {
+            $parent = $_GET['parent'];
+        } 
         if (isset($_GET['id'])) {
             $categoryId = $_GET['id'];
             $category = GalleryModel::getCategory($categoryId);
@@ -413,27 +450,27 @@ class GalleryView extends XModule {
             $imagesArray = GalleryModel::getImages($_GET['id']);
             $images = Common::toMap($imagesArray, "id", "image");
         }
-        InfoMessages::printInfoMessage("Here you can create and edit an image category.");
+        InfoMessages::printInfoMessage(parent::getTranslation("gallery.category.description"));
         ?>
-        <br/><h3>Edit Image Category:</h3>
         <form id="editCategoryForm" action="<?php echo parent::link(array("action"=>$category==null?"create":"update","id"=>isset($_GET['id']) ? $_GET['id'] : "","category"=>isset($_GET['category']) ? $_GET['category'] : "","parent"=>isset($_GET['parent']) ? $_GET['parent'] : "")); ?>" method="post" />
-            Title of the image:
-            <br/>
-            <input type="textbox" class="expand" name="title" value="<?php echo htmlspecialchars($title,ENT_QUOTES); ?>"/>
-            <br/><br/>
-            Description of the category:
-            <br/>
-            <textarea name="description" class="expand" cols="4" rows="3"><?php echo htmlspecialchars($description,ENT_QUOTES); ?></textarea>
-            <br/><br/>
-            Preview Image:
-            <br/>
-            <?php InputFeilds::printSelect("imageId", $imageFile, $images); ?>
-            <br/><br/><hr/>
-            <div align="right">
-                <input type="submit" value="Absenden"/>
-                <input type="button" value="Cancel" onclick="callUrl('<?php echo NavigationModel::createModuleLink($this->getId(),array("action"=>"back","category"=>$_GET['parent'])); ?>');"/>
+            <h3><?php echo parent::getTranslation("gallery.category.header"); ?></h3>
+            <label for="title"><?php echo parent::getTranslation("gallery.category.title"); ?></label>
+            <div><input type="textbox" class="expand" name="title" value="<?php echo htmlspecialchars($title,ENT_QUOTES); ?>"/></div>
+            <label for="description"><?php echo parent::getTranslation("gallery.category.description"); ?></label>
+            <div><textarea name="description" class="expand" cols="4" rows="3"><?php echo htmlspecialchars($description,ENT_QUOTES); ?></textarea></div>
+            <label for="imageId"><?php echo parent::getTranslation("gallery.category.image"); ?></label>
+            <div><?php InputFeilds::printSelect("imageId", $imageFile, $images); ?></div>
+            <hr/>
+            <div class="alignRight">
+                <button type="submit"><?php echo parent::getTranslation("gallery.category.save"); ?></button>
+                <button type="button" onclick="callUrl('<?php echo NavigationModel::createModuleLink($this->getId(),array("action"=>"back","category"=>$parent)); ?>');"/>
+                    <?php echo parent::getTranslation("gallery.category.cancel"); ?>
+                </button>
             </div>
         </form>
+        <script>
+        $("#editCategoryForm button").button();
+        </script>
         <?php
     }
     

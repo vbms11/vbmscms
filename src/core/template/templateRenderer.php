@@ -308,66 +308,6 @@ class TemplateRenderer {
             echo '<script type="text/javascript" src="'.$script.'" ></script>'.PHP_EOL.'        ';
         }
     }
-
-    
-    function printPlainMenu ($menu,$reRender=null,$animate=null,$effect="slide") {
-        ?>
-        <div class="sddm">
-        <?php
-        $menus = $this->getMenu($menu);
-        
-        if ($menus != null) {
-            $first = true;
-            foreach ($menus as $page) {
-                ?>
-                <div>
-                    <a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name,$page->page->id); ?>" onmouseout="mclosetime();" onmouseover="mopen('<?php echo "m_".$page->page->id; ?>');"  onclick="<?php if ($reRender != null) { echo NavigationModel::createPageRenderClick($page->page->id,$reRender,"$animate","$effect"); }?>"><?php echo $page->page->name; ?></a> 
-                    <?php
-                    if (count($page->children) > 0) {
-                        ?>
-                        <div id="<?php echo "m_".$page->page->id; ?>" class='sddmHide <?php if ($page->selected == true) echo "sddmSelected"; ?>' onmouseover="mcancelclosetime()" onmouseout="mclosetime()">
-                        <?php
-                        foreach ($page->children as $childPage) {
-                            ?>
-                            <a href="<?php echo NavigationModel::createPageNameLink($childPage->page->name,$childPage->page->id); ?>" onclick="<?php if ($reRender != null) { echo NavigationModel::createPageRenderClick($page->page->id,$reRender,"$animate","$effect"); }?>" <?php if ($childPage->selected == true) echo "class='sddmSelected'"; ?>><?php echo $childPage->page->name; ?></a>
-                            <?php
-                        }
-                        ?>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </div>
-                <?php
-                $first = false;
-            }
-        }
-        if (Context::hasRole("pages.editmenu")) {
-            ?>
-            <div class="sddmButton">
-                <a href="<?php echo NavigationModel::createStaticPageLink("pages",array("levels"=>"2","menu"=>$menu)); ?>" class="navileft_passive" title="Menu Verwalten">
-                    <img class="imageLink" src="resource/img/edit.png"  alt=""/>
-                </a>
-            </div>
-            <?php
-        }
-        ?>
-        </div>
-        <?php
-    }
-
-    function printLoginMenu () {
-
-        if (Context::isLoggedIn()) {
-            ?>
-            <a class="loginButton" href="<?php echo NavigationModel::createStaticPageLink("login",array("action"=>"logout")); ?>" title="administrator login">Logout</a>
-            <?php
-        } else {
-            ?>
-            <a class="loginButton" href="<?php echo NavigationModel::createStaticPageLink("login"); ?>" title="administrator login">Login</a>
-            <?php
-        }
-    }
     
     function renderTrackerScript ($page) {
         if (!empty($page->pagetrackerscript) || !empty($page->sitetrackerscript) || !empty($page->domaintrackerscript)) {
@@ -504,13 +444,6 @@ class TemplateRenderer {
             echo "]]></area>".PHP_EOL;
         }
         echo "</vcms>".PHP_EOL;
-    }
-    
-    function printWelcomeText () {
-        ?>
-        Welcome user 
-        <?php
-        echo Context::getUsername();
     }
 
 }

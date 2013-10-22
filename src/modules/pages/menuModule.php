@@ -98,7 +98,7 @@ class MenuView extends XModule {
     }
     
     function getStyles () {
-        return array("/?service=menuStyles");
+        return array("css/menu.css","/?service=menuStyles");
     }
     
     function getScripts () {
@@ -402,7 +402,6 @@ class MenuView extends XModule {
     }
     
     function printMenuView () {
-        $menuStyle = MenuModel::getMenuStyle(parent::param("selectedStyle"));
         // styles
         $styles = MenuModel::getMenuStyles();
         $menuStyle = null;
@@ -415,23 +414,29 @@ class MenuView extends XModule {
                 $menuStyle = MenuModel::getMenuStyle($styles[$keys[0]]->id);
             }
         }
-        if ($menuStyle != null) {
-            ?>
-            <div class="<?php echo $menuStyle->cssclass ?>">
+        $menuStyleClass = "";
+        if (!empty($menuStyle)) {
+            $menuStyleClass = $menuStyle->cssclass;
+        }
+        $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
+        // if no menu selected select the first menu if any exist
+        if (empty($menus)) {
+            $menusList = Context::getRenderer()->getMenus();
+            if (count($menusList) > 0) {
+                // parent::param("selectedMenu",current($menus));
+                // $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
+                $menus = current($menusList);
+            }
+        }
+        ?>
+        <div class="panel menuPanel <?php echo $menuStyleClass ?>">
+            <?php
+            if (!empty($menus) && !empty($menuStyle)) {
+                ?>
                 <div class="sddm">
                     <?php
-                    $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
-                    // if no menu selected select the first menu if any exist
-                    if (empty($menus)) {
-                        $menus = Context::getRenderer()->getMenus();
-                        $menuKeys = array_keys($menus);
-                        if (count($menuKeys) > 0) {
-                            parent::param("selectedMenu",$menuKeys[0]);
-                            $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
-                        }
-                    }
                     $first = true;
-                    if (!Common::isEmpty($menus)) {
+                    if (!empty($menus)) {
                         foreach ($menus as $page) {
                             $levelId = "m_".$page->page->id;
                             if (!Common::isEmpty($page->page->name)) {
@@ -451,9 +456,11 @@ class MenuView extends XModule {
                     }
                     ?>
                 </div>
-            </div>
             <?php
-        }
+            }
+            ?>
+        </div>
+        <?php
     }
     
     function printMenuNode ($page,$parentNodes) {

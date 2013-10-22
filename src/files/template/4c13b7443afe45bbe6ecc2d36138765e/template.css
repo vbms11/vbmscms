@@ -1,48 +1,81 @@
 body {
-    margin: 0px;
-    background: black;
+    padding:0px;
+    margin:0px;
+}    
+.frameDiv {
+    min-width: 700px;
+    margin: 0px 10px 0px 10px;
 }
-#pageFrameDiv {
-    min-width:1000px;
+.topMenuDiv {
+    margin: 0px 10px 0px 10px;
 }
-#headerDiv {
-    background: url('menta_bike_transparent.png') no-repeat black;
-    background-position: 60px 0px;
-    height: 75px;
+.topMenuMarginDiv {
+    float: right;
 }
-#topMenuDiv {
-    background: url('menuGrad.png') black;
-    height: 32px;
+.headerDiv {
+    clear: both;
+    height: 100px;
+    margin: 10px 0px 0px 0px;
+    border: 1px dashed silver;
+    background: url('gradBig.gif') white repeat-x;
 }
-#bodyTopDiv {
-
+.headerMenuDiv {
+    min-height: 30px;
+    margin: 10px 0px 0px 0px;
+    border: 1px dashed silver;
+    background: url('gradSmall.gif') white repeat-x;
 }
-#bodyDiv {
+.headerMenuMarginDiv {
+    margin:10px;
+}
+.bodyDiv {
     min-height: 200px;
-    background: url('bg.jpg') repeat;
-    padding: 40px 0px;
+    margin: 10px 0px 0px 0px;
+    border: 1px dashed silver;
+    background: url('gradBig.gif') white repeat-x;
 }
-#bodyMarginDiv {
-    margin: 0px 60px;
+.bodyMarginDiv {
+    margin:10px;
 }
-#socialDiv {
-
+.bodyDivLeftMargin {
+    margin-left: 210px;
 }
-#socialMarginDiv {
-    margin:20px;
+.bodyDivRightMargin {
+    margin-right: 210px;
 }
-#bottomMenuDiv {
-    background: url('menuBottomGrad.png') black;
-    height: 48px;
+.bodyRightDiv {
+    min-height: 200px;
+    width: 200px;
+    float: right;
+    margin: 10px 0px 0px 0px;
+    border: 1px dashed silver;
+    background: url('gradBig.gif') white repeat-x;
 }
-#copyRightDiv {
-    min-height: 20px;
+.bodyRightMarginDiv {
+    margin:10px;
 }
-#headerToolsDiv {
-    position: absolute;
-    top: 25px;
-    right: 35px;
+.bodyLeftDiv {
+    min-height: 200px;
+    width: 200px;
+    float: left;
+    margin: 10px 0px 0px 0px;
+    border: 1px dashed silver;
+    background: url('gradBig.gif') white repeat-x;
 }
-#headerToolsMenu, #headerMenuSearch, #headerLangsMenu {
+.bodyLeftMarginDiv {
+    margin:10px;
+}
+.footerMenuDiv {
+    clear: both;
+    min-height: 30px;
+    margin: 10px 0px 10px 0px;
+    border: 1px dashed silver;
+    background: url('gradSmall.gif') white repeat-x;
+}
+.footerMenuMarginDiv {
+    margin:10px;
+}
+.floatContainerDiv {
     float:left;
+    width:100%;
 }

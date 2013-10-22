@@ -36,7 +36,7 @@ class GalleryModel {
         $gallery = Database::queryAsObject("select * from t_gallery_page where pageid = '$moduleId' and type = '$galleryType'");
         if ($gallery == null) {
             $rootCategory = GalleryModel::createCategory("root_$moduleId", "root_$moduleId", null, null);
-            Database::query("insert into t_gallery_page (pageid,type,rootcategory) values('$moduleId','$type',$rootCategory')");
+            Database::query("insert into t_gallery_page (pageid,type,rootcategory) values('$moduleId','$galleryType','$rootCategory')");
             return GalleryModel::getGallery($theId, $galleryType);
         }
         return $gallery;

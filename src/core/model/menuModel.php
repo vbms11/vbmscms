@@ -105,7 +105,9 @@ class MenuModel {
             exit;
             return array();
         }
-        //
+        //from t_menu_instance i
+            //    left join t_menu m on m.type = i.id
+
         $query = "
             select p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description
             from t_menu m
