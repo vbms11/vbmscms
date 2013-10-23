@@ -159,6 +159,14 @@ class Context {
     static function isRenderRequest () {
         return (isset($_GET["reRender"]) && !Common::isEmpty($_GET["reRender"]));
     }
+    
+    static function isAdminMode () {
+        return isset($_SESSION["context.mode.admin"]) ? $_SESSION["context.mode.admin"] : false;
+    }
+    
+    static function setAdminMode ($isAdminMode) {
+        $_SESSION["context.mode.admin"] = $isAdminMode;
+    }
 
     static function getPage () {
         return isset($_SESSION["req.page"]) ? $_SESSION["req.page"] : null;
@@ -351,7 +359,12 @@ class Context {
             unset($_SESSION["req.returnValue"]);
             // set the siteid
             $_SESSION["req.site"] = DomainsModel::getCurrentSite();
-
+            
+            // check if admin mode
+            if (isset($_GET["setAdminMode"])) {
+                Context::setAdminMode($_GET["setAdminMode"] == "1" ? true : false);
+            }
+            
             // set the selected page
             $page = NavigationModel::selectPage();
             if ($page != null) {

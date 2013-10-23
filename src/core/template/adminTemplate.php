@@ -5,37 +5,55 @@ require_once 'core/plugin.php';
 class AdminTemplate extends XTemplate {
     
     /**
-     * 
-     * @param type $html
-     * @return type
-     */
-    function setData ($html) {
-    }
-    
-    /**
      * returns the names of the areas defined by this template
      */
     function getAreas () {
-        return array("center","adminMenu","popup");
+        return array("center","adminMenu","dialog");
     }
 
     /**
      * renders this template
      */
     function render () {
-        
-        
-        $this->renderMainTemplateArea(Context::getPageId(), "center");
-        
-        $this->renderStaticModule("adminMenu");
+        ?>
+        <div class="adminMenuDiv">
+            <?php $this->renderStaticModule("adminMenu"); ?>
+        </div>
+        <div class="adminContentSplitter"></div>
+        <div class="adminBodyDiv">
+            <?php $this->renderMainTemplateArea("center"); ?>
+        </div>
+        <script>
+        $(function() {
+            $('.adminContentSplitter').draggable({    
+                axis: 'x',
+                containment: '.adminContentDiv',
+                drag: function(event, ui) {
+                    $('.adminMenuDiv').css({ "width" : ui.position.left + 'px' });
+                    $('.adminBodyDiv').css({ 
+                        "left" : ui.position.left + 3 + 'px'
+                    });
+                },
+                refreshPositions: true,
+                scroll: false
+            });
+        });
+        </script>
+        <?php
+        $this->renderFocusedModule("dialog");
     }
     
+    /**
+     * 
+     */
     static function renderAdminHeader () {
         ?>
         <div class="ui-widget-header adminHeaderDiv">
             <div class="adminHeaderModesDiv">
-                <div class="ui-widget-header adminHeaderModeDiv"><h3>View</h3></div>
-                <div class="ui-widget-header adminHeaderModeDiv"><h3>Edit</h3></div>
+                <div class="ui-widget-header adminHeaderModeDiv"><a>View</a></div>
+                <div class="ui-widget-header adminHeaderModeDiv">
+                    <a href="<?php NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","id"=>  Context::getPageId())); ?>">Edit</a>
+                </div>
             </div>
             <div class="adminHeaderLogoDiv"></div>
         </div>
@@ -43,6 +61,9 @@ class AdminTemplate extends XTemplate {
         <?php
     }
     
+    /**
+     * 
+     */
     static function renderAdminFooter () {
         ?>
         </div>
@@ -54,12 +75,12 @@ class AdminTemplate extends XTemplate {
      * @param type $pageId
      * @param type $teplateArea
      */
-    function renderMainTemplateArea ($pageId, $teplateArea) {
-        $this->renderTemplateArea($pageId, $teplateArea);    
+    function renderMainTemplateArea ($teplateArea) {
+        $this->renderTemplateArea($teplateArea);    
     }
     
     /**
-     * renders the focused module as a popup
+     * renders the focused module as a dialog
      * @param type $teplateArea
      */
     function renderFocusedModule ($teplateArea) {
@@ -80,6 +101,9 @@ class AdminTemplate extends XTemplate {
         return array("/core/template/js/admin.js");
     }
     
+    /**
+     * @return string
+     */
     static function getAdminStyle () {
         return "core/template/css/admin.css";
     }
