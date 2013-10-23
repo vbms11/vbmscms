@@ -158,6 +158,9 @@ class GalleryView extends XModule {
     
     function printGallery () {
         
+        Context::addRequiredStyle("resource/js/lightbox/css/jquery.lightbox-0.5.css");
+        Context::addRequiredScript("resource/js/lightbox/js/jquery.lightbox-0.5.pack.js");
+        
         ?>
         <div class="galleryContainer">
             <?php

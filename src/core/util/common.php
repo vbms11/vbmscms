@@ -155,6 +155,7 @@ class InputFeilds {
     }
     
     static function printCaptcha ($name) {
+        Context::addRequiredStyle("resource/css/captcha.css");
         $captcha = Captcha::getCaptcha($name);
         ?>
         <div class="captchaDiv">
@@ -168,6 +169,9 @@ class InputFeilds {
     }
     
     static function printHtmlEditor ($name,$value="",$cssFile="",$fileSystem = array("action"=>"www")) {
+        Context::addRequiredStyle("resource/js/elrte/css/elrte.min.css");
+        Context::addRequiredScript("resource/js/elrte/js/elrte.min.js");
+        Context::addRequiredScript("resource/js/elrte/js/i18n/elrte.en.js");
         ?>
         <textarea id="<?php echo $name; ?>" name="<?php echo $name; ?>">
             <?php echo htmlspecialchars($value,ENT_QUOTES); ?>
@@ -194,15 +198,6 @@ class InputFeilds {
         });
         </script>
         <?php
-        /*
-        require_once('resource/js/fckeditor/fckeditor.php');
-        $oFCKeditor = new FCKeditor("$name") ;
-        $oFCKeditor->BasePath = 'resource/js/fckeditor/' ;
-        $oFCKeditor->Value = "$value";
-        $oFCKeditor->Height = "500px";
-        $oFCKeditor->ToolbarSet = 'MyToolbar' ;
-        $oFCKeditor->Create();
-        */
     }
     
     static function printBBEditor ($name,$value="") {
@@ -228,6 +223,11 @@ class InputFeilds {
     
     static function printMultiSelect ($name,$options,$selection,$styled=true) {
         
+        Context::addRequiredStyle("resource/js/multiselect/css/ui.multiselect.css");
+        Context::addRequiredScript("resource/js/multiselect/js/plugins/localisation/jquery.localisation-min.js");
+        Context::addRequiredScript("resource/js/multiselect/js/plugins/scrollTo/jquery.scrollTo-min.js");
+        Context::addRequiredScript("resource/js/multiselect/js/ui.multiselect.js");
+        
         echo "<select class='multiselect' multiple='multiple' id='$name' name='".$name."[]'>";
         foreach ($options as $key => $valueName) {
             echo "<option value='".$key."'";
@@ -249,6 +249,8 @@ class InputFeilds {
     }
     
     static function printMultiFileUpload ($name,$action,$values=array()) {
+        Context::addRequiredScript("resource/js/valums-file-uploader/client/fileuploader.js");
+        Context::addRequiredStyle("resource/js/valums-file-uploader/client/fileuploader.css");
         ?>
         <div id="file-uploader-<?php echo $name; ?>">       
             <noscript>          

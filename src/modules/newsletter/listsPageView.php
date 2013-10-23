@@ -184,7 +184,8 @@ class ListsPageView extends XModule {
     }
 
     function printEmailListsView () {
-
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         $emailGroups = EmailListModel::getEmailGroups();
 	$emailGroupIds = array_keys($emailGroups);
         $emailGroup = $emailGroups[$emailGroupIds[0]];

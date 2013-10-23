@@ -15,7 +15,7 @@ class TemplateModel {
     static function getTemplateObj ($page) {
         $templateClass = null;
         // echo "p=".$page;
-        if (Common::isEmpty($page->html) && !Common::isEmpty($page->templateinclude) && !Common::isEmpty($page->interface)) {
+        if (!empty($page->templateinclude) && !empty($page->interface)) {
             require_once($page->templateinclude);
             $templateClass = eval("return new $page->interface();");
             $templateClass->setPath(dirname($page->templateinclude));

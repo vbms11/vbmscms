@@ -148,6 +148,10 @@ class MysqlDataSource implements IDataSource {
     }
     
     function fetchObject ($result) {
+        $rows = mysql_num_rows($result);
+        if ($rows < 1) {
+            return;
+        }
         $obj = mysql_fetch_object($result);
         return $obj;
     }

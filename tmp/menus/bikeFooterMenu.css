@@ -1,0 +1,43 @@
+.bottomDivMenu {
+    margin-left:60px;
+    height:48px;
+    font: 11px Arial,sans-serif;
+    line-height:48px;
+}
+.bottomDivMenu .sddm {
+}
+.bottomDivMenu .sddm div a {
+    text-decoration: none;
+    padding: 0px 7px;
+    margin: 0px;
+    font-weight:normal;
+    color: #FFF;
+}
+.bottomDivMenu .sddm div a.sddmSelected {
+    color: #FFDD00;
+}
+.bottomDivMenu .sddm div a:hover {
+    color: #FFDD00;
+}
+.bottomDivMenu .sddm div div {
+    background-color: rgb(250,250,250);
+    border: 1px solid silver;
+    padding: 4px;
+}
+.bottomDivMenu .sddm div div a:hover {
+    background-color: rgb(240,240,240);
+    border: 1px solid silver;
+    padding: 3px 3px 3px 4px;
+}
+.bottomDivMenu .sddm div div a {
+    background-color: rgb(250,250,250);
+    padding: 4px;
+}
+.bottomDivMenu .sddm div div a.sddmSelected {
+    font-weight: bold;
+    color:black;
+}
+.bottomDivMenu .sddm div a.sddmFirst {
+    padding-left: 0px;
+    border-left: 0px none;
+}

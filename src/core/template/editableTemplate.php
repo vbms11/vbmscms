@@ -33,7 +33,7 @@ class EditableTemplate extends XTemplate {
      * renders this template
      */
     function render () {
-        $this->templateParser->render(false);
+        $this->templateParser->render();
     }
 
     /**

@@ -330,27 +330,4 @@ class Dependency {
     }
 }
 
-
-/*
-class DependencyResolver {
-
-    static public $dependencies = array();
-    static function addDependency ($dependency) {
-	DependencyResolver::dependencies[$dependency->getName()] = $dependency;
-    }
-    static function getDependencyStlyes ($name) {
-	DependencyResolver::dependencies[$name]->getStyles();
-    }
-    static function getDependencyScripts ($name) {
-	DependencyResolver::dependencies[$name]->getScripts();
-    }
-}
-
-DependencyResolver::addDependency(new Dependency("finder",array("resource/js/elfinder/js/elfinder.min.js"),array("resource/js/elfinder/css/elfinder.css")));
-DependencyResolver::addDependency(new Dependency("editor",array("resource/js/elrte/js/i18n/elrte.en.js","resource/js/elrte/js/elrte.min.js"),array("resource/js/elrte/css/elrte.min.css")));
-DependencyResolver::addDependency(new Dependency("multiselect",array("resource/js/multiselect/js/plugins/localisation/jquery.localisation-min.js","resource/js/multiselect/js/plugins/scrollTo/jquery.scrollTo-min.js","resource/js/multiselect/js/ui.multiselect.js"),array()));
-DependencyResolver::addDependency(new Dependency("fileupload",array(),array());
-DependencyResolver::addDependency(new Dependency("lightbox",array(),array());
-DependencyResolver::addDependency(new Dependency("datatables",array(),array());
-*/
 ?>

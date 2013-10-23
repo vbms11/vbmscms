@@ -60,6 +60,8 @@ class MessagePageView extends XModule {
     }
 
     function printMainView () {
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         $message = null;
         if (isset($_GET['message']))
             $message = ForumPageModel::getPm($_GET['message']);

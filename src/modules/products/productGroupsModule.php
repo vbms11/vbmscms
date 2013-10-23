@@ -307,7 +307,7 @@ class ProductGroupsModule extends XModule {
                     </td><td class="expand">
                         <?php
                         $gallerys = Common::toMap(GalleryModel::getCategorys(),"id","title");
-                        InputFeilds::printSelect(parent::alias("galleryId"), $article->galleryid, $gallerys);
+                        InputFeilds::printSelect(parent::alias("galleryId"), $article == null ? "" : $article->galleryid, $gallerys);
                         ?>
                     </td></tr><tr><td>
                         <b><?php echo parent::getTranslation("products.titel"); ?>:</b>

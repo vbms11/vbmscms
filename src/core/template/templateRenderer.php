@@ -1,5 +1,7 @@
 <?php
 
+require_once 'core/template/adminTemplate.php';
+
 class TemplateRenderer {
     
     /**
@@ -33,7 +35,11 @@ class TemplateRenderer {
      * @param <type> $pageId
      * @param <type> $teplateArea
      */
-    function renderTemplateArea ($pageId, $teplateArea) {
+    function renderTemplateArea ($teplateArea, $pageId = null) {
+        
+        if (empty($pageId)) {
+            $pageId  = Context::getPageId();
+        }
         
         echo "<div class='vcms_area' id='vcms_area_$teplateArea' >";
 
@@ -46,7 +52,7 @@ class TemplateRenderer {
             if (Context::hasRole("pages.edit")) {
                 ?>
                 <div class="toolButtonDiv show">
-                    <a class="toolButtonSpacinng" href="<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$teplateArea,"position"=>-1)); ?>"><img src="resource/img/new.png" class="imageLink" alt="" title="Neues Modul einpflegen" /></a>
+                    <a class="toolButtonSpacinng" href="<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>$pageId,"area"=>$teplateArea,"position"=>-1)); ?>"><img src="resource/img/new.png" class="imageLink" alt="" title="Neues Modul einpflegen" /></a>
                 </div>
                 <?php
             }
@@ -57,8 +63,8 @@ class TemplateRenderer {
             <script>
             var areaMenuDiv = $('#vcms_area_<?php echo $teplateArea; ?>');
             areaMenuDiv.contextMenu([
-                    {'Insert Module':function (menuItem,menu) { callUrl('<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$teplateArea,"position"=>-1),false); ?>'); }},
-                    {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }}],
+                    {'Insert Module':function (menuItem,menu) { callUrl('<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>$pageId,"area"=>$teplateArea,"position"=>-1),false); ?>'); }},
+                    {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>$pageId),false); ?>'); }}],
                     {theme:'vista'});
             areaMenuDiv.mouseover(function(){
                 $(this).addClass("vcms_area_show_border");
@@ -78,7 +84,11 @@ class TemplateRenderer {
      * @param <type> $pageId
      * @param <type> $teplateArea
      */
-    function renderMainTemplateArea ($pageId, $teplateArea) {
+    function renderMainTemplateArea ($teplateArea, $pageId = null) {
+        
+        if (empty($pageId)) {
+            $pageId = Context::getPageId();
+        }
         
         $focusedModuleId = Context::getFocusedArea();
         if ($focusedModuleId != null) {
@@ -88,7 +98,7 @@ class TemplateRenderer {
             Context::setIsFocusedArea(false);
             echo "</div>";
         } else {
-            $this->renderTemplateArea($pageId, $teplateArea);
+            $this->renderTemplateArea($teplateArea, $pageId);
         }    
     }
     
@@ -98,7 +108,7 @@ class TemplateRenderer {
      * @param <type> $pageId
      * @param <type> $menuName
      */
-    function renderMenu ($pageId, $menuName) {
+    function renderMenu ($menuName) {
         // get the menu module
         $menuModule = null;
         $menuAreaModules = Context::getModules($menuName);
@@ -218,10 +228,6 @@ class TemplateRenderer {
         <meta name="robots" content="index, follow" />
         <?php
 
-        // print page resource links
-        $headerStyles = array();
-        $headerScripts = array();
-
         // get module resouces
         $modulesByArea = Context::getModules();
         foreach ($modulesByArea as $modulesInArea) {
@@ -236,7 +242,7 @@ class TemplateRenderer {
                         } else {
                             $link = ResourcesModel::createModuleResourceLink($module, $script);
                         }
-                        $headerScripts[$link] = $link;
+                        Context::addRequiredScript($link);
                     }
                 }
                 $styles = $module->getStyles();
@@ -249,7 +255,7 @@ class TemplateRenderer {
                         } else {
                             $link = ResourcesModel::createModuleResourceLink($module, $style);
                         }
-                        $headerStyles[$link] = $link;
+                        Context::addRequiredStyle($link);
                     }
                 }
             }
@@ -261,50 +267,32 @@ class TemplateRenderer {
         if (!Common::isEmpty($styles)) {
             $templateStylePaths = $template->getResourcePaths($styles);
             foreach ($templateStylePaths as $templateStylePath) {
-                $headerStyles[$templateStylePath] = $templateStylePath;
+                Context::addRequiredStyle($templateStylePath);
             }
         }
         $scripts = $template->getScripts();
         if (!Common::isEmpty($scripts)) {
             $templateScriptPaths = $template->getResourcePaths($scripts);
             foreach ($templateScriptPaths as $templateScriptPath) {
-                $headerScripts[$templateScriptPath] = $templateScriptPath;
+                Context::addRequiredScript($templateScriptPath);
             }
         }
 
         ?>
         <link rel="shortcut icon" href="<?php echo ResourcesModel::createTemplateResourceLink("favicon.ico"); ?>" type="image/x-icon" />
-        <link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
+        <link type="text/css" href="resource/js/jquery/css/base/jquery.ui.all.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-ui-1.8.15.custom.min.js"></script>
+        <link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/main.js"></script>
-        
-        <script type="text/javascript" src="resource/js/datatables/js/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="resource/js/lightbox/js/jquery.lightbox-0.5.pack.js"></script>
-        <script type="text/javascript" src="resource/js/multiselect/js/plugins/localisation/jquery.localisation-min.js"></script>
-        <script type="text/javascript" src="resource/js/multiselect/js/plugins/scrollTo/jquery.scrollTo-min.js"></script>
-        <script type="text/javascript" src="resource/js/multiselect/js/ui.multiselect.js"></script>
-        <script type="text/javascript" src="resource/js/smefcms/smefcms.js"></script>
-        <!-- elRTE -->
-        <script src="resource/js/elrte/js/elrte.min.js" type="text/javascript" charset="utf-8"></script>
-        <link rel="stylesheet" href="resource/js/elrte/css/elrte.min.css" type="text/css" media="screen" charset="utf-8"/>
-        <script src="resource/js/elrte/js/i18n/elrte.en.js" type="text/javascript" charset="utf-8"></script>
-        <!-- elFinder -->
-        <link rel="stylesheet" href="resource/js/elfinder/css/elfinder.css" type="text/css" media="screen" title="no title" charset="utf-8"/>
-        <script src="resource/js/elfinder/js/elfinder.min.js" type="text/javascript" charset="utf-8"></script>
-        <link type="text/css" href="resource/js/valums-file-uploader/client/fileuploader.css" media="all" rel="stylesheet"/>
-        <script type="text/javascript" src="resource/js/valums-file-uploader/client/fileuploader.js"></script>
-        <link type="text/css" href="resource/js/contextmenu/jquery.contextmenu.css" media="all" rel="stylesheet"/>
-        <script type="text/javascript" src="resource/js/contextmenu/jquery.contextmenu.js"></script>
-        
         <?php
 
         // render style links
-        foreach ($headerStyles as $style) {
+        foreach (Context::getRequiredStyles() as $style) {
             echo '<link rel="stylesheet" type="text/css" href="'.$style.'" />'.PHP_EOL.'        ';
         }
         // render script links
-        foreach ($headerScripts as $script) {
+        foreach (Context::getRequiredScripts() as $script) {
             echo '<script type="text/javascript" src="'.$script.'" ></script>'.PHP_EOL.'        ';
         }
     }
@@ -319,35 +307,33 @@ class TemplateRenderer {
         }
     }
     
+    function renderHeader () {
+        
+        if (Context::hasRoleGroup("admin")) {
+            AdminTemplate::renderAdminHeader();
+            Context::addRequiredStyle(AdminTemplate::getAdminStyle());
+        }
+    }
+    
     function renderFooter () {
-        ?>
-        <!-- footer -->
-        <div id="cmsFooterDiv" class="cmsFooter"></div>
-        <div id="cmsFooterDivButtons" class="cmsFooter">
-            <div class="cmsFooterButton" id="cmsUsersOnline">
-                <?php
-                echo "<span id='cmsUsersOnlineText'>(0) Users Online</span>";
-                ?>
-                <div id="cmsUsersOnlineMenu" class="hide"></div>
-            </div>
-            <div id="cmsFooterMenu">
-                <?php 
-                $this->printPlainMenu(24,array("center"),"#contentDivOpacity,#contentDiv","fade"); 
-                ?>
-            </div>
-        </div>
-        <?php 
-        // echo "querys = ".implode(" <br/>\n<br/>\n<br/> ",$_SESSION['database.querys']); 
-        ?>
-        <script>
-        $("#cmsUsersOnline").click(function () {
-            $("#cmsUsersOnlineMenu").slideToggle("slow", function () {});
-        });
-        $("#cmsUsersOnlineMenu div").click(function () {
-            $("#cmsUsersOnlineMenu").slideToggle("slow", function () {});
-        });
-        </script>
-        <?php
+        
+        if (Context::hasRoleGroup("admin")) {
+            AdminTemplate::renderAdminFooter();
+        }
+        
+        if (Context::hasRole("pages.edit")) {
+            Context::addRequiredScript("resource/js/contextmenu/jquery.contextmenu.js");
+            Context::addRequiredStyle("resource/js/contextmenu/jquery.contextmenu.css");
+            ?>
+            <script>
+            $("body").contextMenu([
+                {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }}],
+                {theme:'vista'});
+            </script>
+            <?php
+        }
+        
+        $this->renderTrackerScript(Context::getPage());
     }
     
     function invokeRender () {
@@ -362,25 +348,19 @@ class TemplateRenderer {
                 ModuleModel::renderModule($module);
             }
         } else {
+            
+            ob_start();
+            $this->renderHeader();
+            $this->render();
+            $this->renderFooter();
+            $bodyHtml = ob_get_clean();
+            
             echo '<?xml version="1.0" encoding="ISO-8859-1" ?>'.PHP_EOL;
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'.PHP_EOL;
-            // echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'.PHP_EOL;
             echo '<html xmlns="http://www.w3.org/1999/xhtml">'.PHP_EOL.'<head>'.PHP_EOL;
             $this->renderHtmlHeader();
-            echo '</head>'.PHP_EOL.'<body>'.PHP_EOL.'<div id="cmsBodyDiv">'.PHP_EOL;
-            $this->render();
-            echo '</div>'.PHP_EOL;
-            // $this->renderFooter();
-            if (Context::hasRole("pages.edit")) {
-                echo '<script>'.PHP_EOL;
-                ?>
-                $("body").contextMenu([
-                    {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }}],
-                    {theme:'vista'});
-                <?php
-                echo '</script>'.PHP_EOL;
-            }
-            $this->renderTrackerScript(Context::getPage());
+            echo '</head>'.PHP_EOL.'<body>'.PHP_EOL;
+            echo $bodyHtml;
             echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
         }
     }
@@ -440,7 +420,7 @@ class TemplateRenderer {
         // render areas that have changed
         foreach ($areas as $area) {
             echo "<area id='$area' animate='$animate' effect='$effect'><![CDATA[";
-            $this->renderTemplateArea(Context::getPageId(),$area);
+            $this->renderTemplateArea($area, Context::getPageId());
             echo "]]></area>".PHP_EOL;
         }
         echo "</vcms>".PHP_EOL;

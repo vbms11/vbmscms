@@ -59,6 +59,10 @@ class TemplatesView extends XModule {
     }
     
     function renderEditTemplateView ($templateId = null) {
+        
+        Context::addRequiredScript("resource/js/elfinder/js/elfinder.min.js");
+        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.css");
+        
         $actionName = "";
         if ($templateId != null) {
             $template = TemplateModel::getTemplate($templateId);
@@ -148,7 +152,8 @@ class TemplatesView extends XModule {
     }
     
     function renderMainView() {
-        
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         ?>
         <div class="panel templatesPanel">
             <div>

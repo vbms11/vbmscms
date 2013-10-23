@@ -480,6 +480,8 @@ class OrdersView extends XModule {
     }
     
     function printMainView ($pageId) {
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         if (!Common::isEmpty(parent::param("selectedForm"))) {
             ?>
             <div id="tabs">

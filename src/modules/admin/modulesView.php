@@ -28,7 +28,8 @@ class ModulesView extends XModule {
     }
     
     function renderMainView() {
-        
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         ?>
         <div class="panel modulesPanel">
             <div>

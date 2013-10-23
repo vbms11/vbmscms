@@ -146,7 +146,7 @@ class NavigationModel {
             }
             $pageId = $welcomePage->id;
         }
-        $link = "?pageid1=$pageId".NavigationModel::buildParams($params,$xhtml).NavigationModel::addSessionKeys($xhtml);
+        $link = "?pageid=$pageId".NavigationModel::buildParams($params,$xhtml).NavigationModel::addSessionKeys($xhtml);
         return ($secure == null ? NavigationModel::$secureLink : $secure) ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
     
@@ -167,12 +167,12 @@ class NavigationModel {
     }
 
     static function createModuleLink ($moduleId,$params=null,$xhtml=true,$secure=null) {
-        $link = "?page1=$moduleId".NavigationModel::buildParams($params,$xhtml).NavigationModel::addSessionKeys($xhtml);
+        $link = "?moduleid=$moduleId".NavigationModel::buildParams($params,$xhtml).NavigationModel::addSessionKeys($xhtml);
         return ($secure == null ? NavigationModel::$secureLink : $secure) ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
 
     static function createModuleAjaxLink ($moduleId,$params=null,$xhtml=true,$secure=true) {
-        $link = "?page1=$moduleId".NavigationModel::buildParams(NavigationModel::addAjaxParam($params),$xhtml);
+        $link = "?moduleid=$moduleId".NavigationModel::buildParams(NavigationModel::addAjaxParam($params),$xhtml);
         return NavigationModel::$secureLink ? NavigationModel::registerSecureLink($link,$xhtml).NavigationModel::addSessionKeys($xhtml,true) : $link.NavigationModel::addSessionKeys($xhtml,true);
     }
 
@@ -182,7 +182,7 @@ class NavigationModel {
     
     static function createActionLink ($action,$params=null,$xhtml=true) {
         $moduleId = Context::getModuleId();
-        $link = "?page1=$moduleId&action=$action".NavigationModel::buildParams($params,$xhtml).(!NavigationModel::$secureLink ? NavigationModel::addSessionKeys($xhtml) : "");
+        $link = "?moduleid=$moduleId&action=$action".NavigationModel::buildParams($params,$xhtml).(!NavigationModel::$secureLink ? NavigationModel::addSessionKeys($xhtml) : "");
         return NavigationModel::$secureLink ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
     
@@ -364,23 +364,13 @@ class NavigationModel {
     
     static function selectPage () {
         
-        // stophack
-        //$page = PagesModel::getStaticPage("login", Context::getLang());
-        //if (1==1) return $page;
-        
-        $lang = Context::getLang();
         Context::setModuleId(null);
-        
-        // pagename pagecode moduleid pageid
         $page = null;
-        if (isset($_GET['page1'])) {
-            Context::setModuleId($_GET['page1']);
-            $page = PagesModel::getPageByTemplateArea($_GET['page1'],Context::getLang());
+        
+        if (isset($_GET['moduleid'])) {
+            Context::setModuleId($_GET['moduleid']);
+            $page = PagesModel::getPageByTemplateArea($_GET['moduleid'],Context::getLang());
             NavigationModel::addToHistory();
-        } else if (isset($_GET['pageid1'])) {
-            $page = PagesModel::getPage($_GET['pageid1'],Context::getLang());
-            NavigationModel::addToHistory();
-            NavigationModel::clearSecureLinks();
         } else if (isset($_GET['pageid'])) {
             $page = PagesModel::getPage($_GET['pageid'],Context::getLang());
             NavigationModel::addToHistory();
@@ -389,8 +379,8 @@ class NavigationModel {
             $page = PagesModel::getPage($_GET['p'],Context::getLang(),true,$_GET['n']);
             NavigationModel::addToHistory();
             NavigationModel::clearSecureLinks();
-        } else if (isset($_GET['name1'])) {
-            $page = PagesModel::getPageByName($_GET['name1'],Context::getLang());
+        } else if (isset($_GET['pagename'])) {
+            $page = PagesModel::getPageByName($_GET['pagename'],Context::getLang());
             NavigationModel::addToHistory();
             NavigationModel::clearSecureLinks();
         } else if (isset($_GET['static'])) {
@@ -405,20 +395,14 @@ class NavigationModel {
         if (!isset($_GET['service']) && $page == null) {
             // default to welcome page
             $page = PagesModel::getWelcomePage(Context::getLang());
-            // if no welcome page take user to the setup page
-            //if ($page == null) {
-            //    $page = PagesModel::getPage(1,Context::getLang());
-                //$page = $pagesModel->getSetupPage($lang);
-            //}
-            
+            // if no welcome page take user to login
             if ($page == null) {
                 $page = PagesModel::getStaticPage("login", Context::getLang());
             }
-            
+            // if no login page take user to setup
             if ($page == null) {
                 $page = PagesModel::getStaticPage("startup", Context::getLang());
             }
-            // NavigationModel::clearSecureLinks();
         }
         
         return $page;

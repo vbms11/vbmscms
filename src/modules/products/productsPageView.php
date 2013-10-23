@@ -320,27 +320,33 @@ class ProductsPageView extends XModule {
         $group = ProductsPageModel::getGroup($groupId);
         ?>
         <div class="panel">
-            <div class="productsGroupTitle shadow">
-                <h1><?php echo $group->name; ?></h1>
-            </div>
-            <div>
-                <?php
-                for ($i=0; $i<count($products); $i++) {
-                    ?>
-                    <div class="productsGridTile shadow">
-                        <div class="productsGridImage">
-                            <a href="<?php echo parent::link(array("action"=>"viewProduct","id"=>$products[$i]->id)) ?>"><img class="productsImage imageLink" width="228" height="228" src="<?php echo ResourcesModel::createResourceLink("products", $products[$i]->img); ?>" alt=""/></a>
-                        </div>
-                        <div class="productsGridTitle">
-                            <?php
-                            echo Common::htmlEscape($products[$i]->titel);
-                            ?>
-                        </div>
-                    </div>
-                    <?php
-                }
+            <?php
+            if (!empty($group)) {
                 ?>
-            </div>
+                <div class="productsGroupTitle shadow">
+                    <h1><?php echo $group->name; ?></h1>
+                </div>
+                <div>
+                    <?php
+                    for ($i=0; $i<count($products); $i++) {
+                        ?>
+                        <div class="productsGridTile shadow">
+                            <div class="productsGridImage">
+                                <a href="<?php echo parent::link(array("action"=>"viewProduct","id"=>$products[$i]->id)) ?>"><img class="productsImage imageLink" width="228" height="228" src="<?php echo ResourcesModel::createResourceLink("products", $products[$i]->img); ?>" alt=""/></a>
+                            </div>
+                            <div class="productsGridTitle">
+                                <?php
+                                echo Common::htmlEscape($products[$i]->titel);
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <?php
+            }
+            ?>
             <hr class="hrClear">
         </div>
         <?php

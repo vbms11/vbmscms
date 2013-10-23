@@ -12,10 +12,10 @@ $GLOBALS['cmsName'] = 'vbmscms';
 $GLOBALS['cmsVersion'] = '0.5';
 $GLOBALS['cmsLicese'] = '';
 $GLOBALS['cmsSecureLink'] = true;
-$GLOBALS['serverSecret'] = 'SCpL9icgLjM/ClSNWGK5ji/MmWf6gEZgUWZh4sgkKkri+w76DocC/ce4+sRR2D/d/4H7jyDfPYCOQPsInyEHGvmM+Bob4meUvbI6cPXR2j++JNpKMqu9v5847g1znLpW';
+$GLOBALS['serverSecret'] = 'ItpMqaaI5EGcKJ7HrebTcaGQg5iPeoKVLa9GUJQZMcQxyQYPoTHw/eUTjPnJYrkx0gKu3EHnJ//xZt418poepLMqD+U6V6vRInHO6hoPv7KqjKmOS3HnakC5VKaHLX8j';
 $GLOBALS['serverPublicKey'] = '';
 $GLOBALS['serverPrivateKey'] = '';
-$GLOBALS['currencySymbol'] = '€';
+$GLOBALS['currencySymbol'] = '&euro;';
 $GLOBALS['weightUnit'] = 'kg';
 $GLOBALS['weightInGram'] = '1000';
 ?>

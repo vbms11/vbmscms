@@ -18,6 +18,7 @@ include_once 'core/model/translationsModel.php';
 include_once 'core/model/sessionModel.php';
 include_once 'core/model/resourcesModel.php';
 include_once 'core/context.php';
+include_once 'core/session.php';
 include_once 'core/model/navigationModel.php';
 include_once 'core/model/confirmModel.php';
 include_once 'core/model/domainsModel.php';

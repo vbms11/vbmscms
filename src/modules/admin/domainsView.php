@@ -21,7 +21,8 @@ class DomainsView extends XModule {
     }
     
     function renderMainView() {
-        
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         ?>
         <div class="panel domainsPanel">
             <table width="100%" class="nowrap"><tr>

@@ -42,6 +42,10 @@ class LanguagesModule extends XModule {
         }
     }
     
+    function getStyles() {
+        array("css/languages.css");
+    }
+    
     function renderMainView () {
         $languages = LanguagesModel::getActiveLanguages();
         ?>

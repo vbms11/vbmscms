@@ -193,10 +193,7 @@ class TemplateParser {
      * replaces the placeholders in the template return the result
      * @return string 
      */
-    function render ($renderToBuffer = true) {
-        if ($renderToBuffer) {
-            ob_start();
-        }
+    function render () {
         $cntParts = count($this->parts);
         for ($i=0; $i<$cntParts; $i++) {
             echo $this->parts[$i];
@@ -204,13 +201,13 @@ class TemplateParser {
                 $area = $this->areas[$i];
                 switch ($area->type) {
                     case "main":
-                        Context::getRenderer()->renderMainTemplateArea(Context::getPageId(), $area->name);
+                        Context::getRenderer()->renderMainTemplateArea($area->name, Context::getPageId());
                         break;
                     case "area":
-                        Context::getRenderer()->renderTemplateArea(Context::getPageId(), $area->name);
+                        Context::getRenderer()->renderTemplateArea($area->name, Context::getPageId());
                         break;
                     case "menu":
-                        Context::getRenderer()->renderMenu(Context::getPageId(), $area->name);
+                        Context::getRenderer()->renderMenu($area->name);
                         break;
                     case "value":
                         $this->renderValue($area->name);
@@ -220,11 +217,6 @@ class TemplateParser {
                         break;
                 }
             }
-        }
-        if ($renderToBuffer) {
-            $buffer = ob_get_contents();
-            ob_end_clean();
-            return $buffer;
         }
     }
     

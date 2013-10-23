@@ -1,0 +1,25 @@
+.captchaDiv {
+    border: 1px solid silver;
+    height: 40px;
+    width: 100%;
+}
+.captchaDiv .captchaImgDiv {
+    float:left;
+    width: 125px;
+    height: 40px;
+}
+.captchaDiv .captchaInputDiv {
+    height:40px;
+    margin-left: 163px;
+    border-left:1px solid silver;
+}
+.captchaDiv .captchaReloadDiv {
+    width: 38px;
+    height: 40px;
+    background: url('../img/refresh_32.png') center no-repeat;
+    float:left;
+}
+.captchaDiv input {
+    height:36px;
+    width:100%;
+}

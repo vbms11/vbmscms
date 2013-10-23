@@ -1,3 +1,8 @@
+.pagesPathLink {
+    background: url("../img/arrow.gif") no-repeat 0px 6px;
+    padding-left: 11px;
+}
+
 .menuPanel {
     min-height: 15px;
 }

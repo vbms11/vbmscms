@@ -398,8 +398,7 @@ CREATE TABLE IF NOT EXISTS `t_module` (
 --
 
 INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `interface`, `inmenu`, `category`, `position`, `static`) VALUES
-(1, 'Seitenmanager', 'pages', 'modules/pages/pagesView.php', 0x616c6c6f777320796f7520746f206564697420746865206d656e75, 'PagesView', 0, 4, 0, 1),
-(2, 'Wysiwyg Editor', '', 'modules/wysiwyg/wysiwygPageView.php', '', 'WysiwygPageView', 1, 1, 0, 0),
+(2, 'Wysiwyg Editor', '', 'modules/editor/wysiwygPageView.php', '', 'WysiwygPageView', 1, 1, 0, 0),
 (13, 'Login', 'login', 'modules/users/loginModule.php', 0x616c6c6f777320796f7520746f20656e74657220616e6420657869742061646d696e206d6f6465, 'LoginModule', 1, 4, 0, 1),
 (16, 'Newsletters', '', 'modules/newsletter/newsletterPageView.php', '', 'NewsletterPageView', 1, 3, 0, 0),
 (17, 'Produkteliste', '', 'modules/products/productsPageView.php', '', 'ProductsPageView', 1, 1, 0, 0),
@@ -433,7 +432,7 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (52, 'Shopping Basket', 'shopBasket', 'modules/products/shopBasketView.php', NULL, 'ShopBasketView', 1, 5, 1, 1),
 (53, 'Slideshow', '', 'modules/gallery/slideshowView.php', NULL, 'SlideshowView', 1, 1, 1, 0),
 (54, 'File System Service', 'fileSystem', 'modules/admin/fileSystemService.php', NULL, 'FileSystemService', 0, 4, 0, 1),
-(55, 'File Manager', '', 'modules/filesystem/filesystemView.php', NULL, 'FilesystemView', 1, 4, 1, 0),
+(55, 'File Manager', '', 'modules/admin/filesystemView.php', NULL, 'FilesystemView', 1, 4, 1, 0),
 (56, 'Rechnungen', '', 'modules/products/shopBillsView.php', NULL, 'ShopBillsView', 1, 4, 1, 0),
 (57, 'Full Screen Callendar', '', 'modules/events/fullCallendarView.php', NULL, 'FullCallendarView', 1, 1, 0, 0),
 (58, 'Events Table', 'eventsTable', 'modules/events/eventsTable.php', NULL, 'EventsTableView', 1, 0, 0, 1),
@@ -738,14 +737,14 @@ CREATE TABLE IF NOT EXISTS `t_page_roles` (
   `roleid` int(10) NOT NULL,
   `pageid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=37 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
 -- Daten für Tabelle `t_page_roles`
 --
 
 INSERT INTO `t_page_roles` (`id`, `roleid`, `pageid`) VALUES
-(1, 10, 4),
+(37, 7, 4),
 (2, 7, 6),
 (3, 8, 6),
 (4, 9, 6),
@@ -780,7 +779,11 @@ INSERT INTO `t_page_roles` (`id`, `roleid`, `pageid`) VALUES
 (33, 9, 13),
 (34, 10, 13),
 (35, 13, 13),
-(36, 10, 14);
+(36, 10, 14),
+(38, 8, 4),
+(39, 9, 4),
+(40, 10, 4),
+(41, 13, 4);
 
 -- --------------------------------------------------------
 
@@ -841,7 +844,7 @@ CREATE TABLE IF NOT EXISTS `t_roles` (
   `userid` int(10) NOT NULL,
   `roleid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Daten für Tabelle `t_roles`
@@ -852,7 +855,12 @@ INSERT INTO `t_roles` (`id`, `name`, `userid`, `roleid`) VALUES
 (2, '8', 1, 8),
 (3, '9', 1, 9),
 (4, '10', 1, 10),
-(5, '13', 1, 13);
+(5, '13', 1, 13),
+(6, '7', 2, 7),
+(7, '8', 2, 8),
+(8, '9', 2, 9),
+(9, '10', 2, 10),
+(10, '13', 2, 13);
 
 -- --------------------------------------------------------
 
@@ -898,7 +906,7 @@ CREATE TABLE IF NOT EXISTS `t_session` (
 --
 
 INSERT INTO `t_session` (`userid`, `sessionid`, `sessionkey`, `ip`, `name`, `lastpolltime`, `logintime`) VALUES
-(NULL, 'd2b7d296fa561a734705089787c3dcdb601b938b', 'qVaU9U302rt2NSwGiywTABKi7L8LkJeZugpOrNFs', '127.0.0.1', 'guest_4558039', '2013-10-22 16:34:44', NULL);
+(NULL, 'c63c1f0ca5e14f615f83b7d980441b19b2d24071', 'EYYwzoy+hPJUkWl6GuuhQ5C+cVTnl2iPjfeUknTy', '127.0.0.1', 'guest_9200215', '2013-10-23 13:47:02', NULL);
 
 -- --------------------------------------------------------
 
@@ -1048,14 +1056,15 @@ CREATE TABLE IF NOT EXISTS `t_users` (
   `active` tinyint(1) NOT NULL,
   `image` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `t_users`
 --
 
 INSERT INTO `t_users` (`id`, `username`, `password`, `authkey`, `email`, `firstname`, `lastname`, `objectid`, `registerdate`, `birthdate`, `active`, `image`) VALUES
-(1, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@gmail.com', 'sil', 'muh', 1, '2013-10-22', '0000-00-00', 1, NULL);
+(1, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@gmail.com', 'sil', 'muh', 1, '2013-10-22', '0000-00-00', 1, NULL),
+(2, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@gmail.com', 'sil', 'muh', 2, '2013-10-23', '0000-00-00', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -1123,14 +1132,15 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `tableid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `t_vdb_object`
 --
 
 INSERT INTO `t_vdb_object` (`id`, `tableid`) VALUES
-(1, 2);
+(1, 2),
+(2, 2);
 
 -- --------------------------------------------------------
 
@@ -1184,7 +1194,16 @@ INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
 (1, 6, ''),
 (1, 7, 0x30),
 (1, 8, ''),
-(1, 24, '');
+(1, 24, ''),
+(2, 1, ''),
+(2, 2, ''),
+(2, 3, ''),
+(2, 4, ''),
+(2, 5, ''),
+(2, 6, ''),
+(2, 7, 0x30),
+(2, 8, ''),
+(2, 24, '');
 
 -- --------------------------------------------------------
 

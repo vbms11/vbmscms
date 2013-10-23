@@ -127,7 +127,7 @@ class LoginModule extends XModule {
 
     function printBadView () {
         ?>
-        <div class="panel">
+        <div class="panel loginPanel loginFailPanel">
             <?php echo parent::getTranslation("login.invalid"); ?>
         </div>
         <?php
@@ -135,7 +135,7 @@ class LoginModule extends XModule {
 
     function printLoggedInView () {
         ?>
-        <div class="panel largePadding">
+        <div class="panel loginPanel loginSuccessPanel">
             <?php
             $text = parent::getTranslation("login.success");
             $text = str_replace("%1%", Context::getUsername(), $text);
@@ -147,7 +147,7 @@ class LoginModule extends XModule {
 
     function printLoggedOutView () {
         ?>
-        <div class="panel largePadding">
+        <div class="panel loginPanel loginLogoutPanel">
             <?php echo parent::getTranslation("login.logout.success"); ?>
         </div>
         <?php

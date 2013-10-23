@@ -77,27 +77,25 @@ class InstallView extends XModule {
 	function printInstallingView () {
 		?>
 		<div class="panel installPanel">
-			<h2>Installation Progress</h2>
-			The cms is installing the datamodel, This may take several minutes.
-			<hr/>
-			<div id="progressbar"></div>
-                        <a href="?action=install&<?php echo session_name()."=".session_id(); ?>">install</a>
-			<script>
-			$("#progressbar").progressbar({
-				value: 100
-				
-			});
-			function gotoLogin (data) {
-				callUrl("");
-			}
-		/*	$.ajax({
-                    "url": "?action=install&<?php echo session_name()."=".session_id(); ?>",
-                    "context": document.body,
-                    "success": function(data){
-                        gotoLogin(data);
+                    <h2>Installation Progress</h2>
+                    The cms is installing the datamodel, This may take several minutes.
+                    <hr/>
+                    <div id="progressbar"></div>
+                    <script>
+                    $("#progressbar").progressbar({
+                        value: 100
+                    });
+                    function gotoLogin (data) {
+                        callUrl("");
                     }
-                });*/
-			</script>
+                    $.ajax({
+                        "url": "?action=install&<?php echo session_name()."=".session_id(); ?>",
+                        "context": document.body,
+                        "success": function(data){
+                            gotoLogin(data);
+                        }
+                    });
+                    </script>
 		</div>
 		<?php
 		

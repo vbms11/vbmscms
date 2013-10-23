@@ -59,8 +59,8 @@ body {
     float:right;
 }
 #logoDiv {
-    background-image: url(../img/vbmscmslogo.png);
+    background-image: url(../../../resource/img/vbmscmslogo.png);
     float:right;
-    width: 225px;
-    height: 52px;
+    height: 40px;
+    width: 192px;
 }

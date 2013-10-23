@@ -67,7 +67,8 @@ class ResultsView extends XModule {
     }
     
     function renderResults () {
-        
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         ?>
         <div class="toolButtonDiv">
             <button class="btnImport">Import</button>

@@ -301,6 +301,8 @@ class ShopBillsView extends XModule {
 
     
     function printMainView ($pageId) {
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         if (!Common::isEmpty(parent::param("selectedForm"))) {
             ?>
             <div id="tabs_<?php echo parent::getId(); ?>">
@@ -721,6 +723,8 @@ class ShopBillsView extends XModule {
     }
     
     function printSelectProductView () {
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         $userId = null;
         if (isset($_GET['selectedUser'])) {
             $userId = $_GET['selectedUser'];
@@ -800,7 +804,8 @@ class ShopBillsView extends XModule {
     }
     
     function printNewView () {
-        
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         $userId = null;
         if (isset($_GET['selectedUser'])) {
             $userId = $_GET['selectedUser'];

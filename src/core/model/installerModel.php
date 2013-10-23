@@ -40,10 +40,10 @@ class InstallerModel {
 		$config .= '$GLOBALS[\'serverPublicKey\'] = \'\';'.PHP_EOL;
 		$config .= '$GLOBALS[\'serverPrivateKey\'] = \'\';'.PHP_EOL;
 
-        // shop config
-		$config .= '$GLOBALS[\'currencySymbol\'] = \'€\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'weightUnit\'] = \'kg\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'weightInGram\'] = \'1000\';'.PHP_EOL;
+                // shop config
+		$config .= '$GLOBALS[\'currencySymbol\'] = \'&euro;\';'.PHP_EOL;
+                $config .= '$GLOBALS[\'weightUnit\'] = \'kg\';'.PHP_EOL;
+                $config .= '$GLOBALS[\'weightInGram\'] = \'1000\';'.PHP_EOL;
 
 		$config .= "?>";
 		

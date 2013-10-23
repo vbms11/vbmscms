@@ -24,11 +24,12 @@ class InstallTemplate extends XTemplate {
         	?>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
-		<link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
-        	<script type="text/javascript" src="resource/js/jquery/js/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="resource/js/jquery/js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript" src="resource/js/jquery/js/jquery-ui-1.8.15.custom.min.js"></script>        
-		<script type="text/javascript" src="resource/js/main.js"></script>
-		<link rel="stylesheet" href="core/template/css/install.css" type="text/css" media="screen" charset="utf-8"/>
+		<link type="text/css" href="resource/js/jquery/css/base/jquery.ui.all.css" media="all" rel="stylesheet"/>
+                <script type="text/javascript" src="resource/js/main.js"></script>
+		<link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
+        	<link rel="stylesheet" href="core/template/css/install.css" type="text/css" media="screen" charset="utf-8"/>
         	</head>
 		<body>
 		<div id="cmsBodyDiv">
