@@ -45,6 +45,7 @@
     left: 203px;
     right: 0px;
     background: grey;
+    overflow: auto;
 }
 .adminHeaderLogoDiv {
     position: absolute;
@@ -65,4 +66,21 @@
     height: 40px;
 }
 .adminHeaderModeDiv h3 {
+}
+
+/* fixes for template */
+#vcms_area_adminMenu, #vcms_area_adminMenu .vcms_module {
+    height: 100%;
+}
+
+.adminMenuAccordionDiv .ui-accordion-content {
+    padding: 1em 0.2em;
+}
+
+.adminMenuDiv .vcms_module, .adminBodyDiv .vcms_module {
+    padding: 0px;
+}
+
+.jstree-default.jstree-focused {
+    background: white !important;
 }

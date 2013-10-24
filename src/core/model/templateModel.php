@@ -39,8 +39,8 @@ class TemplateModel {
         $templateClass->invokeRender();
     }
 */
-    static function getAreaNames ($pageId) {
-        $templateObj = TemplateModel::getTemplateObj($pageId);
+    static function getAreaNames ($page) {
+        $templateObj = TemplateModel::getTemplateObj($page);
         return $templateObj->getAreas();
     }
 
@@ -94,7 +94,7 @@ class TemplateModel {
 
         // 
         $pageId = mysql_real_escape_string($pageId);
-        $moduleIncludes = Database::queryAsArray("select a.id, a.name as name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename, a.code
+        $moduleIncludes = Database::queryAsArray("select a.id, a.name as name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename, pt.sysname as sysname, a.code
             from t_templatearea a
             left join t_module pt on pt.id = a.type
             where $conditionSql
@@ -125,7 +125,7 @@ class TemplateModel {
 
     static function getStaticModule ($code, $sysName) {
         $acode = mysql_real_escape_string($code);
-        $result = Database::queryAsObject("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename
+        $result = Database::queryAsObject("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.sysname as sysname, pt.name as modulename
             from t_templatearea a
             left join t_module pt on pt.id = a.type
             where a.code = '$acode'");

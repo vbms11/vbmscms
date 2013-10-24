@@ -5,7 +5,7 @@ require_once("core/model/pagesModel.php");
 require_once("core/model/moduleModel.php");
 require_once("core/model/rolesModel.php");
 
-class PageConfigModule extends XModule {
+class AdminMenuModule extends XModule {
 
     function onProcess ()  {
         
@@ -30,28 +30,55 @@ class PageConfigModule extends XModule {
     }
 
     function printMenuView () {
+        $menus = MenuModel::getMenuInstances();
+        $pages = MenuModel::getPagesInMenu(Context::getSiteId(),false);
+        Context::addRequiredScript("resource/js/jstree/jquery.jstree.js");
         ?>
         <div class="adminMenuAccordionDiv">
-            <h3>Sites</h3>
+            <h3>Account</h3>
             <div>
-                <p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
+                <div class="adminMenuAccountDiv">
+                    <ul>
+                        <li><a href="">Sites</a></li>
+                        <li><a href="">Domains</a></li>
+                        <li><a href="">Package</a></li>
+                        <li><a href="">Messages</a></li>
+                    </ul>
+                </div>
             </div>
             <h3>Pages</h3>
             <div>
-                <p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
+                <div class="adminMenuPagesDiv">
+                    <ul>
+                    <?php
+                    foreach ($menus as $menu) {
+                        $liClass = count($pages[$menu->id]) > 0 ? "jstree-open" : "";
+                        ?>
+                        <li class="<?php echo $liClass; ?>" id="<?php echo $menu->id; ?>">
+                            <a href="#"><?php echo $menu->name ?></a>
+                            <?php $this->printMenu($pages[$menu->id]); ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                    </ul>
+                </div>
             </div>
             <h3>Templates</h3>
             <div>
-                <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
                 <ul>
-                        <li>List item one</li>
-                        <li>List item two</li>
-                        <li>List item three</li>
+                    <li>List item one</li>
+                    <li>List item two</li>
+                    <li>List item three</li>
                 </ul>
             </div>
             <h3>Modules</h3>
             <div>
-                <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
+                <ul>
+                    <li>List item one</li>
+                    <li>List item two</li>
+                    <li>List item three</li>
+                </ul>
             </div>
             <h3>Shop</h3>
             <div>
@@ -64,13 +91,49 @@ class PageConfigModule extends XModule {
         </div>
         <script>
         $(function() {
+            <?php
+            $activeIndex = 0;
+            $selectedNode = null;
+            switch (Context::isAdminMode()) {
+                case "pages":
+                    $activeIndex = 1;
+                    $selectedNode = $_SESSION['adminPageId'];
+            }
+            ?>
             $(".adminMenuAccordionDiv").accordion({
-                heightStyle: "fill"
+                heightStyle: "fill",
+                active : <?php echo $activeIndex; ?>
             });
+            $(".adminMenuPagesDiv").jstree({ 
+                "plugins" : ["themes","html_data","ui"] 
+            }).bind("select_node.jstree", function (event, data) { 
+                callUrl("<?php echo parent::staticLink("adminPages", array("action"=>"editPage"));?>&adminPageId="+data.rslt.obj.attr("id"));
+            });
+            $(".adminMenuAccountDiv").jstree({ 
+                "plugins" : ["themes","html_data","ui"] 
+            }).one("reopen.jstree", function (event, data) { });
         });
         </script>
         <?php
     }
     
+    function printMenu ($menu) {
+        echo '<ul>';
+        foreach ($menu as $page) {
+            $liClass = isset($page->children) && count($page->children) > 0 ? "jstree-open " : "";
+            $aClass = $page->page->id == $_SESSION['adminPageId'] ? "jstree-clicked" : "";
+            ?>
+            <li class="<?php echo $liClass; ?>" id="<?php echo $page->page->id; ?>">
+                <a class="<?php echo $aClass; ?>" href="<?php echo parent::staticLink("adminPages", array("action"=>"editPage","adminPageId"=>$page->page->id)); ?>">
+                    <?php echo $page->page->name; ?>
+                </a>
+            </li>
+            <?php
+            if (isset($page->children)) {
+                $this->printMenu ($page->children);
+            }
+        }
+        echo '</ul>';
+    }
 }
 ?>

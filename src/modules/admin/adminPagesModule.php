@@ -5,7 +5,7 @@ require_once("core/model/pagesModel.php");
 require_once("core/model/moduleModel.php");
 require_once("core/model/rolesModel.php");
 
-class PageConfigModule extends XModule {
+class AdminPagesModule extends XModule {
 
     function onProcess ()  {
 
@@ -39,6 +39,17 @@ class PageConfigModule extends XModule {
                     parent::focus();
                     parent::redirect(array("id"=>$_GET['id'],"menu"=>isset($_GET["menu"]) ? $_GET["menu"] : "","parent"=>isset($_GET["parent"]) ? $_GET["parent"] : ""));
                     break;
+                    
+                    
+                    
+                    
+                    
+                    
+                case "editPage":
+                    if (isset($_GET["adminPageId"])) {
+                        $_SESSION["adminPageId"] = $_GET["adminPageId"];
+                    }
+                    break;
             }
         }
     }
@@ -65,98 +76,105 @@ class PageConfigModule extends XModule {
 
     function printEditPage () {
         
-        $id = isset($_GET["id"]) ? $_GET["id"] : "";
-        $page = null;
-        if ($id != "") {
-            $page = PagesModel::getPage($id, Context::getLang(), false);
+        if (isset($_SESSION["adminPageId"])) {
+            
+            $page = PagesModel::getPage($_SESSION["adminPageId"], Context::getLang(), false);
+            
+            ?>
+            <div id="adminPagesTabs">
+                <ul>
+                    <li><a href="#tabs-1">Content</a></li>
+                    <li><a href="#tabs-2">Template</a></li>
+                    <li><a href="#tabs-3">Menu</a></li>
+                    <li><a href="#tabs-4">Settings</a></li>
+                </ul>
+                <div id="tabs-1">
+                    <?php $this->printPageContentView($page); ?>
+                </div>
+                <div id="tabs-2">
+                    <?php $this->printPageTemplateView($page); ?>
+                </div>
+                <div id="tabs-3">
+                    <?php $this->printPageMenuView($page); ?>
+                </div>
+                <div id="tabs-4">
+                    <?php $this->printPageSettingsView($page); ?>
+                </div>
+            </div>
+            <script>
+            $("#adminPagesTabs").tabs();
+            </script>
+            <?php
+        
+        } else {
+            echo "no page selected";
         }
-        
-        ?>
-        <div id="adminPagesTabs">
-            <ul>
-                <li><a href="#tabs-1">Content</a></li>
-                <li><a href="#tabs-2">Template</a></li>
-                <li><a href="#tabs-3">Menu</a></li>
-                <li><a href="#tabs-4">Settings</a></li>
-            </ul>
-            <div id="tabs-1">
-                <?php $this->printPageContentView($page); ?>
-            </div>
-            <div id="tabs-2">
-                <?php $this->printPageTemplateView($page); ?>
-            </div>
-            <div id="tabs-3">
-                <?php $this->printPageMenuView($page); ?>
-            </div>
-            <div id="tabs-4">
-                <?php $this->printPageSettingsView($page); ?>
-            </div>
-        </div>
-        <?php
-        
     }
     
     function printPageSettingsView ($page) {
-        ?>
-        <h3><a href="#section1">Page Configuration</a></h3>
-        <div>
-            <form method="post" action="<?php echo parent::link(array("action"=>"savepage","menu"=>$menu,"parent"=>$parent,"id"=>$id)); ?>">
+        
+        $templateValuesNames = Common::toMap(TemplateModel::getTemplates(Context::getSiteId()),"id","name");
+        $allRoles = Common::toMap(RolesModel::getCustomRoles(),"id","name");
+        $pageRoles = Common::toMap(RolesModel::getPageRoles($page->id),"roleid","roleid");
 
-                <table class="expand"><tr><td class="nowrap">
+        ?>
+        <div class="pageSettingsView">
+            <form method="post" action="<?php echo parent::link(array("action"=>"savepage","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id)); ?>">
+
+                <h3>Page Configuration</h3>
+
+                <table class="formTable"><tr><td>
                     Name der Seite:
-                </td><td class="expand">
-                    <input type="text" class="textbox" name="pagename" value="<?php echo $page == null ? "" : $page->name; ?>" />
-                </td></tr><tr><td class="nowrap">
-                    Titel der Seite:
-                </td><td class="expand">
-                    <input type="text" class="textbox" name="pagetitle" value="<?php echo $page == null ? "" : $page->title; ?>" />
-                </td></tr><tr><td class="nowrap">
-                    Keywords:
-                </td><td class="expand">
-                    <input type="text" class="textbox" name="pagekeywords" value="<?php echo $page == null ? "" : $page->keywords; ?>" />
-                </td></tr><tr><td class="nowrap" valign="top">
-                    Description:
-                </td><td class="expand">
-                    <textarea class="expand" rows="3" cols="5" name="pagedescription" ><?php echo $page == null ? "" : $page->description; ?></textarea>
+                </td><td>
+                    <input type="text" name="pagename" value="<?php echo $page == null ? "" : $page->name; ?>" />
                 </td></tr><tr><td>
-                </td><td class="expand">
+                    Titel der Seite:
+                </td><td>
+                    <input type="text" name="pagetitle" value="<?php echo $page == null ? "" : $page->title; ?>" />
+                </td></tr><tr><td>
+                    Keywords:
+                </td><td>
+                    <input type="text" name="pagekeywords" value="<?php echo $page == null ? "" : $page->keywords; ?>" />
+                </td></tr><tr><td valign="top">
+                    Description:
+                </td><td>
+                    <textarea rows="3" cols="5" name="pagedescription" ><?php echo $page == null ? "" : $page->description; ?></textarea>
+                </td></tr><tr><td>
+                </td><td>
                     <input type="checkbox" name="active" value="1" <?php echo ($page != null && $page->active) ? "checked='true'" : ""; ?> />
                     Diese Seite im Men&uuml; in der aktiven Sprache anzeigen.
                 </td></tr><tr><td>
-                </td><td class="expand">
+                </td><td>
                     <input type="checkbox" name="welcome" value="1" <?php echo ($page != null && $page->welcome) ? "checked='true'" : ""; ?> />
                     Diese Seite als Startseite festlegen.
-                </td></tr><tr><td class="nowrap">
+                </td></tr><tr><td>
                     Template
-                </td><td class="expand">
+                </td><td>
                     <?php
-                    $valuesNames = Common::toMap(TemplateModel::getTemplates(DomainsModel::getCurrentSite()->siteid),"id","name");
-                    InputFeilds::printSelect("template", $page != null ? $page->template : null, $valuesNames);
+                    InputFeilds::printSelect("template", $page != null ? $page->template : null, $templateValuesNames);
                     ?>
-                </td></tr><tr><td colspan="2" align="right">
-                    <br/>
-                    <hr/>
-                    <button class="btnSave" type="submit">Save</button>
-                    <button class="btnBack">Abbrechen</button>
+                </td></tr><tr><td colspan="2">
+                    <?php
+                    InfoMessages::printInfoMessage("Please select the user groups that can view this page");
+                    ?>
+                </td></tr><tr><td>
+                    User Role Groups
+                </td><td>
+                    <?php
+                    InputFeilds::printMultiSelect("roleGroups",$allRoles,$pageRoles);
+                    ?>
                 </td></tr></table>
-            </div>
-        
-            <h3>Configure Page Roles</h3>
-            <div>
-                <?php
-                InfoMessages::printInfoMessage("Please select the role groups that are required to view this page");
-                $allRoles = Common::toMap(RolesModel::getCustomRoles(),"id","name");
-                $pageRoles = Common::toMap(RolesModel::getPageRoles($page->id),"roleid","roleid");
-                InputFeilds::printMultiSelect("roleGroups",$allRoles,$pageRoles);
-                ?>
-                <br/>
                 <hr/>
                 <div class="alignRight">
                     <button class="btnSave" type="submit">Save</button>
                     <button class="btnBack">Abbrechen</button>
                 </div>
+                
             </form>
         </div>
+        <script>
+        $(".pageSettingsView button").button();
+        </script>
         <?php
     }
     
@@ -166,11 +184,11 @@ class PageConfigModule extends XModule {
         $pages = MenuModel::getPagesInAllLangs($page->menuid,$page->id,false,Context::getLang());
         
         ?>
-        <h3><a href="#section1">Configure Menu Pages</a></h3>
+        <h3>Configure Menu Pages</h3>
         <div>                    
             <div class="alignLeft">
                 <button class="newPageButton">Neue Seite erstellen</button>
-            </td>
+            </div>
             <?php
             if (count($pages) > 0) {
                 ?>
@@ -209,7 +227,7 @@ class PageConfigModule extends XModule {
             <script>
             $(".newPageButton").each(function (index,object) {
                 $(object).button().click(function () {
-                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>parent::param("selectedMenu"),"parent"=>$parent)); ?>");
+                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$page->menuid,"parent"=>$page->parent)); ?>");
                 });
             })
             </script>
@@ -223,7 +241,7 @@ class PageConfigModule extends XModule {
         <?php
     }
     
-    function printPageContentView ($pageId) {
+    function printPageContentView ($page) {
         
         ?>
         <h3>Configure Page Modules</h3>

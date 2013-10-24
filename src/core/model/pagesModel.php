@@ -109,23 +109,20 @@ class PagesModel {
      */
     static function getStaticPage ($_name,$_lang) {
         $site = DomainsModel::getCurrentSite();
-        $template = TemplateModel::getMainTemplate($site->siteid);
         $name = mysql_real_escape_string($_name);
         $lang = mysql_real_escape_string($_lang);
-        $siteId = Context::getSiteId();
         $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
             from t_page p
-            left join t_template t on p.template = t.id
+            left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
             where p.code = '$name';
                 ";
         $pageObj = Database::queryAsObject($query);
         if ($pageObj == null) {
+            $template = TemplateModel::getMainTemplate($site->siteid);
             $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
             $page = PagesModel::getPageTemplate($pageId, $_lang);
-            //echo "id=".$pageId.":p=".$page;
             $templateAreas = TemplateModel::getAreaNames($page);
-            // echo "s=".$name.",n=".$templateAreas[0];
             $moduleTypeId = ModuleModel::getModuleByName($_name);
             $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id, -1);
             Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");

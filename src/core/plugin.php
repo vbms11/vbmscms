@@ -74,6 +74,7 @@ abstract class XModule implements IModule, ITranslatable {
     public $paramsDirty = false;
     public $moduleAreaName;
     public $modulePosition;
+    public $sysname;
     function getAreaName () {
         return $this->moduleAreaName;
     }

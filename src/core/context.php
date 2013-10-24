@@ -362,7 +362,7 @@ class Context {
             
             // check if admin mode
             if (isset($_GET["setAdminMode"])) {
-                Context::setAdminMode($_GET["setAdminMode"] == "1" ? true : false);
+                Context::setAdminMode($_GET["setAdminMode"]);
             }
             
             // set the selected page

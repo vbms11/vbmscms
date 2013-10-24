@@ -9,7 +9,7 @@ class InfoMessages {
 
     static function printMessageBox ($message,$type = "info") {
         $styleClass = "infoMessage_$type";
-        echo "<div class='infoMessage_background'><div class='$styleClass'>$message</div></div>";
+        echo "<div class='ui-widget-header infoMessage_background'><div class='$styleClass'>$message</div></div>";
     }
 
     static function printInfoMessage ($message) {

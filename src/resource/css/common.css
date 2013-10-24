@@ -150,6 +150,27 @@ formActionsToolbar button {
     background-color: rgb(240,240,240);
 }
 
+.formTable {
+    width: 100%;
+}
+.formTable td {
+    width: 99%;
+    vertical-align: top;
+}
+.formTable td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+.formTable input, .formTable select, .formTable textarea {
+    width: 99%;
+}
+.formTable input[type="checkbox"] {
+    width: 1%;
+}
+.formTable select[multiple="multiple"] {
+    width: 500px;
+}
+
 
 img {
     border: 0px none;
@@ -171,9 +192,8 @@ a img {
 }
 
 .infoMessage_background {
-    background-image:url('../img/common/infoMessageBg.gif');
-    background-repeat: repeat-x;
     border: 1px solid silver;
+    font-weight: normal;
 }
 .infoMessage_info {
     background-image:url('../img/info.png');

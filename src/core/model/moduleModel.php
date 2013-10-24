@@ -65,6 +65,7 @@ class ModuleModel {
         $obj->moduleId = $moduleObj->id;
         $obj->moduleAreaName = $moduleObj->name;
         $obj->modulePosition = $moduleObj->position;
+        $obj->sysname = $moduleObj->sysname;
         $obj->include = $moduleObj->include;
         // add the translations
         if (in_array("ITranslatable", class_implements($obj))) {
@@ -100,7 +101,7 @@ class ModuleModel {
         self::renderModuleObject($moduleObj);
     }
     
-    static function renderModuleObject ($moduleObject) {
+    static function renderModuleObject ($moduleObject, $contextMenu = true) {
         ?>
         <div class="vcms_module" id="vcms_module_<?php echo $moduleObject->getId(); ?>">
             <?php
@@ -108,7 +109,7 @@ class ModuleModel {
             ?>
         </div>
         <?php
-        if (!Context::isAjaxRequest() || Context::isRenderRequest()) {
+        if ($contextMenu && (!Context::isAjaxRequest() || Context::isRenderRequest())) {
             $roles = $moduleObject->getRoles();
             if (Context::hasRole($roles) && Context::getFocusedArea() != $moduleObject->getId()) {
                 self::renderContextMenu($moduleObject);

@@ -138,7 +138,7 @@ class TemplateRenderer {
      * @param <type> $areaName
      */
     function renderStaticModule ($moduleSysName, $areaName = null, $pageId = null) {
-        $this->renderModule($moduleSysName,$areaName,true,$pageId);
+        $this->renderModule($moduleSysName,$areaName,true,$pageId,true);
     }
     
     /**
@@ -281,8 +281,8 @@ class TemplateRenderer {
         ?>
         <link rel="shortcut icon" href="<?php echo ResourcesModel::createTemplateResourceLink("favicon.ico"); ?>" type="image/x-icon" />
         <link type="text/css" href="resource/js/jquery/css/base/jquery.ui.all.css" media="all" rel="stylesheet"/>
-        <script type="text/javascript" src="resource/js/jquery/js/jquery-1.6.2.min.js"></script>
-        <script type="text/javascript" src="resource/js/jquery/js/jquery-ui-1.8.15.custom.min.js"></script>
+        <script type="text/javascript" src="resource/js/jquery/js/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="resource/js/jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
         <link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/main.js"></script>
         <?php
