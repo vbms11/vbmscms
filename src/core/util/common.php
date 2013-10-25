@@ -169,6 +169,8 @@ class InputFeilds {
     }
     
     static function printHtmlEditor ($name,$value="",$cssFile="",$fileSystem = array("action"=>"www")) {
+        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.css");
+        Context::addRequiredScript("resource/js/elfinder/js/elfinder.min.js");
         Context::addRequiredStyle("resource/js/elrte/css/elrte.min.css");
         Context::addRequiredScript("resource/js/elrte/js/elrte.min.js");
         Context::addRequiredScript("resource/js/elrte/js/i18n/elrte.en.js");

@@ -369,7 +369,7 @@ class NavigationModel {
         
         if (isset($_GET['moduleid'])) {
             Context::setModuleId($_GET['moduleid']);
-            $page = PagesModel::getPageByTemplateArea($_GET['moduleid'],Context::getLang());
+            $page = PagesModel::getPageByModuleId($_GET['moduleid'],Context::getLang());
             NavigationModel::addToHistory();
         } else if (isset($_GET['pageid'])) {
             $page = PagesModel::getPage($_GET['pageid'],Context::getLang());

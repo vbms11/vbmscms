@@ -62,7 +62,7 @@
     float: left;
     padding: 0 20px;
     border: 0px solid silver;
-    border-width: 0px 0px 0px 1px;
+    border-width: 0px 0px 0px 1px !important;
     height: 40px;
 }
 .adminHeaderModeDiv h3 {
@@ -83,4 +83,11 @@
 
 .jstree-default.jstree-focused {
     background: white !important;
+}
+
+
+.adminHeaderModesDiv a {
+    text-decoration: none;
+    line-height: 40px;
+    font-weight: normal;
 }

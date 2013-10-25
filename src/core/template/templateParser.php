@@ -165,7 +165,7 @@ class TemplateParser {
             }
         }
         for ($i=0; $i<$len; $i++) {
-            if (isset($this->areas[$i]->hasArea) && $this->areas[$i]->hasArea == true) {
+            if ($this->areas[$i]->type !== "main" && isset($this->areas[$i]->hasArea) && $this->areas[$i]->hasArea == true) {
                 $retAreas[] = $this->areas[$i]->name;
             }
         }

@@ -8,7 +8,7 @@ class AdminTemplate extends XTemplate {
      * returns the names of the areas defined by this template
      */
     function getAreas () {
-        return array("center","dialog");
+        return array("center");
     }
 
     /**
@@ -40,7 +40,6 @@ class AdminTemplate extends XTemplate {
         });
         </script>
         <?php
-        $this->renderFocusedModule("dialog");
     }
     
     /**
@@ -55,13 +54,14 @@ class AdminTemplate extends XTemplate {
         } else {
             $adminPageId = Context::getPageId();
         }
+        
         ?>
         <div class="ui-widget-header adminHeaderDiv">
             <div class="adminHeaderModesDiv">
-                <div class="ui-widget-header adminHeaderModeDiv">
+                <div class="ui-widget-header <?php echo !Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
                     <a href="<?php echo NavigationModel::createPageLink($adminPageId,array("setAdminMode"=>"0")); ?>">View</a>
                 </div>
-                <div class="ui-widget-header adminHeaderModeDiv">
+                <div class="ui-widget-header <?php echo Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
                     <a href="<?php echo NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","setAdminMode"=>"pages","adminPageId"=>$adminPageId)); ?>">Edit</a>
                 </div>
             </div>
@@ -86,7 +86,34 @@ class AdminTemplate extends XTemplate {
      * @param type $teplateArea
      */
     function renderMainTemplateArea ($teplateArea) {
-        $this->renderTemplateArea($teplateArea);    
+        $focusedModuleId = Context::getFocusedArea();
+        if (empty($focusedModuleId)) {
+            $this->renderTemplateArea($teplateArea);    
+        } else {
+            ?>
+            <div id="adminEditModuleTabs">
+                <ul>
+                    <li><a href="#tabs-1">Edit Module</a></li>
+                    <li><a href="#tabs-2">Attributes</a></li>
+                </ul>
+                <div id="tabs-1">
+                    <?php 
+                    echo "<div id='vcms_area_$teplateArea' >";
+                    Context::setIsFocusedArea(true);
+                    ModuleModel::renderModuleObject(Context::getModule($focusedModuleId));
+                    Context::setIsFocusedArea(false);
+                    echo "</div>";
+                    ?>
+                </div>
+                <div id="tabs-2">
+                    <?php  ?>
+                </div>
+            </div>
+            <script>
+            $("#adminEditModuleTabs").tabs();
+            </script>
+            <?php
+        }
     }
     
     /**
@@ -110,21 +137,6 @@ class AdminTemplate extends XTemplate {
         }
         
         echo "</div>";
-    }
-    
-    /**
-     * renders the focused module as a dialog
-     * @param type $teplateArea
-     */
-    function renderFocusedModule ($teplateArea) {
-        $focusedModuleId = Context::getFocusedArea();
-        if ($focusedModuleId != null) {
-            echo "<div id='vcms_area_$teplateArea' >";
-            Context::setIsFocusedArea(true);
-            ModuleModel::renderModuleObject(Context::getModule($focusedModuleId));
-            Context::setIsFocusedArea(false);
-            echo "</div>";
-        }
     }
 
     /**

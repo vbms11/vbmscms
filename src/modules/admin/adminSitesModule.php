@@ -2,7 +2,7 @@
 
 require_once 'core/plugin.php';
 
-class SitesView extends XModule {
+class AdminSitesModule extends XModule {
     
     function onProcess () {
         

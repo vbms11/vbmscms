@@ -2,7 +2,7 @@
 
 require_once 'core/plugin.php';
 
-class DomainsView extends XModule {
+class AdminDomainsModule extends XModule {
     
     function onProcess () {
         

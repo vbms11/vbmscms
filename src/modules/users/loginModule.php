@@ -17,6 +17,9 @@ class LoginModule extends XModule {
     function onProcess () {
 
         switch (parent::getAction()) {
+            case "edit":
+                parent::focus();
+                break;
             case "login":
                 if (UsersModel::login($_POST['username'],$_POST['password'])) {
                     parent::focus();

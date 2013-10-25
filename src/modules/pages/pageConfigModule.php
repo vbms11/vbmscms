@@ -77,7 +77,7 @@ class PageConfigModule extends XModule {
                 <?php
                 if (!Common::isEmpty($menu)) {
                     ?>
-                    <button onclick="callUrl('<?php echo NavigationModel::createStaticPageLink("menu",array("action"=>"edit","menu"=>$menu,"parent"=>$parent)); ?>');">Back to Menu</button>
+                    <button onclick="callUrl('<?php echo NavigationModel::createModuleLink($_GET['menu'],array("action"=>"edit","parent"=>$parent)); ?>');">Back to Menu</button>
                     <?php
                 }
                 ?>

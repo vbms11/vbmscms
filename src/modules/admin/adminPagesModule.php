@@ -12,23 +12,15 @@ class AdminPagesModule extends XModule {
         if (Context::hasRole("pages.editmenu")) {
             
             switch (parent::getAction()) {
+                
                 case "savepage":
-                    if (Common::isEmpty($_GET['id'])) {
-                        if (Common::isEmpty($_GET['parent']))
-                            $_GET['parent'] = null;
-                        $newPageId = PagesModel::createPage($_POST['pagename'], "", Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['template'],null,$_POST['pagedescription']);
-                        MenuModel::createPageInMenu($newPageId, $_GET["menu"], $_GET["parent"], Context::getLang());
-                        MenuModel::setPageActivateInMenu($newPageId, $_POST['active'], Context::getLang());
-                        $_GET['id'] = $newPageId;
-                    } else {
-                        PagesModel::updatePage($_GET['id'], $_POST['pagename'], "", Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['pagedescription'],$_POST['template'],null);
-                        MenuModel::updatePageInMenu($_GET['id'], $_GET["menu"], $_GET["parent"], Context::getLang());
-                        MenuModel::setPageActivateInMenu($_GET['id'], $_POST['active'], Context::getLang());
-                    }
-                    parent::focus();
-                    parent::redirect(array("id"=>$_GET['id'],"menu"=>isset($_GET["menu"]) ? $_GET["menu"] : "","parent"=>isset($_GET["parent"]) ? $_GET["parent"] : ""));
-                    break;
-                case "saveRoles":
+                    
+                    // save page settings
+                    PagesModel::updatePage($_GET['id'], $_POST['pagename'], "", Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['pagedescription'],null,null);
+                    MenuModel::updatePageInMenu($_GET['id'], $_GET["menu"], $_GET["parent"], Context::getLang());
+                    MenuModel::setPageActivateInMenu($_GET['id'], $_POST['active'], Context::getLang());
+                    
+                    // save page roles
                     $roleGroups = $_POST['roleGroups'];
                     RolesModel::clearPageRoles($_GET['id']);
                     if ($roleGroups != null && count($roleGroups) > 0) {
@@ -36,20 +28,52 @@ class AdminPagesModule extends XModule {
                             RolesModel::savePageRole($_GET['id'], $roleGroup);
                         }
                     }
-                    parent::focus();
-                    parent::redirect(array("id"=>$_GET['id'],"menu"=>isset($_GET["menu"]) ? $_GET["menu"] : "","parent"=>isset($_GET["parent"]) ? $_GET["parent"] : ""));
                     break;
                     
-                    
-                    
-                    
-                    
-                    
                 case "editPage":
+                    
                     if (isset($_GET["adminPageId"])) {
                         $_SESSION["adminPageId"] = $_GET["adminPageId"];
                     }
                     break;
+                
+                case "setTemplate":
+                    break;
+                
+                case "deletepage":
+                    
+                    PagesModel::deletePage($_GET['id']);
+                    break;
+                
+                case "moveup":
+                    
+                    $pages = MenuModel::getPagesInAllLangs($_GET['manuId'],$_GET['parent'],false,Context::getLang());
+                    for ($i=0; $i<count($pages); $i++) {
+                        if ($pages[$i]->id == $_GET['id']) {
+                            if ($i != 0) {
+                                MenuModel::setPagePosition($pages[$i]->id,$pages[$i-1]->position);
+                                MenuModel::setPagePosition($pages[$i-1]->id,$pages[$i]->position);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case "movedown":
+                    
+                    $pages = MenuModel::getPagesInAllLangs($_GET['manuId'],$_GET['parent'],false,Context::getLang());
+                    for ($i=count($pages)-1; $i>-1; $i--) {
+                        if ($pages[$i]->id == $_GET['id']) {
+                            if (count($pages)-1 > $i) {
+                                MenuModel::setPagePosition($pages[$i]->id,$pages[$i+1]->position);
+                                MenuModel::setPagePosition($pages[$i+1]->id,$pages[$i]->position);
+                                break;
+                            }
+                        }
+                    }
+                    parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
+                    break;
+
             }
         }
     }
@@ -84,25 +108,33 @@ class AdminPagesModule extends XModule {
             <div id="adminPagesTabs">
                 <ul>
                     <li><a href="#tabs-1">Content</a></li>
-                    <li><a href="#tabs-2">Template</a></li>
-                    <li><a href="#tabs-3">Menu</a></li>
+                    <li><a href="#tabs-2">Menu</a></li>
+                    <li><a href="#tabs-3">Template</a></li>
                     <li><a href="#tabs-4">Settings</a></li>
                 </ul>
                 <div id="tabs-1">
                     <?php $this->printPageContentView($page); ?>
                 </div>
                 <div id="tabs-2">
-                    <?php $this->printPageTemplateView($page); ?>
+                    <?php $this->printPageMenuView($page); ?>
                 </div>
                 <div id="tabs-3">
-                    <?php $this->printPageMenuView($page); ?>
+                    <?php $this->printPageTemplateView($page); ?>
                 </div>
                 <div id="tabs-4">
                     <?php $this->printPageSettingsView($page); ?>
                 </div>
             </div>
             <script>
-            $("#adminPagesTabs").tabs();
+            $("#adminPagesTabs").tabs({
+                active : $.cookie('activetab'),
+                activate : function( event, ui ){
+                    $.cookie( 'activetab', ui.newTab.index(),{
+                        expires : 10
+                    });
+                }
+            });
+            
             </script>
             <?php
         
@@ -113,7 +145,6 @@ class AdminPagesModule extends XModule {
     
     function printPageSettingsView ($page) {
         
-        $templateValuesNames = Common::toMap(TemplateModel::getTemplates(Context::getSiteId()),"id","name");
         $allRoles = Common::toMap(RolesModel::getCustomRoles(),"id","name");
         $pageRoles = Common::toMap(RolesModel::getPageRoles($page->id),"roleid","roleid");
 
@@ -147,12 +178,6 @@ class AdminPagesModule extends XModule {
                 </td><td>
                     <input type="checkbox" name="welcome" value="1" <?php echo ($page != null && $page->welcome) ? "checked='true'" : ""; ?> />
                     Diese Seite als Startseite festlegen.
-                </td></tr><tr><td>
-                    Template
-                </td><td>
-                    <?php
-                    InputFeilds::printSelect("template", $page != null ? $page->template : null, $templateValuesNames);
-                    ?>
                 </td></tr><tr><td colspan="2">
                     <?php
                     InfoMessages::printInfoMessage("Please select the user groups that can view this page");
@@ -185,34 +210,36 @@ class AdminPagesModule extends XModule {
         
         ?>
         <h3>Configure Menu Pages</h3>
-        <div>                    
+        <div>
             <div class="alignLeft">
                 <button class="newPageButton">Neue Seite erstellen</button>
             </div>
             <?php
             if (count($pages) > 0) {
                 ?>
-                <table class="resultTable expand" cellspacing="0" border="0"><tr>
-                    <td class="resultTableCell resultTableHeader" align="center">id</td>
-                    <td class="resultTableCell resultTableHeader expand" align="center">Name</td>
-                    <td class="resultTableCell resultTableHeader" align="center" colspan="5">Tools</td>
+                <table class="resultTable" cellspacing="0" border="0">
+                 
+                <tr>
+                    <td align="center">id</td>
+                    <td class="expand" align="center">Name</td>
+                    <td align="center" colspan="5">Tools</td>
                 </tr>
                 <?php
-                for ($i=0; $i<count($pages); $i++) {
+                foreach ($pages as $page) {
                     ?>
                     <tr>
-                        <td class="resultTableCell"><?php echo $pages[$i]->id; ?></td>
-                        <td class="resultTableCell expand" align="center">
+                        <td align="center"><?php echo $page->id; ?></td>
+                        <td align="center">
                             <?php
-                            $name = ($pages[$i]->name == "") ? "Bitte Name vergeben" : $pages[$i]->name;
+                            $name = empty($page->name) ? "Bitte Name vergeben" : $page->name;
                             ?>
-                            <a href="<?php echo parent::link(array("action"=>"edit","menu"=>parent::param("selectedMenu"),"parent"=>$pages[$i]->id)); ?>"><?php echo $name; ?></a>
+                            <a href="<?php echo parent::link(array("action"=>"edit","menu"=>$page->menuid,"parent"=>$page->id)); ?>"><?php echo $name; ?></a>
                         </td>
-                        <td class="resultTableCell"><a href="<?php echo NavigationModel::createPageLink($pages[$i]->id,array()); ?>"><img src="resource/img/view.png" class="imageLink" alt="" /></a></td>
-                        <td class="resultTableCell"><a href="<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>parent::param("selectedMenu"),"parent"=>$parent,"id"=>$pages[$i]->id)); ?>"><img src="resource/img/preferences.png" class="imageLink" alt="" /></a></td>
-                        <td class="resultTableCell"><a href="<?php echo parent::link(array("action"=>"movedown","menu"=>parent::param("selectedMenu"),"parent"=>$parent,"id"=>$pages[$i]->id)); ?>"><img src="resource/img/movedown.png" class="imageLink" alt="" /></a></td>
-                        <td class="resultTableCell"><a href="<?php echo parent::link(array("action"=>"moveup","menu"=>parent::param("selectedMenu"),"parent"=>$parent,"id"=>$pages[$i]->id)); ?>"><img src="resource/img/moveup.png" class="imageLink" alt="" /></a></td>
-                        <td class="resultTableCell"><img src="resource/img/delete.png" class="imageLink" alt="" onclick="doIfConfirm('Wollen Sie wirklich diese Seite l&ouml;schen?','<?php echo parent::link(array("action"=>"deletepage","menu"=>parent::param("selectedMenu"),"parent"=>$parent,"id"=>$pages[$i]->id),false); ?>');" /></td>
+                        <td><a href="<?php echo NavigationModel::createPageLink($page->id,array("setAdminMode"=>"0")); ?>"><img src="resource/img/view.png" alt="" /></a></td>
+                        <td><a href="<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id)); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"movedown","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id)); ?>"><img src="resource/img/movedown.png" alt="" /></a></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"moveup","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id)); ?>"><img src="resource/img/moveup.png" alt="" /></a></td>
+                        <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Wollen Sie wirklich diese Seite l&ouml;schen?','<?php echo parent::link(array("action"=>"deletepage","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id),false); ?>');" /></td>
                     </tr>
                     <?php
                 }
@@ -250,7 +277,8 @@ class AdminPagesModule extends XModule {
         $areaNames = TemplateModel::getAreaNames($page);
         foreach ($areaNames as $areaName) {
             ?>
-            <fieldset title="<?php echo $areaName; ?>">
+            <fieldset>
+                <legend><?php echo $areaName; ?></legend>
                 <?php
                 $modules = TemplateModel::getAreaModules($page->id, $areaName);
                 ?>
@@ -263,7 +291,10 @@ class AdminPagesModule extends XModule {
                                 <img src="resource/img/preferences.png" alt="" onclick="callUrl('<?php echo NavigationModel::createModuleLink($module->id,array("action"=>"edit"),false); ?>');" />
                                 <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Wollen Sie wirklich dieses Modul l&ouml;schen?','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$module->id),false); ?>');" />
                             </div>
-                            ModuleModel::renderModuleObject($module);
+                            <?php
+                            $moduleClass = ModuleModel::getModuleClass($module);
+                            ModuleModel::renderModuleObject($moduleClass,false);
+                            ?>
                         </div>
                         <?php
                     }

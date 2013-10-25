@@ -324,16 +324,16 @@ class TemplateModel {
     
     static function getMainTemplate ($siteId) {
         $siteId = mysql_real_escape_string($siteId);
-        if (Context::isAdminMode()) {
-            return Database::queryAsObject("select t.id, t.name, t.template, t.interface 
-                from t_template t
-                where t.id = 1");
-        } else {
-            return Database::queryAsObject("select t.id, t.name, t.template, t.interface 
-                from t_template t
-                join t_site_template st on st.templateid = t.id and st.siteid = '$siteId' 
-                where st.main = 1");    
-        }
+        return Database::queryAsObject("select t.id, t.name, t.template, t.interface 
+            from t_template t
+            join t_site_template st on st.templateid = t.id and st.siteid = '$siteId' 
+            where st.main = 1");
+    }
+    
+    static function getAdminTemplate () {
+        return Database::queryAsObject("select t.id, t.name, t.template, t.interface  
+            from t_template t
+            where t.id = 1");
     }
     
     static function getTemplates ($siteId = null) {

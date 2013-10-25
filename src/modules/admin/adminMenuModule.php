@@ -39,10 +39,10 @@ class AdminMenuModule extends XModule {
             <div>
                 <div class="adminMenuAccountDiv">
                     <ul>
-                        <li><a href="">Sites</a></li>
-                        <li><a href="">Domains</a></li>
-                        <li><a href="">Package</a></li>
-                        <li><a href="">Messages</a></li>
+                        <li id="adminSites"><a href="">Sites</a></li>
+                        <li id="adminDomains"><a href="">Domains</a></li>
+                        <li id="adminPackage"><a href="">Package</a></li>
+                        <li id="adminMessages"><a href="">Messages</a></li>
                     </ul>
                 </div>
             </div>
@@ -111,7 +111,22 @@ class AdminMenuModule extends XModule {
             });
             $(".adminMenuAccountDiv").jstree({ 
                 "plugins" : ["themes","html_data","ui"] 
-            }).one("reopen.jstree", function (event, data) { });
+            }).bind("select_node.jstree", function (event, data) {
+                switch (data.rslt.obj.attr("id")) {
+                    case "adminSites":
+                        callUrl("<?php echo parent::staticLink("adminSites"); ?>");
+                        break;
+                    case "adminDomains":
+                        callUrl("<?php echo parent::staticLink("adminDomains"); ?>");
+                        break;
+                    case "adminPackage":
+                        callUrl("<?php echo parent::staticLink("adminPackage"); ?>");
+                        break;
+                    case "adminMessages":
+                        callUrl("<?php echo parent::staticLink("adminMessages"); ?>");
+                        break;
+                }
+            });
         });
         </script>
         <?php

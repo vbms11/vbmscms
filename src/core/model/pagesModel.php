@@ -118,7 +118,9 @@ class PagesModel {
             where p.code = '$name';
                 ";
         $pageObj = Database::queryAsObject($query);
-        if ($pageObj == null) {
+        
+        // create page if it dose not exist
+        if (empty($pageObj)) {
             $template = TemplateModel::getMainTemplate($site->siteid);
             $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
             $page = PagesModel::getPageTemplate($pageId, $_lang);
@@ -128,6 +130,24 @@ class PagesModel {
             Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");
             return PagesModel::getStaticPage($_name,$_lang);
         }
+        
+        return $pageObj;
+    }
+    
+    /**
+     * 
+     * @param type $pageObj
+     */
+    static function ensureAdminTemplate ($pageObj) {
+        
+        if (Context::isAdminMode()) {
+            $adminTemplate = TemplateModel::getAdminTemplate();
+            $pageObj->css = $pageObj->html  = $pageObj->js = "";
+            $pageObj->templateinclude = $adminTemplate->template;
+            $pageObj->interface = $adminTemplate->interface;
+            $pageObj->template = $adminTemplate->template;
+        }
+        
         return $pageObj;
     }
     
@@ -164,13 +184,18 @@ class PagesModel {
                 where p1.siteid = $siteId
             )";
         }
+        
 	if (count(Context::getRoleGroups()) > 0) {
-		return Database::queryAsObject($query);
+            $page = Database::queryAsObject($query);
+            $page = self::ensureAdminTemplate($page);
+            return $page;
 	}
+        
 	return null;
     }
 
-    static function getPageByTemplateArea ($id, $lang) {
+    static function getPageByModuleId ($id, $lang) {
+        
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
@@ -181,8 +206,8 @@ class PagesModel {
             left join t_menu as m on p.id = m.page and lang = '$lang'
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
             where p.id = a.pageid";
-        $result = Database::query($query);
-        return mysql_fetch_object($result);
+        $result = Database::queryAsObject($query);
+        return self::ensureAdminTemplate($result);
     }
 
     static function createPage ($name,$type,$lang,$welcome,$title,$keywords,$template,$areas,$description,$code="") {
@@ -214,14 +239,23 @@ class PagesModel {
         $keywords = mysql_real_escape_string($keywords);
         $type = mysql_real_escape_string($type);
         $description = mysql_real_escape_string($description);
-        $template = mysql_real_escape_string($template);
+        
+        // set page name
         $code = PagesModel::getPage($id,$lang);
         if ($code != null) {
             $code = $code->namecode;
         }
         $codeModel = new CodeModel();
         $codeModel->setCode($code,$lang,$name);
-        $query = "update t_page set title = '$title', keywords = '$keywords', description = '$description', type = '$type', template = '$template' where id = '$id'";
+        
+        // dont save template if null
+        $templateSql = "";
+        if ($template != null) {
+            $template = mysql_real_escape_string($template);
+            $templateSql = ", template = '$template'";
+        }
+        
+        $query = "update t_page set title = '$title', keywords = '$keywords', description = '$description', type = '$type' $templateSql where id = '$id'";
         Database::query($query);
         PagesModel::setWelcome($id,$welcome);
         // update template areas

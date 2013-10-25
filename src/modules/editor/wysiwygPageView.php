@@ -1,7 +1,7 @@
 <?php
 
 require_once 'core/plugin.php';
-include_once 'modules/wysiwyg/wysiwygPageModel.php';
+include_once 'modules/editor/wysiwygPageModel.php';
 
 class WysiwygPageView extends XModule {
 

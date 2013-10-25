@@ -179,13 +179,13 @@ class TemplateRenderer {
         if (empty($targetModule)) {
             if ($static) {
                 TemplateModel::createStaticModule($areaName, $moduleType);
+                $targetModule = TemplateModel::getStaticModule($moduleType, $moduleType);
             } else {
                 $module = ModuleModel::getModuleByName($moduleType);
                 $newModuleId = TemplateModel::insertTemplateModule($pageId, $areaName, $module->id);
-                $newModule = ModuleModel::getModule($newModuleId);
-                Context::addModule($newModule);
-                $targetModule = $newModule;
+                $targetModule = ModuleModel::getTemplateModule($newModuleId);
             }
+            Context::addModule($targetModule);
             $modules = Context::getModules($areaName);
         }
         // render area with module in it
@@ -282,6 +282,7 @@ class TemplateRenderer {
         <link rel="shortcut icon" href="<?php echo ResourcesModel::createTemplateResourceLink("favicon.ico"); ?>" type="image/x-icon" />
         <link type="text/css" href="resource/js/jquery/css/base/jquery.ui.all.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="resource/js/cookie/jquery.cookie.js"></script>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
         <link type="text/css" href="resource/css/main.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/main.js"></script>
