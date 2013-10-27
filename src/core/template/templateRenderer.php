@@ -2,33 +2,7 @@
 
 require_once 'core/template/adminTemplate.php';
 
-class TemplateRenderer {
-    
-    /**
-     * returns the pages in given menu
-     */
-    function getMenu ($menu, $parent = null) {
-        if ($this->menus == null) {
-            $this->menus = MenuModel::getPagesInMenu();
-        }
-        if (!empty($parent)) {
-            $childs = array();
-            foreach ($this->menus as $menu) {
-                if ($menu->parent == $parent) {
-                    $childs[] = $menu;
-                }
-            }
-            return $childs;
-        }
-        return isset($this->menus[$menu]) ? $this->menus[$menu] : null;
-    }
-
-    /**
-     * returns the pages in all menus
-     */
-    function getMenus () {
-    	return $this->menus;
-    }
+class TemplateRenderer extends BaseRenderer {
     
     /**
      * called when an area of the template is to be rendered
@@ -43,7 +17,7 @@ class TemplateRenderer {
         
         echo "<div class='vcms_area' id='vcms_area_$teplateArea' >";
 
-        $areaModules = Context::getModules($teplateArea);
+        $areaModules = $this->getModules($teplateArea);
         if (count($areaModules) > 0) {
             foreach ($areaModules as $areaModule) {
                 ModuleModel::renderModuleObject($areaModule);
@@ -86,15 +60,11 @@ class TemplateRenderer {
      */
     function renderMainTemplateArea ($teplateArea, $pageId = null) {
         
-        if (empty($pageId)) {
-            $pageId = Context::getPageId();
-        }
-        
         $focusedModuleId = Context::getFocusedArea();
-        if ($focusedModuleId != null) {
+        if (!empty($focusedModuleId)) {
             echo "<div id='vcms_area_$teplateArea' >";
             Context::setIsFocusedArea(true);
-            ModuleModel::renderModuleObject(Context::getModule($focusedModuleId));
+            ModuleModel::renderModuleObject($this->getModule($focusedModuleId));
             Context::setIsFocusedArea(false);
             echo "</div>";
         } else {
@@ -109,14 +79,10 @@ class TemplateRenderer {
      * @param <type> $menuName
      */
     function renderMenu ($menuName) {
-        // get the menu module
-        $menuModule = current(Context::getModules($menuName));
         
         // render the menu
         echo "<div id='vcms_area_$menuName' >";
-        foreach (Context::getModules($menuName) as $module) {
-            ModuleModel::renderModuleObject($module);
-        }
+        ModuleModel::renderModuleObject(current($this->getModules($menuName)));
         echo "</div>";
     }
 
@@ -158,7 +124,7 @@ class TemplateRenderer {
             $areaName = $moduleType;
         }
         // find target module
-        $modules = Context::getModules($areaName);
+        $modules = $this->getModules($areaName);
         $targetModule = null;
         foreach ($modules as $module) {
             if ($module->sysname == $moduleType) {
@@ -175,8 +141,8 @@ class TemplateRenderer {
                 $newModuleId = TemplateModel::insertTemplateModule($pageId, $areaName, $module->id);
                 $targetModule = ModuleModel::getTemplateModule($newModuleId);
             }
-            Context::addModule($targetModule);
-            $modules = Context::getModules($areaName);
+            $this->addModule($targetModule);
+            $modules = $this->getModules($areaName);
         }
         // render area with module in it
         echo "<div id='vcms_area_$areaName' >";
@@ -219,7 +185,7 @@ class TemplateRenderer {
         <?php
 
         // get module resouces
-        $modulesByArea = Context::getModules();
+        $modulesByArea = $this->getModules();
         foreach ($modulesByArea as $modulesInArea) {
             foreach ($modulesInArea as $module) {
                 $scripts = $module->getScripts();
@@ -329,92 +295,20 @@ class TemplateRenderer {
     
     function invokeRender () {
         
-        if (Context::isAjaxRequest()) {
-            if (Context::isRenderRequest()) {
-                // rerender request
-                $this->handelRenderRequest();
-            } else {
-                // ajax request
-                $module = TemplateModel::getTemplateModule(Context::getModuleId());
-                ModuleModel::renderModule($module);
-            }
-        } else {
-            
-            ob_start();
-            $this->renderHeader();
-            $this->render();
-            $this->renderFooter();
-            $bodyHtml = ob_get_clean();
-            
-            echo '<?xml version="1.0" encoding="ISO-8859-1" ?>'.PHP_EOL;
-            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'.PHP_EOL;
-            echo '<html xmlns="http://www.w3.org/1999/xhtml">'.PHP_EOL.'<head>'.PHP_EOL;
-            $this->renderHtmlHeader();
-            echo '</head>'.PHP_EOL.'<body>'.PHP_EOL;
-            echo $bodyHtml;
-            echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
-        }
-    }
-
-    function handelRenderRequest () {
-        // get render request parameters
-        $areas = explode(",",Context::get('reRender'));
-        $animate = $_GET['animate'];
-        $effect = $_GET['effect'];
-        // set response type to xml
-        header('Content-Type: text/xml; charset=utf-8');
+        ob_start();
+        $this->renderHeader();
+        $this->render();
+        $this->renderFooter();
+        $bodyHtml = ob_get_clean();
         
-        echo "<vcms>".PHP_EOL;
+        echo '<?xml version="1.0" encoding="ISO-8859-1" ?>'.PHP_EOL;
+        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'.PHP_EOL;
+        echo '<html xmlns="http://www.w3.org/1999/xhtml">'.PHP_EOL.'<head>'.PHP_EOL;
+        $this->renderHtmlHeader();
+        echo '</head>'.PHP_EOL.'<body>'.PHP_EOL;
+        echo $bodyHtml;
+        echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
         
-        $page = Context::getPage();
-        $modulesByArea = TemplateModel::getTemplateAreas(Context::getPageId());
-        $modules = array();
-        foreach ($modulesByArea as $moduleArea) {
-            foreach ($moduleArea as $module) {
-                if (!isset($modules[$module->typeid])) {
-                    $modules[] = $module;
-                }
-            }
-        }
-        foreach ($modules as $module) {
-            $moduleObj = ModuleModel::getModuleClass($module);
-            $styles = $moduleObj->getStyles();
-            if ($styles != null || count($styles) != 0) {
-                foreach ($styles as $style) {
-                    echo '<style href="'.ResourcesModel::createModuleResourceLink($module, $style).'" />'.PHP_EOL;
-                }
-            }
-            $scripts = $moduleObj->getScripts();
-            if ($scripts != null || count($scripts) != 0) {
-                foreach ($scripts as $script) {
-                    echo '<script src="'.ResourcesModel::createModuleResourceLink($module, $script).'" />'.PHP_EOL;
-                }
-            }
-        }
-        $template = TemplateModel::getTemplateObj($page);
-        $styles = $template->getStyles();
-        if ($styles != null || count($scripts) != 0) {
-            foreach ($styles as $style) {
-                echo '<link href="'.ResourcesModel::createTemplateResourceLink($style).'" />'.PHP_EOL;
-            }
-        }
-        $scripts = $template->getScripts();
-        if ($scripts != null || count($scripts) != 0) {
-            foreach ($scripts as $script) {
-                echo '<script src="'.ResourcesModel::createTemplateResourceLink($script).'" />'.PHP_EOL;
-            }
-        }
-        
-        // check if template is the same
-        // tell client to include scripts and styles
-        
-        // render areas that have changed
-        foreach ($areas as $area) {
-            echo "<area id='$area' animate='$animate' effect='$effect'><![CDATA[";
-            $this->renderTemplateArea($area, Context::getPageId());
-            echo "]]></area>".PHP_EOL;
-        }
-        echo "</vcms>".PHP_EOL;
     }
 
 }

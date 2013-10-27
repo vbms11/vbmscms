@@ -75,7 +75,7 @@ class ModuleModel {
     }
 
     static function processModule ($moduleId) {
-        $module = Context::getModule($moduleId);
+        $module = Context::getRenderer()->getModule($moduleId);
         if (!empty($module)) {
             self::processModuleObject($module);
         } else {
@@ -212,7 +212,7 @@ class ModuleModel {
                     break;
                 case "movemodule":
                     TemplateModel::moveTemplateModule(Context::getPageId(),$_GET["id"],$_GET["area"],$_GET["pos"]);
-                    Context::returnValue("");
+                    Context::setReturnValue("");
                     break;
                 case "logdata":
                     LogDataModel::logThis($_GET['data']);
@@ -231,7 +231,7 @@ class ModuleModel {
 
         // process system or module actions
         if ($moduleId != null) {
-            ModuleModel::processModuleObject(Context::getModule($moduleId));
+            ModuleModel::processModuleObject(Context::getRenderer()->getModule($moduleId));
         } else {
             ModuleModel::processAction();
         }

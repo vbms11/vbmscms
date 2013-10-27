@@ -91,7 +91,7 @@ class AdminTemplate extends XTemplate {
             
             echo "<div class='vcms_area' id='vcms_area_$teplateArea' >";
 
-            $areaModules = Context::getModules($teplateArea);
+            $areaModules = $this->getModules($teplateArea);
             if (count($areaModules) > 0) {
                 foreach ($areaModules as $areaModule) {
                     if ($areaModule->sysname == Context::isAdminMode()) {
@@ -113,7 +113,7 @@ class AdminTemplate extends XTemplate {
                     <?php 
                     echo "<div id='vcms_area_$teplateArea' >";
                     Context::setIsFocusedArea(true);
-                    ModuleModel::renderModuleObject(Context::getModule($focusedModuleId));
+                    ModuleModel::renderModuleObject($this->getModule($focusedModuleId));
                     Context::setIsFocusedArea(false);
                     echo "</div>";
                     ?>
@@ -142,7 +142,7 @@ class AdminTemplate extends XTemplate {
         
         echo "<div class='vcms_area' id='vcms_area_$teplateArea' >";
 
-        $areaModules = Context::getModules($teplateArea);
+        $areaModules = $this->getModules($teplateArea);
         if (count($areaModules) > 0) {
             foreach ($areaModules as $areaModule) {
                 ModuleModel::renderModuleObject($areaModule, false);

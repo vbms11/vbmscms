@@ -42,7 +42,7 @@ class FullCallendarView extends XModule {
                             'url' => parent::link(array("action"=>"view","id"=>$event->id))
                         );
                     }
-                    Context::returnValue(json_encode($jsonEvents));
+                    Context::setReturnValue(json_encode($jsonEvents));
                 }
                 break;
             case "deleteEvent":

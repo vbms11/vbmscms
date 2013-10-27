@@ -228,7 +228,7 @@ class NavigationModel {
     static function addAjaxParam ($params = array()) {
         if ($params == null)
             $params = array();
-        $params["moduleAjaxRequest"] = "true";
+        $params["moduleAjaxRequest"] = true;
         return $params;
     }
     

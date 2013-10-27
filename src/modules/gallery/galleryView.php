@@ -27,7 +27,7 @@ class GalleryView extends XModule {
                 case "uploadImage":
                     // uploads the image and create preview image
                     GalleryModel::uploadImage("fileData",$_GET['category']);
-                    Context::returnValue("");
+                    Context::setReturnValue("");
                     break;
                 case "update":
                     // updates the details of an image or category

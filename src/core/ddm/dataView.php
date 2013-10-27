@@ -70,7 +70,7 @@ class DynamicDataView {
                         $returnValue .= "'".Common::htmlEscape($columnValue)."'";
                     }
                     $returnValue .= "]";
-                    Context::returnValue($returnValue);
+                    Context::setReturnValue($returnValue);
                     break;
                 case "ddmSearch":
                     break;
@@ -87,7 +87,7 @@ class DynamicDataView {
                     header("content-type: application/csv-tab-delimited-table");
                     header("content-length: ".strlen($csvData));
                     header("content-disposition: attachment; filename=\"$tableId.csv\"");
-                    Context::returnValue($csvData);
+                    Context::setReturnValue($csvData);
                     break;
                 case "import":
                     // parse the file

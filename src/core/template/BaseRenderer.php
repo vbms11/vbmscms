@@ -1,0 +1,150 @@
+<?php
+
+abstract class BaseRenderer {
+    
+    public $menus = null;
+    public $modules = null;
+    
+    abstract function invokeRender ();
+    
+    // modules in this page
+
+    function loadModules ($pageId = null) {
+        
+        if ($pageId == null) {
+            $pageId = Context::getPageId();
+        }
+        
+        // get static modules
+        $staticModules = $this->getStaticModules();
+        $templateAreas = $this->getAreas();
+        
+        // load the modules
+        $pageModules = TemplateModel::getAreaModules($pageId, $templateAreas, $staticModules);
+        $pageAreaNames = array();
+        foreach ($pageModules as $module) {
+            $this->addModule($module);
+            $pageAreaNames[$module->id] = $module->name;
+        }
+        
+        // load the module parameters
+        $instanceParams = array();
+        $allParams = ModuleModel::getAreaModuleParams(array_keys($pageAreaNames));
+        foreach ($allParams as $param) {
+            if (!isset($instanceParams[$param->instanceid])) {
+                $instanceParams[$param->instanceid] = array();
+            }
+            $instanceParams[$param->instanceid][$param->name] = unserialize($param->value);
+        }
+
+        $this->setModuleParams($instanceParams);
+    }
+    
+    /**
+     * get all modules on page
+     * @return type
+     */
+    function getPageModules () {
+        if (empty($this->modules)) {
+            $this->loadModules();
+        }
+        return $this->modules;
+    }
+    
+    /**
+     * 
+     * @param type $instanceParams
+     */
+    function setModuleParams ($instanceParams) {
+        foreach ($instanceParams as $instanceId => $params) {
+            $module = &$this->getModule($instanceId);
+            $module->setParams($params);
+        }
+    }
+    
+    /**
+     * add module
+     * @param type $module
+     */
+    function addModule ($module) {
+        if (empty($this->modules)) {
+            $this->modules = array();
+        }
+        if (!isset($this->modules[$module->name])) {
+            $this->modules[$module->name] = array();
+        }
+        $this->modules[$module->name][$module->id] = &ModuleModel::getModuleClass($module);
+    }
+    
+    /**
+     * remove module by module id
+     * @param type $moduleId
+     */
+    function removeModule ($moduleId) {
+        foreach ($this->getPageModules() as $modules) {
+            if (isset($modules[$moduleId])) {
+                unset($modules[$moduleId]);
+            }
+        }
+    }
+    
+    /**
+     * get module by area name
+     * @param type $areaName
+     * @return type
+     */
+    function getModules ($areaName = null) {
+        $modules = $this->getPageModules();
+        if ($areaName == null) {
+            return $modules;
+        }
+        if (isset($modules[$areaName])) {
+            return $modules[$areaName];
+        }
+        return array();
+    }
+    
+    /**
+     * get module by module id
+     * @param type $id
+     * @return null
+     */
+    function getModule ($id) {
+        $modules = &$this->getPageModules();
+        foreach ($modules as $modules) {
+            if (isset($modules[$id])) {
+                return $modules[$id];
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * returns the pages in given menu
+     */
+    function getMenu ($menu, $parent = null) {
+        if ($this->menus == null) {
+            $this->menus = MenuModel::getPagesInMenu();
+        }
+        if (!empty($parent)) {
+            $childs = array();
+            foreach ($this->menus as $menu) {
+                if ($menu->parent == $parent) {
+                    $childs[] = $menu;
+                }
+            }
+            return $childs;
+        }
+        return isset($this->menus[$menu]) ? $this->menus[$menu] : null;
+    }
+
+    /**
+     * returns the pages in all menus
+     */
+    function getMenus () {
+    	return $this->menus;
+    }
+    
+}
+
+?>

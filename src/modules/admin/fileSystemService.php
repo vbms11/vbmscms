@@ -55,7 +55,7 @@ class FileSystemService extends XModule {
             $fm = new elFinder($opts); 
             $fm->run();
         }
-        Context::returnValue("");
+        Context::setReturnValue("");
         
     }
     

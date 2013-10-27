@@ -113,7 +113,7 @@ class Captcha {
         header("Content-Type: image/gif");
         ImageGif ($img);
         ImageDestroy ($img);
-        Context::returnValue("");
+        Context::setReturnValue("");
     }
     
     static function createAnswer ($anserLen) {

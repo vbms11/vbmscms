@@ -45,7 +45,7 @@ class TemplateModel {
     }
 
     static function deleteAreaModule ($moduleId) {
-        Context::removeModule($moduleId);
+        Context::getRenderer()->removeModule($moduleId);
         // call destroy on the module interface
         $moduleObj = TemplateModel::getTemplateModule($moduleId);
         ModuleModel::destroyModule($moduleObj);

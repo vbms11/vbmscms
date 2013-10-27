@@ -153,7 +153,7 @@ class UsersPageView extends XModule {
                     header("content-type: application/csv-tab-delimited-table");
                     header("content-length: 9999");//.strlen($returnCsv)
                     header("content-disposition: attachment; filename=newusers".Common::rand().".csv");
-                    Context::returnValue($returnCsv);
+                    Context::setReturnValue($returnCsv);
                     break;
             }
         }

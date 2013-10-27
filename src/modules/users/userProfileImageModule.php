@@ -30,7 +30,7 @@ class UserProfileImageModule extends XModule {
             case "uploadImage":
                 // uploads the image and create preview image
                 GalleryModel::uploadImage("fileData",$user->gallery);
-                Context::returnValue("");
+                Context::setReturnValue("");
                 break;
         }
     }

@@ -214,20 +214,13 @@ class Context {
     // renderer
 
     static function loadRenderer () {
-        $mode = self::get("renderRequest");
-        if ($mode == null && self::get("ajax") == "1") {
-            $mode = "ajax";
-        }
-        switch ($mode) {
-            case "vcms":
-                $renderer = new VCmsRenderer(TemplateModel::getTemplateObj(self::getPage()));
-                break;
-            case "ajax":
-                $renderer = new AJaxRenderer(TemplateModel::getTemplateObj(self::getPage()));
-                break;
-            default:
-                $renderer = TemplateModel::getTemplateObj(self::getPage());
-                break;
+        
+        if (Context::isRenderRequest()) {
+            $renderer = new VCmsRenderer();
+        } else if (Context::isAjaxRequest()) {
+            $renderer = new AJaxRenderer();
+        } else {
+            $renderer = TemplateModel::getTemplateObj(self::getPage());
         }
         Context::setRenderer($renderer);
     }
@@ -248,98 +241,6 @@ class Context {
         return isset($_REQUEST["req.renderer"]) ? $_REQUEST["req.renderer"] : null;
     }
 
-    // modules in this page
-
-    static function loadModules () {
-
-        // get static modules
-        $staticModules = self::getRenderer()->getStaticModules();
-        $templateAreas = self::getRenderer()->getAreas();
-        
-        $_REQUEST['req.modules'] = array();
-        
-        // load the modules
-        $pageModules = TemplateModel::getAreaModules(self::getPageId(), $templateAreas, $staticModules);
-        $pageAreaNames = array();
-        foreach ($pageModules as $module) {
-            self::addModule($module);
-            $pageAreaNames[$module->id] = $module->name;
-        }
-        
-        // load the module parameters
-        $instanceParams = array();
-        $allParams = ModuleModel::getAreaModuleParams(array_keys($pageAreaNames));
-        foreach ($allParams as $param) {
-            if (!isset($instanceParams[$param->instanceid])) {
-                $instanceParams[$param->instanceid] = array();
-            }
-            $instanceParams[$param->instanceid][$param->name] = unserialize($param->value);
-        }
-
-        self::setModuleParams($instanceParams);
-    }
-
-    static function getPageModules () {
-        if (!isset($_REQUEST['req.modules'])) {
-            self::loadModules();
-        }
-        return $_REQUEST['req.modules'];
-    }
-    
-    static function setModuleParams ($instanceParams) {
-        foreach ($instanceParams as $instanceId => $params) {
-            $module = &self::getModule($instanceId);
-            $module->setParams($params);
-        }
-    }
-    
-    static function addModule ($module) {
-        if (!isset($_REQUEST['req.modules'])) {
-            $_REQUEST['req.modules'] = array();
-        }
-        if (!isset($_REQUEST['req.modules'][$module->name])) {
-            $_REQUEST['req.modules'][$module->name] = array();
-        }
-        $_REQUEST['req.modules'][$module->name][$module->id] = &ModuleModel::getModuleClass($module);
-    }
-    
-    static function removeModule ($moduleId) {
-        foreach (self::getPageModules() as $modules) {
-            if (isset($modules[$moduleId])) {
-                unset($modules[$moduleId]);
-            }
-        }
-    }
-
-    static function getModules ($areaName = null) {
-        $modules = self::getPageModules();
-        if ($areaName == null) {
-            return $modules;
-        }
-        if (isset($modules[$areaName])) {
-            return $modules[$areaName];
-        }
-        return array();
-    }
-    
-    static function getModule ($id) {
-        $modules = &self::getPageModules();
-        foreach ($modules as $areaName => $modules) {
-            if (isset($modules[$id])) {
-                return $modules[$id];
-            }
-        }
-        return null;
-    }
-
-    static function getAreaNames () {
-        return array_keys(self::getPageModules());
-    }
-    
-    static function addQueryToLog ($query) {
-        self::$queryLog[] = $query;
-    }
-
     // methods called at the start and end of the context
 
     static function startRequest () {
@@ -356,7 +257,6 @@ class Context {
             NavigationModel::startRequest();
             LanguagesModel::selectLanguage();
             
-            unset($_SESSION["req.returnValue"]);
             // set the siteid
             $_SESSION["req.site"] = DomainsModel::getCurrentSite();
             
@@ -373,7 +273,6 @@ class Context {
                 $_SESSION["req.pageName"] = $page->name;
                 // $_SESSION["req.pageCode"] = $page->code;
                 self::loadRenderer();
-                self::loadModules();
             }
         }
     }
@@ -399,7 +298,7 @@ class Context {
         // save module parameters
         /*
         $moduleParams = array();
-        $modules = self::getModules();
+        $modules = self::getRenderer()->getModules();
         foreach ($modules as $module) {
             if ($module->paramsDirty) {
                 $moduleParams[$module->getId()] = $module->params();
@@ -430,7 +329,7 @@ class Context {
     
     static function getFocusedArea () {
     	if (isset($_SESSION['focusedArea']))
-        	return $_SESSION['focusedArea'];
+            return $_SESSION['focusedArea'];
     	return null;
     }
 
@@ -442,15 +341,15 @@ class Context {
      * if called the value will be returned as the response the 
      * render methods of the modules in the page will not be called
      */
-    static function returnValue ($value) {
-        $_SESSION["req.returnValue"] = $value;
+    static function setReturnValue ($value) {
+        $_REQUEST["req.returnValue"] = $value;
     }
     
     /**
      * returns the return value and null if none was set
      */
     static function getReturnValue () {
-        return isset($_SESSION["req.returnValue"]) ? $_SESSION["req.returnValue"] : null;
+        return isset($_REQUEST["req.returnValue"]) ? $_REQUEST["req.returnValue"] : null;
     }
     
     /**
@@ -524,6 +423,12 @@ class Context {
             }
         }
         return $styles;
+    }
+    
+    
+    
+    static function addQueryToLog ($query) {
+        self::$queryLog[] = $query;
     }
 }
 
