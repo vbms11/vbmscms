@@ -126,10 +126,12 @@ class PagesModel {
             $page = PagesModel::getPageTemplate($pageId, $_lang);
             $templateAreas = TemplateModel::getAreaNames($page);
             $moduleTypeId = ModuleModel::getModuleByName($_name);
-            $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id, -1);
+            $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id, -1, $name);
             Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");
             return PagesModel::getStaticPage($_name,$_lang);
         }
+        
+        $pageObj = self::ensureAdminTemplate($pageObj);
         
         return $pageObj;
     }

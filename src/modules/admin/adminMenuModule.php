@@ -54,7 +54,7 @@ class AdminMenuModule extends XModule {
                     foreach ($menus as $menu) {
                         $liClass = count($pages[$menu->id]) > 0 ? "jstree-open" : "";
                         ?>
-                        <li class="<?php echo $liClass; ?>" id="<?php echo $menu->id; ?>">
+                        <li class="adminNodeEditorMenu <?php echo $liClass; ?>" id="<?php echo $menu->id; ?>">
                             <a href="#"><?php echo $menu->name ?></a>
                             <?php $this->printMenu($pages[$menu->id]); ?>
                         </li>
@@ -95,7 +95,7 @@ class AdminMenuModule extends XModule {
             $activeIndex = 0;
             $selectedNode = null;
             switch (Context::isAdminMode()) {
-                case "pages":
+                case "adminPages":
                     $activeIndex = 1;
                     $selectedNode = $_SESSION['adminPageId'];
             }
@@ -106,8 +106,12 @@ class AdminMenuModule extends XModule {
             });
             $(".adminMenuPagesDiv").jstree({ 
                 "plugins" : ["themes","html_data","ui"] 
-            }).bind("select_node.jstree", function (event, data) { 
-                callUrl("<?php echo parent::staticLink("adminPages", array("action"=>"editPage"));?>&adminPageId="+data.rslt.obj.attr("id"));
+            }).bind("select_node.jstree", function (event, data) {
+                if (data.rslt.obj.hasClass("adminNodeEditorMenu")) {
+                    callUrl("<?php echo parent::staticLink("adminMenus", array("action"=>"editMenu"));?>&adminMenuId="+data.rslt.obj.attr("id"));
+                } else if (data.rslt.obj.hasClass("adminNodeEditorPage")) {
+                    callUrl("<?php echo parent::staticLink("adminPages", array("action"=>"editPage"));?>&adminPageId="+data.rslt.obj.attr("id"));
+                }
             });
             $(".adminMenuAccountDiv").jstree({ 
                 "plugins" : ["themes","html_data","ui"] 
@@ -138,7 +142,7 @@ class AdminMenuModule extends XModule {
             $liClass = isset($page->children) && count($page->children) > 0 ? "jstree-open " : "";
             $aClass = $page->page->id == $_SESSION['adminPageId'] ? "jstree-clicked" : "";
             ?>
-            <li class="<?php echo $liClass; ?>" id="<?php echo $page->page->id; ?>">
+            <li class="adminNodeEditorPage <?php echo $liClass; ?>" id="<?php echo $page->page->id; ?>">
                 <a class="<?php echo $aClass; ?>" href="<?php echo parent::staticLink("adminPages", array("action"=>"editPage","adminPageId"=>$page->page->id)); ?>">
                     <?php echo $page->page->name; ?>
                 </a>

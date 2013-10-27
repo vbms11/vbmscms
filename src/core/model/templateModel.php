@@ -75,11 +75,11 @@ class TemplateModel {
             $staticModulesCondition = "";
         } elseif (is_array($staticModules)) {
             foreach ($staticModules as $staticModule) {
-                $staticModuleNames[] = mysql_real_escape_string($staticModule['name']);
+                $staticModuleNames[$staticModule['type']] = mysql_real_escape_string($staticModule['type']);
             }
             $staticModulesCondition = "a.code in ('".implode("','", $staticModuleNames)."') ";
         } else {
-            $staticModulesCondition = "a.code = '".mysql_real_escape_string($staticModules['name'])."' ";
+            $staticModulesCondition = "a.code = '".mysql_real_escape_string($staticModules['type'])."' ";
         }
 
         // make the condition
@@ -106,8 +106,7 @@ class TemplateModel {
             foreach ($staticModules as $staticModule) {
                 $staticModuleExists = false;
                 foreach ($moduleIncludes as $moduleInclude) {
-                    if ($moduleInclude->code == $staticModule['name']) {
-                        $moduleInclude->name = $moduleInclude->code;
+                    if ($moduleInclude->code == $staticModule['type'] && $moduleInclude->name == $staticModule['name']) {
                         $staticModuleExists = true;
                     }
                 }
@@ -125,10 +124,11 @@ class TemplateModel {
 
     static function getStaticModule ($code, $sysName) {
         $acode = mysql_real_escape_string($code);
+        $sysName = mysql_real_escape_string($sysName);
         $result = Database::queryAsObject("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.sysname as sysname, pt.name as modulename
             from t_templatearea a
             left join t_module pt on pt.id = a.type
-            where a.code = '$acode'");
+            where a.code = '$sysName'");
         if ($result == null) {
             TemplateModel::createStaticModule($code,$sysName);
             return TemplateModel::getStaticModule($code,$sysName);
@@ -142,7 +142,7 @@ class TemplateModel {
         if ($module == null) {
             return null;
         }
-        Database::query("insert into t_templatearea(name,pageid,type,position,code) values('','','".($module->id)."','','$code')");
+        Database::query("insert into t_templatearea(name,pageid,type,position,code) values('$code','','".($module->id)."','','$sysName')");
         $result = Database::queryAsObject("select last_insert_id() as max from t_templatearea");
         return $result->max;
     }
@@ -175,7 +175,7 @@ class TemplateModel {
         Database::query("update t_templatearea set position = position + 1 where pageid = '$pageId' and name = '$area' and position >= '$fromPosition'");
     }
 
-    static function insertTemplateModule ($pageId,$area,$moduleId,$position = -1) {
+    static function insertTemplateModule ($pageId,$area,$moduleId,$position = -1,$code = null) {
         if ($position == -1) {
             TemplateModel::shiftTemplateModulesDown($pageId, $area, $position);
             $result = Database::queryAsObject("select min(position)-1 as max from t_templatearea where name = '$area' and pageid = '$pageId'");
@@ -188,10 +188,11 @@ class TemplateModel {
         $area = mysql_real_escape_string($area);
         $moduleId = mysql_real_escape_string($moduleId);
         $position = mysql_real_escape_string($position);
+        $code = mysql_real_escape_string($code);
         // stop hack
         //if (1==1) 
             //return;
-        Database::query("insert into t_templatearea(name,pageid,type,position) values('$area','$pageId','$moduleId','$position')");
+        Database::query("insert into t_templatearea(name,pageid,type,position,code) values('$area','$pageId','$moduleId','$position','$code')");
         $result = Database::queryAsObject("select last_insert_id() as max from t_templatearea");
         return $result->max;
     }

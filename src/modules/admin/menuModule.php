@@ -1,6 +1,8 @@
 <?php
 
-class MenuView extends XModule {
+require_once("modules/admin/adminPagesBaseModule.php");
+
+class MenuView extends AdminPagesBaseModule {
     
     function onProcess () {
 	if (Context::hasRole("menu.edit")) {
@@ -40,37 +42,26 @@ class MenuView extends XModule {
                     // parent::redirect(array("action"=>"edit"));
                     break;
                 case "deleteStyle":
+                    
                     MenuModel::deleteMenuStyle($_GET['id']);
                     parent::redirect(array("action"=>"edit"));
                     break;
+                    
                 case "deletepage":
-                    PagesModel::deletePage($_GET['id']);
+                    
+                    $this->deletePageAction();
                     parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
                     break;
+                    
                 case "moveup":
-                    $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$_GET['parent'],false,Context::getLang());
-                    for ($i=0; $i<count($pages); $i++) {
-                        if ($pages[$i]->id == $_GET['id']) {
-                            if ($i != 0) {
-                                MenuModel::setPagePosition($pages[$i]->id,$pages[$i-1]->position);
-                                MenuModel::setPagePosition($pages[$i-1]->id,$pages[$i]->position);
-                                break;
-                            }
-                        }
-                    }
+                    
+                    $this->movePageUpAction();
                     parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
                     break;
+                
                 case "movedown":
-                    $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$_GET['parent'],false,Context::getLang());
-                    for ($i=count($pages)-1; $i>-1; $i--) {
-                        if ($pages[$i]->id == $_GET['id']) {
-                            if (count($pages)-1 > $i) {
-                                MenuModel::setPagePosition($pages[$i]->id,$pages[$i+1]->position);
-                                MenuModel::setPagePosition($pages[$i+1]->id,$pages[$i]->position);
-                                break;
-                            }
-                        }
-                    }
+                    
+                    $this->movePageDownAction();
                     parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
                     break;
             }
@@ -120,8 +111,6 @@ class MenuView extends XModule {
                 parent::param("selectedMenu",$keys[0]);
             }
         }
-        // get pages to be shown
-        $pages = MenuModel::getPagesInAllLangs(parent::param("selectedMenu"),$parent,false,Context::getLang());
         // styles
         $styles = MenuModel::getMenuStyles();
         $selectedStyle = null;
@@ -170,67 +159,14 @@ class MenuView extends XModule {
                     }
                     ?>
                     </tr></table>
-                    <hr/>
                     
-                    <table><tr><td>
-                        <button class="newPageButton">Neue Seite erstellen</button>
-                    </td>
                     <?php
-                    if ($parent != null) {
-                        
-                        $parentPages = MenuModel::getPageParents($parent,Context::getLang());
+                    if (parent::param("selectedMenu") != null) {
                         ?>
-                        <td>
-                        <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>parent::param("selectedMenu"),"parent"=>"")); ?>">Menu</a>
-                        <?php
-                        for ($i=count($parentPages)-1; $i>-1; $i--) {
-                            if ($i - 1 < 0) $parentId = $parent;
-                            else $parentId = $parentPages[$i-1]->parent;
-                            ?>
-                            <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>parent::param("selectedMenu"),"parent"=>$parentId)); ?>"><?php echo $parentPages[$i]->name; ?></a>
-                            <?php
-                        }
-                        ?>
-                        </td>
-                        <?php
-                    }
-                    ?>
-                    </tr></table>
-                    <br/>
-
-                    <?php
-                    if (count($pages) > 0) {
-                        ?>
-                        <table class="resultTable expand" cellspacing="0" border="0"><tr>
-                            <td class="resultTableCell resultTableHeader" align="center">id</td>
-                            <td class="resultTableCell resultTableHeader expand" align="center">Name</td>
-                            <td class="resultTableCell resultTableHeader" align="center" colspan="5">Tools</td>
-                        </tr>
-                        <?php
-                        for ($i=0; $i<count($pages); $i++) {
-                            ?>
-                            <tr>
-                                <td class="resultTableCell"><?php echo $pages[$i]->id; ?></td>
-                                <td class="resultTableCell expand" align="center">
-                                    <?php
-                                    $name = ($pages[$i]->name == "") ? "Bitte Name vergeben" : $pages[$i]->name;
-                                    ?>
-                                    <a href="<?php echo parent::link(array("action"=>"edit","menu"=>parent::param("selectedMenu"),"parent"=>$pages[$i]->id)); ?>"><?php echo $name; ?></a>
-                                </td>
-                                <td class="resultTableCell"><a href="<?php echo NavigationModel::createPageLink($pages[$i]->id,array()); ?>"><img src="resource/img/view.png" class="imageLink" alt="" /></a></td>
-                                <td class="resultTableCell"><a href="<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>parent::getId(),"parent"=>$parent,"id"=>$pages[$i]->id)); ?>"><img src="resource/img/preferences.png" class="imageLink" alt="" /></a></td>
-                                <td class="resultTableCell"><a href="<?php echo parent::link(array("action"=>"movedown","menu"=>parent::param("selectedMenu"),"parent"=>$parent,"id"=>$pages[$i]->id)); ?>"><img src="resource/img/movedown.png" class="imageLink" alt="" /></a></td>
-                                <td class="resultTableCell"><a href="<?php echo parent::link(array("action"=>"moveup","menu"=>parent::param("selectedMenu"),"parent"=>$parent,"id"=>$pages[$i]->id)); ?>"><img src="resource/img/moveup.png" class="imageLink" alt="" /></a></td>
-                                <td class="resultTableCell"><img src="resource/img/delete.png" class="imageLink" alt="" onclick="doIfConfirm('Wollen Sie wirklich diese Seite l&ouml;schen?','<?php echo parent::link(array("action"=>"deletepage","menu"=>parent::param("selectedMenu"),"parent"=>$parent,"id"=>$pages[$i]->id),false); ?>');" /></td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                        </table>
-                        <br/>
-                        <button class="newPageButton">Neue Seite erstellen</button>
                         <hr/>
                         <?php
+                        $_GET['menuModuleId'] = $this->getId();
+                        $this->printPageMenuView(parent::param("selectedMenu"), $parent);
                     }
                     ?>
                     <div id="edit-menu-dialog" title="Edit Menu">
@@ -251,80 +187,84 @@ class MenuView extends XModule {
                     </div>
                     
                 </div>
-                <h3><a href="#section2">Configure Menu Style</a></h3>
-                <div>
-                    
-                    <table><tr><td class="nowrap">
-                        Select Style: 
-                    </td>
-                    <?php
-                    if (count($styles) > 0) {
-                        ?>
-                        <td class="expand">
-                            <?php InputFeilds::printSelect("selectedStyle", parent::param("selectedStyle"), Common::toMap($styles,"id","name")); ?>
+                <?php
+                if (parent::param("selectedMenu") != null) {
+                    ?>
+                    <h3><a href="#section2">Configure Menu Style</a></h3>
+                    <div>
+
+                        <table><tr><td class="nowrap">
+                            Select Style: 
                         </td>
                         <?php
-                    }
-                    ?>
-                    <td>
-                        <button id="btn_newStyle">New</button>
-                    </td>
-                    <?php
-                    if (count($styles) > 0) {
+                        if (count($styles) > 0) {
+                            ?>
+                            <td class="expand">
+                                <?php InputFeilds::printSelect("selectedStyle", parent::param("selectedStyle"), Common::toMap($styles,"id","name")); ?>
+                            </td>
+                            <?php
+                        }
                         ?>
                         <td>
-                            <button id="btn_deleteStyle">Delete</button>
+                            <button id="btn_newStyle">New</button>
                         </td>
                         <?php
-                    }
-                    ?>
-                    </tr></table>
-                    <hr/>
-                    
-                    <?php
-                    if (count($styles) > 0) {
-                        ?>
-                        <form method="post" action="<?php echo parent::link(array("action"=>"editStyle","id"=>parent::param("selectedStyle"))); ?>#section2">
-                            <table width="100%"><tr>
-                                <td class="nowrap">Style Name: </td>
-                                <td class="expand">
-                                    <?php InputFeilds::printTextFeild('styleName',$selectedStyle->name,"expand"); ?>
-                                </td>
-                            </tr><tr>
-                                <td class="nowrap">Css Class Name: </td>
-                                <td class="expand">
-                                    <?php InputFeilds::printTextFeild('cssname',$selectedStyle->cssclass,"expand"); ?>
-                                </td>
-                            </tr><tr>
-                                <td colspan="2">
-                                    Menu Style Css Code:
-                                </td>
-                            </tr><tr>
-                                <td colspan="2">
-                                    <?php InputFeilds::printTextArea('cssstyle',$selectedStyle->cssstyle,"expand",15); ?>
-                                </td>
-                            </tr></table><hr/>
-                            <div class="alignRight">
-                                <button id="btn_saveStyle">Save</button>
-                            </div>
-                        </form>
-                        <?php
-                    }
-                    ?>
-                    
-                    <div id="new-style-dialog" title="New Style">
-                        <form method="post" id="new-style-dialog-form" action="<?php echo parent::link(array("action"=>"newStyle")); ?>#section2">
-                            <b>Menu Style Name</b>
-                            <?php
-                            InputFeilds::printTextFeild("newStyleName");
+                        if (count($styles) > 0) {
                             ?>
-                        </form>
+                            <td>
+                                <button id="btn_deleteStyle">Delete</button>
+                            </td>
+                            <?php
+                        }
+                        ?>
+                        </tr></table>
+                        <hr/>
+
+                        <?php
+                        if (count($styles) > 0) {
+                            ?>
+                            <form method="post" action="<?php echo parent::link(array("action"=>"editStyle","id"=>parent::param("selectedStyle"))); ?>#section2">
+                                <table width="100%"><tr>
+                                    <td class="nowrap">Style Name: </td>
+                                    <td class="expand">
+                                        <?php InputFeilds::printTextFeild('styleName',$selectedStyle->name,"expand"); ?>
+                                    </td>
+                                </tr><tr>
+                                    <td class="nowrap">Css Class Name: </td>
+                                    <td class="expand">
+                                        <?php InputFeilds::printTextFeild('cssname',$selectedStyle->cssclass,"expand"); ?>
+                                    </td>
+                                </tr><tr>
+                                    <td colspan="2">
+                                        Menu Style Css Code:
+                                    </td>
+                                </tr><tr>
+                                    <td colspan="2">
+                                        <?php InputFeilds::printTextArea('cssstyle',$selectedStyle->cssstyle,"expand",15); ?>
+                                    </td>
+                                </tr></table><hr/>
+                                <div class="alignRight">
+                                    <button id="btn_saveStyle">Save</button>
+                                </div>
+                            </form>
+                            <?php
+                        }
+                        ?>
+
+                        <div id="new-style-dialog" title="New Style">
+                            <form method="post" id="new-style-dialog-form" action="<?php echo parent::link(array("action"=>"newStyle")); ?>#section2">
+                                <b>Menu Style Name</b>
+                                <?php
+                                InputFeilds::printTextFeild("newStyleName");
+                                ?>
+                            </form>
+                        </div>
+
                     </div>
-                    
-                </div>
+                    <?php
+                }
+                ?>
             </div>
-            
-            
             <script>
             $("#selectedMenu").change(function () {
                 callUrl("<?php echo parent::link(array("action"=>"selectMenu")); ?>",{"id":$("#selectedMenu").val()});
@@ -375,8 +315,7 @@ class MenuView extends XModule {
                 }
             });
             $("#menu-accordion").accordion({
-                autoHeight: false,
-                navigation: true
+                heightStyle: "content"
             });
             $(".newPageButton").each(function (index,object) {
                 $(object).button().click(function () {
@@ -423,8 +362,6 @@ class MenuView extends XModule {
         if (empty($menus)) {
             $menusList = Context::getRenderer()->getMenus();
             if (count($menusList) > 0) {
-                // parent::param("selectedMenu",current($menus));
-                // $menus = Context::getRenderer()->getMenu(parent::param("selectedMenu"));
                 $menus = current($menusList);
             }
         }

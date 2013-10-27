@@ -130,7 +130,7 @@ formActionsToolbar button {
 
 
 /* admin */
-
+/*
 .resultTable {
     border: 0px;
     border-top: 1px;
@@ -149,6 +149,32 @@ formActionsToolbar button {
     border-color: silver;
     background-color: rgb(240,240,240);
 }
+*/
+
+.resultTable {
+    margin-top: 10px;
+    border-width: 1px 0px 0px 1px;
+    border-style: solid;
+    border-color: silver;
+    text-align: center;
+    white-space: nowrap;
+}
+.resultTable td {
+    border-width: 0px 1px 1px 0px;
+    border-style: solid;
+    border-color: silver;
+    height: 30px;
+}
+.resultTable thead td {
+    font-weight:bold;
+    background: url('../img/common/grad_vert.gif') repeat-x;
+}
+.resultTable tbody td {
+    background: #f0f0f0;
+}
+
+
+
 
 .formTable {
     width: 100%;

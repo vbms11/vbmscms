@@ -62,7 +62,7 @@ class AdminTemplate extends XTemplate {
                     <a href="<?php echo NavigationModel::createPageLink($adminPageId,array("setAdminMode"=>"0")); ?>">View</a>
                 </div>
                 <div class="ui-widget-header <?php echo Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
-                    <a href="<?php echo NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","setAdminMode"=>"pages","adminPageId"=>$adminPageId)); ?>">Edit</a>
+                    <a href="<?php echo NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","setAdminMode"=>"adminPages","adminPageId"=>$adminPageId)); ?>">Edit</a>
                 </div>
             </div>
             <div class="adminHeaderLogoDiv"></div>
@@ -88,7 +88,20 @@ class AdminTemplate extends XTemplate {
     function renderMainTemplateArea ($teplateArea) {
         $focusedModuleId = Context::getFocusedArea();
         if (empty($focusedModuleId)) {
-            $this->renderTemplateArea($teplateArea);    
+            
+            echo "<div class='vcms_area' id='vcms_area_$teplateArea' >";
+
+            $areaModules = Context::getModules($teplateArea);
+            if (count($areaModules) > 0) {
+                foreach ($areaModules as $areaModule) {
+                    if ($areaModule->sysname == Context::isAdminMode()) {
+                        ModuleModel::renderModuleObject($areaModule, false);
+                    }
+                }
+            }
+
+            echo "</div>";
+            
         } else {
             ?>
             <div id="adminEditModuleTabs">
@@ -164,10 +177,17 @@ class AdminTemplate extends XTemplate {
      * returns the codes of the static modules
      */
     function getStaticModules () {
-        return array(array(
+        $staticModules = array(array(
             "name"=>"adminMenu",
             "type"=>"adminMenu"
         ));
+        if (Context::isAdminMode() == "adminPages" && Context::getFocusedArea() == null) {
+            $staticModules[] = array(
+                "name" => "center",
+                "type" => "adminPages"
+            );
+        }
+        return $staticModules;
     }
 }
 

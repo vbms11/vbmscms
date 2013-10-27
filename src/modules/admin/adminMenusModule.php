@@ -6,7 +6,7 @@ require_once("core/model/moduleModel.php");
 require_once("core/model/rolesModel.php");
 require_once("modules/admin/adminPagesBaseModule.php");
 
-class AdminPagesModule extends AdminPagesBaseModule {
+class AdminMenusModule extends AdminPagesBaseModule {
 
     function onProcess ()  {
 
@@ -17,15 +17,13 @@ class AdminPagesModule extends AdminPagesBaseModule {
                 case "savepage":
                     
                     $this->savePageAction();
-                    
-                case "editPage":
-                    
-                    if (isset($_GET["adminPageId"])) {
-                        $_SESSION["adminPageId"] = $_GET["adminPageId"];
-                    }
                     break;
-                
-                case "setTemplate":
+                    
+                case "editMenu":
+                    
+                    if (isset($_GET["adminMenuId"])) {
+                        $_SESSION["adminMenuId"] = $_GET["adminMenuId"];
+                    }
                     break;
                 
                 case "deletepage":
@@ -36,11 +34,13 @@ class AdminPagesModule extends AdminPagesBaseModule {
                 case "moveup":
                     
                     $this->movePageUpAction();
+                    parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
                     break;
                     
                 case "movedown":
                     
                     $this->movePageDownAction();
+                    parent::redirect(array("action"=>"edit","parent"=>$_GET['parent']));
                     break;
 
             }
@@ -55,7 +55,7 @@ class AdminPagesModule extends AdminPagesBaseModule {
         switch (parent::getAction()) {
             default:
                 if (Context::hasRole("pages.edit")) {
-                    $this->printEditPage();
+                    $this->printEditMenu();
                 }
         }
     }
@@ -67,50 +67,39 @@ class AdminPagesModule extends AdminPagesBaseModule {
         return array("pages.editmenu","pages.edit");
     }
 
-    function printEditPage () {
+    function printEditMenu () {
         
-        if (isset($_SESSION["adminPageId"])) {
+        if (isset($_SESSION["adminMenuId"])) {
             
-            $page = PagesModel::getPage($_SESSION["adminPageId"], Context::getLang(), false);
+            $page = PagesModel::getPage($_SESSION["adminMenuId"], Context::getLang(), false);
             
             ?>
-            <div id="adminPagesTabs">
+            <div id="adminMenusTabs">
                 <ul>
-                    <li><a href="#tabs-1">Content</a></li>
-                    <li><a href="#tabs-2">Menu</a></li>
-                    <li><a href="#tabs-3">Template</a></li>
-                    <li><a href="#tabs-4">Settings</a></li>
+                    <li><a href="#tabs-1">Menu</a></li>
+                    <li><a href="#tabs-2">Style</a></li>
                 </ul>
                 <div id="tabs-1">
-                    <?php $this->printPageContentView($page); ?>
+                    <?php $this->printPageMenuView($page); ?>
                 </div>
                 <div id="tabs-2">
-                    <h3>Configure Page Menu</h3>
-                    <?php $this->printPageMenuView($page->menuid,$page->id); ?>
-                </div>
-                <div id="tabs-3">
-                    <?php $this->printPageTemplateView($page); ?>
-                </div>
-                <div id="tabs-4">
-                    <h3>Configure Page Settings</h3>
-                    <?php $this->printPageSettingsView($page); ?>
+                    <?php $this->printMenuStyleView($page); ?>
                 </div>
             </div>
             <script>
-            $("#adminPagesTabs").tabs({
-                active : $.cookie('activetab'),
+            $("#adminMenusTabs").tabs({
+                active : $.cookie('activeMenutab'),
                 activate : function( event, ui ){
-                    $.cookie( 'activetab', ui.newTab.index(),{
+                    $.cookie( 'activeMenutab', ui.newTab.index(),{
                         expires : 10
                     });
                 }
             });
-            
             </script>
             <?php
         
         } else {
-            echo "no page selected";
+            echo "no menu selected";
         }
     }
     

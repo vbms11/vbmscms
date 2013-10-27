@@ -110,18 +110,8 @@ class TemplateRenderer {
      */
     function renderMenu ($menuName) {
         // get the menu module
-        $menuModule = null;
-        $menuAreaModules = Context::getModules($menuName);
-        foreach ($menuAreaModules as $module) {
-            if (isset($module->code) && $module->code == $menuName) {
-                $menuModule = $module;
-            }
-        }
-        // create it if it dose not exist
-        if ($menuModule == null) {
-            $menuModule = TemplateModel::getStaticModule($menuName,$menuName);
-            Context::addModule($menuModule);
-        }
+        $menuModule = current(Context::getModules($menuName));
+        
         // render the menu
         echo "<div id='vcms_area_$menuName' >";
         foreach (Context::getModules($menuName) as $module) {
