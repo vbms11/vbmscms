@@ -265,7 +265,11 @@ class MenuView extends AdminPagesBaseModule {
                 }
                 ?>
             </div>
-            <script>
+            <script> 
+            $("#menu-accordion").accordion({
+                heightStyle: "content"
+            });
+            // menu
             $("#selectedMenu").change(function () {
                 callUrl("<?php echo parent::link(array("action"=>"selectMenu")); ?>",{"id":$("#selectedMenu").val()});
                 e.preventDefault();
@@ -303,6 +307,7 @@ class MenuView extends AdminPagesBaseModule {
                     }
                 }
             });
+            // style
             $("#new-style-dialog").dialog({
                 autoOpen: false, height: 300, width: 350, modal: true,
                 buttons: {
@@ -314,14 +319,6 @@ class MenuView extends AdminPagesBaseModule {
                     }
                 }
             });
-            $("#menu-accordion").accordion({
-                heightStyle: "content"
-            });
-            $(".newPageButton").each(function (index,object) {
-                $(object).button().click(function () {
-                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>parent::param("selectedMenu"),"parent"=>$parent)); ?>");
-                })
-            })
             $("#btn_newStyle").button().click(function () {
                 $("#new-style-dialog").dialog("open");
             });

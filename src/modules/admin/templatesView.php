@@ -61,7 +61,7 @@ class TemplatesView extends XModule {
     function renderEditTemplateView ($templateId = null) {
         
         Context::addRequiredScript("resource/js/elfinder/js/elfinder.min.js");
-        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.css");
+        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.min.css");
         
         $actionName = "";
         if ($templateId != null) {

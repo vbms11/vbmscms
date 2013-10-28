@@ -45,7 +45,7 @@ class FilesystemView extends XModule {
     function printMainView () {
         
         Context::addRequiredScript("resource/js/elfinder/js/elfinder.min.js");
-        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.css");
+        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.min.css");
         
         ?>
         <div class="panel filesystemPanel">

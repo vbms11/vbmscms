@@ -40,6 +40,7 @@ class PageConfigModule extends AdminPagesBaseModule {
     function printEditPage () {
 
         $id = isset($_GET["id"]) ? $_GET["id"] : "";
+        $page = null;
         if ($id != "") {
             $page = PagesModel::getPage($id, Context::getLang(), false);
         }

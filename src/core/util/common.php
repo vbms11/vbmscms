@@ -169,7 +169,7 @@ class InputFeilds {
     }
     
     static function printHtmlEditor ($name,$value="",$cssFile="",$fileSystem = array("action"=>"www")) {
-        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.css");
+        Context::addRequiredStyle("resource/js/elfinder/css/elfinder.min.css");
         Context::addRequiredScript("resource/js/elfinder/js/elfinder.min.js");
         Context::addRequiredStyle("resource/js/elrte/css/elrte.min.css");
         Context::addRequiredScript("resource/js/elrte/js/elrte.min.js");
@@ -189,13 +189,16 @@ class InputFeilds {
             toolbar  : 'maxi',
             cssfiles : ['<?php echo $cssFile; ?>'],
             fmOpen : function(callback) {
-                $('<div id="myelfinder" />').elfinder({
+                $('<div />').dialogelfinder({
                     url : '<?php echo NavigationModel::createServiceLink("fileSystem", $fileSystem); ?>',
                     lang : 'en',
-                    dialog : { width : 900, modal : true, title : 'elFinder - file manager for web' },
-                    closeOnEditorCallback : true,
-                    editorCallback : callback
-                })
+                    commandsOptions: {
+                        getfile: {
+                            oncomplete: 'destroy' // destroy elFinder after file selection
+                        }
+                    },
+                    getFileCallback : function(file) { callback(file.url); }
+                }).elfinder('instance');
             }
         });
         </script>

@@ -82,8 +82,8 @@ class AdminPagesBaseModule extends XModule {
             <form method="post" action="<?php 
                 echo parent::link(array("action"=>"savepage",
                     "menuModuleId"  => isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : '',
-                    "menu"          => empty($page) ? "" : $page->menuid,
-                    "parent"        => empty($page) ? "" : $page->parent,
+                    "menu"          => empty($page) ? $_GET['menu'] : $page->menuid,
+                    "parent"        => empty($page) ? $_GET['parent'] : $page->parent,
                     "id"            => empty($page) ? "" : $page->id)); 
                 ?>">
 
@@ -118,7 +118,7 @@ class AdminPagesBaseModule extends XModule {
                     ?>
                 </td></tr><tr><td>
                 </td><td>
-                    <input type="checkbox" name="active" value="1" <?php echo ($page != null && $page->active) ? "checked='true'" : ""; ?> />
+                    <input type="checkbox" name="active" value="1" <?php echo ($page == null || $page->active) ? "checked='true'" : ""; ?> />
                     Diese Seite im Men&uuml; in der aktiven Sprache anzeigen.
                 </td></tr><tr><td>
                 </td><td>
@@ -149,10 +149,11 @@ class AdminPagesBaseModule extends XModule {
         <?php
     }
     
-    function printPageMenuView ($menuId, $pageId) {
+    function printPageMenuView ($menuId, $parentId) {
         
         // get pages to be shown
-        $pages = MenuModel::getPagesInAllLangs($menuId,$pageId,false,Context::getLang());
+        $pages = MenuModel::getPagesInAllLangs($menuId,$parentId,false,Context::getLang());
+        $parent = isset($_GET['parent']) ? $_GET['parent'] : null;
         
         ?>
         <div>
@@ -161,18 +162,18 @@ class AdminPagesBaseModule extends XModule {
             </div>
             <?php
             if (count($pages) > 0) {
-                if (isset($_GET['parent']) && !empty($_GET['parent'])) {
+                if (!empty($parent)) {
 
-                    $parentPages = MenuModel::getPageParents($_GET['parent'],Context::getLang());
+                    $parentPages = MenuModel::getPageParents($parent,Context::getLang());
                     ?>
                     <table><tr><td><td>
-                    <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>$_GET['parent'],"parent"=>"")); ?>">Menu</a>
+                    <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>$menuId,"parent"=>"")); ?>">Menu</a>
                     <?php
                     for ($i=count($parentPages)-1; $i>-1; $i--) {
                         if ($i - 1 < 0) $parentId = $parent;
                         else $parentId = $parentPages[$i-1]->parent;
                         ?>
-                        <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>$_GET['parent'],"parent"=>$parentId)); ?>"><?php echo $parentPages[$i]->name; ?></a>
+                        <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>$menuId,"parent"=>$parentId)); ?>"><?php echo $parentPages[$i]->name; ?></a>
                         <?php
                     }
                     ?>
@@ -220,7 +221,7 @@ class AdminPagesBaseModule extends XModule {
             <script>
             $(".newPageButton").each(function (index,object) {
                 $(object).button().click(function () {
-                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$page->menuid,"parent"=>$page->parent)); ?>");
+                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$menuId,"parent"=>$parent,"menuModuleId"=>isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : "")); ?>");
                 });
             })
             </script>

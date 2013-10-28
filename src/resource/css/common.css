@@ -166,7 +166,6 @@ formActionsToolbar button {
     height: 30px;
 }
 .resultTable thead td {
-    font-weight:bold;
     background: url('../img/common/grad_vert.gif') repeat-x;
 }
 .resultTable tbody td {
