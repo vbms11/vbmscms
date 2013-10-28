@@ -117,7 +117,7 @@ class CommentsView extends XModule {
                 $comments = CommentsModel::getComments("t_users", Context::getSelectedUserId());
                 break;
         }
-        
+        /*
         $page = isset($_GET['page']) ? $_GET['page'] : 0;
         $pages = floor(count($comments) / 20);
         if ($pages > 1) {
@@ -133,6 +133,7 @@ class CommentsView extends XModule {
             <br/>
             <?php
         }
+         */
         if ($comments != null) {
             foreach ($comments as $comment) {
                 Context::getUserHome();
@@ -179,16 +180,17 @@ class CommentsView extends XModule {
         <div class="panel commentsPanel">
             <div class="commentsAvatar">
                 <?php
+                $userName = "";
+                $userImage = "modules/comments/img/User.png";
                 if (Context::isLoggedIn()) {
-                    ?>
-                    <img src="<?php echo ResourcesModel::createResourceLink("gallery/small", $comment->userimage); ?>" alt="<?php echo $comment->username; ?>" />
-                    <?php
-                } else {
-                    ?>
-                    <img src="resouce/img/icons/User.png" alt="" />
-                    <?php
+                    $userName = Context::getUsername();
+                    $user = Context::getUser();
+                    if (!empty($user->image)) {
+                        $userImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
+                    }
                 }
                 ?>
+                <img src="<?php echo $userImage; ?>" alt="<?php echo $userName; ?>" />
             </div>
             <div class="commentsBody">
                 <form id="commentForm" method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
@@ -201,11 +203,11 @@ class CommentsView extends XModule {
                         <input type="textbox" name="name" class="expand" value=""/>
                     </div>
                     <div class="commentsComment">
-                        <?php echo parent::getTranslation("comments.comment"); ?><br/><br/>
+                        <?php echo parent::getTranslation("comments.comment"); ?><br/>
                         <textarea name="comment" class="expand" rows="4" cols="3"></textarea>
                     </div>
                     <div class="commentsCaptcha">
-                        <?php echo parent::getTranslation("common.captcha"); ?><br/><br/>
+                        <?php echo parent::getTranslation("common.captcha"); ?><br/>
                         <?php InputFeilds::printCaptcha("captcha"); ?>
                     </div>
                     <div class="commentsButtons">
@@ -215,6 +217,7 @@ class CommentsView extends XModule {
             </div>
         </div>
         <?php
+        /*
         if ($pages > 1) {
             ?>
             <br/>
@@ -228,6 +231,7 @@ class CommentsView extends XModule {
             </div>
             <?php
         }
+         */
         ?>
         <script type="text/javascript">
         $(function() {

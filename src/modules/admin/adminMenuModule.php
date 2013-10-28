@@ -56,7 +56,11 @@ class AdminMenuModule extends XModule {
                         ?>
                         <li class="adminNodeEditorMenu <?php echo $liClass; ?>" id="<?php echo $menu->id; ?>">
                             <a href="#"><?php echo $menu->name ?></a>
-                            <?php $this->printMenu($pages[$menu->id]); ?>
+                            <?php 
+                            if (isset($pages[$menu->id])) {
+                                $this->printMenu($pages[$menu->id]); 
+                            }
+                            ?>
                         </li>
                         <?php
                     }

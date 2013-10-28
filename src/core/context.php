@@ -14,6 +14,12 @@ class Context {
         $_SESSION["userLoggedin"] = true;
         Session::setUserFromContext();
     }
+    
+    static function getUser () {
+        if (isset($_SESSION["context.user"]) && !empty($_SESSION["context.user"]))
+            return $_SESSION["context.user"];
+        return null;
+    }
 
     static function getUsername () {
         if (isset($_SESSION["userName"]) && !Common::isEmpty($_SESSION["userName"]))

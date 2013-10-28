@@ -14,6 +14,9 @@ class RegisterRoleModule extends XModule {
     function onProcess () {
 
         switch (parent::getAction()) {
+            case "edit":
+                parent::focus();
+                break;
             case "save":
                 if (Context::hasRole("roles.register.edit")) {
                     parent::param("confirmRegister",    $_POST['confirmRegister']);
@@ -23,6 +26,8 @@ class RegisterRoleModule extends XModule {
                     parent::param("clickToUnregister",  $_POST['clickToUnregister']);
                     parent::param("notLoggedIn",        $_POST['notLoggedIn']);
                 }
+                parent::blur();
+                parent::redirect();
                 break;
             case "register":
                 if (count(parent::param("userRoles")) > 0) {

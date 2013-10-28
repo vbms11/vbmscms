@@ -105,7 +105,7 @@ class BackupModel {
 
         //save file
         $path = ResourcesModel::getResourcePath("backup");
-        $filename = 'db-backup-'.time().'-'.Common::randHash().'.sql';
+        $filename = 'db-backup-'.time().'-'.Common::randHash(20,false).'.sql';
         $handle = fopen($path.$filename,'w+');
         fwrite($handle,$return);
         fclose($handle);

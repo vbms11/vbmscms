@@ -4,8 +4,8 @@
     
 }
 .commentsAvatar {
-    min-height: 64px;
-    min-width: 100px;
+    height: 80px;
+    width: 80px;
     float: left;
     margin: 10px;
 }

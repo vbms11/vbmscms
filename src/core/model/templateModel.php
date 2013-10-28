@@ -45,7 +45,7 @@ class TemplateModel {
     }
 
     static function deleteAreaModule ($moduleId) {
-        Context::getRenderer()->removeModule($moduleId);
+        // Context::getRenderer()->removeModule($moduleId);
         // call destroy on the module interface
         $moduleObj = TemplateModel::getTemplateModule($moduleId);
         ModuleModel::destroyModule($moduleObj);
@@ -161,7 +161,7 @@ class TemplateModel {
 
     static function getTemplateModule ($moduleId) {
         $moduleId = mysql_real_escape_string($moduleId);
-        $result = Database::query("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface
+        $result = Database::query("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.sysname, pt.name as modulename
             from t_templatearea a
             left join t_module pt on pt.id = a.type
             where a.id = '$moduleId'");

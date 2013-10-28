@@ -158,7 +158,7 @@ class ProfilePageView extends XModule {
                 });
             });
             $(".usersInfoPanel button").each(function (index,object) {
-                object.button();
+                $(object).button();
             })
             </script>
         </div>

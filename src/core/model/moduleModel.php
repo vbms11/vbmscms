@@ -57,7 +57,7 @@ class ModuleModel {
         Database::query("delete from t_site_module where siteid = '$siteId' and templateid = '$moduleId'");
     }
     
-    static function getModuleClass ($moduleObj) {
+    static function getModuleClass ($moduleObj, $params = true) {
         // get the module instance
         require_once($moduleObj->include);
         $className = $moduleObj->interface;
@@ -67,6 +67,10 @@ class ModuleModel {
         $obj->modulePosition = $moduleObj->position;
         $obj->sysname = $moduleObj->sysname;
         $obj->include = $moduleObj->include;
+        // set module parameters
+        if ($params) {
+            $obj->setParams(self::getModuleParams($moduleObj->id));
+        }
         // add the translations
         if (in_array("ITranslatable", class_implements($obj))) {
             TranslationsModel::addTranslations($obj->getTranslations());
@@ -75,7 +79,7 @@ class ModuleModel {
     }
 
     static function processModule ($moduleId) {
-        $module = Context::getRenderer()->getModule($moduleId);
+        $module = self::getModule($moduleId);
         if (!empty($module)) {
             self::processModuleObject($module);
         } else {
@@ -94,11 +98,8 @@ class ModuleModel {
     }
 
     static function renderModule ($moduleObj) {
-
-        $moduleObj = ModuleModel::getModuleClass($moduleObj);
-        $moduleParams = ModuleModel::getModuleParams($moduleObj->getId());
-        $moduleObj->setParams($moduleParams);
-        self::renderModuleObject($moduleObj);
+        
+        self::renderModuleObject(self::getModuleClass($moduleObj));
     }
     
     static function renderModuleObject ($moduleObject, $contextMenu = true) {
@@ -153,7 +154,7 @@ class ModuleModel {
      * gets service module instance by service name
      */
     static function getServiceClass ($serviceName) {
-        return self::getModuleClass(ModuleModel::getModuleBySysname($serviceName));
+        return self::getModuleClass(self::getModuleBySysname($serviceName));
     }
     
     /*
@@ -161,9 +162,8 @@ class ModuleModel {
      */
     static function processService ($serviceName, $params = array()) {
         
-        $serviceClass = ModuleModel::getModuleClass(ModuleModel::getModuleBySysname($serviceName));
+        $serviceClass = self::getModuleClass(self::getModuleBySysname($serviceName));
         Context::setIsFocusedArea(true);
-        $serviceClass->setParams($params);
         $serviceClass->process($serviceName);
         Context::setIsFocusedArea(false);
     }
@@ -172,7 +172,7 @@ class ModuleModel {
      * render module class as service
      */
     static function renderService ($serviceName, $params = array()) {
-        $serviceClass = ModuleModel::getServiceClass($serviceName);
+        $serviceClass = self::getServiceClass($serviceName);
         Context::setIsFocusedArea(true);
         $serviceClass->setParams($params);
         $serviceClass->view($serviceName);
@@ -184,7 +184,7 @@ class ModuleModel {
      */
     static function destroyModule ($moduleObj) {
 
-        $moduleClass = ModuleModel::getModuleClass($moduleObj);
+        $moduleClass = self::getModuleClass($moduleObj);
         $moduleClass->destroy($moduleObj->id);
     }
 
@@ -225,38 +225,49 @@ class ModuleModel {
         
         // decide if to unfocus the main content area
         $moduleId = Context::getModuleId();
-        if (Context::getFocusedArea() != $moduleId || $moduleId == null) {
+        if (Context::getFocusedArea() != $moduleId || empty($moduleId)) {
             Context::setFocusedArea(null);
         }
 
         // process system or module actions
-        if ($moduleId != null) {
-            ModuleModel::processModuleObject(Context::getRenderer()->getModule($moduleId));
+        if (empty($moduleId)) {
+            self::processAction();
         } else {
-            ModuleModel::processAction();
+            
+            $moduleClass = self::getModuleClass(TemplateModel::getTemplateModule($moduleId));
+            $moduleClass->setParams(self::getModuleParams($moduleId));
+            self::processModuleObject($moduleClass);
         }
     }
-
-    static function getModuleParams ($moduleId) {
-        $moduleId = mysql_real_escape_string($moduleId);
-        $ret = array();
-        $params = Database::queryAsArray("select * from t_module_instance_params where instanceid = '$moduleId'");
-        foreach ($params as $param) {
-            $ret[$param->name] = unserialize($param->value);
-        }
-        return $ret;
-    }
-
-    static function getAreaModuleParams ($name) {
-        if (is_array($name)) {
-            foreach ($name as $key => $value) {
-                $name[$key] = mysql_real_escape_string($value);
+    
+    /**
+     * 
+     * @param type $moduleIds int or array
+     * @return type
+     */
+    static function getModuleParams ($moduleIds) {
+        
+        $moduleParams = array();
+        if (is_array($moduleIds)) {
+            foreach ($moduleIds as $key => $value) {
+                $moduleIds[$key] = mysql_real_escape_string($value);
             }
-            $name = " in ('".implode("','",$name)."') ";
+            $moduleIdsStr = " in ('".implode("','",$moduleIds)."') ";
         } else {
-            $name = " = '".mysql_real_escape_string($name)."' ";
+            $moduleIdsStr = " = '".mysql_real_escape_string($moduleIds)."' ";
         }
-        return Database::queryAsArray("select * from t_module_instance_params where instanceid $name");
+        $moduleParamsData = Database::queryAsArray("select * from t_module_instance_params where instanceid $moduleIdsStr");
+        foreach ($moduleParamsData as $param) {
+            if (is_array($moduleIds)) {
+                if (!isset($moduleParams[$param->instanceid])) {
+                    $moduleParams[$param->instanceid] = array();
+                }
+                $moduleParams[$param->instanceid][$param->name] = unserialize($param->value);
+            } else {
+                $moduleParams[$param->name] = unserialize($param->value);
+            }
+        }
+        return $moduleParams;
     }
     
     static function setModuleParam ($moduleId,$name,$value) {

@@ -23,21 +23,12 @@ abstract class BaseRenderer {
         $pageModules = TemplateModel::getAreaModules($pageId, $templateAreas, $staticModules);
         $pageAreaNames = array();
         foreach ($pageModules as $module) {
-            $this->addModule($module);
+            $this->addModule(ModuleModel::getModuleClass($module,false));
             $pageAreaNames[$module->id] = $module->name;
         }
         
         // load the module parameters
-        $instanceParams = array();
-        $allParams = ModuleModel::getAreaModuleParams(array_keys($pageAreaNames));
-        foreach ($allParams as $param) {
-            if (!isset($instanceParams[$param->instanceid])) {
-                $instanceParams[$param->instanceid] = array();
-            }
-            $instanceParams[$param->instanceid][$param->name] = unserialize($param->value);
-        }
-
-        $this->setModuleParams($instanceParams);
+        $this->setModuleParams(ModuleModel::getModuleParams(array_keys($pageAreaNames)));
     }
     
     /**
@@ -57,7 +48,7 @@ abstract class BaseRenderer {
      */
     function setModuleParams ($instanceParams) {
         foreach ($instanceParams as $instanceId => $params) {
-            $module = &$this->getModule($instanceId);
+            $module = $this->getModule($instanceId);
             $module->setParams($params);
         }
     }
@@ -70,10 +61,10 @@ abstract class BaseRenderer {
         if (empty($this->modules)) {
             $this->modules = array();
         }
-        if (!isset($this->modules[$module->name])) {
-            $this->modules[$module->name] = array();
+        if (!isset($this->modules[$module->moduleAreaName])) {
+            $this->modules[$module->moduleAreaName] = array();
         }
-        $this->modules[$module->name][$module->id] = &ModuleModel::getModuleClass($module);
+        $this->modules[$module->moduleAreaName][$module->moduleId] = $module;
     }
     
     /**
