@@ -126,14 +126,20 @@ class ModuleModel {
         var moduleMenuDiv = $('#vcms_module_<?php echo $moduleClass->getId(); ?>');
         moduleMenuDiv.contextMenu([
             {'Edit Module':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createModuleLink($moduleClass->getId(),array("action"=>"edit"),false); ?>'); }},
-            {'Insert Module':function (menuItem,menu) { callUrl('<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$moduleClass->getAreaName(),"position"=>$moduleClass->getPosition()),false); ?>'); }},
-            {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }},
-            $.contextMenu.separator,
-            {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleClass->getId()),false); ?>'); }},
-            {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleClass->getId()),false); ?>'); }},
             <?php
-            if ($page->codeid !== $moduleClass->getId()) {
+            if (empty($moduleClass->sysname)) {
                 ?>
+                {'Insert Module':function (menuItem,menu) { callUrl('<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$moduleClass->getAreaName(),"position"=>$moduleClass->getPosition()),false); ?>'); }},
+                <?php
+            }
+            ?>
+            {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }},
+            <?php
+            if (empty($moduleClass->sysname)) {
+                ?>
+                $.contextMenu.separator,
+                {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleClass->getId()),false); ?>'); }},
+                {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleClass->getId()),false); ?>'); }},
                 $.contextMenu.separator,
                 {'Delete Module':function (menuItem,menu) { doIfConfirm('Wollen Sie wirklich dieses Modul l&ouml;schen?','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$moduleClass->getId()),false); ?>'); }}
                 <?php

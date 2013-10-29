@@ -10,8 +10,7 @@ class UsersModel {
     static function login ($username,$password) {
         $username = mysql_real_escape_string($username);
         $password = md5($password);
-        $result = Database::query("select * from t_users where username = '$username' and password = '$password' and active = '1'");
-        $userObj = mysql_fetch_object($result);
+        $userObj = Database::queryAsObject("select * from t_users where username = '$username' and password = '$password' and active = '1'");
         
         // validate login
         if ($userObj != null && $userObj->username == $username && $userObj->password == $password) {

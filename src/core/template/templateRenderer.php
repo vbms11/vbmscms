@@ -82,7 +82,7 @@ class TemplateRenderer extends BaseRenderer {
         
         // render the menu
         echo "<div id='vcms_area_$menuName' >";
-        ModuleModel::renderModuleObject(current($this->getModules($menuName)));
+        ModuleModel::renderModuleObject(current($this->getModules($menuName)), true, false);
         echo "</div>";
     }
 

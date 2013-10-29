@@ -98,22 +98,26 @@ class ProductGroupsModule extends XModule {
         switch (parent::getAction()) {
 
             case "editGroup":
-                $this->printEditGroup($parent, $_GET['id']);
+                $this->printEditGroupTabsView($parent, $_GET['id']);
                 break;
             case "newGroup":
-                $this->printEditGroup($parent);
+                $this->printEditGroupTabsView($parent);
                 break;
             case "editProduct":
-                $this->printEditProduct($parent, $_GET['id']);
+                $this->printEditProductTabsView($parent, $_GET['id']);
                 break;
             case "newProduct":
-                $this->printEditProduct($parent);
+                $this->printEditProductTabsView($parent);
                 break;
             default:
-                $this->printMainView($parent);
+                if ($parent == null) {
+                    $this->printProductGroupsTabsView();
+                } else {
+                    $this->printProductsTabsView($parent);
+                }
         }
     }
-
+    
     function getRoles () {
         return array();
     }
@@ -124,132 +128,242 @@ class ProductGroupsModule extends XModule {
 
     static function getTranslations () {
         return array("en" => array(
-                "products.image"        =>"Product Image",
-                "products.gallery"      =>"Product Gallery",
-                "products.titel"        =>"Name",
-                "products.shorttext"    =>"Short Text",
-                "products.text"         =>"Long Text",
-                "products.stock"        =>"Stock",
-                "products.price"        =>"Price",
-                "products.minimum"      =>"Minimum Amount",
-                "products.weight"       =>"Weight",
-                "products.shipping"     =>"Shipping Costs"
+                "products.image"            =>"Product Image",
+                "products.gallery"          =>"Product Gallery",
+                "products.titel"            =>"Name",
+                "products.shorttext"        =>"Short Text",
+                "products.text"             =>"Long Text",
+                "products.stock"            =>"Stock",
+                "products.price"            =>"Price",
+                "products.minimum"          =>"Minimum Amount",
+                "products.weight"           =>"Weight",
+                "products.shipping"         =>"Shipping Costs",
+                "products.tab.groups"       =>"Product Groups",
+                "products.tab.products"     =>"Products",
+                "products.tab.product.edit" =>"Edit Product",
+                "products.tab.group.edit"   =>"Edit Product Group"
             ), "de" => array(
-                "products.image"        =>"Product Image",
-                "products.gallery"      =>"Product Gallery",
-                "products.titel"        =>"Name",
-                "products.shorttext"    =>"Short Text",
-                "products.text"         =>"Long Text",
-                "products.stock"        =>"Stock",
-                "products.price"        =>"Price",
-                "products.minimum"      =>"Minimum Amount",
-                "products.weight"       =>"Weight",
-                "products.shipping"     =>"Shipping Costs"
+                "products.image"            =>"Product Image",
+                "products.gallery"          =>"Product Gallery",
+                "products.titel"            =>"Name",
+                "products.shorttext"        =>"Short Text",
+                "products.text"             =>"Long Text",
+                "products.stock"            =>"Stock",
+                "products.price"            =>"Price",
+                "products.minimum"          =>"Minimum Amount",
+                "products.weight"           =>"Weight",
+                "products.shipping"         =>"Shipping Costs",
+                "products.tab.groups"       =>"Product Groups",
+                "products.tab.products"     =>"Products",
+                "products.tab.product.edit" =>"Edit Product",
+                "products.tab.group.edit"   =>"Edit Product Group"
             ));
     }
-
-    function printMainView ($parent) {
+    
+    function printEditGroupTabsView ($parent = null, $id = null) {
+        ?>
+        <div class="panel productGroupsTabs">
+            <ul>
+                <li><a href="#productGroups"><?php echo parent::getTranslation("products.tab.groups"); ?></a></li>
+                <li><a href="#productProducts"><?php echo parent::getTranslation("products.tab.products"); ?></a></li>
+                <li><a href="#productEdit"><?php echo parent::getTranslation("products.tab.group.edit"); ?></a></li>
+            </ul>
+            <div id="productGroups">
+                <?php $this->printProductGroupsView(); ?>
+            </div>
+            <div id="productProducts">
+                <?php $this->printProductsView($parent); ?>
+            </div>
+            <div id="productEdit">
+                <?php $this->printEditGroup($parent, $id); ?>
+            </div>
+        </div>
+        <script>
+        $(".productGroupsTabs").tabs({
+            active : 2
+        });
+        </script>
+        <?php
+    }
+    
+    function printEditProductTabsView ($parent = null, $id = null) {
+        ?>
+        <div class="panel productGroupsTabs">
+            <ul>
+                <li><a href="#productGroups"><?php echo parent::getTranslation("products.tab.groups"); ?></a></li>
+                <li><a href="#productProducts"><?php echo parent::getTranslation("products.tab.products"); ?></a></li>
+                <li><a href="#productEdit"><?php echo parent::getTranslation("products.tab.product.edit"); ?></a></li>
+            </ul>
+            <div id="productGroups">
+                <?php $this->printProductGroupsView(); ?>
+            </div>
+            <div id="productProducts">
+                <?php $this->printProductsView($parent); ?>
+            </div>
+            <div id="productEdit">
+                <?php $this->printEditProduct($parent, $id); ?>
+            </div>
+        </div>
+        <script>
+        $(".productGroupsTabs").tabs({
+            active : 2
+        });
+        </script>
+        <?php
+    }
+    
+    function printProductsTabsView ($parent) {
+        ?>
+        <div class="panel productGroupsTabs">
+            <ul>
+                <li><a href="#productGroups"><?php echo parent::getTranslation("products.tab.groups"); ?></a></li>
+                <li><a href="#productProducts"><?php echo parent::getTranslation("products.tab.products"); ?></a></li>
+            </ul>
+            <div id="productGroups">
+                <?php $this->printProductGroupsView(); ?>
+            </div>
+            <div id="productProducts">
+                <?php $this->printProductsView($parent); ?>
+            </div>
+        </div>
+        <script>
+        $(".productGroupsTabs").tabs({
+            active : 1
+        });
+        </script>
+        <?php
+    }
+    
+    function printProductGroupsTabsView ($parent = null) {
+        ?>
+        <div class="panel productGroupsTabs">
+            <ul>
+                <li><a href="#productGroups"><?php echo parent::getTranslation("products.tab.groups"); ?></a></li>
+            </ul>
+            <div id="productGroups">
+                <?php $this->printProductGroupsView($parent); ?>
+            </div>
+        </div>
+        <script>
+        $(".productGroupsTabs").tabs({
+            active : 0
+        });
+        </script>
+        <?php
+    }
+    
+    function printProductsView ($parent) {
         ?>
         <div class="panel">
             <?php
-            if ($parent ==  null) {
-                $groups = ProductsPageModel::getGroups($parent);
-                InfoMessages::printInfoMessage("product.groups.main.grouplist") ?>
-                <br/>
-                <div class="alignRight">
-                    <button type="button" id="<?php echo parent::alias("newGroup"); ?>">Create New Group</button>
-                </div>
-                <?php
-                if (count($groups) > 0) {
-                    ?>
-                    <table class="productGroupsTable" cellspacing="0">
-                    <thead>
-                        <tr>
-                        <td class="contract">id</td>
-                        <td class="expand">name</td>
-                        <td colspan="2" class="contract">tools</td>
-                        <tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($groups as $group) {
-                            ?>
-                            <tr>
-                            <td><?php echo $group->id ?></td>
-                            <td><a href="<?php echo parent::link(array("parent"=>$group->id)); ?>"><?php echo $group->name ?></a></td>
-                            <td><a href="<?php echo parent::link(array("action"=>"editGroup","id"=>$group->id,"parent"=>$parent)); ?>"><img src="resource/img/preferences.png" alt=""/></a></td>
-                            <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Are you sure that you want to delete this product group?','<?php echo parent::link(array("action"=>"deleteGroup","parent"=>$parent,"id"=>$group->id),false); ?>');" /></td>
-                            <tr>
-                            <?php
-                        }
-                        ?>
-                    </tbody>
-                    </table>
-                    <hr>
+            $products = ProductsPageModel::getProducts($parent, Context::getLang());
+            InfoMessages::printInfoMessage("product.groups.main.productlist") ?>
+            <br/>
+            <div class="alignRight">
+                <button type="button" id="<?php echo parent::alias("newProduct"); ?>">Create New Product</button>
+                <button type="button" id="<?php echo parent::alias("newBack"); ?>">Back</button>
+            </div>
+            <?php
+            if (count($products) > 0) {
+                ?>
+                <table class="productGroupsTable" cellspacing="0">
+                <thead>
+                    <tr>
+                    <td class="contract">id</td>
+                    <td class="expand">name</td>
+                    <td class="contract">price (<?php echo Config::getCurrency(); ?>)</td>
+                    <td class="contract">stock</td>
+                    <td class="contract">weight (<?php echo Config::getWeight(); ?>)</td>
+                    <td class="contract">shipping (<?php echo Config::getCurrency(); ?>)</td>
+                    <td class="contract">minimum</td>
+                    <td colspan="4" class="contract">tools</td>
+                    <tr>
+                </thead>
+                <tbody>
                     <?php
-                }
-            }
-            if ($parent != null) {
-                $products = ProductsPageModel::getProducts($parent, Context::getLang());
-                InfoMessages::printInfoMessage("product.groups.main.productlist") ?>
-                <br/>
-                <div class="alignRight">
-                    <button type="button" id="<?php echo parent::alias("newProduct"); ?>">Create New Product</button>
-                    <button type="button" id="<?php echo parent::alias("newBack"); ?>">Back</button>
-                </div>
-                <?php
-                if (count($products) > 0) {
-                    ?>
-                    <table class="productGroupsTable" cellspacing="0">
-                    <thead>
-                        <tr>
-                        <td class="contract">id</td>
-                        <td class="expand">name</td>
-                        <td class="contract">price (<?php echo Config::getCurrency(); ?>)</td>
-                        <td class="contract">stock</td>
-                        <td class="contract">weight (<?php echo Config::getWeight(); ?>)</td>
-                        <td class="contract">shipping (<?php echo Config::getCurrency(); ?>)</td>
-                        <td class="contract">minimum</td>
-                        <td colspan="4" class="contract">tools</td>
-                        <tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($products as $product) {
-                            ?>
-                            <tr>
-                            <td><?php echo $product->id ?></td>
-                            <td><?php echo $product->titel ?></td>
-                            <td><?php echo $product->price ?></td>
-                            <td><?php echo $product->quantity ?></td>
-                            <td><?php echo $product->weight ?></td>
-                            <td><?php echo $product->shipping ?></td>
-                            <td><?php echo $product->minimum ?></td>
-                            <td><a href="<?php echo parent::link(array("action"=>"editProduct","id"=>$product->id,"parent"=>$parent)); ?>"><img src="resource/img/preferences.png" alt=""/></a></td>
-                            <td><a href="<?php echo parent::link(array("action"=>"moveUp","id"=>$product->id,"parent"=>$parent)); ?>"><img src="resource/img/moveup.png" alt=""/></a></td>
-                            <td><a href="<?php echo parent::link(array("action"=>"moveDown","id"=>$product->id,"parent"=>$parent)); ?>"><img src="resource/img/movedown.png" alt=""/></a></td>
-                            <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Are you sure that you want to delete this product?','<?php echo parent::link(array("action"=>"deleteProduct","parent"=>$parent,"id"=>$product->id),false); ?>');" /></td>
-                            <tr>
-                            <?php
-                        }
+                    foreach ($products as $product) {
                         ?>
-                    </tbody>
-                    </table>
-                    <?php
-                }
+                        <tr>
+                        <td><?php echo $product->id ?></td>
+                        <td><?php echo $product->titel ?></td>
+                        <td><?php echo $product->price ?></td>
+                        <td><?php echo $product->quantity ?></td>
+                        <td><?php echo $product->weight ?></td>
+                        <td><?php echo $product->shipping ?></td>
+                        <td><?php echo $product->minimum ?></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"editProduct","id"=>$product->id,"parent"=>$parent)); ?>"><img src="resource/img/preferences.png" alt=""/></a></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"moveUp","id"=>$product->id,"parent"=>$parent)); ?>"><img src="resource/img/moveup.png" alt=""/></a></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"moveDown","id"=>$product->id,"parent"=>$parent)); ?>"><img src="resource/img/movedown.png" alt=""/></a></td>
+                        <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Are you sure that you want to delete this product?','<?php echo parent::link(array("action"=>"deleteProduct","parent"=>$parent,"id"=>$product->id),false); ?>');" /></td>
+                        <tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+                </table>
+                <?php
             }
             ?>
         </div>
         <script>
-            $("#<?php echo parent::alias("newGroup"); ?>").button().click(function (event) {
-                callUrl("<?php echo parent::link(array("action"=>"newGroup","parent"=>$parent),false); ?>");
-            })
-            $("#<?php echo parent::alias("newProduct"); ?>").button().click(function (event) {
-                callUrl("<?php echo parent::link(array("action"=>"newProduct","parent"=>$parent),false); ?>");
-            })
-            $("#<?php echo parent::alias("newBack"); ?>").button().click(function (event) {
-                callUrl("<?php echo parent::link(array("action"=>"back","parent"=>$parent),false); ?>");
-            });
+        $("#<?php echo parent::alias("newProduct"); ?>").button().click(function (event) {
+            callUrl("<?php echo parent::link(array("action"=>"newProduct","parent"=>$parent),false); ?>");
+        })
+        $("#<?php echo parent::alias("newBack"); ?>").button().click(function (event) {
+            callUrl("<?php echo parent::link(array("action"=>"back","parent"=>$parent),false); ?>");
+        });
+        </script>
+        <?php
+    }
+    
+    function printProductGroupsView ($parent = null) {
+        ?>
+        <div class="panel productGroupsPanel">
+            <?php
+            $groups = ProductsPageModel::getGroups($parent);
+            InfoMessages::printInfoMessage("product.groups.main.grouplist") ?>
+            <br/>
+            <div class="alignRight">
+                <button type="button">Create New Group</button>
+            </div>
+            <?php
+            if (count($groups) > 0) {
+                ?>
+                <table class="productGroupsTable" cellspacing="0">
+                <thead>
+                    <tr>
+                    <td class="contract">id</td>
+                    <td class="expand">name</td>
+                    <td colspan="2" class="contract">tools</td>
+                    <tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($groups as $group) {
+                        ?>
+                        <tr>
+                        <td><?php echo $group->id ?></td>
+                        <td><a href="<?php echo parent::link(array("parent"=>$group->id)); ?>"><?php echo $group->name ?></a></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"editGroup","id"=>$group->id,"parent"=>$parent)); ?>"><img src="resource/img/preferences.png" alt=""/></a></td>
+                        <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Are you sure that you want to delete this product group?','<?php echo parent::link(array("action"=>"deleteGroup","parent"=>$parent,"id"=>$group->id),false); ?>');" /></td>
+                        <tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+                </table>
+                <hr>
+                <div class="alignRight">
+                    <button type="button">Create New Group</button>
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <script>
+        $(".productGroupsPanel .alignRight button").button().click(function (event) {
+            callUrl("<?php echo parent::link(array("action"=>"newGroup","parent"=>$parent),false); ?>");
+        })
         </script>
         <?php
     }

@@ -201,7 +201,10 @@ class ProductsPageModel {
         Database::query("update t_product_group set parent = $parentSql where id = '$id'");
     }
 
-    static function getGroups ($parent = null) {
+    static function getGroups ($parent = null, $siteId = null) {
+        if (empty($siteId)) {
+            $siteId = Context::getSiteId();
+        }
         $lang = mysql_real_escape_string(Context::getLang());
         if ($parent == null) {
             return Database::queryAsArray("select c.value as name, g.* from t_product_group g left join t_code c on c.code = g.namecode and c.lang = '$lang'");

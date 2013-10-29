@@ -348,7 +348,11 @@ CREATE TABLE IF NOT EXISTS `t_module` (
   `position` int(10) NOT NULL,
   `static` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=72 ;
+
+--
+-- Daten für Tabelle `t_module`
+--
 
 INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `interface`, `inmenu`, `category`, `position`, `static`) VALUES
 (2, 'Wysiwyg Editor', '', 'modules/editor/wysiwygPageView.php', '', 'WysiwygPageView', 1, 1, 0, 0),
@@ -373,7 +377,7 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (36, 'Events List', '', 'modules/events/eventsList.php', '', 'EventsListView', 1, 1, 0, 0),
 (38, 'Templates Manager', '', 'modules/admin/templatesView.php', '', 'TemplatesView', 1, 4, 0, 0),
 (39, 'Modules Manager', '', 'modules/admin/modulesView.php', '', 'ModulesView', 1, 4, 0, 0),
-(40, 'Domains Manager', '', 'modules/admin/domainsView.php', '', 'DomainsView', 1, 4, 0, 0),
+(40, 'Domains Manager', 'adminDomains', 'modules/admin/adminDomainsModule.php', '', 'AdminDomainsModule', 1, 4, 0, 1),
 (41, 'Images', 'system', 'modules/admin/systemService.php', '', 'SystemService', 0, 4, 0, 1),
 (42, 'Seo Settings', 'seo', 'modules/admin/seoView.php', '', 'SeoView', 0, 4, 0, 1),
 (44, 'Startup Welcome', 'startup', 'modules/admin/startupView.php', '', 'StartupView', 0, 4, 0, 1),
@@ -389,18 +393,18 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (56, 'Rechnungen', '', 'modules/products/shopBillsView.php', NULL, 'ShopBillsView', 1, 4, 1, 0),
 (57, 'Full Screen Callendar', '', 'modules/events/fullCallendarView.php', NULL, 'FullCallendarView', 1, 1, 0, 0),
 (58, 'Events Table', 'eventsTable', 'modules/events/eventsTable.php', NULL, 'EventsTableView', 1, 0, 0, 1),
-(59, 'Plain Menu', 'menu', 'modules/pages/menuModule.php', NULL, 'MenuView', 1, 0, 0, 0),
-(60, 'Page Config', 'pageConfig', 'modules/pages/pageConfigModule.php', NULL, 'PageConfigModule', 0, 0, 0, 1),
+(59, 'Plain Menu', 'menu', 'modules/admin/menuModule.php', NULL, 'MenuView', 1, 0, 0, 0),
+(60, 'Page Config', 'pageConfig', 'modules/admin/pageConfigModule.php', NULL, 'PageConfigModule', 0, 0, 0, 1),
 (61, 'Confirm', 'confirm', 'modules/admin/confirmModuleView.php', NULL, 'ConfirmView', 0, 0, 0, 1),
 (63, 'Languages', '', 'modules/admin/languagesModule.php', NULL, 'LanguagesModule', 1, 0, 0, 0),
 (64, 'Search Box', '', 'modules/search/searchBoxModule.php', NULL, 'SearchBoxModule', 1, 0, 0, 0),
 (65, 'Product Groups', 'productGroups', 'modules/products/productGroupsModule.php', '', 'ProductGroupsModule', 1, 0, 0, 1),
 (66, 'Payment', 'payment', 'modules/products/paymentModule.php', '', 'PaymentModule', 0, 0, 0, 1),
 (67, 'Social Networks', '', 'modules/social/socialModule.php', '', 'SocialModule', 1, 0, 0, 0),
-(68, 'Menu Styles', 'menuStyles', 'modules/pages/menuStylesModule.php', NULL, 'MenuStylesModule', 0, 0, 0, 1),
+(68, 'Menu Styles', 'menuStyles', 'modules/admin/menuStylesModule.php', NULL, 'MenuStylesModule', 0, 0, 0, 1),
 (69, 'Admin Menu', 'adminMenu', 'modules/admin/adminMenuModule.php', NULL, 'AdminMenuModule', 0, 0, 0, 1),
-(70, 'Admin Pages', 'adminPages', 'modules/admin/adminPagesModule.php', NULL, 'AdminPagesModule', 0, 0, 0, 1);
-
+(70, 'Admin Pages', 'adminPages', 'modules/admin/adminPagesModule.php', NULL, 'AdminPagesModule', 0, 0, 0, 1),
+(71, 'Admin Menus', 'adminMenus', 'modules/admin/adminMenusModule.php', NULL, 'AdminMenusModule', 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -451,11 +455,9 @@ CREATE TABLE IF NOT EXISTS `t_module_roles` (
   `customrole` int(10) NOT NULL,
   `modulerole` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1185 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
---
--- Daten für Tabelle `t_module_roles`
---
+-- --------------------------------------------------------
 
 INSERT INTO `t_module_roles` (`id`, `customrole`, `modulerole`) VALUES
 (1112, 7, 'products.view'),
@@ -532,8 +534,6 @@ INSERT INTO `t_module_roles` (`id`, `customrole`, `modulerole`) VALUES
 (1183, 10, 'payment.edit'),
 (1184, 10, 'social.edit');
 
--- --------------------------------------------------------
-
 --
 -- Tabellenstruktur für Tabelle `t_newsletter`
 --
@@ -543,14 +543,7 @@ CREATE TABLE IF NOT EXISTS `t_newsletter` (
   `name` varchar(100) NOT NULL,
   `text` blob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Daten für Tabelle `t_newsletter`
---
-
-INSERT INTO `t_newsletter` (`id`, `name`, `text`) VALUES
-(1, 'Test Newsletter', 0x486920256e616d65252c3c6272202f3e3c6272202f3e5468697320697320612074657374206e6577736c6574746572207468617420686173206265656e2073656e7420746f20796f757220656d61696c20616464726573732025656d61696c253c6272202f3e3c6272202f3e6b696e642072656761726473);
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -914,7 +907,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_column` (
   `description` blob,
   `required` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
 
 --
 -- Daten für Tabelle `t_vdb_column`
@@ -951,7 +944,8 @@ INSERT INTO `t_vdb_column` (`id`, `tableid`, `name`, `edittype`, `position`, `re
 (45, 10, 'Stadt (city)', 1, 7, NULL, NULL, '', 1),
 (46, 10, 'Postleitzahl (post code)', 1, 8, NULL, NULL, '', 1),
 (47, 10, 'Land (country)', 1, 9, NULL, NULL, '', 1),
-(48, 10, 'instructions', 9, 1, NULL, NULL, 0x44657461696c20496e666f726d6174696f6e3a, 0);
+(48, 10, 'instructions', 9, 1, NULL, NULL, 0x44657461696c20496e666f726d6174696f6e3a, 0),
+(49, 2, 'test', 1, 25, NULL, NULL, '', 0);
 
 -- --------------------------------------------------------
 
@@ -963,15 +957,8 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `tableid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=4 ;
 
---
--- Daten für Tabelle `t_vdb_object`
---
-
-INSERT INTO `t_vdb_object` (`id`, `tableid`) VALUES
-(1, 2),
-(2, 2);
 
 -- --------------------------------------------------------
 
@@ -1011,30 +998,6 @@ CREATE TABLE IF NOT EXISTS `t_vdb_value` (
   KEY `objectid` (`objectid`),
   KEY `columnid` (`columnid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Daten für Tabelle `t_vdb_value`
---
-
-INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
-(1, 1, ''),
-(1, 2, ''),
-(1, 3, ''),
-(1, 4, ''),
-(1, 5, ''),
-(1, 6, ''),
-(1, 7, 0x30),
-(1, 8, ''),
-(1, 24, ''),
-(2, 1, ''),
-(2, 2, ''),
-(2, 3, ''),
-(2, 4, ''),
-(2, 5, ''),
-(2, 6, ''),
-(2, 7, 0x30),
-(2, 8, ''),
-(2, 24, '');
 
 -- --------------------------------------------------------
 

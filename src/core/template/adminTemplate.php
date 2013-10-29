@@ -87,7 +87,12 @@ class AdminTemplate extends XTemplate {
      */
     function renderMainTemplateArea ($teplateArea) {
         $focusedModuleId = Context::getFocusedArea();
-        if (empty($focusedModuleId)) {
+        if (!empty($focusedModuleId)) {
+            $module = $this->getModule($focusedModuleId);
+        } else {
+            $module = null;
+        }
+        if (empty($focusedModuleId) || (!empty($module) && $module->sysname == Context::isAdminMode())) {
             
             echo "<div class='vcms_area' id='vcms_area_$teplateArea' >";
 
@@ -95,7 +100,13 @@ class AdminTemplate extends XTemplate {
             if (count($areaModules) > 0) {
                 foreach ($areaModules as $areaModule) {
                     if ($areaModule->sysname == Context::isAdminMode()) {
+                        if (!empty($focusedModuleId)) {
+                            Context::setIsFocusedArea(true);
+                        }
                         ModuleModel::renderModuleObject($areaModule, false);
+                        if (!empty($focusedModuleId)) {
+                            Context::setIsFocusedArea(false);
+                        }
                     }
                 }
             }
@@ -181,10 +192,10 @@ class AdminTemplate extends XTemplate {
             "name"=>"adminMenu",
             "type"=>"adminMenu"
         ));
-        if (Context::isAdminMode() == "adminPages" && Context::getFocusedArea() == null) {
+        if (Context::isAdminMode() && Context::getFocusedArea() == null) {
             $staticModules[] = array(
                 "name" => "center",
-                "type" => "adminPages"
+                "type" => Context::isAdminMode()
             );
         }
         return $staticModules;

@@ -129,7 +129,6 @@ class Session {
         session_unset();
         session_destroy();
         session_write_close();
-        // setcookie("s",'',0,'/');
         session_regenerate_id(true);
     }
     

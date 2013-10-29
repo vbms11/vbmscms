@@ -23,11 +23,10 @@ class LoginModule extends XModule {
             case "login":
                 if (UsersModel::login($_POST['username'],$_POST['password'])) {
                     parent::focus();
-                    // NavigationModel::redirectModule(parent::getId(), array("action"=>"welcome"));
                     if (NavigationModel::hasNextAction()) {
                         NavigationModel::redirectNextAction();
                     } else {
-                        NavigationModel::redirect();
+                        parent::redirect(array("action"=>"welcome"));
                     }
                 } else {
                     parent::focus();

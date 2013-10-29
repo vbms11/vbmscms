@@ -23,12 +23,12 @@ class CommentsView extends XModule {
             case "saveComment":
                 if (isset($_GET['id']) && !Common::isEmpty($_GET['id'])) {
                     if (Context::hasRole("comment.edit")) {
-                        CommentsModel::saveComment(parent::getId(), $_GET['id'], $_POST['name'], $_POST['comment']);
+                        CommentsModel::saveComment(parent::getId(), $_GET['id'], $_POST['name'], $_POST['email'], $_POST['comment']);
                     }
                 } else {
                     if (Context::hasRole("comment.post")) {
                         if (Captcha::validateInput("captcha")) {
-                            CommentsModel::saveComment(parent::getId(), null, $_POST['name'], $_POST['comment']);
+                            CommentsModel::saveComment(parent::getId(), null, $_POST['name'], $_POST['email'], $_POST['comment']);
                         }
                     }
                 }
