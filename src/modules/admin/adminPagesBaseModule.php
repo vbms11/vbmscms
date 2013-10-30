@@ -153,7 +153,7 @@ class AdminPagesBaseModule extends XModule {
         
         // get pages to be shown
         $pages = MenuModel::getPagesInAllLangs($menuId,$parentId,false,Context::getLang());
-        $parent = isset($_GET['parent']) ? $_GET['parent'] : null;
+        // $parent = isset($_GET['parent']) ? $_GET['parent'] : null;
         
         ?>
         <div>
@@ -221,7 +221,7 @@ class AdminPagesBaseModule extends XModule {
             <script>
             $(".newPageButton").each(function (index,object) {
                 $(object).button().click(function () {
-                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$menuId,"parent"=>$parent,"menuModuleId"=>isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : "")); ?>");
+                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$menuId,"parent"=>$parentId,"menuModuleId"=>isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : "")); ?>");
                 });
             })
             </script>

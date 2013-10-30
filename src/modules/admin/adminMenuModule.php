@@ -117,7 +117,10 @@ class AdminMenuModule extends XModule {
             <ul>
             <?php
             foreach ($menus as $menu) {
-                $liClass = count($pages[$menu->id]) > 0 ? "jstree-open" : "";
+                $liClass = "";
+                if (isset($pages[$menu->id]) && count($pages[$menu->id]) > 0) {
+                    $liClass = "jstree-open";
+                }
                 ?>
                 <li class="adminNodeEditorMenu <?php echo $liClass; ?>" id="menu_<?php echo $menu->id; ?>">
                     <a href="#"><?php echo $menu->name ?></a>

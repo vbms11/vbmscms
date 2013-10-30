@@ -14,7 +14,6 @@
     bottom: 0px;
     width: 200px;
     left: 0px;
-    background: silver;
 }
 .adminContentSplitter {
     position: fixed;
@@ -44,7 +43,6 @@
     bottom: 0px;
     left: 203px;
     right: 0px;
-    background: grey;
     overflow: auto;
 }
 .adminHeaderLogoDiv {

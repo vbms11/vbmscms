@@ -2,7 +2,7 @@
 
 require_once 'core/plugin.php';
 
-class TemplatesView extends XModule {
+class AdminTemplatesModule extends XModule {
     
     function onProcess () {
         
@@ -43,6 +43,8 @@ class TemplatesView extends XModule {
                 }
                 break;
             case "edit":
+            case "availabel":
+                break;
             default:
                 if (Context::hasRole("template.view")) {
                     $this->renderMainView();

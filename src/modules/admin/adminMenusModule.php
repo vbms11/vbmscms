@@ -71,30 +71,19 @@ class AdminMenusModule extends AdminPagesBaseModule {
         
         if (isset($_SESSION["adminMenuId"])) {
             
-            $page = PagesModel::getPage($_SESSION["adminMenuId"], Context::getLang(), false);
+            // $page = PagesModel::getPage($_SESSION["adminMenuId"], Context::getLang(), false);
             
             ?>
             <div id="adminMenusTabs">
                 <ul>
                     <li><a href="#tabs-1">Menu</a></li>
-                    <li><a href="#tabs-2">Style</a></li>
                 </ul>
                 <div id="tabs-1">
-                    <?php $this->printPageMenuView($page); ?>
-                </div>
-                <div id="tabs-2">
-                    <?php $this->printMenuStyleView($page); ?>
+                    <?php $this->printPageMenuView($_SESSION["adminMenuId"], null); ?>
                 </div>
             </div>
             <script>
-            $("#adminMenusTabs").tabs({
-                active : $.cookie('activeMenutab'),
-                activate : function( event, ui ){
-                    $.cookie( 'activeMenutab', ui.newTab.index(),{
-                        expires : 10
-                    });
-                }
-            });
+            $("#adminMenusTabs").tabs();
             </script>
             <?php
         

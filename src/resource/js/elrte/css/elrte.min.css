@@ -16,8 +16,8 @@
 .rounded-7{-moz-border-radius:7px;-webkit-border-radius:7px;border-radius:7px}
 .rounded-left-3{-moz-border-radius-topleft:3px;-webkit-border-top-left-radius:3px;-moz-border-radius-bottomleft:3px;-webkit-border-bottom-left-radius:3px}
 .rounded-bottom-7{-moz-border-radius-bottomleft:7px;-moz-border-radius-bottomright:7px;-webkit-border-bottom-left-radius:7px;-webkit-border-bottom-right-radius:7px;border-bottom-left-radius:7px;border-bottom-right-radius:7px}
-.ui-widget{font-size:.9em}
-.ui-dialog .ui-dialog-buttonpane button{padding:.1em .6em .2em .6em}
+.el-rte .ui-widget{font-size:.9em}
+.el-rte .ui-dialog .ui-dialog-buttonpane button{padding:.1em .6em .2em .6em}
 .el-colorpicker{width:16px;height:16px;border:1px solid #ccc;position:relative;cursor:default}
 .el-palette{width:182px;border:1px solid #ccc;background:#fff;padding:3px 2px 3px 3px;z-index:99000;position:absolute;top:16px;left:0}
 .el-palette .color{float:left;width:14px;height:14px;line-height:1px;border-top:1px solid #eee;border-left:1px solid #eee}
@@ -28,8 +28,8 @@
 .ui-widget .el-dialogform-rtl{direction:rtl}
 .ui-widget .el-dialogform-rtl .ui-tabs-nav li{float:right}
 .el-dialogform div.tab:hover{background:transparent}
-.ui-dialog .ui-dialog-title,.ui-dialog .ui-dialog-content{font-size:.9em}
-.ui-tabs .ui-tabs-nav li a{padding:.2em .7em}
+.el-rte .ui-dialog .ui-dialog-title, .el-rte .ui-dialog .ui-dialog-content{font-size:.9em}
+.el-rte .ui-tabs .ui-tabs-nav li a{padding:.2em .7em}
 .el-dialogform .tab{padding:5px 0 12px 0;border:0}
 .el-dialogform .separator{border-top:1px solid #ccc;margin:5px 2px}
 .el-dialogform table{width:100%;border:0}
@@ -53,7 +53,7 @@
 .el-select .list .active{background-color:#c3dbef}
 .el-select .list div *{padding:0;margin:0;border:0;white-space:nowrap;display:block}
 .el-rte{font-family:Trebuchet MS,Verdana,Geneva,sans-serif;overflow:hidden}
-.el-rte.el-fullscreen{position:absolute;width:99%;top:0;left:0;margin:0;z-index:10}
+.el-rte.el-fullscreen{position:absolute;width:99%;top:0;left:0;margin:0;z-index:101}
 .elrte-swf-placeholder{width:1px;background:url('../images/swf.png') 0 0 no-repeat}
 .elrtetesturl{color:red;background-image:url(../images/pixel.gif)}
 .el-rte .toolbar{background-color:#eee;padding:3px 7px 2px 7px;border:1px solid #ccc;white-space:normal}
@@ -146,9 +146,9 @@
 .el-palette{top:20px}
 .el-dialogform,.el-dialogform td{font-size:.9em}
 .el-dialogform select{font-size:.9em}
-.ui-dialog .ui-dialog-buttonpane{padding:.4em,1em}
-.ui-dialog .ui-dialog-buttonpane button{margin:.3em .4em .1em 0;font-size:.9em}
-.ui-dialog .ui-dialog-titlebar{padding:.3em 1em .3em}
+.el-rte .ui-dialog .ui-dialog-buttonpane{padding:.4em,1em}
+.el-rte .ui-dialog .ui-dialog-buttonpane button{margin:.3em .4em .1em 0;font-size:.9em}
+.el-rte .ui-dialog .ui-dialog-titlebar{padding:.3em 1em .3em}
 .el-dialogform label{display:block}
 .el-dialogform label input{margin-right:2px}
 .el-dialogform iframe.el-rte-preview{width:100%;height:235px;margin:0;padding:0;outline:0;border:0}
