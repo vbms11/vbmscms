@@ -20,22 +20,20 @@ class SiteModel {
         return $_SERVER['HTTP_HOST'];
     }
     
-    static function createSite ($name,$id=null) {
-	$insertId = "";
-	if (id != null) {
-		$insertId = ",'".mysql_real_escape_string($id)."'";
-	}
-        $name = mysql_real_escape_string($name);
-        Database::query("insert into t_site ".(id != null ? "id" : "")." values ('$id'$insertId)");
-	return Database::getLastInsertId();
+    static function createSite ($name, $cmsCustomerId, $description) {
+	$name = mysql_real_escape_string($name);
+        $description = mysql_real_escape_string($description);
+        $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
+        Database::query("insert into t_site (name,cmscustomerid,description) values ('$name','$description','$description')");
+	$result = Database::queryAsObject("select last_insert_id() as newid from t_site");
+        return $result->newid;
     }
     
-    static function createSite ($siteName) {
-        $siteName = mysql_real_escape_string($siteName);
-        Database::query("insert into t_site (name) values ('$siteName')");
-        $result = Database::queryAsObject("select last_insert_id() as id from t_site");
-        return $result->id;
+    static function byCmscustomerid ($cmsCustomerId) {
+        $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
+        return Database::queryAsArray("select * from t_site where cmscustomerid = '$cmsCustomerId'");
     }
+    
 }
 
 ?>

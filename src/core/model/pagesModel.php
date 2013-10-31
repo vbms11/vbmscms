@@ -111,7 +111,7 @@ class PagesModel {
         $site = DomainsModel::getCurrentSite();
         $name = mysql_real_escape_string($_name);
         $lang = mysql_real_escape_string($_lang);
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
+        $query = "select p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
             from t_page p
             left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'

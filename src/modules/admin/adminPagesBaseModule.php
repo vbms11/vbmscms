@@ -65,9 +65,24 @@ class AdminPagesBaseModule extends XModule {
             }
         }
     }
-                    
     
-    function printPageSettingsView ($page) {
+    function printPageSettingsTabView () {
+        ?>
+        <div id="adminMenusTabs">
+            <ul>
+                <li><a href="#tabs-1">Page Settings</a></li>
+            </ul>
+            <div id="tabs-1">
+                <?php $this->printPageSettingsView(); ?>
+            </div>
+        </div>
+        <script>
+        $("#adminMenusTabs").tabs();
+        </script>
+        <?php
+    }
+    
+    function printPageSettingsView ($page = "") {
         
         $allRoles = Common::toMap(RolesModel::getCustomRoles(),"id","name");
         $pageRoles = null;
@@ -221,7 +236,7 @@ class AdminPagesBaseModule extends XModule {
             <script>
             $(".newPageButton").each(function (index,object) {
                 $(object).button().click(function () {
-                    callUrl("<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$menuId,"parent"=>$parentId,"menuModuleId"=>isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : "")); ?>");
+                    callUrl("<?php echo parent::link(array("action"=>"createPage","menu"=>$menuId,"parent"=>$parentId,"menuModuleId"=>isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : "")); ?>");
                 });
             })
             </script>

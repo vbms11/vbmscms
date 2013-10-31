@@ -29,6 +29,38 @@ class AdminMenuModule extends XModule {
     function getRoles () {
         return array("admin.edit");
     }
+    
+    static function getTranslations() {
+        return array("en" => array(
+            "admin.menu.account" 		=> "Account",
+            "admin.menu.pages"                  => "Pages",
+            "admin.menu.templates" 		=> "Templates",
+            "admin.menu.modules" 		=> "Modules",
+            "admin.menu.shop"                   => "Shop",
+            "admin.menu.products" 		=> "Products",
+            "admin.menu.template.installed"     => "Installed",
+            "admin.menu.template.customize"     => "Customize",
+            "admin.menu.template.available"     => "Available",
+            "admin.menu.account.sites"          => "Sites",
+            "admin.menu.account.domains" 	=> "Domains",
+            "admin.menu.account.package" 	=> "Package",
+            "admin.menu.account.messages" 	=> "Messages"
+        ), "de" => array(
+            "admin.menu.account" 		=> "Account",
+            "admin.menu.pages"                  => "Pages",
+            "admin.menu.templates" 		=> "Templates",
+            "admin.menu.modules" 		=> "Modules",
+            "admin.menu.shop"                   => "Shop",
+            "admin.menu.products" 		=> "Products",
+            "admin.menu.template.installed"     => "Installed",
+            "admin.menu.template.customize"     => "Customize",
+            "admin.menu.template.available"     => "Available",
+            "admin.menu.account.sites"          => "Sites",
+            "admin.menu.account.domains" 	=> "Domains",
+            "admin.menu.account.package" 	=> "Package",
+            "admin.menu.account.messages" 	=> "Messages"
+        ));
+    }
 
     function printMenuView () {
         Context::addRequiredScript("resource/js/jstree/jquery.jstree.js");
@@ -74,7 +106,6 @@ class AdminMenuModule extends XModule {
         $(function() {
             <?php
             $activeIndex = 0;
-            $selectedNode = null;
             switch (Context::isAdminMode()) {
                 case "adminSites":
                 case "adminDomains":
@@ -83,8 +114,8 @@ class AdminMenuModule extends XModule {
                     $activeIndex = 0;
                     break;
                 case "adminPages":
+                case "adminMenus":
                     $activeIndex = 1;
-                    $selectedNode = $_SESSION['adminPageId'];
                     break;
                 case "adminTemplates":
                     $activeIndex = 2;
@@ -121,9 +152,13 @@ class AdminMenuModule extends XModule {
                 if (isset($pages[$menu->id]) && count($pages[$menu->id]) > 0) {
                     $liClass = "jstree-open";
                 }
+                $aClass = "";
+                if (isset($_GET['adminMenuId']) && $_GET['adminMenuId'] == $menu->id) {
+                    $aClass = "jstree-clicked";
+                }
                 ?>
                 <li class="adminNodeEditorMenu <?php echo $liClass; ?>" id="menu_<?php echo $menu->id; ?>">
-                    <a href="#"><?php echo $menu->name ?></a>
+                    <a href="#" class="<?php echo $aClass; ?>"><?php echo $menu->name ?></a>
                     <?php 
                     if (isset($pages[$menu->id])) {
                         $this->printMenu($pages[$menu->id]); 
@@ -157,17 +192,22 @@ class AdminMenuModule extends XModule {
         echo '<ul>';
         foreach ($menu as $page) {
             $liClass = isset($page->children) && count($page->children) > 0 ? "jstree-open " : "";
-            $aClass = $page->page->id == $_SESSION['adminPageId'] ? "jstree-clicked" : "";
+            $aClass = "";
+            if ($page->page->id == $_SESSION['adminPageId'] && !isset($_GET['adminMenuId'])) {
+                 $aClass = "jstree-clicked";
+            }
             ?>
             <li class="adminNodeEditorPage <?php echo $liClass; ?>" id="page_<?php echo $page->page->id; ?>">
                 <a class="<?php echo $aClass; ?>" href="#">
                     <?php echo $page->page->name; ?>
                 </a>
+                <?php
+                if (isset($page->children)) {
+                    $this->printMenu($page->children);
+                }
+                ?>
             </li>
             <?php
-            if (isset($page->children)) {
-                $this->printMenu ($page->children);
-            }
         }
         echo '</ul>';
     }

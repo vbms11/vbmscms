@@ -277,7 +277,12 @@ class Context {
                 $_SESSION["req.page"] = $page;
                 $_SESSION["req.pageId"] = $page->id;
                 $_SESSION["req.pageName"] = $page->name;
-                // $_SESSION["req.pageCode"] = $page->code;
+                if (isset($page->code)) {
+                    $_SESSION["req.pageCode"] = $page->code;
+                    if (Context::isAdminMode()) {
+                        Context::setAdminMode($page->code);
+                    }
+                }
                 self::loadRenderer();
             }
         }

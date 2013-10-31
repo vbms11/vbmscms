@@ -1,6 +1,8 @@
 <?php
 
 require_once 'core/plugin.php';
+include_once 'core/model/cmsCustomerModel.php';
+include_once 'core/model/sitesModel.php';
 
 class AdminSitesModule extends XModule {
     
@@ -147,131 +149,59 @@ class AdminSitesModule extends XModule {
     }
     
     function renderMainView() {
-        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
-        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
         ?>
-        <div class="panel templatesPanel">
-            <div>
-                <div class="adminTableToolbar">
-                    <button id="btnCreateTemplate">Create</button>
-                    <button id="btnEditTemplate">Edit</button>
-                    <button id="btnAddTemplate">Add</button>
-                    <button id="btnRemoveTemplate">Remove</button>
+        <div class="panel adminSitesPanel">
+            <div class="adminSitesTabs">
+                <ul>
+                    <li><a href="#adminSitesTab">Sites</a></li>
+                </ul>
+                <div id="adminSitesTab">
+
+                    <div class="alignRight">
+                        <button id="btnCreateTemplate"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
+                    </div>
+
+                    <?php
+                    $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
+                    $sites = SiteModel::byCmscustomerid($customer->id);
+
+                    if (!empty($sites)) {
+                        
+                        ?>
+                        <table class="resultTable">
+                        <thead><tr>
+                            <td>ID</td>
+                            <td>Name</td>
+                            <td colspan="2">Tools</td>
+                        </tr></thead>
+                        <tbody>
+                        <?php
+                        
+                        foreach ($sites as $site) {
+                            ?>
+                            <tr>
+                                <td><?php echo $site->id; ?></td>
+                                <td><?php echo $site->name; ?></td>
+                                <td><a>Edit</a></td>
+                                <td><a>Delete</a></td>
+                            </tr>
+                            <?php
+                        }
+                        
+                        ?>
+                        </tbody></table>
+                        <div class="alignRight">
+                            <button id="btnCreateTemplate"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
+                        </div>
+                        <?php
+                    }
+
+                    ?>
                 </div>
-                <h3>Templates:</h3>
             </div>
-            <div>
-                <table cellpadding="0" cellspacing="0" border="0" class="display" id="templates"></table>
-            </div>
-        </div>
-        <div id="selectTemplateDialog" title="Add Template">
-            <?php 
-            InfoMessages::printInfoMessage("templates.add.select");
-            echo "<br/>";
-            $templates = array();
-            $allTemplates = TemplateModel::getTemplates();
-            foreach ($allTemplates as $template) {
-                $templates[$template->id] = $template->name;
-            }
-            InputFeilds::printSelect("template", null, $templates);
-            ?>
-        </div>
-        <div id="newTemplateDialog" title="New Template">
-            <form action="<?php echo parent::link(array("action"=>"create")); ?>" method="post" id="newTemplateDialogForm">
-                <p>Create a new template by filling out the following feilds then click on 'Edit Template'</p>
-                <table><tr><td>
-                    Template Name:
-                </td><td>
-                    <?php InputFeilds::printTextFeild("name"); ?>    
-                </td></tr><tr><td>
-                     Template Path:
-                </td><td>
-                    <?php InputFeilds::printTextFeild("include"); ?>
-                </td></tr><tr><td>
-                    Template Inpterface:
-                </td><td>
-                    <?php InputFeilds::printTextFeild("interface"); ?>
-                </td></tr></table>
-            </form>
         </div>
         <script type="text/javascript">
-        var userMessages = [
-            <?php
-            $site = DomainsModel::getCurrentSite();
-            $messages = TemplateModel::getTemplates($site->siteid);
-            $first = true;
-            foreach ($messages as $message) {
-                if (!$first)
-                    echo ",";
-                echo "['".Common::htmlEscape($message->id)."','".Common::htmlEscape($message->name)."','".Common::htmlEscape($message->template)."','".Common::htmlEscape($message->interface)."']";
-                $first = false;
-            }
-            ?>
-        ];
         
-        var oTableTemplate = $('#templates').dataTable({
-            "bJQueryUI": true,
-            "sPaginationType": "full_numbers",
-            "iDisplayLength": 10,
-            "aLengthMenu": [[10, 20, 40, -1], [10, 20, 40, "All"]],
-            "aaData": userMessages,
-            "aoColumns": [
-                {'sTitle':'ID'},
-                {'sTitle':'Name'},
-                {'sTitle':'Path'},
-                {'sTitle':'Interface'}]
-        });
-        $("#templates tbody").click(function(event) {
-            $(oTableTemplate.fnSettings().aoData).each(function (){
-                $(this.nTr).removeClass('row_selected');
-            });
-            $(event.target.parentNode).addClass('row_selected');
-        });
-        $("#selectTemplateDialog").dialog({
-            autoOpen: false,
-            show: "blind",
-            hide: "explode",
-            modal: true,
-            buttons: {
-                "Add": function() {
-                    $(this).dialog("close");
-                    callUrl("<?php echo NavigationModel::createModuleLink(parent::getId(), array("action"=>"add"),false); ?>",{"id":$("#template").val()});
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $("#newTemplateDialog").dialog({
-            autoOpen: false,
-            show: "blind",
-            hide: "explode",
-            height: 300,
-            width: 400,
-            modal: true,
-            buttons: {
-                "Edit Template": function() {
-                    $(this).dialog("close");
-                    $("#newTemplateDialogForm").submit();
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        // the button actions
-        $("#btnAddTemplate").button().click(function () {
-            $("#selectTemplateDialog").dialog("open");
-        });
-        $("#btnRemoveTemplate").button().click(function () {
-            callUrl("<?php echo parent::link(array("action"=>"remove"),false) ?>",{"id":getSelectedRow(oTableTemplate)[0].childNodes[0].innerHTML});
-        });
-        $("#btnCreateTemplate").button().click(function () {
-            $("#newTemplateDialog").dialog("open");
-        });
-        $("#btnEditTemplate").button().click(function () {
-            callUrl("<?php echo parent::link(array("action"=>"editTemplate"),false) ?>",{"id":getSelectedRow(oTableTemplate)[0].childNodes[0].innerHTML});
-        });
         </script>
         <?php
     }

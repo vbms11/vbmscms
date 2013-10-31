@@ -46,7 +46,12 @@ class MenuView extends AdminPagesBaseModule {
                     MenuModel::deleteMenuStyle($_GET['id']);
                     parent::redirect(array("action"=>"edit"));
                     break;
+                
+                case "createPage":
                     
+                    NavigationModel::redirectStaticModule("pageConfig",array("menu"=>$_GET['menu'],"parent"=>$_GET['parent'],"menuModuleId"=>isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : ""));
+                    break;
+                
                 case "deletepage":
                     
                     $this->deletePageAction();

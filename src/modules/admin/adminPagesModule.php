@@ -17,7 +17,9 @@ class AdminPagesModule extends AdminPagesBaseModule {
                 case "savepage":
                     
                     $this->savePageAction();
-                    
+                    parent::redirect();
+                    break;
+                
                 case "editPage":
                     
                     if (isset($_GET["adminPageId"])) {
@@ -53,7 +55,14 @@ class AdminPagesModule extends AdminPagesBaseModule {
     function onView () {
         
         switch (parent::getAction()) {
+            
+            case "createPage":
+                
+                $this->printPageSettingsTabView();
+                break;
+                
             default:
+                
                 if (Context::hasRole("pages.edit")) {
                     $this->printEditPage();
                 }
@@ -66,6 +75,9 @@ class AdminPagesModule extends AdminPagesBaseModule {
     function getRoles () {
         return array("pages.editmenu","pages.edit");
     }
+    
+    
+    
 
     function printEditPage () {
         
