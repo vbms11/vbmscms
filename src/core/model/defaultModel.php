@@ -46,6 +46,17 @@ CREATE TABLE IF NOT EXISTS `t_chat_room_session` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `t_cms_customer`
+--
+
+CREATE TABLE IF NOT EXISTS `t_cms_customer` (
+  `id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `t_cms_version`
 --
 
@@ -109,14 +120,7 @@ CREATE TABLE IF NOT EXISTS `t_domain` (
   `siteid` int(10) NOT NULL,
   `domaintrackerscript` blob,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Daten für Tabelle `t_domain`
---
-
-INSERT INTO `t_domain` (`id`, `url`, `siteid`, `domaintrackerscript`) VALUES
-(1, 'localhost', 1, NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -348,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `t_module` (
   `position` int(10) NOT NULL,
   `static` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=72 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=75 ;
 
 --
 -- Daten für Tabelle `t_module`
@@ -375,7 +379,7 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (34, 'Messages', '', 'modules/forum/messagePageView.php', '', 'MessagePageView', 1, 2, 0, 0),
 (35, 'Events Callender', '', 'modules/events/callenderView.php', '', 'CallenderView', 1, 1, 0, 0),
 (36, 'Events List', '', 'modules/events/eventsList.php', '', 'EventsListView', 1, 1, 0, 0),
-(38, 'Templates Manager', '', 'modules/admin/templatesView.php', '', 'TemplatesView', 1, 4, 0, 0),
+(38, 'Templates Manager', 'adminTemplates', 'modules/admin/adminTemplatesModule.php', '', 'TemplatesView', 1, 4, 0, 1),
 (39, 'Modules Manager', '', 'modules/admin/modulesView.php', '', 'ModulesView', 1, 4, 0, 0),
 (40, 'Domains Manager', 'adminDomains', 'modules/admin/adminDomainsModule.php', '', 'AdminDomainsModule', 1, 4, 0, 1),
 (41, 'Images', 'system', 'modules/admin/systemService.php', '', 'SystemService', 0, 4, 0, 1),
@@ -404,7 +408,10 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (68, 'Menu Styles', 'menuStyles', 'modules/admin/menuStylesModule.php', NULL, 'MenuStylesModule', 0, 0, 0, 1),
 (69, 'Admin Menu', 'adminMenu', 'modules/admin/adminMenuModule.php', NULL, 'AdminMenuModule', 0, 0, 0, 1),
 (70, 'Admin Pages', 'adminPages', 'modules/admin/adminPagesModule.php', NULL, 'AdminPagesModule', 0, 0, 0, 1),
-(71, 'Admin Menus', 'adminMenus', 'modules/admin/adminMenusModule.php', NULL, 'AdminMenusModule', 0, 0, 0, 1);
+(71, 'Admin Menus', 'adminMenus', 'modules/admin/adminMenusModule.php', NULL, 'AdminMenusModule', 0, 0, 0, 1),
+(72, 'Sites Manager', 'adminSites', 'modules/admin/adminSitesModule.php', NULL, 'AdminSitesModule', 0, 0, 0, 1),
+(73, 'Admin Messages', 'adminMessages', 'modules/admin/adminMessagesModule.php', NULL, 'AdminMessagesModule', 0, 0, 0, 1),
+(74, 'Admin Package', 'adminPackage', 'modules/admin/adminPackageModule.php', NULL, 'AdminPackageModule', 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -455,9 +462,11 @@ CREATE TABLE IF NOT EXISTS `t_module_roles` (
   `customrole` int(10) NOT NULL,
   `modulerole` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1185 ;
 
--- --------------------------------------------------------
+--
+-- Daten für Tabelle `t_module_roles`
+--
 
 INSERT INTO `t_module_roles` (`id`, `customrole`, `modulerole`) VALUES
 (1112, 7, 'products.view'),
@@ -533,6 +542,8 @@ INSERT INTO `t_module_roles` (`id`, `customrole`, `modulerole`) VALUES
 (1182, 10, 'menu.edit'),
 (1183, 10, 'payment.edit'),
 (1184, 10, 'social.edit');
+
+-- --------------------------------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `t_newsletter`
@@ -676,7 +687,7 @@ CREATE TABLE IF NOT EXISTS `t_product` (
   `quantity` int(10) NOT NULL,
   `minimum` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=142 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -689,7 +700,7 @@ CREATE TABLE IF NOT EXISTS `t_product_group` (
   `namecode` int(10) NOT NULL,
   `parent` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=28 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -766,15 +777,9 @@ CREATE TABLE IF NOT EXISTS `t_site` (
   `name` varchar(200) NOT NULL,
   `description` blob NOT NULL,
   `sitetrackerscript` blob,
+  `cmscustomerid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Daten für Tabelle `t_site`
---
-
-INSERT INTO `t_site` (`id`, `name`, `description`, `sitetrackerscript`) VALUES
-(1, 'vbmscms admin', '', NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -957,8 +962,14 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `tableid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=5 ;
 
+--
+-- Daten für Tabelle `t_vdb_object`
+--
+
+INSERT INTO `t_vdb_object` (`id`, `tableid`) VALUES
+(4, 2);
 
 -- --------------------------------------------------------
 
@@ -998,6 +1009,22 @@ CREATE TABLE IF NOT EXISTS `t_vdb_value` (
   KEY `objectid` (`objectid`),
   KEY `columnid` (`columnid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `t_vdb_value`
+--
+
+INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
+(4, 1, ''),
+(4, 2, ''),
+(4, 3, ''),
+(4, 4, ''),
+(4, 5, ''),
+(4, 6, ''),
+(4, 7, 0x30),
+(4, 8, ''),
+(4, 24, ''),
+(4, 49, '');
 
 -- --------------------------------------------------------
 

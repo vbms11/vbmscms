@@ -334,7 +334,7 @@ class AdminMenuModule extends XModule {
                     <?php
                     foreach ($siteTemplates as $siteTemplate) {
                         ?>
-                        <li class="" id="template_<?php echo $siteTemplate->id; ?>">
+                        <li class="adminNodeEditorTemplate" id="template_<?php echo $siteTemplate->id; ?>">
                             <a href="#"><?php echo $siteTemplate->name; ?></a>
                         </li>
                         <?php
@@ -351,7 +351,10 @@ class AdminMenuModule extends XModule {
             $(".adminMenuTemplatesDiv").jstree({ 
                 "plugins" : ["themes","html_data","ui"] 
             }).bind("select_node.jstree", function (event, data) {
-                data.rslt.obj.attr("id");
+                if (data.rslt.obj.hasClass("adminNodeEditorTemplate")) {
+                    var templateId = data.rslt.obj.attr("id").substring(9);
+                    callUrl("<?php echo parent::staticLink("adminTemplates",array("action"=>"editTemplate")); ?>&adminTemplateId="+templateId+"&id"+templateId);
+                }
             });
         });
         </script>
