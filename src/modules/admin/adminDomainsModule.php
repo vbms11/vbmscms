@@ -16,66 +16,114 @@ class AdminDomainsModule extends XModule {
         switch (parent::getAction()) {
             
             default:
-                $this->renderMainView();
+                $this->renderMainTabs();
         }
     }
     
-    function renderMainView() {
-        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
-        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
+    static function getTranslations() {
+        return array("en" => array(
+            "admin.domains.domains"             => "Domains",
+            "admin.domains.addDomain"           => "Add Domain",
+            "admin.domains.domainsManager"	=> "Domains Manager",
+            "admin.domains.table.domain"	=> "Domain",
+            "admin.domains.table.sitename"	=> "Site Name",
+            "admin.domains.table.tools"         => "Tools"
+        ),"de" => array(
+            "admin.domains.domains"             => "Domains",
+            "admin.domains.addDomain"           => "Add Domain",
+            "admin.domains.domainsManager"	=> "Domains Manager",
+            "admin.domains.table.domain"	=> "Domain",
+            "admin.domains.table.sitename"	=> "Site Name",
+            "admin.domains.table.tools"         => "Tools"
+        ));
+    }
+    
+    function renderMainTabs () {
         ?>
-        <div class="panel domainsPanel">
-            <table width="100%" class="nowrap"><tr>
-		<td class="contract"><h3>Domains: </h3></td>
-		<td class="contract"><button>Create Site</button></td>
-		<td class="contract">Select Site: </td>
-		<td class="expand"><?php InputFeilds::printSelect("site",null,array()); ?></td>
-		<td class="contract"><button>Delete Site</button></td>
-		<td class="contract"><button>Add Domain</button></td>
-		<td class="contract"><button>Remove Domain</button></td>
-	    </tr></table>
-            </div>
-            <div>
-                <table cellpadding="0" cellspacing="0" border="0" class="display" id="domains"></table>
-                <hr/>
+        <div class="panel adminDomainsPanel">
+            <div class="adminDomainTabs">
+                <ul>
+                    <li><a href="#adminDomains"><?php echo parent::getTranslation("admin.domains.domains"); ?></a></li>
+                </ul>
+                <div id="adminDomains">
+                    <?php $this->renderMainView(); ?>
+                </div>
             </div>
         </div>
-        <script type="text/javascript">
-        var domains = [
-            <?php
-            $modules = DomainsModel::getDomains();
-            $first = true;
-            foreach ($modules as $module) {
-                if (!$first)
-                    echo ",";
-                echo "['".Common::htmlEscape($module->id)."','".Common::htmlEscape($module->url)."']";
-                $first = false;
-            }
-            ?>
-        ];
-        $(function() {
-            var oTable = $('#domains').dataTable({
-                "bScrollCollapse": false,
-                "sScrollY": 200,
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "iDisplayLength": 10,
-                "aLengthMenu": [[10, 20, 40, -1], [10, 20, 40, "All"]],
-                "aaData": domains,
-                "aoColumns": [
-                    {'sTitle':'ID'},
-                    {'sTitle':'Url'}]
-            });
-            $("#domains tbody").click(function(event) {
-                $(oTable.fnSettings().aoData).each(function (){
-                    $(this.nTr).removeClass('row_selected');
-                });
-                $(event.target.parentNode).addClass('row_selected');
-            });
-	    $(".domainsPanel button").each(function(index,object){
-	    	$(object).button();
-            });
+        <script>
+        $(".adminDomainTabs").tabs();
+        </script>
+        <?php
+    }
+    
+    function renderRegisterTabs () {
+        ?>
+        <div class="panel adminDomainsPanel">
+            <div class="adminDomainTabs">
+                <ul>
+                    <li><a href="#adminDomains"><?php echo parent::getTranslation("admin.domains.domains"); ?></a></li>
+                    <li><a href="#adminRegisterDomains"><?php echo parent::getTranslation("admin.domains.register"); ?></a></li>
+                </ul>
+                <div id="adminDomains">
+                    <?php $this->renderMainView(); ?>
+                </div>
+                <div id="adminRegisterDomains">
+                    <?php $this->renderRegisterView(); ?>
+                </div>
+            </div>
+        </div>
+        <script>
+        $(".adminDomainTabs").tabs({
+            active : 1
         });
+        </script>
+        <?php
+    }
+    
+    function renderRegisterView () {
+        ?>
+        <h3><?php echo parent::getTranslation("admin.domains.domainsManager"); ?></h3>
+        <label for="domainName"><?php echo parent::getTranslation("admin.domains.register.name"); ?></label>
+        <input type="text" name="domainName" value="" />
+        
+        <?php
+        
+    }
+    
+    function renderMainView() {
+        $domains = DomainsModel::getDomains(Context::getSiteId());
+        ?>
+        <h3><?php echo parent::getTranslation("admin.domains.domainsManager"); ?></h3>
+
+        <table class="resultTable" cellspacing="0">
+        <thead><tr>
+            <td><?php echo parent::getTranslation("admin.domains.table.sitename"); ?></td>
+            <td class="expand"><?php echo parent::getTranslation("admin.domains.table.domain"); ?></td>
+            <td><?php echo parent::getTranslation("admin.domains.table.tools"); ?></td>
+        </tr></thead>
+        <tbody>
+        <?php
+        
+        foreach ($domains as $domain) {
+            ?>
+            <tr>
+                <td><?php echo $domain->name; ?></td>
+                <td><?php echo $domain->url; ?></td>
+                <td></td>
+            </tr>
+            <?php
+        }
+        
+        ?>
+        </tbody></table>
+        
+        <hr/>
+        <div class="alignRight">
+            <button><?php echo parent::getTranslation("admin.domains.addDomain"); ?></button>
+        </div>
+        
+        <script type="text/javascript">
+        $(".adminDomainsPanel .alignRight button").button();
         </script>
         <?php
     }

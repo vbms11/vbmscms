@@ -49,6 +49,12 @@ $ar_translations = array(
 ,'admin.menu.account.domains'=>'Domains'
 ,'admin.menu.account.package'=>'Package'
 ,'admin.menu.account.messages'=>'Messages'
+,'admin.domains.domains'=>'Domains'
+,'admin.domains.addDomain'=>'Add Domain'
+,'admin.domains.domainsManager'=>'Domains Manager'
+,'admin.domains.table.domain'=>'Domain'
+,'admin.domains.table.sitename'=>'Site Name'
+,'admin.domains.table.tools'=>'Tools'
 ),'de'=>array(
 'login.email'=>'Geben sie eine Emailadresse ein:'
 ,'login.reset'=>'Passwort zur&uuml;cksetzen'
@@ -98,5 +104,11 @@ $ar_translations = array(
 ,'admin.menu.account.domains'=>'Domains'
 ,'admin.menu.account.package'=>'Package'
 ,'admin.menu.account.messages'=>'Messages'
+,'admin.domains.domains'=>'Domains'
+,'admin.domains.addDomain'=>'Add Domain'
+,'admin.domains.domainsManager'=>'Domains Manager'
+,'admin.domains.table.domain'=>'Domain'
+,'admin.domains.table.sitename'=>'Site Name'
+,'admin.domains.table.tools'=>'Tools'
 )); 
 ?>

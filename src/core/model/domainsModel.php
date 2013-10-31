@@ -2,8 +2,16 @@
 
 class DomainsModel {
     
-    static function getDomains () {
-        return Database::queryAsArray("select * from t_domain");
+    static function getDomains ($siteId = null) {
+        if ($siteId != null) {
+            $siteId = mysql_real_escape_string($siteId);
+            return Database::queryAsArray("select d.id, d.url, d.siteid, d.domaintrackerscript, s.name, s.sitetrackerscript 
+                from t_domain d 
+                left join t_site s on d.siteid = s.id 
+                where d.siteid = '$siteId'");
+        } else {
+            return Database::queryAsArray("select * from t_domain");
+        }
     }
     
     static function getDomainSite ($domain) {
