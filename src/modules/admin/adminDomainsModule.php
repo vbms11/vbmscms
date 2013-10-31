@@ -14,7 +14,11 @@ class AdminDomainsModule extends XModule {
     function onView () {
         
         switch (parent::getAction()) {
-            
+            case "addDomain":
+                
+                $this->renderRegisterTabs();
+                break;
+                
             default:
                 $this->renderMainTabs();
         }
@@ -22,6 +26,8 @@ class AdminDomainsModule extends XModule {
     
     static function getTranslations() {
         return array("en" => array(
+            "admin.domains.register"            => "Register Domain",
+            "admin.domains.register.save"       => "Save",
             "admin.domains.domains"             => "Domains",
             "admin.domains.addDomain"           => "Add Domain",
             "admin.domains.domainsManager"	=> "Domains Manager",
@@ -29,6 +35,8 @@ class AdminDomainsModule extends XModule {
             "admin.domains.table.sitename"	=> "Site Name",
             "admin.domains.table.tools"         => "Tools"
         ),"de" => array(
+            "admin.domains.register"            => "Register Domain",
+            "admin.domains.register.save"       => "Save",
             "admin.domains.domains"             => "Domains",
             "admin.domains.addDomain"           => "Add Domain",
             "admin.domains.domainsManager"	=> "Domains Manager",
@@ -82,10 +90,13 @@ class AdminDomainsModule extends XModule {
     
     function renderRegisterView () {
         ?>
-        <h3><?php echo parent::getTranslation("admin.domains.domainsManager"); ?></h3>
+        <h3><?php echo parent::getTranslation("admin.domains.register"); ?></h3>
         <label for="domainName"><?php echo parent::getTranslation("admin.domains.register.name"); ?></label>
         <input type="text" name="domainName" value="" />
-        
+        <hr/>
+        <button id="registerDomain">
+            <?php echo parent::getTranslation("admin.domains.register.save"); ?>
+        </button>
         <?php
         
     }
@@ -119,11 +130,13 @@ class AdminDomainsModule extends XModule {
         
         <hr/>
         <div class="alignRight">
-            <button><?php echo parent::getTranslation("admin.domains.addDomain"); ?></button>
+            <button class="addDomain"><?php echo parent::getTranslation("admin.domains.addDomain"); ?></button>
         </div>
         
         <script type="text/javascript">
-        $(".adminDomainsPanel .alignRight button").button();
+        $(".adminDomainsPanel .alignRight .addDomain").button().click(function(){
+            callUrl("<?php echo parent::link(array("action"=>"addDomain"), false) ?>");
+        });
         </script>
         <?php
     }

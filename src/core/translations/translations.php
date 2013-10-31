@@ -55,6 +55,8 @@ $ar_translations = array(
 ,'admin.domains.table.domain'=>'Domain'
 ,'admin.domains.table.sitename'=>'Site Name'
 ,'admin.domains.table.tools'=>'Tools'
+,'admin.domains.register'=>'Register Domain'
+,'admin.domains.register.save'=>'Save'
 ),'de'=>array(
 'login.email'=>'Geben sie eine Emailadresse ein:'
 ,'login.reset'=>'Passwort zur&uuml;cksetzen'
@@ -110,5 +112,7 @@ $ar_translations = array(
 ,'admin.domains.table.domain'=>'Domain'
 ,'admin.domains.table.sitename'=>'Site Name'
 ,'admin.domains.table.tools'=>'Tools'
+,'admin.domains.register'=>'Register Domain'
+,'admin.domains.register.save'=>'Save'
 )); 
 ?>
