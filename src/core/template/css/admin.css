@@ -46,11 +46,12 @@
     overflow: auto;
 }
 .adminHeaderLogoDiv {
-    position: absolute;
-    left: 10px;
-    top: 0px;
-    width: 100px;
+    background: url("../../../resource/img/vbmscmslogo.png");
     height: 40px;
+    left: 0px;
+    position: absolute;
+    top: 0;
+    width: 195px;
 }
 .adminHeaderModesDiv {
     float: right;

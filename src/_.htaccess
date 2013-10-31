@@ -5,9 +5,9 @@
 #    order allow, deny
 #    deny from all
 #</DirectoryMatch>
-<Files config.php>
-    deny from all
-</Files>
+#<Files config.php>
+#    deny from all
+#</Files>
 
 # limit to only get and post
 
