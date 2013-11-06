@@ -371,61 +371,43 @@ class MenuView extends AdminPagesBaseModule {
         <div class="panel menuPanel <?php echo $menuStyleClass ?>">
             <?php
             if (!empty($menus) && !empty($menuStyle)) {
-                ?>
-                <div class="sddm">
-                    <?php
+                ?><div class="sddm"><?php
                     $first = true;
                     if (!empty($menus)) {
                         foreach ($menus as $page) {
                             $levelId = "m_".$page->page->id;
                             if (!Common::isEmpty($page->page->name)) {
-                                ?>
-                                <div>
-                                    <a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>" onmouseover="mopen('<?php echo $levelId; ?>');" onmouseout="mclosetime('<?php echo $levelId; ?>')" ><?php echo Common::htmlEntities($page->page->name); ?></a>
-                                    <?php
-                                    $this->printMenuNode($page,array($levelId));
-                                    ?>
-                                </div>
-                                <?php
+                                ?><div><a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>"><?php echo Common::htmlEntities($page->page->name); ?></a><?php
+                                    $this->printMenuNode($page);
+                                ?></div><?php
                                 $first = false;
                             }
                         }
                     } else {
                         echo "<br/>";
                     }
-                    ?>
-                </div>
-            <?php
+                ?></div><?php
             }
             ?>
         </div>
         <?php
     }
     
-    function printMenuNode ($page,$parentNodes) {
+    function printMenuNode ($page) {
         
         if (count($page->children) > 0) {
-		$nodes = $parentNodes;
-            	$thisLevel = "m_".$page->page->id;
-		?>
-            <div id="<?php echo $thisLevel; ?>" class='sddmHide <?php if ($page->selected == true) echo "sddmSelected"; ?>' onmouseover="mopen(['<?php echo implode($parentNodes,"','") ?>']);" onmouseout="mclosetime('<?php echo $thisLevel; ?>');">
-                <?php
+            $thisLevel = "m_".$page->page->id;
+            
+            ?><div id="<?php echo $thisLevel; ?>" class='sddmHide <?php if ($page->selected == true) echo "sddmSelected"; ?>' ><?php
                 $first = true;
                 foreach ($page->children as $childPage) {
-			$parentNodes = $nodes;
-			$levelId = "m_".$childPage->page->id;
-			$parentNodes[] = $levelId;
-                    ?>
-                    <a href="<?php echo NavigationModel::createPageNameLink($childPage->page->name, $childPage->page->id); ?>" <?php if ($childPage->selected == true) echo "class='sddmSelected'"; ?> onmouseover="mopen(['<?php echo implode($parentNodes,"','") ?>']);" onmouseout="mclosetime('<?php echo $levelId; ?>');" ><?php echo $childPage->page->name; ?></a>
-                    <?php
+                    ?><a href="<?php echo NavigationModel::createPageNameLink($childPage->page->name, $childPage->page->id); ?>" <?php if ($childPage->selected == true) echo "class='sddmSelected'"; ?> ><?php echo Common::htmlEntities($childPage->page->name); ?></a><?php
                     if (count($childPage->children) > 0) {
-                        $this->printMenuNode($childPage,$parentNodes);
+                        $this->printMenuNode($childPage);
                     }
                     $first = false;
                 }
-                ?>
-            </div>
-            <?php
+            ?></div><?php
         }
     }
 }

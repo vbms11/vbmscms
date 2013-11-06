@@ -163,7 +163,11 @@ class Context {
     }
     
     static function isRenderRequest () {
-        return (isset($_GET["reRender"]) && !Common::isEmpty($_GET["reRender"]));
+        return (isset($_GET["reRender"]) && !empty($_GET["reRender"]));
+    }
+    
+    static function isTemplatePreviewRequest () {
+        return (isset($_GET["templatePreviewRequest"]) && $_GET["templatePreviewRequest"] = "1");
     }
     
     static function isAdminMode () {

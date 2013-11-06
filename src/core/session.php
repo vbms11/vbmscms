@@ -37,8 +37,8 @@ class Session {
         }
         
         // validate keys
-        if (Common::isEmpty($sessionId)  || strlen($sessionId)  != 40 || 
-            Common::isEmpty($sessionKey) || strlen($sessionKey) != 40) {
+        if (empty($sessionId)  || strlen($sessionId)  != 40 || 
+            empty($sessionKey) || strlen($sessionKey) != 40) {
             
             // session keys are invalid
             $keysValid = false;

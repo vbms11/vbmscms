@@ -86,10 +86,9 @@ class AdminMenuModule extends XModule {
             </div>
             <h3><?php echo parent::getTranslation("admin.menu.modules"); ?></h3>
             <div>
-                <ul>
-                    <li>Installed</li>
-                    <li>Avalibel</li>
-                </ul>
+                <?php
+                $this->printModulesMenu();
+                ?>
             </div>
             <h3><?php echo parent::getTranslation("admin.menu.shop"); ?></h3>
             <div>
@@ -212,6 +211,82 @@ class AdminMenuModule extends XModule {
         echo '</ul>';
     }
     
+    function printModulesMenu () {
+        $installedModules = ModuleModel::getModulesInMenu();
+        $availableModules = ModuleModel::getAvailableModules();
+        $installedModulesOpen = false;
+        foreach ($installedModules as $module) {
+            if (parent::get('adminModuleId') == $module->id) {
+                $installedModulesOpen = true;
+            }
+        }
+        $availableModulesOpen = false;
+        foreach ($availableModules as $module) {
+            if (parent::get('adminModuleId') == $module->id) {
+                $availableModulesOpen = true;
+            }
+        }
+        ?>
+        <div class="adminMenuModulesDiv">
+            <ul>
+                <li class="<?php if ($installedModulesOpen) { echo "jstree-open"; } ?>">
+                    <a href="#"><?php echo parent::getTranslation("admin.menu.modules.installed"); ?></a>
+                    <ul>
+                        <?php
+                        foreach ($installedModules as $module) {
+                            $aClass = "";
+                            if (parent::get('adminModuleId') == $module->id) {
+                                $aClass = "jstree-clicked";
+                            }
+                            ?>
+                            <li id="module_<?php echo $module->id; ?>" class="adminNodeEditorModule">
+                                <a href="#" class="<?php echo $aClass; ?>">
+                                    <?php echo $module->name; ?>
+                                </a>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </li>
+                <li class="<?php if ($availableModulesOpen) { echo "jstree-open"; } ?>">
+                    <a href="#"><?php echo parent::getTranslation("admin.menu.template.available"); ?></a>
+                    <ul>
+                        <?php
+                        foreach ($availableModules as $module) {
+                            $aClass = "";
+                            if (parent::get('adminModuleId') == $module->id) {
+                                $aClass = "jstree-clicked";
+                            }
+                            ?>
+                            <li id="module_<?php echo $module->id; ?>" class="adminNodeEditorModule">
+                                <a href="#" class="<?php echo $aClass; ?>">
+                                    <?php echo $module->name; ?>
+                                </a>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <script>
+        $(function() {
+            // shop tree
+            $(".adminMenuModulesDiv").jstree({ 
+                "plugins" : ["themes","html_data","ui"] 
+            }).bind("select_node.jstree", function (event, data) {
+                if (data.rslt.obj.hasClass("adminNodeEditorModule")) {
+                    var id = data.rslt.obj.attr("id").substring(7);
+                    callUrl("<?php echo parent::staticLink("adminModules", array("action"=>"editModule","setAdminMode"=>"adminModules")); ?>&adminModuleId="+id+"&id="+id);
+                }
+            });
+        });
+        </script>
+        <?php
+    }
+    
     function printShopMenu () {
         $liGroupsClass = isset($_GET['adminGroupId']) || isset($_GET['adminProductId']) ? "jstree-open" : "";
         ?>
@@ -326,16 +401,27 @@ class AdminMenuModule extends XModule {
     
     function printTemplatesMenu () {
         $siteTemplates = TemplateModel::getTemplates(Context::getSiteId());
+        $siteTemplatesOpen = false;
+        foreach ($siteTemplates as $siteTemplate) {
+            if (parent::get('adminTemplateId') == $siteTemplate->id) {
+                $siteTemplatesOpen = true;
+            }
+        }
         ?>
         <div class="adminMenuTemplatesDiv">
             <ul>
-                <li><a href="#"><?php echo parent::getTranslation("admin.menu.template.installed"); ?></a>
+                <li class="<?php if ($siteTemplatesOpen) { echo "jstree-open"; } ?>">
+                    <a href="#"><?php echo parent::getTranslation("admin.menu.template.installed"); ?></a>
                     <ul>
                     <?php
                     foreach ($siteTemplates as $siteTemplate) {
+                        $aClass = "";
+                        if (parent::get('adminTemplateId') == $siteTemplate->id) {
+                             $aClass = "jstree-clicked";
+                        }
                         ?>
                         <li class="adminNodeEditorTemplate" id="template_<?php echo $siteTemplate->id; ?>">
-                            <a href="#"><?php echo $siteTemplate->name; ?></a>
+                            <a href="#" class="<?php echo $aClass; ?>"><?php echo $siteTemplate->name; ?></a>
                         </li>
                         <?php
                     }
@@ -353,7 +439,7 @@ class AdminMenuModule extends XModule {
             }).bind("select_node.jstree", function (event, data) {
                 if (data.rslt.obj.hasClass("adminNodeEditorTemplate")) {
                     var templateId = data.rslt.obj.attr("id").substring(9);
-                    callUrl("<?php echo parent::staticLink("adminTemplates",array("action"=>"editTemplate")); ?>&adminTemplateId="+templateId+"&id"+templateId);
+                    callUrl("<?php echo parent::staticLink("adminTemplates",array("action"=>"editTemplate")); ?>&adminTemplateId="+templateId+"&id="+templateId);
                 }
             });
         });

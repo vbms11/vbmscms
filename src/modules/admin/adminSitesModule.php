@@ -40,7 +40,7 @@ class AdminSitesModule extends XModule {
             
             case "editSite":
                 if (Context::hasRole("site.edit")) {
-                    $this->renderEditSiteView($_GET['id']);
+                    $this->renderEditSiteView(parent::get('id'));
                 }
                 break;
             case "edit":
@@ -60,79 +60,10 @@ class AdminSitesModule extends XModule {
     }
     
     function renderEditSiteView ($siteId = null) {
-        $actionName = "";
-        if ($siteId != null) {
-            $template = TemplateModel::getTemplate(siteId);
-            $actionName = "save";
-        }
-        // edit
+        
         ?>
         <div class="panel">
-            <form id="<?php echo parent::alias("templatesForm"); ?>" action="<?php echo parent::link(array("action"=>$actionName,"id"=>$templateId)); ?>" method="post">
-                <div id="tabs">
-                    <ul>
-                        <li><a href="#tabs-1">Info</a></li>
-                        <li><a href="#tabs-2">Editor</a></li>
-                        <li><a href="#tabs-3">Styles</a></li>
-                        <li><a href="#tabs-4">Scripts</a></li>
-                        <li><a href="#tabs-5">Files</a></li>
-                    </ul>
-                    <div id="tabs-1">
-                        <h3>Template Info</h3>
-                        <table><tr><td>
-                            Template Name:
-                        </td><td>
-                            <?php InputFeilds::printTextFeild("name", $template->name); ?>    
-                        </td></tr><tr><td>
-                             Template Path:
-                        </td><td>
-                            <?php InputFeilds::printTextFeild("include", $template->template); ?>
-                        </td></tr><tr><td>
-                            Template Inpterface:
-                        </td><td>
-                            <?php InputFeilds::printTextFeild("interface", $template->interface); ?>
-                        </td></tr></table>
-                    </div>
-                    <div id="tabs-2">
-                        <h3>Template Editor</h3>
-                        <?php
-                        $templateCssPath = ResourcesModel::createResourceLink("template/".Common::hash($templateId,false,false), "template.css");
-                        InputFeilds::printHtmlEditor("html", $template->html,$templateCssPath,array("action"=>"template","id"=>$template->id));
-                        ?>
-                    </div>
-                    <div id="tabs-3">
-                        <h3>Template Styles</h3>
-                        <?php
-                        InputFeilds::printTextArea("css", $template->css,"expand",10);
-                        ?>
-                    </div>
-                    <div id="tabs-4">
-                        <h3>Template Scripts</h3>
-                        <?php
-                        InputFeilds::printTextArea("js",$template->js,"expand",10);
-                        ?>
-                    </div>
-                    <div id="tabs-5">
-                        <h3>Template Files</h3>
-                        <div id="myelfinder" ></div>
-                        <script>
-                        $('#myelfinder').elfinder({
-                            url : '<?php echo NavigationModel::createServiceLink("fileSystem", array("action"=>"template","id"=>$template->id)); ?>',
-                            lang : 'en',
-                            docked: true,
-                            dialog : { width : 900, modal : true, title : 'elFinder - file manager for web' },
-                            closeOnEditorCallback : true
-                        })
-                        $('#myelfinder').elfinder("open");
-                        </script>
-                    </div>
-                </div>
-                <hr/>
-                <div class="alignRight">
-                    <button id="btnSubmit" type='submit'>Save</button>
-                    <button id="btnCacnel">Cancel</button>
-                </div>
-            </form>
+            
             <script>
             $("#tabs").tabs({
                 collapsible: true
@@ -158,7 +89,7 @@ class AdminSitesModule extends XModule {
                 <div id="adminSitesTab">
 
                     <div class="alignRight">
-                        <button id="btnCreateTemplate"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
+                        <button class="btnCreateSite"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
                     </div>
 
                     <?php
@@ -168,10 +99,10 @@ class AdminSitesModule extends XModule {
                     if (!empty($sites)) {
                         
                         ?>
-                        <table class="resultTable">
+                        <table class="resultTable" cellpadding="0">
                         <thead><tr>
                             <td>ID</td>
-                            <td>Name</td>
+                            <td class="expand">Name</td>
                             <td colspan="2">Tools</td>
                         </tr></thead>
                         <tbody>
@@ -191,7 +122,7 @@ class AdminSitesModule extends XModule {
                         ?>
                         </tbody></table>
                         <div class="alignRight">
-                            <button id="btnCreateTemplate"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
+                            <button class="btnCreateSite"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
                         </div>
                         <?php
                     }
@@ -201,7 +132,12 @@ class AdminSitesModule extends XModule {
             </div>
         </div>
         <script type="text/javascript">
-        
+        $(".adminSitesTabs").tabs();
+        $(".btnCreateSite").each(function (index,object) {
+            $(object).button().click(function () {
+                callUrl("<?php echo parent::link(); ?>");
+            });
+        });
         </script>
         <?php
     }

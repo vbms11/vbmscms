@@ -2,7 +2,7 @@
 
 require_once 'core/plugin.php';
 
-class ModulesView extends XModule {
+class AdminModulesModule extends XModule {
     
     function onProcess () {
         
@@ -21,10 +21,40 @@ class ModulesView extends XModule {
     function onView () {
         
         switch (parent::getAction()) {
-            
+            case "editModule":
+                $this->renderEditModuleTabs();
+                break;
             default:
                 $this->renderMainView();
         }
+    }
+    
+    function renderEditModuleTabs () {
+        ?>
+        <div id="adminModulesTabs">
+            <ul>
+                <li><a href="#moduleConfigTab"><?php echo parent::getTranslation("admin.modules.tab.config"); ?></a></li>
+                <li><a href="#moduleAttribsTab"><?php echo parent::getTranslation("admin.modules.tab.attribs"); ?></a></li>
+            </ul>
+            <div id="moduleConfigTab">
+                <?php $this->renderModuleConfigView(); ?>
+            </div>
+            <div id="moduleAttribsTab">
+                <?php $this->renderModuleAttributesView(); ?>
+            </div>
+        </div>
+        <script>
+        $("#adminModulesTabs").tabs();
+        </script>
+        <?php
+    }
+    
+    function renderModuleConfigView () {
+        
+    }
+    
+    function renderModuleAttributesView () {
+        
     }
     
     function renderMainView() {

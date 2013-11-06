@@ -14,6 +14,9 @@ if (!@include_once('config.php')) {
 }
 
 include_once 'core/util/common.php';
+include_once 'core/model/sitesModel.php';
+include_once 'core/model/cmsCustomerModel.php';
+include_once 'core/model/resourcesModel.php';
 include_once 'core/model/translationsModel.php';
 include_once 'core/model/sessionModel.php';
 include_once 'core/model/resourcesModel.php';
@@ -31,6 +34,8 @@ include_once 'core/template/baseRenderer.php';
 include_once 'core/template/ajaxRenderer.php';
 include_once 'core/template/vcmsRenderer.php';
 include_once 'core/template/templateRenderer.php';
+include_once 'core/template/editableTemplate.php';
+include_once 'core/template/editableTemplatePreview.php';
 include_once 'core/model/usersModel.php';
 include_once 'core/model/eventsModel.php';
 include_once 'core/model/languagesModel.php';
@@ -41,7 +46,6 @@ include_once 'core/ddm/dmObject.php';
 include_once 'core/ddm/dmSerializer.php';
 include_once 'core/ddm/dataModel.php';
 include_once 'core/ddm/dataView.php';
-include_once 'core/template/editableTemplate.php';
 include_once 'resource/js/valums-file-uploader/server/php.php';
 include_once 'core/model/installerModel.php';
 

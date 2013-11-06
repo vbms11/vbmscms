@@ -30,6 +30,10 @@ class ModuleModel {
     static function getModulesInMenu () {
         return Database::queryAsArray("select * from t_module where inmenu = '1'");
     }
+    
+    static function getAvailableModules () {
+        return array();
+    }
 
     static function createModule ($name,$description,$include,$interface,$inmenu) {
         $name = mysql_real_escape_string($name);

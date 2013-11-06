@@ -197,7 +197,7 @@ class InputFeilds {
                             oncomplete: 'destroy' // destroy elFinder after file selection
                         }
                     },
-                    getFileCallback : function(file) { callback(file.url); }
+                    getFileCallback : function(file) { callback(file); }
                 }).elfinder('instance');
             }
         });

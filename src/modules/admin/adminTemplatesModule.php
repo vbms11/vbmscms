@@ -42,6 +42,14 @@ class AdminTemplatesModule extends XModule {
                     $this->renderEditTemplateView($_GET['id']);
                 }
                 break;
+            case "listInstalledTemplate":
+                
+                break;
+            
+            case "previewInstalledTemplate":
+                $this->renderPreviewInstalledTemplateView($_GET['id']);
+                break;
+            
             case "edit":
             case "availabel":
                 break;
@@ -58,6 +66,34 @@ class AdminTemplatesModule extends XModule {
     
     function getRoles () {
         return array("template.edit","template.view");
+    }
+    
+    function renderPreviewInstalledTemplateView ($templateId) {
+        ?>
+        <div class="panel">
+            <div id="templatePreviewTabs">
+                <ul>
+                    <li><a href="#tabs-1">Preview</a></li>
+                </ul>
+                <div id="tabs-1">
+                    <h3>Template Editor</h3>
+                    <iframe src="<?php NavigationModel::createPreviewPageLink($templateId); ?>">
+                    
+                    
+                    </iframe>
+
+                    <?php
+                    $templateCssPath = ResourcesModel::createResourceLink("template/".Common::hash($templateId,false,false), "template.css");
+                    InputFeilds::printHtmlEditor("html", $template->html,$templateCssPath,array("action"=>"template","id"=>$template->id));
+                    ?>
+                </div>
+            </div>
+            <script>
+            $("#templatePreviewTabs").tabs({
+            });
+            </script>
+        </div>
+        <?php
     }
     
     function renderEditTemplateView ($templateId = null) {
