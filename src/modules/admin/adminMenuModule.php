@@ -44,7 +44,9 @@ class AdminMenuModule extends XModule {
             "admin.menu.account.sites"          => "Sites",
             "admin.menu.account.domains" 	=> "Domains",
             "admin.menu.account.package" 	=> "Package",
-            "admin.menu.account.messages" 	=> "Messages"
+            "admin.menu.account.messages" 	=> "Messages",
+            "admin.menu.account.forms"          => "Forms",
+            "admin.menu.account.newsletter" 	=> "Newsletter"
         ), "de" => array(
             "admin.menu.account" 		=> "Account",
             "admin.menu.pages"                  => "Pages",
@@ -58,7 +60,9 @@ class AdminMenuModule extends XModule {
             "admin.menu.account.sites"          => "Sites",
             "admin.menu.account.domains" 	=> "Domains",
             "admin.menu.account.package" 	=> "Package",
-            "admin.menu.account.messages" 	=> "Messages"
+            "admin.menu.account.messages" 	=> "Messages",
+            "admin.menu.account.forms"          => "Forms",
+            "admin.menu.account.newsletter" 	=> "Newsletter"
         ));
     }
 
@@ -110,6 +114,7 @@ class AdminMenuModule extends XModule {
                 case "adminDomains":
                 case "adminPackage":
                 case "adminMessages":
+                case "adminNewsletter":
                     $activeIndex = 0;
                     break;
                 case "adminPages":
@@ -176,7 +181,7 @@ class AdminMenuModule extends XModule {
             }).bind("select_node.jstree", function (event, data) {
                 if (data.rslt.obj.hasClass("adminNodeEditorMenu")) {
                     var id = data.rslt.obj.attr("id").substring(5);
-                    callUrl("<?php echo parent::staticLink("adminMenus", array("action"=>"editMenu","setAdminMode"=>"adminMenus"));?>&adminMenuId="+id);
+                    callUrl("<?php echo parent::staticLink("adminMenus", array("action"=>"showEditMenu","setAdminMode"=>"adminMenus"));?>&adminMenuId="+id);
                 } else if (data.rslt.obj.hasClass("adminNodeEditorPage")) {
                     var id = data.rslt.obj.attr("id").substring(5);
                     callUrl("<?php echo parent::staticLink("adminPages", array("action"=>"editPage","setAdminMode"=>"adminPages"));?>&adminPageId="+id);
@@ -372,6 +377,9 @@ class AdminMenuModule extends XModule {
                 <li id="adminDomains"><a href=""><?php echo parent::getTranslation("admin.menu.account.domains"); ?></a></li>
                 <li id="adminPackage"><a href=""><?php echo parent::getTranslation("admin.menu.account.package"); ?></a></li>
                 <li id="adminMessages"><a href=""><?php echo parent::getTranslation("admin.menu.account.messages"); ?></a></li>
+                <li id="adminForms"><a href=""><?php echo parent::getTranslation("admin.menu.account.forms"); ?></a></li>
+                <li id="adminNewsletter"><a href=""><?php echo parent::getTranslation("admin.menu.account.newsletter"); ?></a></li>
+                <li id="adminTranslations"><a href=""><?php echo parent::getTranslation("admin.menu.account.translations"); ?></a></li>
             </ul>
         </div>
         <script>
@@ -391,6 +399,15 @@ class AdminMenuModule extends XModule {
                         break;
                     case "adminMessages":
                         callUrl("<?php echo parent::staticLink("adminMessages"); ?>");
+                        break;
+                    case "adminForms":
+                        callUrl("<?php echo parent::staticLink("configTables"); ?>");
+                        break;
+                    case "adminNewsletter":
+                        callUrl("<?php echo parent::staticLink("adminNewsletter"); ?>");
+                        break;
+                    case "adminTranslations":
+                        callUrl("<?php echo parent::staticLink("adminTranslations"); ?>");
                         break;
                 }
             });

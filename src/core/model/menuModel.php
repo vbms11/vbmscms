@@ -31,17 +31,12 @@ class MenuModel {
     }
     
     static function getMenuInstances () {
-        $results = Database::queryAsArray("select * from t_menu_instance","id");
-        if (count($results) == 0) {
-            $menuTypes = Database::queryAsArray("select DISTINCT type from t_menu");
-            $siteId = mysql_real_escape_string(Context::getSiteId());
-            foreach ($menuTypes as $menuType) {
-                $type = mysql_real_escape_string($menuType->type);
-                Database::query("insert into t_menu_instance(id,name,siteid) values('$type','$type','$siteId')");
-            }
-            $results = Database::queryAsArray("select * from t_menu_instance","id");
-        }
-        return $results;
+        return Database::queryAsArray("select * from t_menu_instance","id");
+    }
+    
+    static function getMenuInstance ($id) {
+        $id = mysql_real_escape_string($id);
+        return Database::queryAsObject("select * from t_menu_instance where id = '$id'");
     }
     
     static function deleteMenuInstance ($id) {

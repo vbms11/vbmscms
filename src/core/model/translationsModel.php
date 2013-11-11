@@ -6,19 +6,18 @@ class TranslationsModel {
     private static $translationsVarName = "ar_translations";
     private static $translations = null;
 
-    static function getVar () {
-        if (is_array(self::$translations)) {
-            return self::$translations;
+    static function getTranslations () {
+        if (empty(self::$translations)) {
+            self::readTranslationsFile();
         }
-        self::readTranslationsFile();
-        return self::getVar();
+        return self::$translations;
     }
 
     static function getTranslation ($code, $lang=null, $escape=true) {
         if ($lang == null) {
             $lang = Context::getLang();
         }
-        $translations = self::getVar();
+        $translations = self::getTranslations();
         $texts = isset($translations[$lang]) ? $translations[$lang] : null;
         $translation = ($texts != null && isset($texts[$code])) ? $texts[$code] : $code;
         if (!$escape) {
@@ -29,7 +28,7 @@ class TranslationsModel {
 
     static function addTranslations ($translations) {
         $newTranslations = false;
-        $varObj = self::getVar();
+        $varObj = self::getTranslations();
         // add the translations
         foreach ($translations as $langCode => $translation) {
             if (!isset($varObj[$langCode])) {
@@ -37,9 +36,10 @@ class TranslationsModel {
                 $varObj[$langCode] = array();
             }
             foreach ($translation as $key => $value) {
-                if (!isset($varObj[$langCode][$key])) {
+                $escapedValue = Common::htmlEntities($value);
+                if (!isset($varObj[$langCode][$key]) || $escapedValue !== $varObj[$langCode][$key]) {
                     $newTranslations = true;
-                    $varObj[$langCode][$key] = Common::htmlEntities($value);
+                    $varObj[$langCode][$key] = $escapedValue;
                 }
             }
         }

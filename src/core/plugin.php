@@ -92,6 +92,7 @@ abstract class XModule implements IModule, ITranslatable {
     }
     function view ($moduleId) {
         $this->moduleId = $moduleId;
+        $this->loadRequiredResources();
         $this->onView();
     }
     function onView () {
@@ -212,6 +213,41 @@ abstract class XModule implements IModule, ITranslatable {
             $value = isset($object[$alias]) ? $object[$alias] : null;
         }
         return $value;
+    }
+    
+    /**
+     * returns path names as required
+     */
+    function getResourcePaths ($paths) {
+        $retPaths = array();
+        foreach ($paths as $path) {
+            if (strpos($path, "http://") === 0 || strpos($path, "https://") === 0) {
+                $retPaths[] = $path;
+            } else if (strpos($path, "/") === 0) {
+                $retPaths[] = substr($path,1);
+            } else {
+                $retPaths[] = ResourcesModel::createModuleResourceLink($this, $path);
+            }
+        }
+        return $retPaths;
+    }
+    
+    
+    function loadRequiredResources () {
+        $styles = $this->getStyles();
+        if (!empty($styles)) {
+            $stylePaths = $this->getResourcePaths($styles);
+            foreach ($stylePaths as $stylePath) {
+                Context::addRequiredStyle($stylePath);
+            }
+        }
+        $scripts = $this->getScripts();
+        if (!empty($scripts)) {
+            $scriptPaths = $this->getResourcePaths($scripts);
+            foreach ($scriptPaths as $scriptPath) {
+                Context::addRequiredScript($scriptPath);
+            }
+        }
     }
 }
 

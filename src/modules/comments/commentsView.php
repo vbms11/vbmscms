@@ -23,7 +23,7 @@ class CommentsView extends XModule {
             case "saveComment":
                 if (isset($_GET['id']) && !Common::isEmpty($_GET['id'])) {
                     if (Context::hasRole("comment.edit")) {
-                        CommentsModel::saveComment(parent::getId(), $_GET['id'], $_POST['name'], $_POST['email'], $_POST['comment']);
+                        CommentsModel::saveComment(parent::getId(), $_GET['id'], null, $_POST['comment'], null, null);
                     }
                 } else {
                     if (Context::hasRole("comment.post")) {
@@ -71,7 +71,7 @@ class CommentsView extends XModule {
     }
 
     function getRoles () {
-        return array("comment.post","comment.edit","comment.delete");
+        return array("comment.post","comment.edit","comment.delete","comment.show.email");
     }
     
     static function getTranslations () {
@@ -133,19 +133,20 @@ class CommentsView extends XModule {
          */
         if ($comments != null) {
             foreach ($comments as $comment) {
+                
+                $commentImage = "modules/comments/img/User.png";
+                if (!empty($comment->userid)) {
+                    $user = UsersModel::getUser($comment->userid);
+                    $comment->name = $user->username;
+                    $comment->email = $user->email;
+                    if (!empty($user->image)) {
+                        $commentImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
+                    }
+                }
+                
                 ?>
                 <div class="panel commentsPanel">
                     <div class="commentsAvatar">
-                        <?php
-                        $commentImage = "resouce/img/icons/User.png";
-                        if (!empty($comment->userid)) {
-                            $user = UsersModel::getUser($comment->userid);
-                            $comment->name = $user->username;
-                            if (!empty($user->image)) {
-                                $commentImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
-                            }
-                        }
-                        ?>
                         <img src="<?php echo $commentImage; ?>" alt="<?php echo $comment->name; ?>" />
                     </div>
                     <div class="commentsBody">
@@ -159,7 +160,10 @@ class CommentsView extends XModule {
                                 </div>
                                 <?php
                             }
-                            echo parent::getTranslation("comments.postedon")." ".Common::htmlEscape($comment->date)." ".parent::getTranslation("comments.by")." ".Common::htmlEscape($comment->name);
+                            echo parent::getTranslation("comments.postedon")." ".Common::htmlEscape($comment->date)." ".parent::getTranslation("comments.by")." ".Common::htmlEscape($comment->name)." ";
+                            if (Context::hasRole("comment.show.email")) {
+                                echo "(".Common::htmlEscape($comment->email).")";
+                            }
                             ?>
                         </div>
                         <div class="commentsComment">
@@ -198,7 +202,7 @@ class CommentsView extends XModule {
                         </div>
                         <div class="commentsHeader">
                             <?php echo parent::getTranslation("comments.email"); ?><br/>
-                            <input type="textbox" name="name" class="expand" value=""/>
+                            <input type="textbox" name="email" class="expand" value=""/>
                         </div>
                         <?php
                     }
@@ -253,7 +257,7 @@ class CommentsView extends XModule {
         <div class="panel commentsPanel">
             <div class="commentsAvatar">
                 <?php
-                $commentImage = "resouce/img/icons/User.png";
+                $commentImage = "modules/comments/img/User.png";
                 if (!empty($comment->userid)) {
                     $user = UsersModel::getUser($comment->userid);
                     $comment->name = $user->username;
@@ -272,6 +276,10 @@ class CommentsView extends XModule {
                         <div class="commentsHeader">
                             <?php echo parent::getTranslation("comments.name"); ?><br/>
                             <input type="textbox" name="name" class="expand" value="<?php echo $id != null ? Common::htmlEscape($comment->username) : ""; ?>" disabled="true"/>
+                        </div>
+                        <div class="commentsHeader">
+                            <?php echo parent::getTranslation("comments.email"); ?><br/>
+                            <input type="textbox" name="name" class="expand" value="<?php echo $id != null ? Common::htmlEscape($comment->email) : ""; ?>" disabled="true"/>
                         </div>
                         <?php
                     }

@@ -12,21 +12,27 @@ class MenuView extends AdminPagesBaseModule {
                     parent::focus();
                     break;
                 case "newMenu":
-                    $newId = MenuModel::saveMenuInstance(null, parent::post('newMenuName'));
+                    
+                    $newId = $this->newMenuAction();
                     parent::param("selectedMenu",$newId);
                     parent::redirect(array("action"=>"edit"));
                     break;
+                    
                 case "editMenu":
-                    MenuModel::saveMenuInstance(parent::get('id'), parent::post('editMenuName'));
+                    
+                    $this->editMenuAction();
                     parent::redirect(array("action"=>"edit"));
                     break;
+                
+                case "deleteMenu":
+                    
+                    $this->deleteMenuAction();
+                    parent::redirect(array("action"=>"edit"));
+                    break;
+                    
                 case "selectMenu":
                     parent::param("selectedMenu",parent::get('id'));
                     // parent::redirect(array("action"=>"edit"));
-                    break;
-                case "deleteMenu":
-                    MenuModel::deleteMenuInstance($_GET['id']);
-                    parent::redirect(array("action"=>"edit"));
                     break;
                 case "newStyle":
                     $newId = MenuModel::saveMenuStyle(null, $_POST['newStyleName'], "", "");
@@ -101,6 +107,16 @@ class MenuView extends AdminPagesBaseModule {
         return array("js/menu.js");
     }
     
+    static function getTranslations() {
+        return array_merge_recursive(parent::getTranslations(),
+            array(
+                "en" => array(
+                ),"de" => array(
+                )
+            )
+        );
+    }
+    
     function printEditView () {
         // get parent
         $parent = (isset($_GET['parent']) ? $_GET['parent'] : null);
@@ -173,23 +189,10 @@ class MenuView extends AdminPagesBaseModule {
                         $_GET['menuModuleId'] = $this->getId();
                         $this->printPageMenuView(parent::param("selectedMenu"), $parent);
                     }
+                    
+                    $this->printRenameMenuView(parent::param("selectedMenu"));
+                    $this->printCreateMenuView();
                     ?>
-                    <div id="edit-menu-dialog" title="Edit Menu">
-                        <form method="post" id="edit-menu-dialog-form" action="<?php echo parent::link(array("action"=>"editMenu","id"=>parent::param("selectedMenu"))); ?>">
-                            <b>Menu Name</b>
-                            <?php
-                            InputFeilds::printTextFeild("editMenuName",$selectedMenuName);
-                            ?>
-                        </form>
-                    </div>
-                    <div id="new-menu-dialog" title="New Menu">
-                        <form method="post" id="new-menu-dialog-form" action="<?php echo parent::link(array("action"=>"newMenu")); ?>">
-                            <b>Menu Name</b>
-                            <?php
-                            InputFeilds::printTextFeild("newMenuName");
-                            ?>
-                        </form>
-                    </div>
                     
                 </div>
                 <?php
@@ -287,30 +290,8 @@ class MenuView extends AdminPagesBaseModule {
                 $("#edit-menu-dialog").dialog("open");
             });
             $("#btn_deleteMenu").button().click(function () {
-                doIfConfirm('Wollen Sie wirklich diese Menu l&ouml;schen?',
+                doIfConfirm('<?php echo parent::getTranslation("menu.delete.confirm") ?>',
                     '<?php echo parent::link(array("action"=>"deleteMenu")); ?>',{"id":$("#selectedMenu").val()});
-            });
-            $("#edit-menu-dialog").dialog({
-                autoOpen: false, height: 300, width: 350, modal: true,
-                buttons: {
-                    "Save": function() {
-                        $("#edit-menu-dialog-form").submit();
-                    },
-                    "Cancel": function() {
-                        $(this).dialog("close");
-                    }
-                }
-            });
-            $("#new-menu-dialog").dialog({
-                autoOpen: false, height: 300, width: 350, modal: true,
-                buttons: {
-                    "Save": function() {
-                        $("#new-menu-dialog-form").submit();
-                    },
-                    "Cancel": function() {
-                        $(this).dialog("close");
-                    }
-                }
             });
             // style
             $("#new-style-dialog").dialog({

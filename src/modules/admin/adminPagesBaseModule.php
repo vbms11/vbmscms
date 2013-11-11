@@ -6,7 +6,29 @@ require_once("core/model/moduleModel.php");
 require_once("core/model/rolesModel.php");
 
 class AdminPagesBaseModule extends XModule {
-
+    
+    static function getTranslations() {
+        return array(
+            "en" => array(
+                "menu.delete.confirm" => "do you realy want to delete this menu?"
+            ),"de" => array(
+                "menu.delete.confirm" => "wollen sie wirklich diesen menu löchen?"
+            )
+        );
+    }
+    
+    function newMenuAction () {
+        return MenuModel::saveMenuInstance(null, parent::post('newMenuName'));
+    }
+    
+    function editMenuAction () {
+        MenuModel::saveMenuInstance(parent::get('id'), parent::post('editMenuName'));
+    }
+    
+    function deleteMenuAction () {
+        MenuModel::deleteMenuInstance($_GET['id']);
+    }
+    
     function savePageAction () {
         
         // save page settings create page if new page
@@ -285,6 +307,67 @@ class AdminPagesBaseModule extends XModule {
             </fieldset>
             <?php
         }
+    }
+    
+    function printRenameMenuView ($menuId) {
+        $menu = MenuModel::getMenuInstance($menuId);
+        ?>
+        <div id="edit-menu-dialog" title="Edit Menu">
+            <form method="post" id="edit-menu-dialog-form" action="<?php echo parent::link(array("action"=>"editMenu","id"=>$menuId)); ?>">
+                <table class="formTable"><tr>
+                    <td>Menu Name</td>
+                    <td>
+                        <?php
+                        InputFeilds::printTextFeild("editMenuName",$menu->name);
+                        ?>
+                    </td>
+                </tr></table>
+            </form>
+        </div>
+        <script>
+        $("#edit-menu-dialog").dialog({
+            autoOpen: false, height: 300, width: 350, modal: true,
+            buttons: {
+                "Save": function() {
+                    $("#edit-menu-dialog-form").submit();
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        </script>
+        <?php
+    }
+    
+    function printCreateMenuView () {
+        ?>
+        <div id="new-menu-dialog" title="New Menu">
+            <form method="post" id="new-menu-dialog-form" action="<?php echo parent::link(array("action"=>"newMenu")); ?>">
+                <table class="formTable"><tr>
+                    <td>Menu Name</td>
+                    <td>
+                        <?php
+                        InputFeilds::printTextFeild("newMenuName");
+                        ?>
+                    </td>
+                </tr></table>
+            </form>
+        </div>
+        <script>
+        $("#new-menu-dialog").dialog({
+            autoOpen: false, height: 300, width: 350, modal: true,
+            buttons: {
+                "Save": function() {
+                    $("#new-menu-dialog-form").submit();
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        </script>
+        <?php
     }
     
 }

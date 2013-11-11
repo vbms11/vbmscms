@@ -147,7 +147,7 @@ class TemplateRenderer extends BaseRenderer {
         // render area with module in it
         echo "<div id='vcms_area_$areaName' >";
         if ($targetOnly) {
-            ModuleModel::renderModuleObject($targetModule);
+            ModuleModel::renderModuleObject($targetModule, false);
         } else {
             foreach ($modules as $areaModules) {
                 foreach ($areaModules as $areaModule) {
@@ -184,50 +184,17 @@ class TemplateRenderer extends BaseRenderer {
         <meta name="robots" content="index, follow" />
         <?php
 
-        // get module resouces
-        $modulesByArea = $this->getModules();
-        foreach ($modulesByArea as $modulesInArea) {
-            foreach ($modulesInArea as $module) {
-                $scripts = $module->getScripts();
-                if (!empty($scripts)) {
-                    foreach ($scripts as $script) {
-                        if (strpos($script,'http://') === 0 || strpos($script,'https://') === 0) {
-                            $link = $script;
-                        } else if (strpos($script,'/') === 0) {
-                            $link = substr($script,1);
-                        } else {
-                            $link = ResourcesModel::createModuleResourceLink($module, $script);
-                        }
-                        Context::addRequiredScript($link);
-                    }
-                }
-                $styles = $module->getStyles();
-                if (!empty($styles)) {
-                    foreach ($styles as $style) {
-                        if (strpos($style,'http://') === 0 || strpos($style,'https://') === 0) {
-                            $link = $style;
-                        } else if (strpos($style,'/') === 0) {
-                            $link = substr($style,1);
-                        } else {
-                            $link = ResourcesModel::createModuleResourceLink($module, $style);
-                        }
-                        Context::addRequiredStyle($link);
-                    }
-                }
-            }
-        }
-
         // get template resources
         $template = TemplateModel::getTemplateObj($page);
         $styles = $template->getStyles();
-        if (!Common::isEmpty($styles)) {
+        if (!empty($styles)) {
             $templateStylePaths = $template->getResourcePaths($styles);
             foreach ($templateStylePaths as $templateStylePath) {
                 Context::addRequiredStyle($templateStylePath);
             }
         }
         $scripts = $template->getScripts();
-        if (!Common::isEmpty($scripts)) {
+        if (!empty($scripts)) {
             $templateScriptPaths = $template->getResourcePaths($scripts);
             foreach ($templateScriptPaths as $templateScriptPath) {
                 Context::addRequiredScript($templateScriptPath);
