@@ -4,7 +4,7 @@ class LanguagesModel {
     
     static function selectLanguage () {
         // set the language
-        $lang = "de";
+        $lang = "en";
         if (isset($_GET['changelang'])) {
             $lang = $_GET['changelang'];
         } else if (isset($_SESSION["req.lang"])) {
@@ -23,11 +23,11 @@ class LanguagesModel {
     }
     
     static function getLanguages () {
-        return Database::queryAsArray("select * from t_language");
+        return Database::queryAsArray("select * from t_language order by isdefault desc, id asc");
     }
 
     static function getActiveLanguages () {
-        return Database::queryAsArray("select * from t_language where active = '1'");
+        return Database::queryAsArray("select * from t_language where active = '1' order by isdefault desc, id asc");
     }
 
     static function saveLanguage ($id,$flag,$active) {

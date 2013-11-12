@@ -77,8 +77,12 @@ class PagesModel {
                     pc.roleid in (".implode(array_values(Context::getRoleGroups()),',').")
                     where p1.siteid = $siteId
                 ) and $endQuery";
+        
+        $pageObj = Database::queryAsObject($query);
+        $pageObj = self::ensureAdminTemplate($pageObj);
+        
 	if (count(Context::getRoleGroups()) > 0) {
-		return Database::queryAsObject($query);
+		return $pageObj;
 	}
         return null;
     }
@@ -98,8 +102,12 @@ class PagesModel {
                     pc.roleid in (".implode(array_values(Context::getRoleGroups()),',').")
                     where p1.siteid = '$siteId'
                 )";
+        
+        $pageObj = Database::queryAsObject($query);
+        $pageObj = self::ensureAdminTemplate($pageObj);
+        
 	if (count(Context::getRoleGroups()) > 0) {
-		return Database::queryAsObject($query);
+		return $pageObj;
 	}
         return null;
     }

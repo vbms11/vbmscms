@@ -322,6 +322,8 @@ class Context {
         ModuleModel::saveModuleParams($moduleParams);
         */
         
+        TranslationsModel::maintainTrnaslationsFile();
+        
         // unset session request data
         $_SESSION["req.page"] = null;
         $_SESSION["req.pageId"] = null;
