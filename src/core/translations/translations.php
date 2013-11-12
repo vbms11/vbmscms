@@ -170,6 +170,13 @@ $ar_translations = array(
 ,'common.captcha'=>'common.captcha'
 ,'admin.menus.tab.menu'=>'admin.menus.tab.menu'
 ,'admin.menus.tab.operations'=>'admin.menus.tab.operations'
+,'admin.package.tab.bill'=>'admin.package.tab.bill'
+,'admin.package.tab.accountDetails'=>'admin.package.tab.accountDetails'
+,'admin.sites.create'=>'admin.sites.create'
+,'admin.sites.title'=>'admin.sites.title'
+,'admin.sites.tab.label'=>'admin.sites.tab.label'
+,'admin.modules.tab.config'=>'admin.modules.tab.config'
+,'admin.modules.tab.attribs'=>'admin.modules.tab.attribs'
 ),'de'=>array(
 'login.email'=>'Geben sie eine Emailadresse ein:'
 ,'login.reset'=>'Passwort zur&uuml;cksetzen'
@@ -340,5 +347,12 @@ $ar_translations = array(
 ,'common.captcha'=>'common.captcha'
 ,'admin.menus.tab.menu'=>'admin.menus.tab.menu'
 ,'admin.menus.tab.operations'=>'admin.menus.tab.operations'
+,'admin.package.tab.bill'=>'admin.package.tab.bill'
+,'admin.package.tab.accountDetails'=>'admin.package.tab.accountDetails'
+,'admin.sites.create'=>'admin.sites.create'
+,'admin.sites.title'=>'admin.sites.title'
+,'admin.sites.tab.label'=>'admin.sites.tab.label'
+,'admin.modules.tab.config'=>'admin.modules.tab.config'
+,'admin.modules.tab.attribs'=>'admin.modules.tab.attribs'
 )); 
 ?>

@@ -84,14 +84,12 @@ class AdminSitesModule extends XModule {
         <div class="panel adminSitesPanel">
             <div class="adminSitesTabs">
                 <ul>
-                    <li><a href="#adminSitesTab">Sites</a></li>
+                    <li><a href="#adminSitesTab"><?php echo parent::getTranslation("admin.sites.tab.label"); ?></a></li>
                 </ul>
                 <div id="adminSitesTab">
-
-                    <div class="alignRight">
-                        <button class="btnCreateSite"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
-                    </div>
-
+                    
+                    <h3><?php echo parent::getTranslation("admin.sites.title"); ?></h3>
+                    
                     <?php
                     $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
                     $sites = SiteModel::byCmscustomerid($customer->id);
@@ -99,7 +97,7 @@ class AdminSitesModule extends XModule {
                     if (!empty($sites)) {
                         
                         ?>
-                        <table class="resultTable" cellpadding="0">
+                        <table class="resultTable" cellspacing="0">
                         <thead><tr>
                             <td>ID</td>
                             <td class="expand">Name</td>
@@ -121,13 +119,15 @@ class AdminSitesModule extends XModule {
                         
                         ?>
                         </tbody></table>
-                        <div class="alignRight">
-                            <button class="btnCreateSite"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
-                        </div>
                         <?php
                     }
 
                     ?>
+                    
+                    <hr/>
+                    <div class="alignRight">
+                        <button class="btnCreateSite"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
+                    </div>
                 </div>
             </div>
         </div>
