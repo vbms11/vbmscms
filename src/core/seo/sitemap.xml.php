@@ -6,9 +6,7 @@ function printMenu ($menu) {
         ?>
         <url>
             <loc><?php echo NavigationModel::getSitePath().NavigationModel::createPageLink($page->page->id); ?></loc>
-            <lastmod>2011-3-28</lastmod> 
-            <changefreq>monthly</changefreq> 
-            <priority>1.0</priority> 
+            <lastmod><?php echo date('Y-m-dTH:i:sP', $page->page->modifydate); ?></lastmod> 
         </url>
         <?php
         if (isset($page->children)) {

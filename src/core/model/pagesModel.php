@@ -4,40 +4,18 @@ require_once 'core/common.php';
 require_once 'core/model/codeModel.php';
 require_once 'core/model/templateModel.php';
 
-class Page {
-    public $id;
-    public $name;
-    public $type;
-    public $namecode;
-    public $parent;
-    public $welcome;
-    public $title;
-    public $keywords;
-    public $active;
-    public $position;
-    public $template;
-    public $templateinclude;
-    public $description;
-
-    function Page ($id,$name,$type,$namecode,$parent,$welcome,$title,$keywords,$active,$position,$template,$templateinclude,$description) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->type = $type;
-        $this->namecode = $namecode;
-        $this->parent = $parent;
-        $this->title = $title;
-        $this->welcome = $welcome;
-        $this->keywords = $keywords;
-        $this->active = $active;
-        $this->position = $position;
-        $this->template = $template;
-        $this->templateinclude = $templateinclude;
-    }
-}
-
 class PagesModel {
     
-    
+    static function updateModifyDate ($pageId = null) {
+        if (empty($pageId)) {
+            $pageId = Context::getPageId();
+        }
+        if (Context::isAdminMode() == "adminPages") {
+            $pageId = $_SESSION['adminPageId'];
+        }
+        $pageId = mysql_real_escape_string($pageId);
+        Database::query("update t_page set modifydate = now() where id = '$pageId'");
+    }
     
     static function getPageNameInMenu ($pageId, $lang) {
         $pageId = mysql_real_escape_string($pageId);
@@ -142,6 +120,16 @@ class PagesModel {
         $pageObj = self::ensureAdminTemplate($pageObj);
         
         return $pageObj;
+    }
+    
+        /**
+     * returns a page object of the default page
+     */
+    static function getTemplatePreviewPage ($templateId) {
+        $templateId = mysql_real_escape_string($templateId);
+        return Database::queryAsObject("select '0' as codeid, '' as code, t.css, t.html, t.js, '0' as id, '0' as type, '0' as namecode, '' as name, '0' as welcome, '' as title, '' as keywords, t.id as template, t.template as templateinclude, t.interface as interface, '' as description
+            from  t_template t
+            where t.id = '$templateId'");
     }
     
     /**

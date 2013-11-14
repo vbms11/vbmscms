@@ -1,0 +1,119 @@
+
+html *
+{
+   font-size: 1em !important;
+   color: #000;
+   font-family: Arial, san-serif !important;
+}
+
+body {
+	margin:0px;
+	padding:0px;
+}
+
+ul li ol {
+	margin: 0px;
+	padding: 0px;
+}
+
+
+/* layout */
+
+div.formEdit_left {
+    width: 275px;
+    min-height: 200px;
+}
+
+div.formEdit_center {
+    min-height: 200px;
+}
+
+td.formEdit_left {
+    width: 1%;
+    vertical-align: top;
+}
+
+td.formEdit_center {
+    width: 99%;
+    vertical-align: top;
+}
+
+.tabs {
+	
+}
+
+#tab_feilds div div {
+    margin-bottom: 5px;
+}
+
+.tabs ul, .tabs li, .tabs ol {
+	margin:0px;
+	padding:0px;
+}
+.ui-state-highlight {
+    height:25px;
+}
+
+#formEdit_tabsLeft {
+}
+#formEdit_tabsCenter {
+	
+}
+.formItemDrag {
+	width: 100%;
+}
+.formEdit_center .form_margin {
+	min-height: 400px;
+}
+
+
+/* parts of the form edit */
+
+.formItemPanel {
+	min-height:20px;
+	border: 1px solid transparent;
+	margin: 0px 0px 5px 0px
+}
+.formItemTools {
+	float:right;
+	width:20px;
+}
+.formItemDescription {
+	color:grey;
+}
+.formItemLabel {
+	font-weight: bold;	
+}
+.formItemInput {
+}
+.formItemMessage {
+}
+
+.formItemPanel textarea,
+.formItemPanel input {
+	width:100%;
+}
+
+
+
+.formItemSelected {
+	border: 1px dashed blue;
+}
+
+.formEditorAttribsTable {
+	width:100%;	
+}
+.formEditorAttribsTable tr td {
+    white-space:nowrap;
+    width:99%;
+}
+.formEditorAttribsTable tr td:first-child {
+    width:1%;
+}
+.formEditorAttribsTable input, .formEditorAttribsTable select {
+    width: 100%;
+} 
+
+
+
+

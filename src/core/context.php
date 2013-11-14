@@ -167,7 +167,7 @@ class Context {
     }
     
     static function isTemplatePreviewRequest () {
-        return (isset($_GET["templatePreviewRequest"]) && $_GET["templatePreviewRequest"] = "1");
+        return (isset($_GET["templatePreview"]));
     }
     
     static function isAdminMode () {
@@ -229,6 +229,8 @@ class Context {
             $renderer = new VCmsRenderer();
         } else if (Context::isAjaxRequest()) {
             $renderer = new AJaxRenderer();
+        } else if (Context::isTemplatePreviewRequest()) {
+            $renderer = TemplateModel::getTemplatePreviewObj(self::getPage());
         } else {
             $renderer = TemplateModel::getTemplateObj(self::getPage());
         }

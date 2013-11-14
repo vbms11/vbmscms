@@ -38,12 +38,14 @@ class CommentsView extends XModule {
                         }
                     }
                 }
+                PagesModel::updateModifyDate();
                 parent::redirect();
                 break;
             case "deleteComment":
                 if (Context::hasRole("comment.delete")) {
                     CommentsModel::deleteComment(parent::get('id'));
                 }
+                PagesModel::updateModifyDate();
                 break;
         }
     }

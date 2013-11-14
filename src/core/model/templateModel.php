@@ -11,7 +11,22 @@ class TemplateModel {
     static function getTemplatePath ($page) {
         return dirname($page->templateinclude)."/";
     }
-
+    
+    static function getTemplatePreviewObj ($page) {
+        $templateClass = null;
+        // echo "p=".$page;
+        if (!empty($page->templateinclude) && !empty($page->interface)) {
+            require_once($page->templateinclude);
+            $templateClass = eval("return new $page->interface();");
+            $templateClass->setPath(dirname($page->templateinclude));
+        } else {
+            $templateClass = new EditableTemplatePreview();
+            $templateClass->setData($page->html);
+            $templateClass->setPath(ResourcesModel::createResourceLink("template/".Common::hash($page->template,false,false)));
+        }
+        return $templateClass;
+    }
+    
     static function getTemplateObj ($page) {
         $templateClass = null;
         // echo "p=".$page;

@@ -27,6 +27,7 @@ class GalleryView extends XModule {
                 case "uploadImage":
                     // uploads the image and create preview image
                     GalleryModel::uploadImage("fileData",$_GET['category']);
+                    PagesModel::updateModifyDate();
                     Context::setReturnValue("");
                     break;
                 case "update":
@@ -36,12 +37,14 @@ class GalleryView extends XModule {
                     } else if (isset($_GET['id'])) {
                         GalleryModel::updateCategory($_GET['id'], $_POST['title'], $_POST['imageId'], $_POST['description']);
                     }
+                    PagesModel::updateModifyDate();
                     parent::blur();
                     parent::link(array("category"=>$_GET['category']));
                     break;
                 case "create":
                     // craetes a category
                     GalleryModel::createCategory($_POST['title'], $_POST['description'], null, $_GET['parent']);
+                    PagesModel::updateModifyDate();
                     parent::blur();
                     parent::redirect();
                     break;
@@ -51,6 +54,7 @@ class GalleryView extends XModule {
                     } else if (isset($_GET['id'])) {
                         GalleryModel::deleteCategory($_GET['id']);
                     }
+                    PagesModel::updateModifyDate();
                     parent::blur();
                     parent::redirect(array("category"=>$_GET['category']));
                     break;

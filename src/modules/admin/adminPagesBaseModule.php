@@ -7,16 +7,6 @@ require_once("core/model/rolesModel.php");
 
 class AdminPagesBaseModule extends XModule {
     
-    static function getTranslations() {
-        return array(
-            "en" => array(
-                "menu.delete.confirm" => "do you realy want to delete this menu?"
-            ),"de" => array(
-                "menu.delete.confirm" => "wollen sie wirklich diesen menu löchen?"
-            )
-        );
-    }
-    
     function newMenuAction () {
         return MenuModel::saveMenuInstance(null, parent::post('newMenuName'));
     }
@@ -92,7 +82,7 @@ class AdminPagesBaseModule extends XModule {
         ?>
         <div id="adminMenusTabs">
             <ul>
-                <li><a href="#tabs-1">Page Settings</a></li>
+                <li><a href="#tabs-1"><?php echo parent::getTranslation("admin.pages.tab.settings"); ?></a></li>
             </ul>
             <div id="tabs-1">
                 <?php $this->printPageSettingsView(); ?>
@@ -125,23 +115,23 @@ class AdminPagesBaseModule extends XModule {
                 ?>">
 
                 <table class="formTable"><tr><td>
-                    Name der Seite:
+                    <?php echo parent::getTranslation("admin.pages.config.name"); ?>
                 </td><td>
                     <input type="text" name="pagename" value="<?php echo $page == null ? "" : $page->name; ?>" />
                 </td></tr><tr><td>
-                    Titel der Seite:
+                    <?php echo parent::getTranslation("admin.pages.config.title"); ?>
                 </td><td>
                     <input type="text" name="pagetitle" value="<?php echo $page == null ? "" : $page->title; ?>" />
                 </td></tr><tr><td>
-                    Keywords:
+                    <?php echo parent::getTranslation("admin.pages.config.keywords"); ?>
                 </td><td>
                     <input type="text" name="pagekeywords" value="<?php echo $page == null ? "" : $page->keywords; ?>" />
                 </td></tr><tr><td>
-                    Description:
+                    <?php echo parent::getTranslation("admin.pages.config.description"); ?>
                 </td><td>
                     <textarea rows="3" cols="5" name="pagedescription" ><?php echo $page == null ? "" : $page->description; ?></textarea>
                 </td></tr><tr><td>
-                    Template:
+                    <?php echo parent::getTranslation("admin.pages.config.template"); ?>
                 </td><td class="expand">
                     <?php
                     if (empty($page)) {
@@ -156,17 +146,13 @@ class AdminPagesBaseModule extends XModule {
                 </td></tr><tr><td>
                 </td><td>
                     <input type="checkbox" name="active" value="1" <?php echo ($page == null || $page->active) ? "checked='true'" : ""; ?> />
-                    Diese Seite im Men&uuml; in der aktiven Sprache anzeigen.
+                    <?php echo parent::getTranslation("admin.pages.config.display"); ?>
                 </td></tr><tr><td>
                 </td><td>
                     <input type="checkbox" name="welcome" value="1" <?php echo ($page != null && $page->welcome) ? "checked='true'" : ""; ?> />
-                    Diese Seite als Startseite festlegen.
-                </td></tr><tr><td colspan="2">
-                    <?php
-                    InfoMessages::printInfoMessage("Please select the user groups that can view this page. By default all users can see the page.");
-                    ?>
+                    <?php echo parent::getTranslation("admin.pages.config.startpage"); ?>
                 </td></tr><tr><td>
-                    User Role Groups: 
+                    <?php echo parent::getTranslation("admin.pages.config.roles"); ?> 
                 </td><td>
                     <?php
                     InputFeilds::printMultiSelect("roleGroups",$allRoles,$pageRoles);
@@ -174,8 +160,8 @@ class AdminPagesBaseModule extends XModule {
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
-                    <button class="btnSave" type="submit">Save</button>
-                    <button class="btnBack">Abbrechen</button>
+                    <button class="btnSave" type="submit"><?php echo parent::getTranslation("admin.pages.config.save"); ?></button>
+                    <button class="btnBack"><?php echo parent::getTranslation("admin.pages.config.cancel"); ?></button>
                 </div>
                 
             </form>
@@ -195,7 +181,7 @@ class AdminPagesBaseModule extends XModule {
         ?>
         <div>
             <div class="alignLeft">
-                <button class="newPageButton">Neue Seite erstellen</button>
+                <button class="newPageButton"><?php echo parent::getTranslation("admin.pages.menu.new"); ?></button>
             </div>
             <?php
             if (count($pages) > 0) {
@@ -204,7 +190,7 @@ class AdminPagesBaseModule extends XModule {
                     $parentPages = MenuModel::getPageParents($parent,Context::getLang());
                     ?>
                     <table><tr><td><td>
-                    <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>$menuId,"parent"=>"")); ?>">Menu</a>
+                    <a class="pagesPathLink" href="<?php echo parent::link(array("action"=>"edit","menu"=>$menuId,"parent"=>"")); ?>"><?php echo parent::getTranslation("admin.pages.menu.menu"); ?></a>
                     <?php
                     for ($i=count($parentPages)-1; $i>-1; $i--) {
                         if ($i - 1 < 0) $parentId = $parent;
@@ -221,9 +207,9 @@ class AdminPagesBaseModule extends XModule {
                 <table class="resultTable" cellspacing="0" border="0">
                 <thead>
                     <tr>
-                        <td align="center">ID</td>
-                        <td class="expand" align="center">Name</td>
-                        <td align="center" colspan="5">Tools</td>
+                        <td align="center"><?php echo parent::getTranslation("admin.pages.menu.id"); ?></td>
+                        <td class="expand" align="center"><?php echo parent::getTranslation("admin.pages.menu.name"); ?></td>
+                        <td align="center" colspan="5"><?php echo parent::getTranslation("admin.pages.menu.tools"); ?></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -242,7 +228,7 @@ class AdminPagesBaseModule extends XModule {
                             <td><a href="<?php echo NavigationModel::createStaticPageLink("pageConfig",array("menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id,"menuModuleId"=>isset($_GET['menuModuleId']) ? $_GET['menuModuleId'] : '')); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
                             <td><a href="<?php echo parent::link(array("action"=>"movedown","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id)); ?>"><img src="resource/img/movedown.png" alt="" /></a></td>
                             <td><a href="<?php echo parent::link(array("action"=>"moveup","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id)); ?>"><img src="resource/img/moveup.png" alt="" /></a></td>
-                            <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Wollen Sie wirklich diese Seite l&ouml;schen?','<?php echo parent::link(array("action"=>"deletepage","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id),false); ?>');" /></td>
+                            <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("admin.pages.menu.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"deletepage","menu"=>$page->menuid,"parent"=>$page->parent,"id"=>$page->id),false); ?>');" /></td>
                         </tr>
                         <?php
                     }
@@ -250,7 +236,7 @@ class AdminPagesBaseModule extends XModule {
                 </tbody>
                 </table>
                 <div class="alignLeft" style="margin-top:10px">
-                    <button class="newPageButton">Neue Seite erstellen</button>
+                    <button class="newPageButton"><?php echo parent::getTranslation("admin.pages.menu.new"); ?></button>
                 </div>
                 <?php
             }
@@ -268,14 +254,14 @@ class AdminPagesBaseModule extends XModule {
     
     function printPageTemplateView () {
         ?>
-        <h3>Configure Page Template</h3>
+        <h3><?php echo parent::getTranslation("admin.pages.template.title"); ?></h3>
         <?php
     }
     
     function printPageContentView ($page) {
         
         ?>
-        <h3>Configure Page Modules</h3>
+        <h3><?php echo parent::getTranslation("admin.pages.modules.title"); ?></h3>
         <?php
         
         $areaNames = TemplateModel::getAreaNames($page);
@@ -293,7 +279,9 @@ class AdminPagesBaseModule extends XModule {
                         <div class="adminPagesModule">
                             <div class="adminPagesModuleTools">
                                 <img src="resource/img/preferences.png" alt="" onclick="callUrl('<?php echo NavigationModel::createModuleLink($module->id,array("action"=>"edit"),false); ?>');" />
-                                <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('Wollen Sie wirklich dieses Modul l&ouml;schen?','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$module->id),false); ?>');" />
+                                <img src="resource/img/moveup.png" alt="" onclick="callUrl('<?php echo NavigationModel::createPageLink($page->id,array("action"=>"moveup","id"=>$module->id),false); ?>');" />
+                                <img src="resource/img/movedown.png" alt="" onclick="callUrl('<?php echo NavigationModel::createPageLink($page->id,array("action"=>"movedown","id"=>$module->id),false); ?>');" />
+                                <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("admin.pages.modules.delete.confirm"); ?>','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$module->id),false); ?>');" />
                             </div>
                             <?php
                             $moduleClass = ModuleModel::getModuleClass($module);
@@ -315,7 +303,7 @@ class AdminPagesBaseModule extends XModule {
         <div id="edit-menu-dialog" title="Edit Menu">
             <form method="post" id="edit-menu-dialog-form" action="<?php echo parent::link(array("action"=>"editMenu","id"=>$menuId)); ?>">
                 <table class="formTable"><tr>
-                    <td>Menu Name</td>
+                    <td><?php echo parent::getTranslation("admin.pages.menu.label.name"); ?></td>
                     <td>
                         <?php
                         InputFeilds::printTextFeild("editMenuName",$menu->name);
@@ -345,7 +333,7 @@ class AdminPagesBaseModule extends XModule {
         <div id="new-menu-dialog" title="New Menu">
             <form method="post" id="new-menu-dialog-form" action="<?php echo parent::link(array("action"=>"newMenu")); ?>">
                 <table class="formTable"><tr>
-                    <td>Menu Name</td>
+                    <td><?php echo parent::getTranslation("admin.pages.menu.label.name"); ?></td>
                     <td>
                         <?php
                         InputFeilds::printTextFeild("newMenuName");

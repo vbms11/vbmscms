@@ -16,6 +16,7 @@ class WysiwygPageView extends XModule {
                 case "update":
                     $content = $_POST['articleContent'];
                     WysiwygPageModel::updateWysiwygPage(parent::getId(),Context::getLang(),$content);
+                    PagesModel::updateModifyDate();
                     parent::redirect();
                     parent::blur();
                     break;

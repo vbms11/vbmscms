@@ -170,6 +170,11 @@ class NavigationModel {
         $link = "?moduleid=$moduleId".NavigationModel::buildParams($params,$xhtml).NavigationModel::addSessionKeys($xhtml);
         return ($secure == null ? NavigationModel::$secureLink : $secure) ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
+    
+    static function createTemplatePreviewLink ($templateId,$xhtml=true,$secure=null) {
+        $link = "?templatePreview=$templateId".NavigationModel::addSessionKeys($xhtml);
+        return ($secure == null ? NavigationModel::$secureLink : $secure) ? NavigationModel::registerSecureLink($link,$xhtml):$link;
+    }
 
     static function createModuleAjaxLink ($moduleId,$params=null,$xhtml=true,$secure=true) {
         $link = "?moduleid=$moduleId".NavigationModel::buildParams(NavigationModel::addAjaxParam($params),$xhtml);
@@ -390,7 +395,9 @@ class NavigationModel {
             // NavigationModel::clearSecureLinks();
         } else if (isset($_GET['service'])) {
             Context::setService($_GET['service']);
-        } 
+        } else if (isset($_GET['templatePreview'])) {
+            $page = PagesModel::getTemplatePreviewPage($_GET['templatePreview']);
+        }
         
         if (!isset($_GET['service']) && $page == null) {
             // default to welcome page

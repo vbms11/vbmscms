@@ -76,7 +76,9 @@ class AdminPagesModule extends AdminPagesBaseModule {
         return array("pages.editmenu","pages.edit");
     }
     
-    
+    function getStyles() {
+        return array("css/pages.css");
+    }
     
 
     function printEditPage () {
@@ -88,23 +90,23 @@ class AdminPagesModule extends AdminPagesBaseModule {
             ?>
             <div id="adminPagesTabs">
                 <ul>
-                    <li><a href="#tabs-1">Content</a></li>
-                    <li><a href="#tabs-2">Menu</a></li>
-                    <li><a href="#tabs-3">Template</a></li>
-                    <li><a href="#tabs-4">Settings</a></li>
+                    <li><a href="#tabs-1"><?php echo parent::getTranslation("admin.pages.tab.content"); ?></a></li>
+                    <li><a href="#tabs-2"><?php echo parent::getTranslation("admin.pages.tab.menu"); ?></a></li>
+                    <li><a href="#tabs-3"><?php echo parent::getTranslation("admin.pages.tab.template"); ?></a></li>
+                    <li><a href="#tabs-4"><?php echo parent::getTranslation("admin.pages.tab.settings"); ?></a></li>
                 </ul>
                 <div id="tabs-1">
                     <?php $this->printPageContentView($page); ?>
                 </div>
                 <div id="tabs-2">
-                    <h3>Configure Page Menu</h3>
+                    <h3><?php echo parent::getTranslation("admin.pages.menu.title"); ?></h3>
                     <?php $this->printPageMenuView($page->menuid,$page->id); ?>
                 </div>
                 <div id="tabs-3">
                     <?php $this->printPageTemplateView($page); ?>
                 </div>
                 <div id="tabs-4">
-                    <h3>Configure Page Settings</h3>
+                    <h3><?php echo parent::getTranslation("admin.pages.settings.title"); ?></h3>
                     <?php $this->printPageSettingsView($page); ?>
                 </div>
             </div>
@@ -122,7 +124,7 @@ class AdminPagesModule extends AdminPagesBaseModule {
             <?php
         
         } else {
-            echo "no page selected";
+            echo parent::getTranslation("admin.pages.error.nopage");
         }
     }
     

@@ -104,7 +104,7 @@ class MenuModel {
             //    left join t_menu m on m.type = i.id
 
         $query = "
-            select p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description
+            select p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.modifydate
             from t_menu m
                 left join t_page as p on p.id = m.page and p.siteid = $siteId
                 left join t_code as c on p.namecode = c.code and c.lang = '$lang' 

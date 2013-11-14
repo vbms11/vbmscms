@@ -221,7 +221,7 @@ class ModuleModel {
                     TemplateModel::moveTemplateModuleDown(Context::getPageId(),$id);
                     break;
                 case "movemodule":
-                    TemplateModel::moveTemplateModule(Context::getPageId(),$_GET["id"],$_GET["area"],$_GET["pos"]);
+                    TemplateModel::moveTemplateModule(Context::getPageId(),$id,$_GET["area"],$_GET["pos"]);
                     Context::setReturnValue("");
                     break;
                 case "logdata":
