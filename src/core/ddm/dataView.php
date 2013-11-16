@@ -224,7 +224,7 @@ class DynamicDataView {
             <div class="formEditor"></div>
             <div class="formEditorValue">
                 <form method="post" action="<?php echo NavigationModel::modifyLink($continueLink, array("ddmAction"=>"ddmSaveFeilds")); ?>">
-                    <input type="hidden" name="formEditorValue" value="<?php echo Common::htmlEscape($formItemsJson); ?>">
+                    <input type="hidden" name="formEditorValue" value='<?php echo $formItemsJson; ?>' />
                 </form>
             </div>
             <div class="alignRight">
@@ -234,15 +234,15 @@ class DynamicDataView {
             </div>
         </div>
         <script type="text/javascript">
-        $(".formEditor").formEditor({"optionsLocation":"right","json":"<?php echo Common::htmlEscape($formItemsJson); ?>"});
+        $(".formEditor").formEditor({"optionsLocation":"right","json":$(".configureObject .formEditorValue input[name=formEditorValue]").val()});
         $(".configureObject .alignRight button").button();
-        $(".configureObject .alignRight save").click(function(){
+        $(".configureObject .alignRight .save").click(function(){
             $("configureObject .formEditorValue input[name=formEditorValue]").val($(".formEditor").formEditor().toJson());
         });
-        $(".configureObject .alignRight reset").click(function () {
+        $(".configureObject .alignRight .reset").click(function () {
             $(".formEditor").formEditor().fromJson($("configureObject .formEditorValue input[name=formEditorValue]").val());
         });
-        $(".configureObject .alignRight save").click(function () {
+        $(".configureObject .alignRight .cancel").click(function () {
             callUrl("<?php echo $backLink; ?>");
         });
         </script>

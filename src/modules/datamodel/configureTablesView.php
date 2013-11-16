@@ -11,11 +11,11 @@ class ConfigureTablesView extends XModule {
 
         switch (parent::getAction()) {
             case "newTable":
-                VirtualDataModel::createTable(parent::get("table"));
-                parent::redirect(array("action"=>"editForm"));
+                $newTableId = VirtualDataModel::createTable(parent::post("table"));
+                parent::redirect(array("action"=>"editForm","table"=>$newTableId));
                 break;
             case "delTable":
-                VirtualDataModel::deleteTable(parent::get("table"));
+                VirtualDataModel::deleteTableById(parent::get("table"));
                 parent::redirect();
                 break;
             case "configTable":
@@ -52,7 +52,6 @@ class ConfigureTablesView extends XModule {
      * returns style sheets used by this module
      */
     function getStyles () {
-
     }
 
     /**
@@ -73,7 +72,7 @@ class ConfigureTablesView extends XModule {
         
         $table = VirtualDataModel::getTableById($tableId);
         if (!empty($table)) {
-            DynamicDataView::configureObject($tableId, parent::link(), parent::link(array("action"=>"configTable","table"=>$tableId)));
+            DynamicDataView::configureObject($table->name, parent::link(), parent::link(array("action"=>"configTable","table"=>$tableId)));
         }
     }
     
@@ -126,7 +125,7 @@ class ConfigureTablesView extends XModule {
                         <td><?php echo $table->id; ?></td>
                         <td><a href="<?php echo parent::link(array("action"=>"editForm","table"=>$table->id)); ?>"><?php echo Common::htmlEscape($table->name); ?></a></td>
                         <td><a href="<?php echo parent::link(array("action"=>"editForm","table"=>$table->id)); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
-                        <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("data.forms.list.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"deleteForm","table"=>$table->id),false); ?>');" /></td>
+                        <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("data.forms.list.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"delTable","table"=>$table->id),false); ?>');" /></td>
                     </tr>
                     <?php
                 }

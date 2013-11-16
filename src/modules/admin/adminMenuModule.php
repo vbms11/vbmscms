@@ -377,7 +377,9 @@ class AdminMenuModule extends XModule {
                 <li id="adminDomains"><a href=""><?php echo parent::getTranslation("admin.menu.account.domains"); ?></a></li>
                 <li id="adminPackage"><a href=""><?php echo parent::getTranslation("admin.menu.account.package"); ?></a></li>
                 <li id="adminMessages"><a href=""><?php echo parent::getTranslation("admin.menu.account.messages"); ?></a></li>
-                <li id="adminForms"><a href=""><?php echo parent::getTranslation("admin.menu.account.forms"); ?></a></li>
+                <li id="adminForms">
+                    <a href=""><?php echo parent::getTranslation("admin.menu.account.forms"); ?></a>
+                </li>
                 <li id="adminNewsletter"><a href=""><?php echo parent::getTranslation("admin.menu.account.newsletter"); ?></a></li>
                 <li id="adminTranslations"><a href=""><?php echo parent::getTranslation("admin.menu.account.translations"); ?></a></li>
             </ul>

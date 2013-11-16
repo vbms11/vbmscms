@@ -212,6 +212,7 @@ $ar_translations = array(
 ,'data.forms.new.title'=>'data.forms.new.title'
 ,'data.forms.new.button.save'=>'data.forms.new.button.save'
 ,'data.forms.new.button.cancel'=>'data.forms.new.button.cancel'
+,'data.forms.new.name'=>'data.forms.new.name'
 ),'de'=>array(
 'login.email'=>'Geben sie eine Emailadresse ein:'
 ,'login.reset'=>'Passwort zur&uuml;cksetzen'
@@ -424,5 +425,6 @@ $ar_translations = array(
 ,'data.forms.new.title'=>'data.forms.new.title'
 ,'data.forms.new.button.save'=>'data.forms.new.button.save'
 ,'data.forms.new.button.cancel'=>'data.forms.new.button.cancel'
+,'data.forms.new.name'=>'data.forms.new.name'
 )); 
 ?>
