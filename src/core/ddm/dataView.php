@@ -67,7 +67,7 @@ class DynamicDataView {
                     foreach ($columns as $column) {
                         $columnDeleted = true;
                         foreach ($formItems as $formItem) {
-                            if ($formItem['id'] == $column->id)
+                            if ($formItem->id == $column->id)
                                 $columnDeleted = false;
                         }
                         if ($columnDeleted) {
@@ -82,23 +82,23 @@ class DynamicDataView {
                         $position++;
                         $newColumn = true;
                         foreach ($columns as $column) {
-                            if ($formItem['id'] == $column->id)
+                            if ($formItem->id == $column->id)
                                 $newColumn = false;
                         }
                         
-                        $id = $formItem["id"];
-                        $value = $formItem["value"];
-                        $label = $formItem["label"];
-                        $required = $formItem["required"];
-                        $name = $formItem["inputName"];
-                        $minLength = $formItem["minLength"] === "" ? null : $formItem["minLength"];
-                        $maxLength = $formItem["maxLength"] === "" ? null : $formItem["maxLength"];
-                        $description = $formItem["description"];
-                        $validator = FormEditorWrapper::formItemValidatorTovalidator($formItem["validator"]);
-                        $editType = FormEditorWrapper::formItemTypeToeditType($formItem["typeName"]);
+                        $id = $formItem->id;
+                        $value = $formItem->value;
+                        $label = $formItem->label;
+                        $required = $formItem->required;
+                        $name = $formItem->inputName;
+                        $minLength = $formItem->minLength === "" ? null : $formItem->minLength;
+                        $maxLength = $formItem->maxLength === "" ? null : $formItem->maxLength;
+                        $description = $formItem->description;
+                        $validator = FormEditorWrapper::formItemValidatorTovalidator($formItem->validator);
+                        $editType = FormEditorWrapper::formItemTypeToeditType($formItem->typeName);
                         
                         if ($newColumn) {
-                            VirtualDataModel::addColumn ($tableId, $name, $editType, $validator, $position, $label, $description, $minLength, $maxLength, $required, $value);
+                            VirtualDataModel::addColumn($tableId, $name, $editType, $validator, $position, $label, $description, $minLength, $maxLength, $required, $value);
                         } else {
                             VirtualDataModel::updateColumn($id, $name, $editType, $validator, $position, $description, $required, $label, $minLength, $maxLength, $value);
                         }
@@ -237,7 +237,8 @@ class DynamicDataView {
         $(".formEditor").formEditor({"optionsLocation":"right","json":$(".configureObject .formEditorValue input[name=formEditorValue]").val()});
         $(".configureObject .alignRight button").button();
         $(".configureObject .alignRight .save").click(function(){
-            $("configureObject .formEditorValue input[name=formEditorValue]").val($(".formEditor").formEditor().toJson());
+            $(".configureObject .formEditorValue input[name=formEditorValue]").val($(".formEditor").formEditor().toJson());
+            $(".configureObject .formEditorValue form").submit();
         });
         $(".configureObject .alignRight .reset").click(function () {
             $(".formEditor").formEditor().fromJson($("configureObject .formEditorValue input[name=formEditorValue]").val());

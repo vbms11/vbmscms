@@ -178,9 +178,7 @@ var FormEditor = function (element) {
             "FormItemTextArea"      : this.FormItemTextArea,
             "FormItemCheckbox"      : this.FormItemCheckbox,
             "FormItemDate"          : this.FormItemDate,
-            "FormItemTime"          : this.FormItemTime,
-            "FormItemSelect"        : this.FormItemSelect,
-            "FormItemMultiSelect"   : this.FormItemMultiSelect
+            "FormItemSelect"        : this.FormItemSelect
         }
     };
     

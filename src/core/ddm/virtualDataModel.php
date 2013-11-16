@@ -22,15 +22,18 @@ class VirtualDataModel extends XDataModel   {
         Database::query("delete from t_vdb_table where id = '$tableId'");
     }
     static function getTables () {
+        return Database::queryAsArray("select * from t_vdb_table where system = '0' order by name asc");
+    }
+    static function getSystemTables () {
         return Database::queryAsArray("select * from t_vdb_table order by name asc");
     }
     static function getTable ($tableName) {
         $tableName = mysql_real_escape_string($tableName);
-        return  Database::queryAsObject("select * from t_vdb_table where name = '$tableName'");
+        return Database::queryAsObject("select * from t_vdb_table where name = '$tableName'");
     }
     static function getTableById ($tableName) {
         $tableName = mysql_real_escape_string($tableName);
-        return  Database::queryAsObject("select * from t_vdb_table where id = '$tableName'");
+        return Database::queryAsObject("select * from t_vdb_table where id = '$tableName'");
     }
     
     // columns

@@ -72,7 +72,7 @@ class ConfigureTablesView extends XModule {
         
         $table = VirtualDataModel::getTableById($tableId);
         if (!empty($table)) {
-            DynamicDataView::configureObject($table->name, parent::link(), parent::link(array("action"=>"configTable","table"=>$tableId)));
+            DynamicDataView::configureObject($table->name, parent::link(), parent::link(array("action"=>"configTable","table"=>$table->name)));
         }
     }
     
