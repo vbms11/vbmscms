@@ -11,14 +11,15 @@ class ConfigureTablesView extends XModule {
 
         switch (parent::getAction()) {
             case "newTable":
-                VirtualDataModel::createTable($_GET['table']);
+                VirtualDataModel::createTable(parent::get("table"));
+                parent::redirect(array("action"=>"editForm"));
                 break;
             case "delTable":
-                VirtualDataModel::deleteTable($_GET['table']);
+                VirtualDataModel::deleteTable(parent::get("table"));
+                parent::redirect();
                 break;
             case "configTable":
-                // echo $_GET['table']." - ".$_GET['ddmAction']." - ".$_GET['ddmId'];
-                DynamicDataView::processAction($_GET['table'], parent::link(array(),false), parent::link(array('table'=>$_GET['table']),false));
+                DynamicDataView::processAction(parent::get("table"), parent::link(array(),false), parent::link(array('table'=>parent::get("table")),false));
                 break;
         }
     }
@@ -29,8 +30,14 @@ class ConfigureTablesView extends XModule {
     function onView () {
 
         switch (parent::getAction()) {
+            case "newForm":
+                $this->printNewFormTabs();
+                break;
+            case "editForm":
+                $this->printEditTableView(parent::get("table"));
+                break;
             default:
-                $this->printMainView();
+                $this->printListTablesTabs();
                 break;
         }
     }
@@ -61,74 +68,127 @@ class ConfigureTablesView extends XModule {
     function getRoles () {
         return array("dm.tables.config");
     }
-
-    function printMainView () {
+    
+    function printEditTableView ($tableId) {
         
-        $tables = VirtualDataModel::getTables();
-        if (count($tables) > 0) {
-            
-            $selectedTable = isset($_GET['table']) ? $_GET['table'] : $tables[0]->name;
-            $valueNameArray = Common::toMap($tables, "name", "name");
-            
-            ?>
-            <table width="100%" style="white-space: nowrap;"><tr><td>
-                <button id="newTable">New Table</button>
-            </td><td>
-                Select Table: 
-            </td><td class="expand">
-                <?php
-                InputFeilds::printSelect("table", $selectedTable, $valueNameArray);
-                ?>
-            </td><td>
-                <button id="deleteTable">Delete</button>
-            </td></tr></table>
-            <hr/>
-            
-            <div id="dialog-form-table" title="Create new table">
-                <p class="validateTips">All form fields are required.</p>
-                <form>
-                <fieldset>
-                    <label for="name">Table Name</label>
-                    <input type="text" name="name" id="tablename" class="text ui-widget-content ui-corner-all" />
-                </fieldset>
-                </form>
-            </div>
-            
-            <?php
-            DynamicDataView::configureObject($selectedTable, parent::link(), parent::link(array("action"=>"configTable","table"=>$selectedTable)));
-            ?>
-            <script type="text/javascript">
-                
-            $("#dialog-form-table").dialog({
-                height: 300, width: 350,
-                autoOpen: false, modal: true,
-                show: "blind", hide: "explode",
-                buttons: {
-                    "Create Table" : function () {
-                        callUrl("<?php echo parent::link(array("action"=>"newTable"),false); ?>",{"table":$("#tablename").val()});
-                        $("#dialog-form-table").dialog( "close" );
-                    }
-                }
-            });
-            $('#newTable').button().click(function (e) {
-                $("#dialog-form-table").dialog( "open" );
-                this.preventDefault();
-            });
-            
-            $('#deleteTable').button().click(function () {
-                callUrl("<?php echo parent::link(array("action"=>"delTable"),false); ?>",{table : $('#table').val()});
-            });
-            $('#table').change(function () {
-                callUrl("<?php echo parent::link(array(),false); ?>",{"table" : $('#table').val()});
-            });
-            </script>
-            <?php
-            
-        } else {
-            
+        $table = VirtualDataModel::getTableById($tableId);
+        if (!empty($table)) {
+            DynamicDataView::configureObject($tableId, parent::link(), parent::link(array("action"=>"configTable","table"=>$tableId)));
         }
     }
+    
+    
+    function printNewFormView () {
+        ?>
+        <div class="editFormsNewPanel">
+            <form method="post" action="<?php echo parent::link(array("action"=>"newTable")); ?>">
+                <h3><?php echo parent::getTranslation("data.forms.new.title"); ?></h3>
+                <table class="formTable"><tr>
+                    <td><?php echo parent::getTranslation("data.forms.new.name"); ?></td>
+                    <td><input type="text" name="table" /></td>
+                </tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button class="submitButton" type="submit"><?php echo parent::getTranslation("data.forms.new.button.save"); ?></button>
+                    <button class="cancelButton" type="button"><?php echo parent::getTranslation("data.forms.new.button.cancel"); ?></button>
+                </div>
+            </form>
+        </div>
+        <script>
+        $(".editFormsNewPanel .alignRight button").button();
+        $(".editFormsNewPanel .alignRight  .cancelButton").click(function(){
+            callUrl("<?php echo parent::link(array(),false); ?>");
+        })
+        </script>
+        <?php
+    }
+    
+    function printListTablesView () {
+        
+        $tables = VirtualDataModel::getTables();
+        ?>
+        <div class="editFormsListPanel">
+            <h3><?php echo parent::getTranslation("data.forms.list.title"); ?></h3>
+            <?php
+            if (count($tables) > 0) {
+                ?>
+                <table class="resultTable" width="100%" cellspacing="0"><thead>
+                <tr>
+                    <td class="contract"><?php echo parent::getTranslation("data.forms.list.table.id"); ?></td>
+                    <td class="expand"><?php echo parent::getTranslation("data.forms.list.table.name"); ?></td>
+                    <td class="contract" colspan="2"><?php echo parent::getTranslation("data.forms.list.table.tools"); ?></td>
+                </tr>
+                </thead><tbody>
+                <?php
+                foreach ($tables as $table) {
+                    ?>
+                    <tr>
+                        <td><?php echo $table->id; ?></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"editForm","table"=>$table->id)); ?>"><?php echo Common::htmlEscape($table->name); ?></a></td>
+                        <td><a href="<?php echo parent::link(array("action"=>"editForm","table"=>$table->id)); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
+                        <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("data.forms.list.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"deleteForm","table"=>$table->id),false); ?>');" /></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                </tbody></table>
+                <?php
+            }
+            ?>
+            <hr/>
+            <div class="alignRight">
+                <button type="button"><?php echo parent::getTranslation("data.forms.list.button.create"); ?></button>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $(".editFormsListPanel .alignRight button").button().click(function () {
+            callUrl("<?php echo parent::link(array("action"=>"newForm")); ?>");
+        });
+        </script>
+        <?php
+    }
+    
+    function printListTablesTabs () {
+        ?>
+        <div class="editFormsPanel">
+            <div class="editFormsTabs">
+                <ul>
+                    <li><a href="#editFormsTab"><?php echo parent::getTranslation("data.forms.tab.list.label"); ?></a></li>
+                </ul>
+                <div id="editFormsTab">
+                    <?php $this->printListTablesView(); ?>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $(".editFormsPanel .editFormsTabs").tabs();
+        </script>
+        <?php
+    }
 
+    function printNewFormTabs () {
+        ?>
+        <div class="editFormsPanel">
+            <div class="editFormsTabs">
+                <ul>
+                    <li><a href="#editFormsTab"><?php echo parent::getTranslation("data.forms.tab.list.label"); ?></a></li>
+                    <li><a href="#createFormTab"><?php echo parent::getTranslation("data.forms.tab.create.label"); ?></a></li>
+                </ul>
+                <div id="editFormsTab">
+                    <?php $this->printListTablesView(); ?>
+                </div>
+                <div id="createFormTab">
+                    <?php $this->printNewFormView(); ?>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $(".editFormsPanel .editFormsTabs").tabs({
+            active : 1
+        });
+        </script>
+        <?php
+    }
 }
 
 

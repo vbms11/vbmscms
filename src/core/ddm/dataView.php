@@ -1,7 +1,8 @@
 <?php
 
-require_once 'core/ddm/dataModel.php';
 require_once 'core/util/common.php';
+require_once 'core/ddm/dataModel.php';
+require_once 'core/ddm/formEditorWrapper.php';
 
 class DynamicDataView {
 
@@ -53,9 +54,57 @@ class DynamicDataView {
                     NavigationModel::redirect($backLink);
                     break;
                 case "ddmSaveFeilds":
+                    
+                    if (!isset($_POST['formEditorValue']))
+                        break;
+                    
+                    $formItems = json_decode($_POST['formEditorValue']);
+                    
+                    if (empty($formItems))
+                        break;
+                    
+                    // find columns that have been deleted
                     foreach ($columns as $column) {
-                        VirtualDataModel::updateColumn($column->id,$_POST["name_".$column->id],$_POST["edittype_".$column->id],null,null,$_POST["description_".$column->id],isset($_POST["required_".$column->id]) ? "1" : "0");
+                        $columnDeleted = true;
+                        foreach ($formItems as $formItem) {
+                            if ($formItem['id'] == $column->id)
+                                $columnDeleted = false;
+                        }
+                        if ($columnDeleted) {
+                            VirtualDataModel::deleteColumn($tableId, $column->name);
+                        }
                     }
+                    
+                    // save columns
+                    $position = 0;
+                    foreach ($formItems as $formItem) {
+                        
+                        $position++;
+                        $newColumn = true;
+                        foreach ($columns as $column) {
+                            if ($formItem['id'] == $column->id)
+                                $newColumn = false;
+                        }
+                        
+                        $id = $formItem["id"];
+                        $value = $formItem["value"];
+                        $label = $formItem["label"];
+                        $required = $formItem["required"];
+                        $name = $formItem["inputName"];
+                        $minLength = $formItem["minLength"] === "" ? null : $formItem["minLength"];
+                        $maxLength = $formItem["maxLength"] === "" ? null : $formItem["maxLength"];
+                        $description = $formItem["description"];
+                        $validator = FormEditorWrapper::formItemValidatorTovalidator($formItem["validator"]);
+                        $editType = FormEditorWrapper::formItemTypeToeditType($formItem["typeName"]);
+                        
+                        if ($newColumn) {
+                            VirtualDataModel::addColumn ($tableId, $name, $editType, $validator, $position, $label, $description, $minLength, $maxLength, $required, $value);
+                        } else {
+                            VirtualDataModel::updateColumn($id, $name, $editType, $validator, $position, $description, $required, $label, $minLength, $maxLength, $value);
+                        }
+                    }
+                    
+                    NavigationModel::redirect($backLink);
                     break;
                 case "ddmDeleteFeild":
                     VirtualDataModel::deleteColumn($tableId,$_GET["ddmId"]);
@@ -161,122 +210,40 @@ class DynamicDataView {
     static function displayRelation ($rootObjectId) {
 
     }
-
+    
     static function configureObject ($tableId,$backLink,$continueLink) {
-
-        $columns = VirtualDataModel::getColumns($tableId);
-        $first = true;
         
+        Context::addRequiredScript("resource/js/formEditor/formEditor.js");
+        Context::addRequiredStyle("resource/js/formEditor/formEditor.css");
+        
+        $columns = VirtualDataModel::getColumns($tableId);
+        $formItems = FormEditorWrapper::columnsToFormItemConfig($columns);
+        $formItemsJson = json_encode($formItems);
         ?>
-        <form method="post" id="userAttribs" action="<?php echo NavigationModel::modifyLink($continueLink, array("ddmAction"=>"ddmSaveFeilds")); ?>">
-            <div style="text-align:right;">
-                <button class="save" href="">Save</button>
-                <button class="newattrib">Add Attribute</button>
-                <button class="reset">Reset</button>
+        <div class="configureObject">
+            <div class="formEditor"></div>
+            <div class="formEditorValue">
+                <form method="post" action="<?php echo NavigationModel::modifyLink($continueLink, array("ddmAction"=>"ddmSaveFeilds")); ?>">
+                    <input type="hidden" name="formEditorValue" value="<?php echo Common::htmlEscape($formItemsJson); ?>">
+                </form>
             </div>
-            <?php
-            if (!Common::isEmpty($columns) && count($columns) > 0) {
-                ?>
-                <br/>
-                <table width="100%"><tr>
-                    <td class="expand nowrap">Attribute Name</td>
-                    <td class="nowrap">Edit Type</td>
-                    <td class="nowrap">Value</td>
-                    <td class="contract" colspan="4" align="center">Tool</td>
-                    <?php
-                    foreach ($columns as $column) {
-                        ?>
-                        <tr valign="top">
-                        <td><input class="expand" name="name_<?php echo $column->id; ?>" value="<?php echo $column->name; ?>" /></td>
-                        <td>
-                            <?php
-                            InputFeilds::printSelect("edittype_".$column->id, $column->edittype, array(
-                                    XDataModel::$dm_type_text=>"textfield",
-                                    XDataModel::$dm_type_textbox=>"textbox",
-                                    XDataModel::$dm_type_date=>"date",
-                                    XDataModel::$dm_type_boolean=>"boolean",
-                                    XDataModel::$dm_type_freetext=>"freetext",
-                                    XDataModel::$dm_type_dropdown=>"dropdown"
-                                ), "width:100px");
-                            ?>
-                        </td><td>
-                            <?php InputFeilds::printTextArea("description_".$column->id, $column->description); ?>
-                        </td><td>
-                            <?php InputFeilds::printCheckbox("required_".$column->id, $column->required); ?>
-                        </td>
-                        <td><a href="<?php echo NavigationModel::modifyLink($continueLink, array("ddmAction"=>"ddmDown","ddmId"=>$column->id)); ?>"><img src="resource/img/movedown.png" class="imageLink" alt="" /></a></td>
-                        <td><a href="<?php echo NavigationModel::modifyLink($continueLink, array("ddmAction"=>"ddmUp","ddmId"=>$column->id)); ?>"><img src="resource/img/moveup.png" class="imageLink" alt="" /></a></td>
-                        <td><img src="resource/img/delete.png" class="imageLink" alt="" onclick="doIfConfirm('Wollen Sie wirklich diese Zeile l&ouml;schen?','<?php echo NavigationModel::modifyLink($continueLink, array("ddmAction"=>"ddmDeleteFeild","ddmId"=>$column->name), false); ?>');" /></td>
-                        </tr>
-                        <?php
-                    }
-                    
-                    ?>
-                </table>
-                <br/>
-                <div style="text-align:right;">
-                    <button class="save" href="">Save</button>
-                    <button class="newattrib">Add Attribute</button>
-                    <button class="reset">Reset</button>
-                </div>
-                <?php
-            } 
-            ?>
-        </form>
-
-        <div id="dialog-form-attribute" title="Create new attribute">
-            <?php
-            InfoMessages::printInfoMessage("Specify the name and edit type for the attribute that you would like to add!");
-            ?>
-            <br/>
-            <form method="post" id="createAttrib" action="<?php echo NavigationModel::modifyLink($continueLink, array("ddmAction"=>"ddmAddAttribute")); ?>">
-                <input type="hidden" name="tableId" value="<?php echo $tableId; ?>"/>
-                <table width="100%"><tr>
-                    <td class="nowrap">Attribute Name: </td>
-                    <td class='expand'><input class="expand" type="text" name="name" value="" /></td>
-                </tr><tr>
-                    <td class="nowrap">Edit Type: </td>
-                    <td class='expand'>
-                    <?php
-                        InputFeilds::printSelect("editType", null, array(
-                            XDataModel::$dm_type_text=>"textfield",
-                            XDataModel::$dm_type_textbox=>"textbox",
-                            XDataModel::$dm_type_date=>"date",
-                            XDataModel::$dm_type_boolean=>"boolean",
-                            XDataModel::$dm_type_freetext=>"freetext",
-                            XDataModel::$dm_type_dropdown=>"dropdown"
-                        ));
-                    ?>
-                    </td>
-                </tr></table>
-            </form>
+            <div class="alignRight">
+                <button class="save">Save</button>
+                <button class="reset">Reset</button>
+                <button class="cancel">Cancel</button>
+            </div>
         </div>
         <script type="text/javascript">
-            
-        $("button").button();
-        
-        $(".reset").click(function(event) {
-            callUrl("<?php echo NavigationModel::modifyLink($continueLink, array(), false); ?>");
+        $(".formEditor").formEditor({"optionsLocation":"right","json":"<?php echo Common::htmlEscape($formItemsJson); ?>"});
+        $(".configureObject .alignRight button").button();
+        $(".configureObject .alignRight save").click(function(){
+            $("configureObject .formEditorValue input[name=formEditorValue]").val($(".formEditor").formEditor().toJson());
         });
-        $(".newattrib").click(function(e) {
-            $("#dialog-form-attribute").dialog("open");
-            e.preventDefault();
+        $(".configureObject .alignRight reset").click(function () {
+            $(".formEditor").formEditor().fromJson($("configureObject .formEditorValue input[name=formEditorValue]").val());
         });
-        $(".save").click(function(event) {
-            $("#userAttribs").submit();
-        });
-        $("#dialog-form-attribute").dialog({
-            height: 300, width: 350,
-            modal: true, autoOpen: false,
-            show: "blind", hide: "explode",
-            buttons: {
-                "Create Attribute": function() {
-                    $("#createAttrib").submit();
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
+        $(".configureObject .alignRight save").click(function () {
+            callUrl("<?php echo $backLink; ?>");
         });
         </script>
         <?php

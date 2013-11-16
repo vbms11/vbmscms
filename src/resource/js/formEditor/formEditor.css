@@ -1,73 +1,5 @@
 
-html *
-{
-   font-size: 1em !important;
-   color: #000;
-   font-family: Arial, san-serif !important;
-}
-
-body {
-	margin:0px;
-	padding:0px;
-}
-
-ul li ol {
-	margin: 0px;
-	padding: 0px;
-}
-
-
-/* layout */
-
-div.formEdit_left {
-    width: 275px;
-    min-height: 200px;
-}
-
-div.formEdit_center {
-    min-height: 200px;
-}
-
-td.formEdit_left {
-    width: 1%;
-    vertical-align: top;
-}
-
-td.formEdit_center {
-    width: 99%;
-    vertical-align: top;
-}
-
-.tabs {
-	
-}
-
-#tab_feilds div div {
-    margin-bottom: 5px;
-}
-
-.tabs ul, .tabs li, .tabs ol {
-	margin:0px;
-	padding:0px;
-}
-.ui-state-highlight {
-    height:25px;
-}
-
-#formEdit_tabsLeft {
-}
-#formEdit_tabsCenter {
-	
-}
-.formItemDrag {
-	width: 100%;
-}
-.formEdit_center .form_margin {
-	min-height: 400px;
-}
-
-
-/* parts of the form edit */
+/* parts of the form items */
 
 .formItemPanel {
 	min-height:20px;
@@ -94,11 +26,67 @@ td.formEdit_center {
 	width:100%;
 }
 
+/* form item types */
 
+.formItemTypeCheckbox {
+}
+.formItemTypeCheckbox .formItemInput, .formItemTypeCheckbox .formItemLabel {
+    display: inline;
+}
+.formItemTypeCheckbox input[type=checkbox] {
+    margin-left: 20px;
+    width: 1%;
+}
+
+
+
+/* form editor layout */
+
+div.formEditOptions {
+    width: 275px;
+    min-height: 200px;
+}
+
+div.formEdit_center {
+    min-height: 200px;
+}
+
+td.formEditOptions {
+    width: 1%;
+    vertical-align: top;
+}
+
+td.formEdit_center {
+    width: 99%;
+    vertical-align: top;
+}
+
+#tab_feilds div div {
+    margin-bottom: 5px;
+}
+
+.ui-state-highlight {
+    height:25px;
+}
+
+#formEdit_tabsLeft {
+}
+
+#formEdit_tabsCenter {
+}
+
+.formItemDrag {
+    width: 100%;
+}
+.formPanel, .tabs_margin, .tab_options_margin {
+    min-height: 400px;
+}
 
 .formItemSelected {
 	border: 1px dashed blue;
 }
+
+/* attributes */
 
 .formEditorAttribsTable {
 	width:100%;	

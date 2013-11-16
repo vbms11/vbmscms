@@ -130,6 +130,13 @@ abstract class XDataModel {
     public static $dm_type_freetext = 9;
     public static $dm_type_dropdown = 10;
     
+    public static $dm_validator_none = 1;
+    public static $dm_validator_text = 2;
+    public static $dm_validator_alphabetic = 3;
+    public static $dm_validator_numeric = 4;
+    public static $dm_validator_email = 5;
+    
+    
     abstract static function install ();
     
     // tables

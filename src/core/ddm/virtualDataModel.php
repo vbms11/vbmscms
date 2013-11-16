@@ -28,10 +28,25 @@ class VirtualDataModel extends XDataModel   {
     }
     
     // columns
-    static function addColumn ($tableName, $columnName, $editType, $validator = null, $position=null) {
+    static function addColumn ($tableName, $columnName, $editType, $validator = null, $position=null, $label = "", $description = "", $minLength = null, $maxLength = null, $required = "0", $value = "") {
+        
         $tableName = mysql_real_escape_string($tableName);
         $columnName = mysql_real_escape_string($columnName);
         $editType = mysql_real_escape_string($editType);
+        $label = mysql_real_escape_string($label); 
+        $description = mysql_real_escape_string($description);
+        $required = mysql_real_escape_string($required);
+        $value = mysql_real_escape_string($value);
+        if ($minLength == null) {
+            $minLength = "null";
+        } else {
+            $minLength = "'".mysql_real_escape_string($minLength)."'";
+        }
+        if ($maxLength == null) {
+            $maxLength = "null";
+        } else {
+            $maxLength = "'".mysql_real_escape_string($maxLength)."'";
+        }
         if ($validator == null) {
             $validator = "null";
         } else {
@@ -42,9 +57,12 @@ class VirtualDataModel extends XDataModel   {
         } else {
             $position = VirtualDataModel::getNexColumnPosition($tableName);
         }
-        Database::query("insert into t_vdb_column (tableid,name,edittype,position) values ((select id from t_vdb_table where name = '$tableName'),'$columnName','$editType','$position')");
+        Database::query("insert into t_vdb_column 
+            (tableid,name,edittype,position,label,description,required,minlength,maxlength,value,validator) 
+            values ((select id from t_vdb_table where name = '$tableName'),'$columnName','$editType','$position','$label','$description','$required',$minLength,$maxLength,'$value',$validator)");
     }
     static function deleteColumn ($tableName, $columnName) {
+        
         $tableName = mysql_real_escape_string($tableName);
         $columnName = mysql_real_escape_string($columnName);
         // delete values this column has
@@ -53,14 +71,31 @@ class VirtualDataModel extends XDataModel   {
         Database::query("delete from t_vdb_column where tableid = (select t.id from t_vdb_table t where t.name = '$tableName') and name = '$columnName'") or die(mysql_error());
         
     }
-    static function updateColumn ($id, $columnName, $editType, $validator=null, $position=null, $description="",$required="0") {
+    static function updateColumn ($id, $columnName, $editType, $validator=null, $position=null, $description="", $required="0", $label = "",  $minLength = null, $maxLength = null, $value = "") {
+        
         $columnName = mysql_real_escape_string($columnName);
         $editType = mysql_real_escape_string($editType);
         $id = mysql_real_escape_string($id);
-        $column = VirtualDataModel::getColumn(null, $columnName);
         $description = mysql_real_escape_string($description);
         $required = mysql_real_escape_string($required);
-        Database::query("update t_vdb_column set name = '$columnName', edittype = '$editType', description = '$description', required = '$required' where id = '$id'");
+        $label = mysql_real_escape_string($label);
+        $value = mysql_real_escape_string($value);
+        if ($minLength == null) {
+            $minLength = "null";
+        } else {
+            $minLength = "'".mysql_real_escape_string($minLength)."'";
+        }
+        if ($maxLength == null) {
+            $maxLength = "null";
+        } else {
+            $maxLength = "'".mysql_real_escape_string($maxLength)."'";
+        }
+        if ($validator == null) {
+            $validator = "null";
+        } else {
+            $validator = "'".mysql_real_escape_string($validator)."'";
+        }
+        Database::query("update t_vdb_column set name = '$columnName', edittype = '$editType', description = '$description', required = '$required', label = '$label', value = '$value', minlength = $minLength, maxlength = $maxLength, validator = $validator where id = '$id'");
     }
     static function getColumns ($tableName) {
         $tableName = mysql_real_escape_string($tableName);
@@ -76,6 +111,10 @@ class VirtualDataModel extends XDataModel   {
         $tableName = mysql_real_escape_string($tableName);
         $columnName = mysql_real_escape_string($columnName);
         return Database::queryAsObject("select c.* from t_vdb_column c where c.name = '$columnName' and c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName')");
+    }
+    static function getColumnById ($columnId) {
+        $columnId = mysql_real_escape_string($columnId);
+        return Database::queryAsObject("select c.* from t_vdb_column c where c.id = '$columnId'");
     }
     static function hasColumn ($tableName, $columnName) {
         $tableName = mysql_real_escape_string($tableName);
