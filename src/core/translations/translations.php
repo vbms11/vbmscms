@@ -213,6 +213,13 @@ $ar_translations = array(
 ,'data.forms.new.button.save'=>'data.forms.new.button.save'
 ,'data.forms.new.button.cancel'=>'data.forms.new.button.cancel'
 ,'data.forms.new.name'=>'data.forms.new.name'
+,'admin.pages.menu.label.name'=>'admin.pages.menu.label.name'
+,'admin.messages.tab.new'=>'admin.messages.tab.new'
+,'admin.messages.tab.old'=>'admin.messages.tab.old'
+,'admin.messages.tab.view'=>'admin.messages.tab.view'
+,'admin.messages.button.back'=>'admin.messages.button.back'
+,'admin.messages.button.delete'=>'admin.messages.button.delete'
+,'admin.messages.button.marknew'=>'admin.messages.button.marknew'
 ),'de'=>array(
 'login.email'=>'Geben sie eine Emailadresse ein:'
 ,'login.reset'=>'Passwort zur&uuml;cksetzen'
@@ -426,5 +433,12 @@ $ar_translations = array(
 ,'data.forms.new.button.save'=>'data.forms.new.button.save'
 ,'data.forms.new.button.cancel'=>'data.forms.new.button.cancel'
 ,'data.forms.new.name'=>'data.forms.new.name'
+,'admin.pages.menu.label.name'=>'admin.pages.menu.label.name'
+,'admin.messages.tab.new'=>'admin.messages.tab.new'
+,'admin.messages.tab.old'=>'admin.messages.tab.old'
+,'admin.messages.tab.view'=>'admin.messages.tab.view'
+,'admin.messages.button.back'=>'admin.messages.button.back'
+,'admin.messages.button.delete'=>'admin.messages.button.delete'
+,'admin.messages.button.marknew'=>'admin.messages.button.marknew'
 )); 
 ?>

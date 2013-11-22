@@ -220,6 +220,12 @@ class VirtualDataModel extends XDataModel   {
         Database::query("delete from t_vdb_value where objectid = '$objectId'");
         Database::query("delete from t_vdb_object where id = '$objectId'");
     }
+    static function setRowViewed ($tableName, $objectId, $viewed = '1') {
+        $tableName = mysql_real_escape_string($tableName);
+        $objectId = mysql_real_escape_string($objectId);
+        $viewed = mysql_real_escape_string($viewed);
+        Database::query("update t_vdb_object set viewed = '$viewed' where id = '$objectId'");
+    }
     static function updateRow ($tableName, $objectId, $rowNamesValues) {
         $objectId = mysql_real_escape_string($objectId);
         $table = VirtualDataModel::getTable($tableName);
@@ -255,19 +261,57 @@ class VirtualDataModel extends XDataModel   {
                 where c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName') 
                 order by v.objectid");
         $ret = array(); $row; $lastObjectId = null;
-        foreach ($result as $obj) {
-            if ($lastObjectId != null && $obj->objectid != $lastObjectId) {
-                $lastObjectId = $obj->objectId;
-                $ret[] = $row;
-                unset($row);
-            }
-            $lastObjectId = $obj->objectid;
-            $row->$obj->name = $obj->value;
-        }
         if (count($result) > 0) {
+            foreach ($result as $obj) {
+                if ($lastObjectId != null && $obj->objectid != $lastObjectId) {
+                    $lastObjectId = $obj->objectId;
+                    $ret[] = $row;
+                    unset($row);
+                }
+                $lastObjectId = $obj->objectid;
+                $row->$obj->name = $obj->value;
+            }
             $ret[] = $row;
         }
         return $ret;
+    }
+    static function getCountViewed ($viewed) {
+        $viewed = mysql_real_escape_string($viewed);
+        $result = Database::queryAsObject(
+            "SELECT count(*) as count
+            FROM t_vdb_object o
+            WHERE o.viewed = '$viewed'");
+        return $result->count;
+    }
+    static function getRowsViewed ($tableName,$viewed) {
+        $viewed = mysql_real_escape_string($viewed);
+        $tableName = mysql_real_escape_string($tableName);
+        $result = Database::queryAsArray(
+            "SELECT v.value, c.name, v.objectid, o.viewed
+            FROM t_vdb_object o
+            JOIN t_vdb_value v on v.objectid = o.id
+            JOIN t_vdb_column c ON v.columnid = c.id
+            WHERE c.tableid = (
+                SELECT t.id
+                FROM t_vdb_table t
+                WHERE t.name = '$tableName')
+            and o.viewed = '$viewed'
+            ORDER BY o.id");
+        $ret = array(); $row = array();
+        if (count($result) > 0) {
+            foreach ($result as $obj) {
+                if (isset($row['objectid']) && $obj->objectid != $row['objectid']) {
+                    $ret[] = $row;
+                    unset($row);
+                    $row = array();
+                }
+                $row['objectid'] = $obj->objectid;
+                $row[$obj->name] = $obj->value;
+            }
+            $ret[] = $row;
+        }
+        return $ret;
+
     }
     static function getAllRowsAsArray ($tableName) {
         $tableName = mysql_real_escape_string($tableName);
@@ -278,18 +322,20 @@ class VirtualDataModel extends XDataModel   {
                 where c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName') 
                 order by v.objectid");
         $ret = array(); $row = array(); $lastObjectId = null;
-        foreach ($result as $obj) {
-            if ($lastObjectId != null && $obj->objectid != $lastObjectId) {
-                $row['objectid'] = $lastObjectId;
+        if (count($result) > 0) {
+            foreach ($result as $obj) {
+                if ($lastObjectId != null && $obj->objectid != $lastObjectId) {
+                    $row['objectid'] = $lastObjectId;
+                    $lastObjectId = $obj->objectid;
+                    $ret[] = $row;
+                    unset($row);
+                    $row = array();
+                }
                 $lastObjectId = $obj->objectid;
-                $ret[] = $row;
-                unset($row);
-                $row = array();
+                $row[$obj->name] = $obj->value;
             }
-            $lastObjectId = $obj->objectid;
-            $row[$obj->name] = $obj->value;
+            $ret[] = $row;
         }
-        $ret[] = $row;
         return $ret;
     }
     static function getRowByObjectId ($tableName, $objectId) {

@@ -370,13 +370,14 @@ class AdminMenuModule extends XModule {
     }
     
     function printAccountMenu () {
+        $countNewMessages = VirtualDataModel::getCountViewed('0');
         ?>
         <div class="adminMenuAccountDiv">
             <ul>
                 <li id="adminSites"><a href=""><?php echo parent::getTranslation("admin.menu.account.sites"); ?></a></li>
                 <li id="adminDomains"><a href=""><?php echo parent::getTranslation("admin.menu.account.domains"); ?></a></li>
                 <li id="adminPackage"><a href=""><?php echo parent::getTranslation("admin.menu.account.package"); ?></a></li>
-                <li id="adminMessages"><a href=""><?php echo parent::getTranslation("admin.menu.account.messages"); ?></a></li>
+                <li id="adminMessages"><a href=""><?php echo parent::getTranslation("admin.menu.account.messages"); ?> (<?php echo $countNewMessages; ?>)</a></li>
                 <li id="adminForms">
                     <a href=""><?php echo parent::getTranslation("admin.menu.account.forms"); ?></a>
                 </li>

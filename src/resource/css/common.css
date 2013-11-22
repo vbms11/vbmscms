@@ -171,6 +171,9 @@ formActionsToolbar button {
 .resultTable tbody td {
     background: #f0f0f0;
 }
+.resultTable tbody tr:hover td {
+    background: url('../img/common/grad_vert.gif') repeat-x;
+}
 
 
 

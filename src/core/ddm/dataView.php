@@ -281,32 +281,32 @@ class DynamicDataView {
         $columns = VirtualDataModel::getColumns($tableId);
         $numAttribs = count($columns);
         ?>
-        <table width="100%" cellspacing="5">
+        <table width="100%" class="formTable">
             <?php
             for ($i=0; $i<$numAttribs; $i++) {
                 $value = "";
                 ?>
                 <tr>
                 <?php
-                $name = str_replace(" ", "_", $columns[$i]->name);
+                $name = str_replace(" ", "_", $columns[$i]->label);
                 switch ($columns[$i]->edittype) {
                     case XDataModel::$dm_type_text:
                         ?>
-                        <td class="formLabel" style="vertical-align: top; text-align: right;"><?php echo $columns[$i]->name." : "; if ($columns[$i]->required == "1") { echo "<span style='color:red;'> * </span>"; }?></td>
-                        <td class="expand">
+                        <td><?php echo $columns[$i]->name." : "; if ($columns[$i]->required == "1") { echo "<span style='color:red;'> * </span>"; }?></td>
+                        <td>
                         <input type="text" name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="expand" value="<?php echo htmlentities($value, ENT_QUOTES); ?>"/>
                         <?php
                         break;
                     case XDataModel::$dm_type_textbox:
                         ?>
-                        <td class="formLabel" style="vertical-align: top; text-align: right;"><?php echo $columns[$i]->name; ?>: </td>
-                        <td class="expand">
+                        <td><?php echo $columns[$i]->name; ?>: </td>
+                        <td>
                         <textarea name="<?php echo $name; ?>" id="<?php echo $name; ?>" rows="3" cols="6" class="expand"><?php echo htmlentities($value, ENT_QUOTES); ?></textarea><?php
                         break;
                     case XDataModel::$dm_type_date:
                         ?>
-                        <td class="formLabel" style="vertical-align: top; text-align: right;"><?php echo $columns[$i]->name; ?>: </td>
-                        <td class="expand">
+                        <td><?php echo $columns[$i]->name; ?>: </td>
+                        <td>
                         <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="text" class="expand" value="<?php echo htmlentities($value, ENT_QUOTES); ?>"/>
                         <script>
                         $("#<?php echo $name; ?>").datepicker();
@@ -317,7 +317,7 @@ class DynamicDataView {
                     case XDataModel::$dm_type_boolean:
                         ?>
                         <td></td>
-                        <td class="expand">
+                        <td>
                         <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="checkbox" value="1" <?php if ($value == "1") { echo "checked='true'"; } ?> /><?php
                         echo $columns[$i]->name;
                         break;
@@ -331,14 +331,14 @@ class DynamicDataView {
                         break;
                     case XDataModel::$dm_type_freetext:
                         ?>
-                        <td colspan="2" class="expand">
+                        <td colspan="2">
                         <?php
                         InfoMessages::printFreetextbox($columns[$i]->description);
                         break;
                     case XDataModel::$dm_type_dropdown:
                         ?>
-                        <td class="formLabel" style="vertical-align: top; text-align: right;"><?php echo $columns[$i]->name; ?>: </td>
-                        <td class="expand">
+                        <td><?php echo $columns[$i]->name; ?>: </td>
+                        <td>
                         <?php
                         $values = Common::toMap(explode(PHP_EOL, $columns[$i]->description));
                         InputFeilds::printSelect($name, null, $values);
