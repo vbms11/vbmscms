@@ -169,10 +169,12 @@ class PagesModel {
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
-            where p.id = '$id'";
+            where ";
         if ($checkName != null) {
             $checkName = mysql_real_escape_string($checkName);
-            $query .= " and c.value = '$checkName' ";
+            $query .= "c.value = '$checkName' ";
+        } else {
+            $query .= "p.id = '$id'";
         }
         if ($roles) {
             $query .= " and p.id in (

@@ -131,9 +131,6 @@ class Common {
             if ($k < $ignore) {
                 continue;
             }
-            array_walk($v['args'], function (&$item, $key) {
-                $item = var_export($item, true);
-            });
             $trace .= '#' . ($k - $ignore) . ' ' . $v['file'] . '(' . $v['line'] . '): ' . (isset($v['class']) ? $v['class'] . '->' : '') . $v['function'] . '(' . implode(', ', $v['args']) . ')' . PHP_EOL;
         }
         return $trace;

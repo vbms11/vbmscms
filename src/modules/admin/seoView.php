@@ -37,7 +37,7 @@ class SeoView extends XModule {
         echo "Allow: /".PHP_EOL;
         echo "dissallow: /core/*".PHP_EOL;
         echo "dissallow: /logs/*".PHP_EOL;
-        echo "Sitemap: ".NavigationModel::getSitePath()."sitemap.xml".PHP_EOL;
+        echo "Sitemap: ".NavigationModel::getSitePath()."/"."sitemap.xml".PHP_EOL;
     }
     
     function renderSitemapXml () {
@@ -55,29 +55,19 @@ class SeoView extends XModule {
     }
     
     function printMenuSitemap ($menu) {
-        /*
         foreach ($menu as $page) {
 ?>
-    <url>
-        <loc><?php echo NavigationModel::getSitePath().NavigationModel::createPageNameLink($page->page->name,$page->page->id,array(),false); ?></loc>
-        <lastmod>2012-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
+<url>
+    <loc><?php echo NavigationModel::getSitePath()."/".NavigationModel::createPageNameLink($page->page->name,$page->page->id); ?></loc>
+    <lastmod><?php echo date('Y-m-dTH:i:sP', strtotime($page->page->modifydate)); ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+</url>
 <?php
             if (isset($page->children)) {
-                $this->printMenuSitemap($page->children);
+                $this->printMenuSitemap ($page->children);
             }
         }
-        */
-?>
-    <url>
-        <loc><?php echo NavigationModel::getSitePath(); ?></loc>
-        <lastmod>2012-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>1.0</priority>
-    </url>
-<?php
     }
 
     static function renderRssXml () {

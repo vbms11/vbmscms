@@ -179,11 +179,11 @@ class TemplateParser {
     function renderModule ($module) {
         switch ($module->scope) {
             case "static":
-                Context::getRenderer()->renderStaticModule($module->type, $module->name);
+                Context::getRenderer()->renderStaticModule($module->moduleType, $module->name, null, true);
                 break;
             case "instance":
             default;
-                Context::getRenderer()->renderInstanceModule($module->type, $module->name);
+                Context::getRenderer()->renderInstanceModule($module->moduleType, $module->name, null, true);
                 break;
             default;
         }
@@ -237,6 +237,11 @@ class TemplateParser {
                         if ($area->scope != "static") {
                             break;
                         }
+                        $this->staticModules[] = array(
+                            "name" => $area->name,
+                            "type" => $area->moduleType
+                        );
+                        break;
                     case "menu":
                     default:
                         $this->staticModules[] = array(

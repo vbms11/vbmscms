@@ -93,8 +93,8 @@ class TemplateRenderer extends BaseRenderer {
      * @param <type> $moduleName
      * @param <type> $areaName
      */
-    function renderStaticModule ($moduleSysName, $areaName = null, $pageId = null) {
-        $this->renderModule($moduleSysName,$areaName,true,$pageId,true);
+    function renderStaticModule ($moduleSysName, $areaName = null, $pageId = null, $contextMenu = false) {
+        $this->renderModule($moduleSysName,$areaName,true,$pageId,true,$contextMenu);
     }
     
     /**
@@ -116,7 +116,7 @@ class TemplateRenderer extends BaseRenderer {
      * @param type $pageId
      * @param type $targetOnly
      */
-    function renderModule ($moduleType, $areaName = null, $static = false, $pageId = null, $targetOnly = false) {
+    function renderModule ($moduleType, $areaName = null, $static = false, $pageId = null, $targetOnly = false, $contextMenu = false) {
         if (empty($pageId)) {
             $pageId = Context::getPageId();
         }
@@ -147,7 +147,7 @@ class TemplateRenderer extends BaseRenderer {
         // render area with module in it
         echo "<div id='vcms_area_$areaName' >";
         if ($targetOnly) {
-            ModuleModel::renderModuleObject($targetModule, false);
+            ModuleModel::renderModuleObject($targetModule, $contextMenu);
         } else {
             foreach ($modules as $areaModules) {
                 foreach ($areaModules as $areaModule) {
@@ -219,6 +219,19 @@ class TemplateRenderer extends BaseRenderer {
         foreach (Context::getRequiredScripts() as $script) {
             echo '<script type="text/javascript" src="'.$script.'" ></script>'.PHP_EOL.'        ';
         }
+        
+        ?>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-45809764-1', 'vbmscode.com');
+  ga('send', 'pageview');
+
+</script>
+        <?php
     }
     
     function renderTrackerScript ($page) {
