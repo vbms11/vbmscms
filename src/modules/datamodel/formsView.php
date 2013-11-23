@@ -251,13 +251,10 @@ class FormsView extends XModule {
                     }
                     ?>
                     <div style="text-align:right;">
-                        <button type="submit" onclick="return validateForm(<?php echo DynamicDataView::renderValidateJs($form); ?>);">Absenden</button>
+                        <button class="jquiButton" type="submit" onclick="return validateForm(<?php echo DynamicDataView::renderValidateJs($form); ?>);">Absenden</button>
                     </div>
                 </form>
             </div>
-            <script>
-            $(".panel button").button();
-            </script>
             <?php
             
         }

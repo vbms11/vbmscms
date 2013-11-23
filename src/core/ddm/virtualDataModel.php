@@ -278,9 +278,10 @@ class VirtualDataModel extends XDataModel   {
     static function getCountViewed ($viewed) {
         $viewed = mysql_real_escape_string($viewed);
         $result = Database::queryAsObject(
-            "SELECT count(*) as count
+            "SELECT count(o.id) as count 
             FROM t_vdb_object o
-            WHERE o.viewed = '$viewed'");
+            join t_vdb_table t on o.tableid = t.id
+            WHERE o.viewed = '$viewed' and t.system = '0'");
         return $result->count;
     }
     static function getRowsViewed ($tableName,$viewed) {

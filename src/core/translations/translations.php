@@ -220,6 +220,11 @@ $ar_translations = array(
 ,'admin.messages.button.back'=>'admin.messages.button.back'
 ,'admin.messages.button.delete'=>'admin.messages.button.delete'
 ,'admin.messages.button.marknew'=>'admin.messages.button.marknew'
+,'admin.menu.statistics.day'=>'Day'
+,'admin.menu.statistics.week'=>'Week'
+,'admin.menu.statistics.month'=>'Month'
+,'admin.menu.statistics.year'=>'Year'
+,'admin.statistics.tab.label'=>'Statistics'
 ),'de'=>array(
 'login.email'=>'Geben sie eine Emailadresse ein:'
 ,'login.reset'=>'Passwort zur&uuml;cksetzen'
@@ -440,5 +445,10 @@ $ar_translations = array(
 ,'admin.messages.button.back'=>'admin.messages.button.back'
 ,'admin.messages.button.delete'=>'admin.messages.button.delete'
 ,'admin.messages.button.marknew'=>'admin.messages.button.marknew'
+,'admin.menu.statistics.day'=>'admin.menu.statistics.day'
+,'admin.menu.statistics.week'=>'admin.menu.statistics.week'
+,'admin.menu.statistics.month'=>'admin.menu.statistics.month'
+,'admin.menu.statistics.year'=>'admin.menu.statistics.year'
+,'admin.statistics.tab.label'=>'admin.statistics.tab.label'
 )); 
 ?>

@@ -37,7 +37,7 @@ class SeoView extends XModule {
         echo "Allow: /".PHP_EOL;
         echo "dissallow: /core/*".PHP_EOL;
         echo "dissallow: /logs/*".PHP_EOL;
-        echo "Sitemap: ".NavigationModel::getSitePath()."/"."sitemap.xml".PHP_EOL;
+        echo "Sitemap: ".NavigationModel::getSitePath()."sitemap.xml".PHP_EOL;
     }
     
     function renderSitemapXml () {
@@ -58,7 +58,7 @@ class SeoView extends XModule {
         foreach ($menu as $page) {
 ?>
 <url>
-    <loc><?php echo NavigationModel::getSitePath()."/".NavigationModel::createPageNameLink($page->page->name,$page->page->id); ?></loc>
+    <loc><?php echo NavigationModel::getSitePath().NavigationModel::createPageNameLink($page->page->name,$page->page->id); ?></loc>
     <lastmod><?php echo date('Y-m-dTH:i:sP', strtotime($page->page->modifydate)); ?></lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>

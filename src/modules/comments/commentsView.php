@@ -200,11 +200,11 @@ class CommentsView extends XModule {
                         ?>
                         <div class="commentsHeader">
                             <?php echo parent::getTranslation("comments.name"); ?><br/>
-                            <input type="textbox" name="name" class="expand" value=""/>
+                            <input type="text" name="name" class="expand" value=""/>
                         </div>
                         <div class="commentsHeader">
                             <?php echo parent::getTranslation("comments.email"); ?><br/>
-                            <input type="textbox" name="email" class="expand" value=""/>
+                            <input type="text" name="email" class="expand" value=""/>
                         </div>
                         <?php
                     }
@@ -277,11 +277,11 @@ class CommentsView extends XModule {
                         ?>
                         <div class="commentsHeader">
                             <?php echo parent::getTranslation("comments.name"); ?><br/>
-                            <input type="textbox" name="name" class="expand" value="<?php echo $id != null ? Common::htmlEscape($comment->username) : ""; ?>" disabled="true"/>
+                            <input type="text" name="name" class="expand" value="<?php echo $id != null ? Common::htmlEscape($comment->username) : ""; ?>" disabled="true"/>
                         </div>
                         <div class="commentsHeader">
                             <?php echo parent::getTranslation("comments.email"); ?><br/>
-                            <input type="textbox" name="name" class="expand" value="<?php echo $id != null ? Common::htmlEscape($comment->email) : ""; ?>" disabled="true"/>
+                            <input type="text" name="name" class="expand" value="<?php echo $id != null ? Common::htmlEscape($comment->email) : ""; ?>" disabled="true"/>
                         </div>
                         <?php
                     }

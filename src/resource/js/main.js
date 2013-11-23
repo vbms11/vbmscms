@@ -10,6 +10,10 @@ $.each([
 */
 //window.setTimeout("if(Math.random()*10000%30<1){smefCms.ajax('s321870024.online.de?static=system&action=track&href'+escape(document.location.href));}", 1000);
 
+$(function(){
+    $(".jquiButton").button();
+});
+
 function jq_randomEffect () {
     var jq_effects = ["blind","bounce","clip","drop","explode","fade","fold",
         "highlight","puff","pulsate","scale","shake","size","slide","transfer"];

@@ -167,13 +167,10 @@ class LoginModule extends XModule {
                 <br/><br/>
                 <hr/>
                 <div style="text-align: right;">
-                    <button type="submit" name="login"><?php echo parent::getTranslation("login.logout"); ?></button>
-                    <button type="button" onclick="callUrl('<?php echo NavigationModel::createPageLink(); ?>');" name="cancel"><?php echo parent::getTranslation("login.cancel"); ?></button>
+                    <button type="submit" class="jquiButton" name="login"><?php echo parent::getTranslation("login.logout"); ?></button>
+                    <button type="button" class="jquiButton" onclick="callUrl('<?php echo NavigationModel::createPageLink(); ?>');" name="cancel"><?php echo parent::getTranslation("login.cancel"); ?></button>
                 </div>
             </form>
-            <script>
-            $("#loginForm button").button();
-            </script>
         </div>
         <?php
     }
@@ -182,25 +179,22 @@ class LoginModule extends XModule {
         ?>
         <div class="panel loginPanel">
             <form method="post" action="<?php echo parent::link(array("action"=>"login")); ?>">
-                <table width="100%"><tr><td class="contract">
+                <table width="100%" class="formTable"><tr><td>
                     <?php echo parent::getTranslation("login.username"); ?>
-                </td><td class="expand">
-                    <input class="textbox" type="textbox" name="username" />
-                </td></tr><tr><td class="contract">
+                </td><td>
+                    <input type="text" class="expand" name="username" />
+                </td></tr><tr><td>
                     <?php echo parent::getTranslation("login.password"); ?>
-                </td><td class="expand">
-                    <input class="textbox" type="password" name="password" />
+                </td><td>
+                    <input type="password" class="expand" name="password" />
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
-                    <button type="submit" id="login"><?php echo parent::getTranslation("login.login"); ?></button>
-                    <button type="button" id="register" onclick="callUrl('<?php echo parent::staticLink("register"); ?>');"><?php echo parent::getTranslation("login.register"); ?></button>
-                    <button type="button" id="forgot" onclick="callUrl('<?php echo parent::link(array("action"=>"forgot")); ?>');"><?php echo parent::getTranslation("login.reset"); ?></button>
+                    <button type="submit" class="jquiButton" id="login"><?php echo parent::getTranslation("login.login"); ?></button>
+                    <button type="button" class="jquiButton" id="register" onclick="callUrl('<?php echo parent::staticLink("register"); ?>');"><?php echo parent::getTranslation("login.register"); ?></button>
+                    <button type="button" class="jquiButton" id="forgot" onclick="callUrl('<?php echo parent::link(array("action"=>"forgot")); ?>');"><?php echo parent::getTranslation("login.reset"); ?></button>
                 </div>
             </form>
-            <script>
-            $(".loginPanel button").button();
-            </script>
         </div>
         <?php
     }

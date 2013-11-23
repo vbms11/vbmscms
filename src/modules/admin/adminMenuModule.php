@@ -102,7 +102,9 @@ class AdminMenuModule extends XModule {
             </div>
             <h3><?php echo parent::getTranslation("admin.menu.statistics"); ?></h3>
             <div>
-                <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
+                <?php
+                $this->printStatisticsMenu();
+                ?>
             </div>
         </div>
         <script>
@@ -130,7 +132,7 @@ class AdminMenuModule extends XModule {
                 case "productGroups":
                     $activeIndex = 4;
                     break;
-                case "adminStatistics":
+                case "statistics":
                     $activeIndex = 5;
                     break;
             }
@@ -285,6 +287,42 @@ class AdminMenuModule extends XModule {
                 if (data.rslt.obj.hasClass("adminNodeEditorModule")) {
                     var id = data.rslt.obj.attr("id").substring(7);
                     callUrl("<?php echo parent::staticLink("adminModules", array("action"=>"editModule","setAdminMode"=>"adminModules")); ?>&adminModuleId="+id+"&id="+id);
+                }
+            });
+        });
+        </script>
+        <?php
+    }
+    
+    function printStatisticsMenu () {
+        $statisticMode = parent::get("adminStatisticMode");
+        ?>
+        <div class="adminMenuStatisticsDiv">
+            <ul>
+                <li id="adminStatisticsDay"><a class = "<?php if ($statisticMode == "day") { echo "jstree-clicked"; } ?>" href=""><?php echo parent::getTranslation("admin.menu.statistics.day"); ?></a></li>
+                <li id="adminStatisticsWeek"><a class = "<?php if ($statisticMode == "week") { echo "jstree-clicked"; } ?>" href=""><?php echo parent::getTranslation("admin.menu.statistics.week"); ?></a></li>
+                <li id="adminStatisticsMonth"><a class = "<?php if ($statisticMode == "month") { echo "jstree-clicked"; } ?>" href=""><?php echo parent::getTranslation("admin.menu.statistics.month"); ?></a></li>
+                <li id="adminStatisticsYear"><a class = "<?php if ($statisticMode == "year") { echo "jstree-clicked"; } ?>" href=""><?php echo parent::getTranslation("admin.menu.statistics.year"); ?></a></li>
+            </ul>
+        </div>
+        <script>
+        $(function() {
+            $(".adminMenuStatisticsDiv").jstree({ 
+                "plugins" : ["themes","html_data","ui"] 
+            }).bind("select_node.jstree", function (event, data) {
+                switch (data.rslt.obj.attr("id")) {
+                    case "adminStatisticsDay":
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"day","adminStatisticMode"=>"day")); ?>");
+                        break;
+                    case "adminStatisticsWeek":
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"week","adminStatisticMode"=>"week")); ?>");
+                        break;
+                    case "adminStatisticsMonth":
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"month","adminStatisticMode"=>"month")); ?>");
+                        break;
+                    case "adminStatisticsYear":
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"year","adminStatisticMode"=>"year")); ?>");
+                        break;
                 }
             });
         });
