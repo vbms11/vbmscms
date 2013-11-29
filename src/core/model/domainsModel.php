@@ -32,15 +32,14 @@ class DomainsModel {
         return $_SERVER['HTTP_HOST'];
     }
     
+    static function getSubDomainUrl ($siteName) {
+        return $siteName.".".Config::getCmsMainDomain();
+    }
+    
     static function createDomain ($url,$siteId = 1) {
         $url = mysql_real_escape_string($url);
         $siteId = mysql_real_escape_string($siteId);
         Database::query("insert into t_domain (url,siteid) values ('$url','$siteId')");
-    }
-    
-    static function createSite ($siteName) {
-        $siteName = mysql_real_escape_string($siteName);
-        Database::query("insert into t_domain (name) values ('$siteName')");
         $result = Database::queryAsObject("select last_insert_id() as id from t_domain");
         return $result->id;
     }

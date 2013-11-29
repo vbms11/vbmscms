@@ -24,8 +24,15 @@ class SiteModel {
 	$name = mysql_real_escape_string($name);
         $description = mysql_real_escape_string($description);
         $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
+        // 
+        $defaultDomain = DomainsModel::getSubDomainUrl($name);
+        $piwikSiteId = PiwikModel::createSite($name, $defaultDomain);
+        
         Database::query("insert into t_site (name,cmscustomerid,description) values ('$name','$cmsCustomerId','$description')");
 	$result = Database::queryAsObject("select last_insert_id() as newid from t_site");
+        
+        DomainsModel::createDomain($defaultDomain, $result->newid);
+        
         return $result->newid;
     }
     

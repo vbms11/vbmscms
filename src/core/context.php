@@ -481,6 +481,10 @@ class Config {
     static function getShippingMode () {
         return $GLOBALS['shippingMode'];
     }
+    
+    static function getCmsMainDomain () {
+        return $GLOBALS['cmsMainDomain'];
+    }
 }
 
 

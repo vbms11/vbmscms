@@ -339,9 +339,8 @@ class Http {
         
     }
     
-    function getContent ($url) {
-        $urlHandel = fopen("r",$url);
-        // fread($handle, $length)
+    static function getContent ($url) {
+        return file_get_contents($url);
     }
     
 }

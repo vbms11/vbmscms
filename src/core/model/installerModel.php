@@ -32,7 +32,8 @@ class InstallerModel {
         $config .= '$GLOBALS[\'cmsVersion\'] = \'0.5\';'.PHP_EOL;
         $config .= '$GLOBALS[\'cmsLicese\'] = \'\';'.PHP_EOL;
         $config .= '$GLOBALS[\'cmsSecureLink\'] = true;'.PHP_EOL;
-
+        $config .= '$GLOBALS[\'cmsMainDomain\'] = \''.DomainsModel::getDomainName().'\'';
+        
         // crypto configs
         $config .= '$GLOBALS[\'serverSecret\'] = \'';
         $config .= InstallerModel::generateServerSecret();

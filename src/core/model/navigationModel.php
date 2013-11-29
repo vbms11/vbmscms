@@ -62,7 +62,6 @@ class NavigationModel {
 
     static function getSitePath () {
         return "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['SCRIPT_NAME']);
-        // .'/'
     }
     
     static function getFileUrl () {
