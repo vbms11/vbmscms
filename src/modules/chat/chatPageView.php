@@ -1,7 +1,7 @@
 <?php
 
 require_once("core/plugin.php");
-require_once("core/model/chatModel.php");
+require_once("modules/chat/chatModel.php");
 
 class ChatPageView extends XModule {
 

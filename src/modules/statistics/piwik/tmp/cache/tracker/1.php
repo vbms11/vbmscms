@@ -8,7 +8,7 @@ $content   = array (
   ),
   'hosts' => 
   array (
-    0 => 'vbmscode.com',
+    0 => 'vbmscode2.com',
   ),
   'excluded_ips' => 
   array (
@@ -36,6 +36,6 @@ $content   = array (
     0 => '',
   ),
 );
-$expires_on   = 1385303632;
+$expires_on   = 1387138922;
 $cache_complete   = true;
 ?>

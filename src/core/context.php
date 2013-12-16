@@ -8,35 +8,32 @@ class Context {
 
     // user attribs
 
-    static function setUser ($userId,$username) {
-        $_SESSION["userName"] = $username;
-        $_SESSION["userId"] = $userId;
-        $_SESSION["userLoggedin"] = true;
+    static function setUser ($user) {
+        $_SESSION["context.userName"] = $user->username;
+        $_SESSION["context.userId"] = $user->id;
+        $_SESSION["context.user"] = $user;
+        $_SESSION["context.userLoggedin"] = true;
         Session::setUserFromContext();
     }
     
     static function getUser () {
-        if (isset($_SESSION["context.user"]) && !empty($_SESSION["context.user"]))
-            return $_SESSION["context.user"];
-        return null;
+        return isset($_SESSION["context.user"]) ? $_SESSION["context.user"] : null;
     }
 
     static function getUsername () {
-        if (isset($_SESSION["userName"]) && !Common::isEmpty($_SESSION["userName"]))
-            return $_SESSION["userName"];
-        return null;
+        return isset($_SESSION["context.userName"]) ? $_SESSION["context.userName"] : null;
     }
 
     static function getUserId () {
-        if (isset($_SESSION["userId"]) && !Common::isEmpty($_SESSION["userId"]))
-            return $_SESSION["userId"];
-        return null;
+        return isset($_SESSION["context.userId"]) ? $_SESSION["context.userId"] : null;
     }
 
     static function getUserObjectId () {
-        if (isset($_SESSION["userObjectId"]) && !Common::isEmpty($_SESSION["userObjectId"]))
-            return $_SESSION["userObjectId"];
-        return null;
+        return isset($_SESSION["context.userObjectId"]) ? $_SESSION["context.userObjectId"] : null;
+    }
+    
+    static function isLoggedIn () {
+        return (isset($_SESSION["context.userLoggedin"]) && $_SESSION["context.userLoggedin"] == true) ? true : false;
     }
     
     static function getUserHome ($userId = null) {
@@ -61,10 +58,6 @@ class Context {
         return null;
     }
     
-    static function isLoggedIn () {
-        return (isset($_SESSION["userLoggedin"]) && $_SESSION["userLoggedin"] == true) ? true : false;
-    }
-
     // user roles
 
     static function getRoles () {
@@ -148,12 +141,13 @@ class Context {
     }
     
     static function clear () {
-        $_SESSION["userId"] = null;
-        $_SESSION["userName"] = null;
+        $_SESSION["context.userId"] = null;
+        $_SESSION["context.userName"] = null;
+        $_SESSION["context.user"] = null;
         $_SESSION["userRoles"] = array();
-        $_SESSION["userObjectId"] = null;
+        $_SESSION["context.userObjectId"] = null;
         $_SESSION["userRoleGroups"] = array();
-        $_SESSION["userLoggedin"] = false;
+        $_SESSION["context.userLoggedin"] = false;
     }
 
     // current request
@@ -217,6 +211,9 @@ class Context {
     static function getSiteId () {
         if (!isset($_SESSION["req.site"])) {
             $_SESSION["req.site"] = DomainsModel::getCurrentSite();
+        }
+        if (empty($_SESSION["req.site"])) {
+            return null;
         }
         return $_SESSION["req.site"]->siteid;
     }
@@ -484,6 +481,25 @@ class Config {
     
     static function getCmsMainDomain () {
         return $GLOBALS['cmsMainDomain'];
+    }
+    
+    static function getSeoUrl () {
+        if (isset($GLOBALS['seoUrl']) && $GLOBALS['seoUrl'] === true) {
+            return true;
+        }
+        return false;
+    }
+    
+    static function getPiwikUsername () {
+        return $GLOBALS['piwikUsername'];
+    }
+    
+    static function getPiwikPassword () {
+        return $GLOBALS['piwikPassword'];
+    }
+    
+    static function getAdminEmail () {
+        return $GLOBALS['cmsAdminEmail'];
     }
 }
 

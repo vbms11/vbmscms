@@ -94,19 +94,21 @@ class PagesModel {
      * returns a page object of the default page
      */
     static function getStaticPage ($_name,$_lang) {
-        $site = DomainsModel::getCurrentSite();
         $name = mysql_real_escape_string($_name);
         $lang = mysql_real_escape_string($_lang);
         $query = "select p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
             from t_page p
             left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
-            where p.code = '$name';
-                ";
+            where p.code = '$name'";
         $pageObj = Database::queryAsObject($query);
         
         // create page if it dose not exist
         if (empty($pageObj)) {
+            $site = DomainsModel::getCurrentSite();
+            if (empty($site)) {
+                $site->siteid = 1;
+            }
             $template = TemplateModel::getMainTemplate($site->siteid);
             $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
             $page = PagesModel::getPageTemplate($pageId, $_lang);
@@ -219,7 +221,12 @@ class PagesModel {
         $template = mysql_real_escape_string($template);
         $description = mysql_real_escape_string($description);
         $code = mysql_real_escape_string($code);
-        $siteId = DomainsModel::getCurrentSite()->siteid;
+        $site = DomainsModel::getCurrentSite();
+        if (empty($site)) {
+            $siteId = 1;
+        } else {
+            $siteId = DomainsModel::getCurrentSite()->siteid;
+        }
         // create name code
         $codeModel = new CodeModel();
         $namecode = $codeModel->createCode($lang,$name);

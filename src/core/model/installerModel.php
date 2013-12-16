@@ -46,17 +46,26 @@ class InstallerModel {
         $config .= '$GLOBALS[\'weightUnit\'] = \'kg\';'.PHP_EOL;
         $config .= '$GLOBALS[\'weightInGram\'] = \'1000\';'.PHP_EOL;
 
+        
+        $config .= '$GLOBALS[\'seoUrl\'] = true;'.PHP_EOL;
+        $config .= '$GLOBALS[\'cmsMainDomain\'] = \'local-vbmscms\';'.PHP_EOL;
+        $config .= '$GLOBALS[\'piwikUsername\'] = \'vbms\';'.PHP_EOL;
+        $config .= '$GLOBALS[\'piwikPassword\'] = \'protected7\';'.PHP_EOL;
+        $config .= '$GLOBALS[\'cmsAdminEmail\'] = \'silkyfx@hotmail.de\';'.PHP_EOL;
+        
+        
         $config .= "?>";
 
         // write config file
         file_put_contents("config.php",$config);
+        
+        // write piwik config file
     }
 
     static function generateServerSecret () {
             $GLOBALS['serverSecret'] = "";
             return Common::randHash(128);
     }
-
 
     static function installModel () {
         $_SESSION['installProgress'] = "0";

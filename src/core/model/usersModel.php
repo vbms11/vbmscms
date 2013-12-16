@@ -7,14 +7,20 @@ require_once 'core/context.php';
 
 class UsersModel {
 
-    static function login ($username,$password) {
+    static function login ($username, $password, $siteId = null) {
         $username = mysql_real_escape_string($username);
         $password = md5($password);
-        $userObj = Database::queryAsObject("select * from t_users where username = '$username' and password = '$password' and active = '1'");
-        
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
+        $userObj = Database::queryAsObject("select u.* from t_site_users su 
+            join t_users u on su.userid = u.id 
+            where (username = '$username' or email = '$username') and password = '$password' and active = '1'");
         // validate login
-        if ($userObj != null && $userObj->username == $username && $userObj->password == $password) {
-            Context::setUser($userObj->id,$username);
+        if ($userObj != null) {
+            Context::setUser($userObj);
             Context::reloadRoles();
             return true;
         }
@@ -23,13 +29,12 @@ class UsersModel {
     
     static function loginWithKey ($key) {
         $key = mysql_real_escape_string($key);
-        $result = Database::query("select * from t_users where authkey = '$key' and active = '1'") or die (mysql_error());
-        $userObj = mysql_fetch_object($result);
+        $userObj = Database::queryAsObject("select * from t_users where authkey = '$key' and active = '1'") or die (mysql_error());
         
         // validate login
         if ($userObj != null) {
             
-            Context::setUser($userObj->id,$username);
+            Context::setUser($userObj);
             
             // add all module roles the uesr has
             $userRoles = RolesModel::getRoles($userObj->id);
@@ -47,35 +52,35 @@ class UsersModel {
         Session::clear();
     }
 
-    static function getUsers ($registered = null, $active = null) {
+    static function getUsers ($registered = null, $active = null, $siteId = null) {
         $condition = "";
-        //if ($registered != null) {
-        //    $condition .= "active = '".($registered ? '1' : '0')."' ";
-        //}
         if ($active != null) {
             $condition .= "active = '".($active ? '1' : '0')."' ";
         }
         if ($condition != "") {
             $condition = "where ".$condition;
         }
-        
-        $usersQuery = Database::query("select * from t_users $condition");
-        $users = array();
-        while (($obj = mysql_fetch_object($usersQuery)) != null) {
-            $users[] = $obj;
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
         }
-        return $users;
+        return Database::queryAsArray("select u.* from t_site_users su join t_users on su.userid = u.id $condition");
     }
 
     static function getUser ($id) {
         $id = mysql_real_escape_string($id);
-        $usersQuery = Database::query("select * from t_users where id = '$id'");
-        return mysql_fetch_object($usersQuery);
+        return Database::queryAsObject("select * from t_users where id = '$id'");
     }
     
-    static function getUserByUserName ($username) {
+    static function getUserByUserName ($username, $siteId = null) {
         $username = mysql_real_escape_string($username);
-        return Database::query("select * from t_users where username = '$username'");
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
+        return Database::query("select u.* from t_site_users join t_users u on su.userid = u.id where username = '$username'");
     }
     
     static function getUserByObjectId ($objectId) {
@@ -83,7 +88,7 @@ class UsersModel {
         return Database::queryAsObject("select * from t_users where objectid = '$objectId'");
     }
     
-    static function getUsersByCustomRole ($customRole) {
+    static function getUsersByCustomRole ($customRole, $siteId = null) {
         $customRoles = array();
         if (is_array($customRole)) {
             foreach ($customRole as $role) {
@@ -92,18 +97,33 @@ class UsersModel {
         } else {
             $customRoles[] = mysql_real_escape_string($customRole);
         }
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
         $sqlCustomRoles = "in ('".implode("','",$customRoles)."')";
-        return Database::queryAsArray("select * from t_users u join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id $sqlCustomRoles");
+        return Database::queryAsArray("select * from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id $sqlCustomRoles");
     }
     
-    static function getUsersByCustomRoleId ($customRole) {
+    static function getUsersByCustomRoleId ($customRole, $siteId = null) {
         $customRole = mysql_real_escape_string($customRole);
-        return Database::queryAsArray("select u.* from t_users u join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
+        return Database::queryAsArray("select u.* from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
     }
     
-    static function getUsersEmailsByCustomRoleId ($customRole) {
+    static function getUsersEmailsByCustomRoleId ($customRole, $siteId = null) {
         $customRole = mysql_real_escape_string($customRole);
-        $result = Database::queryAsArray("select email as email from t_users u join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
+        $result = Database::queryAsArray("select email as email from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
         return Common::toMap($result, "email", "email");
     }
     
@@ -119,9 +139,14 @@ class UsersModel {
         Database::query("update t_users set active = '$flag' where id = '$id'");
     }
 
-    static function getUserByEmail ($email) {
+    static function getUserByEmail ($email, $siteId = null) {
         $email = mysql_real_escape_string($email);
-        return Database::queryAsObject("select * from t_users where email = '$email'");
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
+        return Database::queryAsObject("select u.* from t_site_users su join t_users u on su.userid = u.id where email = '$email'");
     }
     
     static function setUserImage ($userId, $imageId) {
@@ -130,7 +155,7 @@ class UsersModel {
         Database::query("update t_users set image = '$imageId' where id = '$userId'");
     }
     
-    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate, $profileImage = null) {
+    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate, $profileImage = null, $siteId = null) {
         $username = mysql_real_escape_string($username);
         $firstName = mysql_real_escape_string($firstName);
         $lastName = mysql_real_escape_string($lastName);
@@ -141,6 +166,11 @@ class UsersModel {
         } else {
             $profileImage = "'".mysql_real_escape_string($profileImage)."'";
         }
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
         if ($id == null) {
             // create user objectid
             $objectId = DynamicDataView::createObject("userAttribs",false);
@@ -149,6 +179,8 @@ class UsersModel {
                 values ('$username','$firstName','$lastName','$email','$birthDate',now(),'$objectId',$profileImage)");
             $result = Database::queryAsObject("select last_insert_id() as id from t_users");
             $id = $result->id;
+            // create site user
+            Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
             // set user password
             UsersModel::setPassword($id, $password);
             // update user attribs
@@ -182,6 +214,7 @@ class UsersModel {
     static function deleteUser ($userId) {
         RolesModel::deleteRoles($userId);
         $userId = mysql_real_escape_string($userId);
+        Database::query("delete from t_site_users where userid = '$userId'");
         Database::query("delete from t_users where id = '$userId'");
     }
     

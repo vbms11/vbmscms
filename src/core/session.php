@@ -76,9 +76,8 @@ class Session {
             Session::startSession("s", $sessionId);
             $_SESSION["session.started"] = $sessionKey;
 	    
-            // set cookies
-            setcookie("k",$sessionKey);
-            setcookie("s",$sessionId);
+            // set session key
+            setcookie("k",$sessionKey, 0, "/");
 	    
             // start database session
             Database::getDataSource();

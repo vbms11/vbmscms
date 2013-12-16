@@ -5,7 +5,10 @@ require_once 'core/common.php';
 class ResourcesModel {
     
     static function getWebPath () {
-        return "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['SCRIPT_NAME']).'/';
+        $host = "http://".$_SERVER['HTTP_HOST'];
+        $dirName = dirname($_SERVER['SCRIPT_NAME']);
+        $dirName = str_replace("\\", "/", $dirName);
+        return $host.$dirName.'/';
     }
     
     static function getBasePath () {

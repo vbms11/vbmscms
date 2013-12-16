@@ -190,27 +190,27 @@ class RegisterModule extends XModule {
         ?>
         <div class="panel registerPanel">
             <form method="post" action="<?php echo parent::link(array("action"=>"register")); ?>">
-                <table width="100%"><tr>
-                    <td class="formLabel"><?php echo parent::getTranslation("register.username"); ?></td>
-                    <td class="expand"><input name="userName" class="textbox" type="text" value="" /></td>
+                <table width="100%" class="formTable"><tr>
+                    <td><?php echo parent::getTranslation("register.username"); ?></td>
+                    <td><input name="userName" class="textbox" type="text" value="" /></td>
                 </tr><tr>
-                    <td class="formLabel"><?php echo parent::getTranslation("register.firstname"); ?></td>
-                    <td class="expand"><input name="firstName" class="textbox" type="text" value="" /></td>
+                    <td><?php echo parent::getTranslation("register.firstname"); ?></td>
+                    <td><input name="firstName" class="textbox" type="text" value="" /></td>
                 </tr><tr>
-                    <td class="formLabel"><?php echo parent::getTranslation("register.lastname"); ?></td>
-                    <td class="expand"><input name="lastName" class="textbox" type="text" value="" /></td>
+                    <td><?php echo parent::getTranslation("register.lastname"); ?></td>
+                    <td><input name="lastName" class="textbox" type="text" value="" /></td>
                 </tr><tr>
-                    <td class="formLabel"><?php echo parent::getTranslation("register.email"); ?></td>
-                    <td class="expand"><input name="email" class="textbox" type="text" value="" /></td>
+                    <td><?php echo parent::getTranslation("register.email"); ?></td>
+                    <td><input name="email" class="textbox" type="text" value="" /></td>
                 </tr><tr>
-                    <td class="formLabel"><?php echo parent::getTranslation("register.dob"); ?></td>
-                    <td class="expand"><input id="birthDate" name="birthDate" class="textbox" type="text" value="" /></td>
+                    <td><?php echo parent::getTranslation("register.dob"); ?></td>
+                    <td><input id="birthDate" name="birthDate" class="textbox" type="text" value="" /></td>
                 </tr><tr>
-                    <td class="formLabel"><?php echo parent::getTranslation("register.password1"); ?></td>
-                    <td class="expand"><input id="password1" name="password1" class="textbox" type="password" value="" /></td>
+                    <td><?php echo parent::getTranslation("register.password1"); ?></td>
+                    <td><input id="password1" name="password1" class="textbox" type="password" value="" /></td>
                 </tr><tr>
-                    <td class="formLabel"><?php echo parent::getTranslation("register.password2"); ?></td>
-                    <td class="expand"><input id="password2" name="password2" class="textbox" type="password" value="" /></td>
+                    <td><?php echo parent::getTranslation("register.password2"); ?></td>
+                    <td><input id="password2" name="password2" class="textbox" type="password" value="" /></td>
                 </tr></table>
                 <hr/>
                 <?php
@@ -218,11 +218,13 @@ class RegisterModule extends XModule {
                 ?>
                 <hr/>
                 <div class="alignRight">
-                    <input type="submit" value="<?php echo parent::getTranslation("register.register"); ?>" />
+                    <button class="jquiButton" type="submit">
+                        <?php echo parent::getTranslation("register.register"); ?>
+                    </button>
                 </div>
             </form>
             <script type="text/javascript">
-            $(".alignRight input").button().click(function (e) {
+            $(".alignRight button[type=submit]").click(function (e) {
                 if ($("#password1").val() != $("#password2").val()) {
                     alert("<?php echo parent::getTranslation("register.missmatch"); ?>");
                     e.preventDefault();

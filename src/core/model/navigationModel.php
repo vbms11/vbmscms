@@ -153,16 +153,21 @@ class NavigationModel {
         if ($params == null) {
             $params = array();
         }
-        $params["n"] = urlencode($name);
-        $params["p"] = urlencode($pageId);
-        if ($pageId == null) {
-            $welcomePage = PagesModel::getWelcomePage(Context::getLang());
-            if ($welcomePage == null) {
-                $welcomePage = PagesModel::getStaticPage("startup", Context::getLang());
+        $url = "";
+        //if (Config::getSeoUrl() === true) {
+            return "/".urlencode($pageId)."/".urlencode($name)."/";
+        /*} else {
+            $params["n"] = urlencode($name);
+            $params["p"] = urlencode($pageId);
+            if ($pageId == null) {
+                $welcomePage = PagesModel::getWelcomePage(Context::getLang());
+                if ($welcomePage == null) {
+                    $welcomePage = PagesModel::getStaticPage("startup", Context::getLang());
+                }
+                $pageId = $welcomePage->id;
             }
-            $pageId = $welcomePage->id;
-        }
-        return "?".NavigationModel::buildParams($params,$xhtml,true);
+            return "?".NavigationModel::buildParams($params,$xhtml,true);
+        }*/
     }
 
     static function createModuleLink ($moduleId,$params=null,$xhtml=true,$secure=null) {
@@ -398,7 +403,9 @@ class NavigationModel {
             $page = PagesModel::getTemplatePreviewPage($_GET['templatePreview']);
         }
         
-        if (!isset($_GET['service']) && $page == null) {
+        if (Context::getSiteId() == null) {
+            $page = PagesModel::getStaticPage("unregistered", Context::getLang());
+        } else if (!isset($_GET['service']) && $page == null) {
             // default to welcome page
             $page = PagesModel::getWelcomePage(Context::getLang());
             // if no welcome page take user to login

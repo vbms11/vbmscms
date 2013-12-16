@@ -98,7 +98,6 @@ class AdminDomainsModule extends XModule {
             <?php echo parent::getTranslation("admin.domains.register.save"); ?>
         </button>
         <?php
-        
     }
     
     function renderMainView() {
