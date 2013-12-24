@@ -316,12 +316,13 @@ class TemplateModel {
         return $newId->newid;
     }
     
-    static function addTemplate ($siteId,$templateId) {
-        $siteId = mysql_real_escape_string($siteId);
+    static function addTemplate ($siteId,$templateId,$main = '0') {
+        $siteId = mysql_real_escape_string($siteId); 
         $templateId = mysql_real_escape_string($templateId);
+        $main = mysql_real_escape_string($main);
         $obj = Database::queryAsObject("select 1 from t_site_template where siteid = '$siteId' and templateid = '$templateId'");
         if ($obj == null) {
-            Database::query("insert into t_site_template (siteid,templateid) values('$siteId','$templateId')");
+            Database::query("insert into t_site_template (siteid,templateid,main) values('$siteId','$templateId','$main')");
         }
     }
     
@@ -356,10 +357,10 @@ class TemplateModel {
         $templates = array();
         if ($siteId != null) {
             $siteId = mysql_real_escape_string($siteId);
-            $templates = Database::queryAsArray("select t.id, t.name, t.template, t.interface from t_template t
+            $templates = Database::queryAsArray("select t.id, t.name, t.template, t.interface, t.main from t_template t
                                                 join t_site_template st on st.templateid = t.id and st.siteid = '$siteId'");
         } else {
-            $templates = Database::queryAsArray("select id, name, template, interface from t_template");
+            $templates = Database::queryAsArray("select id, name, template, interface, main from t_template");
         }
         return $templates;
     }

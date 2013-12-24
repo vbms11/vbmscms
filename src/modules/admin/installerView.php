@@ -39,7 +39,7 @@ class InstallView extends XModule {
 				break;
 			case "install":
 				// create config file
-				InstallerModel::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database']);
+				InstallerModel::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
 				require_once('config.php');
 				// install datamodel
                                 InstallerModel::installModel();

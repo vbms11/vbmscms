@@ -14,6 +14,7 @@ if (!@include_once('config.php')) {
 }
 
 include_once 'core/util/common.php';
+include_once 'core/model/piwikModel.php';
 include_once 'core/model/sitesModel.php';
 include_once 'core/model/cmsCustomerModel.php';
 include_once 'core/model/resourcesModel.php';
@@ -39,7 +40,6 @@ include_once 'core/template/editableTemplatePreview.php';
 include_once 'core/model/usersModel.php';
 include_once 'core/model/eventsModel.php';
 include_once 'core/model/languagesModel.php';
-include_once 'core/model/logDataModel.php';
 include_once 'core/util/infoMessages.php';
 include_once 'core/util/captcha.php';
 include_once 'core/ddm/dmObject.php';

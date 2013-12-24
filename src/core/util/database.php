@@ -73,6 +73,7 @@ class Database {
     }
     
     static function queryAsArray ($query,$index = null) {
+        Log::query($query);
         $result = Database::getDataSource()->query($query) or die(Database::getDataSource()->getError());
         $ret = array();
         if ($index != null) {
@@ -90,7 +91,6 @@ class Database {
         } else {
             self::$error = null;
         }
-        Log::query($query);
         // var_dump($ret);
         return $ret;
     }

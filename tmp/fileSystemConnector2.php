@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../resource/js/elfinder/connectors/php/elFinder.class.php';
+require_once '../resource/js/elfinder/connectors/php/elFinder.class.php';
 
 
 $dirPath = dirname($_SERVER['SCRIPT_FILENAME']);

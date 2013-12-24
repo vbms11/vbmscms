@@ -153,10 +153,9 @@ class NavigationModel {
         if ($params == null) {
             $params = array();
         }
-        $url = "";
-        //if (Config::getSeoUrl() === true) {
+        if (Config::getSeoUrl() === true) {
             return "/".urlencode($pageId)."/".urlencode($name)."/";
-        /*} else {
+        } else {
             $params["n"] = urlencode($name);
             $params["p"] = urlencode($pageId);
             if ($pageId == null) {
@@ -167,7 +166,7 @@ class NavigationModel {
                 $pageId = $welcomePage->id;
             }
             return "?".NavigationModel::buildParams($params,$xhtml,true);
-        }*/
+        }
     }
 
     static function createModuleLink ($moduleId,$params=null,$xhtml=true,$secure=null) {

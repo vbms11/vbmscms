@@ -3,9 +3,7 @@
 require_once 'core/model/rolesModel.php';
 
 class Context {
-
-    static $queryLog;
-
+    
     // user attribs
 
     static function setUser ($user) {
@@ -253,10 +251,6 @@ class Context {
     // methods called at the start and end of the context
 
     static function startRequest () {
-
-        if (Config::getQueryLog()) {
-            self::$queryLog = array();
-        }
         
         if (Config::getNoDatabase()) {
             Session::startDefaultSession();
@@ -292,22 +286,6 @@ class Context {
     }
     
     static function endRequest () {
-
-        // write the query log
-        if (Config::getQueryLog()) {
-            $queryHtml = "<html><head></head><body>";
-            foreach (self::$queryLog as $key => $query) {
-                $queryHtml .= "<div class='query' style='background-color:rgb(".($key % 2 == 0 ? "230,230,230" : "245,245,245").")'>";
-                $queryHtml .= $key." : ".$query;
-                $queryHtml .= "</div></br>";
-            }
-            $filename = "logs/".session_id()."_query.html";
-            $queryHtml .= "</body></html>";
-            if (file_exists($filename)) {
-                unlink($filename);
-            }
-            file_put_contents($filename, $queryHtml);
-        }
         
         // save module parameters
         /*
@@ -322,6 +300,7 @@ class Context {
         */
         
         TranslationsModel::maintainTrnaslationsFile();
+        Log::writeLogFile();
         
         // unset session request data
         $_SESSION["req.page"] = null;

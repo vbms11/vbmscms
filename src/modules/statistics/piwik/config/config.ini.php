@@ -1,17 +1,18 @@
 ; <?php exit; ?> DO NOT REMOVE THIS LINE
 ; file automatically generated or modified by Piwik; you can manually override the default values in global.ini.php by redefining them in this file.
 [database]
-host = "127.0.0.1"
+host = "localhost"
 username = "root"
-dbname = "piwik"
+dbname = "vbmscms2"
+password = ""
 tables_prefix = "piwik_"
 charset = "utf8"
 
 [superuser]
-login = "vbms"
-password = "fbbe3be04d98a0e73c18b25d38ac6cf1"
+login = "root"
+password = "d41d8cd98f00b204e9800998ecf8427e"
 email = "silkyfx@hotmail.de"
-salt = "7d2a3db3f3c71ea7dbe267704a423b70"
+salt = "692f8b3e1cff3f11196308e91fffd336"
 
 [PluginsInstalled]
 PluginsInstalled[] = "Login"
@@ -55,4 +56,3 @@ PluginsInstalled[] = "Annotations"
 PluginsInstalled[] = "MobileMessaging"
 PluginsInstalled[] = "Overlay"
 PluginsInstalled[] = "SegmentEditor"
-
