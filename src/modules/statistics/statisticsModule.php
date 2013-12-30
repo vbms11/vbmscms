@@ -21,7 +21,12 @@ class StatisticsModule extends XModule {
     }
     
     function renderMainView() {
-        $statisticsUrl = "modules/statistics/piwik/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&idSite=1&period=week&date=today";
+        $statisticsUrl = "modules/statistics/piwik/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&period=week&date=today";
+        $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
+        $piwikUserName = PiwikModel::getCmsCustomerUserName($customer->id);
+        $piwikAuthToken = PiwikModel::getAdminAuthToken($piwikUserName,md5(Common::hash($piwikUserName)));
+        $site = SiteModel::getSite(Context::getSiteId());
+        $statisticsUrl .= "&idSite=".$site->piwikid."&token_auth=".$piwikAuthToken;
         ?>
         <div class="panel adminStatisticsPanel">
             <div class="adminStatisticsTabs">
@@ -42,8 +47,6 @@ class StatisticsModule extends XModule {
                $("#"+frameId).css({height:innerDoc.body.scrollHeight});
             }
             catch(err) {
-               window.status = err.message;
-               alert(err.message);
             }
          }
          function resizeStatisticsIFrame () {

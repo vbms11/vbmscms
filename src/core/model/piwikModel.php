@@ -30,15 +30,18 @@ class PiwikModel {
         if (empty(self::$authToken)) {
             $userLogin = Config::getPiwikUsername();
             $md5Password = md5(Config::getPiwikPassword());
-            
-            $urlPath = NavigationModel::getSitePath().self::$piwikUrlPath;
-            $url = self::$piwikUrl."&method=UsersManager.getTokenAuth"
-                    ."&userLogin=$userLogin&md5Password=$md5Password";
-            $result = Http::getContent($urlPath.$url);
-            $obj = json_decode($result);
-            self::$authToken = $obj->value;
+            self::$authToken = self::getAuthToken($userLogin, $md5Password);
         }
         return self::$authToken;
+    }
+    
+    static function getAuthToken ($userLogin, $md5Password) {
+        $urlPath = NavigationModel::getSitePath().self::$piwikUrlPath;
+        $url = self::$piwikUrl."&method=UsersManager.getTokenAuth"
+                ."&userLogin=$userLogin&md5Password=$md5Password";
+        $result = Http::getContent($urlPath.$url);
+        $obj = json_decode($result);
+        return $obj->value;
     }
     
     static function getSite ($siteId) {

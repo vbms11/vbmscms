@@ -16,7 +16,7 @@ class CmsCustomerModel {
         
         $userId = mysql_real_escape_string($userId);
         Database::query("insert into t_cms_customer (userid) values ('$userId')");
-        $result = Database::query("select last_insert_id() as newid from t_cms_customer");
+        $result = Database::queryAsObject("select last_insert_id() as newid from t_cms_customer");
         $cmsCustomerId = $result->newid;
         
         $piwikUserName = PiwikModel::getCmsCustomerUserName($cmsCustomerId);

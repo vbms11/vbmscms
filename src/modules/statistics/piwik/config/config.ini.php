@@ -3,16 +3,16 @@
 [database]
 host = "localhost"
 username = "root"
-dbname = "vbmscms2"
+dbname = "vbmscms"
 password = ""
 tables_prefix = "piwik_"
 charset = "utf8"
 
 [superuser]
 login = "root"
-password = "d41d8cd98f00b204e9800998ecf8427e"
+password = "190a208614d30311b570ef3e81837f0d"
 email = "silkyfx@hotmail.de"
-salt = "692f8b3e1cff3f11196308e91fffd336"
+salt = "ddde8ee4c461dd4c6e1a2c62db590257"
 
 [PluginsInstalled]
 PluginsInstalled[] = "Login"

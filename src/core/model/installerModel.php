@@ -10,7 +10,10 @@ class InstallerModel {
 
 
     static function buildConfig ($hostname,$username,$password,$database,$email) {
-
+        
+        $piwikPassword = Common::randHash();
+        $piwikUsername = $username;
+        
         $config  = '<?php'.PHP_EOL;
         // database config
         $config .= '$GLOBALS[\'dbName\'] = \''.$database.'\';'.PHP_EOL;
@@ -47,8 +50,8 @@ class InstallerModel {
         $config .= '$GLOBALS[\'weightInGram\'] = \'1000\';'.PHP_EOL;
 
         $config .= '$GLOBALS[\'seoUrl\'] = false;'.PHP_EOL;
-        $config .= '$GLOBALS[\'piwikUsername\'] = \'vbms\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'piwikPassword\'] = \'protected7\';'.PHP_EOL;
+        $config .= '$GLOBALS[\'piwikUsername\'] = \''.$piwikUsername.'\';'.PHP_EOL;
+        $config .= '$GLOBALS[\'piwikPassword\'] = \''.$piwikPassword.'\';'.PHP_EOL;
         $config .= '$GLOBALS[\'cmsAdminEmail\'] = \'silkyfx@hotmail.de\';'.PHP_EOL;
         
         $config .= "?>";
@@ -68,8 +71,8 @@ tables_prefix = "piwik_"
 charset = "utf8"
 
 [superuser]
-login = "'.$username.'"
-password = "'.md5($password).'"
+login = "'.$piwikUsername.'"
+password = "'.md5($piwikPassword).'"
 email = "'.$email.'"
 salt = "'.md5(Common::randHash()).'"
 

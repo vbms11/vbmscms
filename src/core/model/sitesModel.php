@@ -5,7 +5,7 @@ class SiteModel {
     
     static function getSite ($siteId) {
         $siteId = mysql_real_escape_string($siteId);
-        return Database::queryAsArray("select * from t_site where id = '$siteId'");
+        return Database::queryAsObject("select * from t_site where id = '$siteId'");
     }
     
     static function getSites () {
