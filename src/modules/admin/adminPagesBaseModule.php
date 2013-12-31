@@ -78,6 +78,16 @@ class AdminPagesBaseModule extends XModule {
         }
     }
     
+    function selectTemplateAction () {
+        $templates = TemplateModel::getTemplates(Context::getSiteId());
+        $pageId = parent::get("id");
+        $index = parent::get("index");
+        if (!empty($index)) {
+            PagesModel::setPageTemplate($pageId,$templates[$index]->id);
+        }
+        Context::setReturnValue("setTemplate:".$index);
+    }
+    
     function printPageSettingsTabView () {
         ?>
         <div id="adminMenusTabs">
@@ -252,9 +262,46 @@ class AdminPagesBaseModule extends XModule {
         <?php
     }
     
-    function printPageTemplateView () {
+    function printPageTemplateView ($page) {
+        $selectedTemplate = $page->template;
+        $templates = TemplateModel::getTemplates(DomainsModel::getCurrentSite()->siteid);
         ?>
         <h3><?php echo parent::getTranslation("admin.pages.template.title"); ?></h3>
+        <div class="templateBoxContainer">
+            <?php
+            foreach ($templates as $template) {
+                $templatePreviedSrc = NavigationModel::createTemplatePreviewLink($template->id);
+                $selectedClass = "";
+                if ($selectedTemplate == $template->id) {
+                    $selectedClass = "ui-selected";
+                }
+                ?>
+                <div class="templatesToggelBox <?php echo $selectedClass; ?>">
+                    <div class="templateToggelBoxDiv"></div>
+                    <iframe class="templateToggelBoxIframe" src="<?php echo $templatePreviedSrc; ?>"></iframe>
+                </div>
+                <?php
+            }
+            ?>
+            <div class="clear"></div>
+        </div>
+        <script>
+        $(".templateBoxContainer").selectable({ 
+            filter: ".templatesToggelBox",
+            start: function () {
+                $(this).each(function (index, object) {
+                    $(object).removeClass("ui-selected");
+                });
+            }, stop: function() {
+                var index = $(".templateBoxContainer .templatesToggelBox").index(
+                        $(".templateBoxContainer .ui-selected"));
+                ajaxRequest("<?php echo parent::ajaxLink(array("action"=>"selectTemplate","id"=>$page->id)) ?>", null, {"index":index});
+            }
+        });
+        $(".templateToggelBoxDiv").click(function(){
+            $(this).parent().click();
+        })
+        </script>
         <?php
     }
     

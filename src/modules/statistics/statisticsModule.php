@@ -21,12 +21,16 @@ class StatisticsModule extends XModule {
     }
     
     function renderMainView() {
-        $statisticsUrl = "modules/statistics/piwik/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&period=week&date=today";
+        $statisticsUrl = "modules/statistics/piwik/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&date=today";
         $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
         $piwikUserName = PiwikModel::getCmsCustomerUserName($customer->id);
         $piwikAuthToken = PiwikModel::getAdminAuthToken($piwikUserName,md5(Common::hash($piwikUserName)));
         $site = SiteModel::getSite(Context::getSiteId());
-        $statisticsUrl .= "&idSite=".$site->piwikid."&token_auth=".$piwikAuthToken;
+        $period = parent::get('adminStatisticMode');
+        if (empty($period)) {
+            $period = "week";
+        }
+        $statisticsUrl .= "&idSite=".$site->piwikid."&token_auth=".$piwikAuthToken."&period=".$period;
         ?>
         <div class="panel adminStatisticsPanel">
             <div class="adminStatisticsTabs">

@@ -44,6 +44,11 @@ class AdminPagesModule extends AdminPagesBaseModule {
                     
                     $this->movePageDownAction();
                     break;
+                
+                case "selectTemplate":
+                    
+                    $this->selectTemplateAction();
+                    break;
 
             }
         }
@@ -85,7 +90,7 @@ class AdminPagesModule extends AdminPagesBaseModule {
         
         if (isset($_SESSION["adminPageId"])) {
             
-            $page = PagesModel::getPage($_SESSION["adminPageId"], Context::getLang(), false);
+            $page = PagesModel::getPage($_SESSION["adminPageId"], Context::getLang(), false, null, false);
             
             ?>
             <div id="adminPagesTabs">

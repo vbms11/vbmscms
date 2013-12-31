@@ -161,6 +161,9 @@ PluginsInstalled[] = "SegmentEditor"';
         // add templates
         $defaultTemplates = TemplateModel::getTemplates();
         foreach ($defaultTemplates as $template) {
+            if (!empty($template->interface)) {
+                continue;
+            }
             TemplateModel::addTemplate($siteId, $template->id, $template->main);
         }
         

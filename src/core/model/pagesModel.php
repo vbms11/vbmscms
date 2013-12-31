@@ -162,7 +162,13 @@ class PagesModel {
         return Database::queryAsObject($query);
     }
     
-    static function getPage ($id, $lang, $roles=true, $checkName=null) {
+    static function setPageTemplate ($pageId, $templateId) {
+        $pageId = mysql_real_escape_string($pageId);
+        $templateId = mysql_real_escape_string($templateId);
+        Database::query("update t_page set template = '$templateId' where id = '$pageId'");
+    }
+    
+    static function getPage ($id, $lang, $roles=true, $checkName=null, $ensureAdminTemplate = true) {
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
@@ -189,7 +195,9 @@ class PagesModel {
         
 	if (count(Context::getRoleGroups()) > 0) {
             $page = Database::queryAsObject($query);
-            $page = self::ensureAdminTemplate($page);
+            if ($ensureAdminTemplate) {
+                $page = self::ensureAdminTemplate($page);
+            }
             return $page;
 	}
         

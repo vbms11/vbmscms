@@ -57,21 +57,29 @@ function doIfConfirm (text,action,replace) {
 }
 
 function ajaxRequest (url,onCompleteHandler,replace) {
-    if (typeof(replace) != "undefined") {
+    if (typeof(replace) !== "undefined") {
         for (var key in replace) {
             url += "&"+key+"="+replace[key];
         }
     }
-    smefCms.ajax(url,onCompleteHandler);
+    $.ajax({
+        "url": url,
+        "context": document.body,
+        "success": function(data){
+            if (typeof(onCompleteHandler) === "function") {
+                onCompleteHandler(data);
+            }
+        }
+    });
 }
 
 function callUrl (url,replace,anchor) {
-    if (typeof(replace) != "undefined") {
+    if (typeof(replace) !== "undefined") {
         for (var key in replace) {
             url += "&"+key+"="+replace[key];
         }
     }
-    if (typeof(anchor) != "undefined") {
+    if (typeof(anchor) !== "undefined") {
         url += "#"+anchor;
     }
     document.location.href = url;
