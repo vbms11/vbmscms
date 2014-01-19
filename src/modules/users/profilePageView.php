@@ -38,8 +38,8 @@ class ProfilePageView extends XModule {
                     break;
                 case "editAttribs":
                     DynamicDataView::processAction("userAttribs",
-                        NavigationModel::createModuleLink(Context::getModuleId(), array("action"=>"edit","id"=>$_GET['id'])),
-                        NavigationModel::createModuleLink(Context::getModuleId(), array("action"=>"editAttribs","id"=>$_GET['id'])));
+                        parent::link(array("action"=>"edit","id"=>$_GET['id'])),
+                        parent::link(array("action"=>"editAttribs","id"=>$_GET['id'])));
                     parent::focus();
                     break;
             }

@@ -13,8 +13,6 @@ class UsersPageView extends XModule {
      */
     function onProcess () {
 
-        $this->getRequestVars();
-
         if (Context::hasRole("users.edit")) {
 
             switch (parent::getAction()) {
@@ -25,7 +23,7 @@ class UsersPageView extends XModule {
                     break;
                 case "updateUser":
                     UsersModel::saveUser($_POST['id'], $_POST['userName'], $_POST['firstName'], $_POST['lastName'], null, $_POST['email'], $_POST['birthDate'], null);
-                    parent::redirect(array("action"=>"edit","id"=>$this->id));
+                    parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
                     break;
                 case "edit":
                     parent::focus();
@@ -41,33 +39,33 @@ class UsersPageView extends XModule {
                     break;
                 case "editAttribs":
                     DynamicDataView::processAction("userAttribs",
-                        parent::link(array("action"=>"edit","id"=>$this->id),false),
-                        parent::link(array("action"=>"editAttribs","id"=>$this->id),false));
+                        parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
+                        parent::link(array("action"=>"editAttribs","id"=>parent::get("id")),false));
                     parent::focus();
                     break;
                 case "configAttribs":
                     DynamicDataView::processAction("userAttribs",
-                        parent::link(array("action"=>"edit","id"=>$this->id),false),
-                        parent::link(array("action"=>"configAttribs","id"=>$this->id),false));
+                        parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
+                        parent::link(array("action"=>"configAttribs","id"=>parent::get("id")),false));
                     parent::focus();
                     break;
                 case "search":
                     DynamicDataView::processAction("userAttribs",
-                        parent::link(array("action"=>"edit","id"=>$this->id),false),
-                        parent::link(array("action"=>"searchAttribs","id"=>$this->id),false));
+                        parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
+                        parent::link(array("action"=>"searchAttribs","id"=>parent::get("id")),false));
                     parent::focus();
                     break;
                 case "activateUser":
-                    UsersModel::setUserActiveFlag($this->id, "1");
-                    parent::redirect(array("action"=>"edit","id"=>$this->id));
+                    UsersModel::setUserActiveFlag(parent::get("id"), "1");
+                    parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
                     break;
                 case "deactivateUser":
-                    UsersModel::setUserActiveFlag($this->id, "0");
-                    parent::redirect(array("action"=>"edit","id"=>$this->id));
+                    UsersModel::setUserActiveFlag(parent::get("id"), "0");
+                    parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
                     break;
                 case "changePassword":
-                    UsersModel::setPassword($this->id,$_POST['password1']);
-                    parent::redirect(array("action"=>"edit","id"=>$this->id));
+                    UsersModel::setPassword(parent::get("id"),$_POST['password1']);
+                    parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
                     break;
                 case "export":
                     if (isset($_GET['selectedTab'])) {
@@ -95,13 +93,13 @@ class UsersPageView extends XModule {
                     
                     DynamicDataView::processAction("userAttribs",
                         parent::link(array(),false),
-                        parent::link(array("action"=>"export","id"=>$this->id),false));
+                        parent::link(array("action"=>"export","id"=>parent::get("id")),false));
                     parent::focus();
                     break;
                 case "import":
                     DynamicDataView::processAction("userAttribs",
                         parent::link(array(),false),
-                        parent::link(array("action"=>"import","id"=>$this->id),false));
+                        parent::link(array("action"=>"import","id"=>parent::get("id")),false));
                     parent::focus();
                     break;
                 case "getData":
@@ -164,14 +162,12 @@ class UsersPageView extends XModule {
      */
     function onView () {
 
-        $this->getRequestVars();
-        
         if (Context::hasRole("users.edit")) {
 
             switch (parent::getAction()) {
                 case "edit":
-                    if ($this->id != null) {
-                        $this->printEditUserView(parent::getId(),$this->id);
+                    if (parent::get("id") != null) {
+                        $this->printEditUserView(parent::getId(),parent::get("id"));
                     } else {
                         $this->printMainView(parent::getId());
                     }
@@ -186,12 +182,12 @@ class UsersPageView extends XModule {
                     $this->printConfigAttribsView($_GET['object']);
                     break;
                 case "export":
-                    DynamicDataView::renderExport(parent::link(array()), parent::link(array("action"=>"export","id"=>$this->id)), "userAttribs");
+                    DynamicDataView::renderExport(parent::link(array()), parent::link(array("action"=>"export","id"=>parent::get("id"))), "userAttribs");
                     break;
                 case "import":
-                    DynamicDataView::renderImport(parent::link(array()), parent::link(array("action"=>"import","id"=>$this->id)), "userAttribs");
+                    DynamicDataView::renderImport(parent::link(array()), parent::link(array("action"=>"import","id"=>parent::get("id"))), "userAttribs");
                     break;
-                case null:
+                default:
                     $this->printMainView(parent::getId());
             }
         }
@@ -218,22 +214,16 @@ class UsersPageView extends XModule {
         return array("users.edit");
     }
 
-
-    function getRequestVars () {
-        $this->action = null; if (isset($_GET['action'])) $this->action = $_GET['action'];
-        $this->id = null; if (isset($_GET['id'])) $this->id = $_GET['id'];
-    }
-
     function printEditAttribsView ($objectId) {
         DynamicDataView::editObject("userAttribs",$objectId,"User Attributes:",
-            parent::link(array("action"=>"edit","id"=>$this->id),false),
-            parent::link(array("action"=>"editAttribs","id"=>$this->id),false));
+            parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
+            parent::link(array("action"=>"editAttribs","id"=>parent::get("id")),false));
     }
     
     function printConfigAttribsView ($objectId) {
         DynamicDataView::configureObject("userAttribs",
-            parent::link(array("action"=>"edit","id"=>$this->id),false),
-            parent::link(array("action"=>"configAttribs","id"=>$this->id,"object"=>$objectId),false));
+            parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
+            parent::link(array("action"=>"configAttribs","id"=>parent::get("id"),"object"=>$objectId),false));
     }
 
     function printMainView ($moduleId) {
@@ -405,10 +395,10 @@ class UsersPageView extends XModule {
                                 <?php
                                 if ($user->active) {
                                     echo 'This user is active<br/>
-                                        <button style="float:right;" onclick="callUrl(\''.NavigationModel::createModuleAjaxLink($moduleId,array("action"=>"deactivateUser","id"=>$this->id),false).'\');">Click to deactivate the user</button>';
+                                        <button style="float:right;" onclick="callUrl(\''.NavigationModel::createModuleAjaxLink($moduleId,array("action"=>"deactivateUser","id"=>parent::get("id")),false).'\');">Click to deactivate the user</button>';
                                 } else {
                                     echo 'This user is not active<br/>
-                                        <button style="float:right;"  onclick="callUrl(\''.NavigationModel::createModuleAjaxLink($moduleId,array("action"=>"activateUser","id"=>$this->id),false).'\');">Click to activate the user</button>';
+                                        <button style="float:right;"  onclick="callUrl(\''.NavigationModel::createModuleAjaxLink($moduleId,array("action"=>"activateUser","id"=>parent::get("id")),false).'\');">Click to activate the user</button>';
                                 }
                                 ?>
                             </div>

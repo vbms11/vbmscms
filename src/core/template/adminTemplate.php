@@ -59,10 +59,14 @@ class AdminTemplate extends XTemplate {
         <div class="ui-widget-header adminHeaderDiv">
             <div class="adminHeaderModesDiv">
                 <div class="ui-widget-header <?php echo !Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
-                    <a href="<?php echo NavigationModel::createPageLink($adminPageId,array("setAdminMode"=>"0")); ?>">View</a>
+                    <a href="<?php echo NavigationModel::createPageLink($adminPageId,array("setAdminMode"=>"0")); ?>">
+                        <?php echo parent::getTranslation("admin.template.header.view"); ?>
+                    </a>
                 </div>
                 <div class="ui-widget-header <?php echo Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
-                    <a href="<?php echo NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","setAdminMode"=>"adminPages","adminPageId"=>$adminPageId)); ?>">Edit</a>
+                    <a href="<?php echo NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","setAdminMode"=>"adminPages","adminPageId"=>$adminPageId)); ?>">
+                        <?php echo parent::getTranslation("admin.template.header.edit"); ?>
+                    </a>
                 </div>
             </div>
             <div class="adminHeaderLogoDiv"></div>
@@ -117,8 +121,7 @@ class AdminTemplate extends XTemplate {
             ?>
             <div id="adminEditModuleTabs">
                 <ul>
-                    <li><a href="#tabs-1">Edit Module</a></li>
-                    <li><a href="#tabs-2">Attributes</a></li>
+                    <li><a href="#tabs-1"><?php echo parent::getTranslation("admin.template.module.edit"); ?></a></li>
                 </ul>
                 <div id="tabs-1">
                     <?php 
@@ -128,9 +131,6 @@ class AdminTemplate extends XTemplate {
                     Context::setIsFocusedArea(false);
                     echo "</div>";
                     ?>
-                </div>
-                <div id="tabs-2">
-                    <?php  ?>
                 </div>
             </div>
             <script>
@@ -162,7 +162,12 @@ class AdminTemplate extends XTemplate {
         
         echo "</div>";
     }
-
+    
+    function renderFooter () {
+        
+        AdminTemplate::renderAdminFooter();
+    }
+    
     /**
      * returns script used by this template
      */

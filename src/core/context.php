@@ -1,7 +1,5 @@
 <?php
 
-require_once 'core/model/rolesModel.php';
-
 class Context {
     
     // user attribs
@@ -206,14 +204,19 @@ class Context {
         return isset($_SESSION["req.lang"]) ? $_SESSION["req.lang"] : null;
     }
     
-    static function getSiteId () {
+    static function getSite () {
         if (!isset($_SESSION["req.site"])) {
             $_SESSION["req.site"] = DomainsModel::getCurrentSite();
         }
         if (empty($_SESSION["req.site"])) {
             return null;
         }
-        return $_SESSION["req.site"]->siteid;
+        return $_SESSION["req.site"];
+    }
+    
+    static function getSiteId () {
+        $site = self::getSite();
+        return $site->siteid;
     }
 
     // renderer
@@ -269,7 +272,7 @@ class Context {
             }
             
             // set the selected page
-            $page = NavigationModel::selectPage();
+            $page = NavigationController::selectPage();
             if ($page != null) {
                 $_SESSION["req.page"] = $page;
                 $_SESSION["req.pageId"] = $page->id;

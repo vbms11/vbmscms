@@ -15,7 +15,7 @@ class TranslationsModel {
         return self::$translations;
     }
 
-    static function getTranslation ($code, $lang=null, $escape=true) {
+    static function getTranslation ($code, $lang=null, $escape=true, $replace=null) {
         if ($lang == null) {
             $lang = Context::getLang();
         }
@@ -28,6 +28,11 @@ class TranslationsModel {
         }
         if (!$escape) {
             $translation = html_entity_decode($translation, ENT_QUOTES);
+        }
+        if ($replace != null && is_array($replace)) {
+            foreach ($replace as $token => $value) {
+                $translation = str_replace($token, $value, $translation);
+            }
         }
         return $translation;
     }

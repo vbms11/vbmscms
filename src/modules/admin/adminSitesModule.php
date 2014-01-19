@@ -12,8 +12,16 @@ class AdminSitesModule extends XModule {
             switch (parent::getAction()) {
                 case "createSite":
                     $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
-                    SiteModel::createSite(parent::post("siteName"), $customer->id, parent::post("siteDescription"));
-                    
+                    SiteModel::createSite(parent::post("siteName"), $customer->id, parent::post("siteDescription"), null, parent::post("siteTrackerScript"));
+                    parent::redirect();
+                    break;
+                case "updateSite":
+                    SiteModel::updateSite(parent::get("id"), parent::post("siteName"), parent::post("siteDescription"), parent::post("siteTrackerScript"));
+                    parent::redirect();
+                    break;
+                case "deleteSite":
+                    //TODO delete all site content
+                    SiteModel::deleteSite(parent::get("id")); 
                     parent::redirect();
                     break;
             }
@@ -28,6 +36,12 @@ class AdminSitesModule extends XModule {
             case "newSite":
                 if (Context::hasRole("site.edit")) {
                     $this->renderCreateTabs();
+                }
+                break;
+            case "editSite":
+                if (Context::hasRole("site.edit")) {
+                    $site = SiteModel::getSite(parent::get("id"));
+                    $this->renderEditTabs($site);
                 }
                 break;
             default:
@@ -45,23 +59,27 @@ class AdminSitesModule extends XModule {
         return array("site.edit","site.view");
     }
     
-    function renderEditSiteView ($siteId = null) {
-        
+    function renderEditTabs ($site) {
         ?>
-        <div class="panel">
-            
-            <script>
-            $("#tabs").tabs({
-                collapsible: true
-            });
-            $("#btnSubmit").button(function(){
-                $("#<?php echo parent::alias("templatesForm"); ?>").submit();
-            });
-            $("#btnCacnel").button(function(){
-                history.back();
-            });
-            </script>
+        <div class="panel adminSitesPanel">
+            <div class="adminSitesTabs">
+                <ul>
+                    <li><a href="#adminSitesTab"><?php echo parent::getTranslation("admin.sites.tab.label"); ?></a></li>
+                    <li><a href="#adminSitesEditTab"><?php echo parent::getTranslation("admin.sites.tab.edit"); ?></a></li>
+                </ul>
+                <div id="adminSitesTab">
+                    <?php $this->renderMainView(); ?>
+                </div>
+                <div id="adminSitesEditTab">
+                    <?php $this->renderEditView($site); ?>
+                </div>
+            </div>
         </div>
+        <script type="text/javascript">
+        $(".adminSitesTabs").tabs({
+            active : 1
+        });
+        </script>
         <?php
     }
     
@@ -107,6 +125,34 @@ class AdminSitesModule extends XModule {
         <?php
     }
     
+    function renderEditView ($site) {
+        ?>
+        <h3><?php echo parent::getTranslation("admin.sites.title.create"); ?></h3>
+        <form method="post" action="<?php echo parent::link(array("action"=>"updateSite","id"=>$site->id)); ?>">
+            <table class="formTable"><tr><td>
+                <label for="siteName"><?php echo parent::getTranslation("admin.sites.label.name"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("siteName", $site->name); ?>
+            </td></tr><tr><td>
+                <label for="siteDescription"><?php echo parent::getTranslation("admin.sites.label.description"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextArea("siteDescription", $site->description); ?>
+            </td></tr><tr><td>
+                <label for="siteTrackerScript"><?php echo parent::getTranslation("admin.sites.label.trackerScript"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextArea("siteTrackerScript", $site->sitetrackerscript); ?>
+            </td></tr>
+            </table>
+            <hr/>
+            <div class="alignRight">
+                <button class="jquiButton" id="registerSite">
+                    <?php echo parent::getTranslation("admin.sites.create.save"); ?>
+                </button>
+            </div>
+        </form>
+        <?php
+    }
+    
     function renderCreateView () {
         ?>
         <h3><?php echo parent::getTranslation("admin.sites.title.create"); ?></h3>
@@ -119,7 +165,12 @@ class AdminSitesModule extends XModule {
                 <label for="siteDescription"><?php echo parent::getTranslation("admin.sites.label.description"); ?></label>
             </td><td>
                 <?php InputFeilds::printTextArea("siteDescription"); ?>
-            </td></tr></table>
+            </td></tr><tr><td>
+                <label for="siteTrackerScript"><?php echo parent::getTranslation("admin.sites.label.trackerScript"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextArea("siteTrackerScript"); ?>
+            </td></tr>
+            </table>
             <hr/>
             <div class="alignRight">
                 <button class="jquiButton" id="registerSite">

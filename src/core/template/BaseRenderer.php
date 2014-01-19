@@ -136,6 +136,17 @@ abstract class BaseRenderer {
     	return $this->menus;
     }
     
+    /**
+     * returns translations for a given code
+     * @param type $key
+     * @param type $replace
+     * @param type $escape
+     * @param type $lang
+     * @return type
+     */
+    static function getTranslation ($key,$replace=null,$escape=true,$lang=null) {
+        return TranslationsModel::getTranslation($key,$lang,$escape,$replace);
+    }
 }
 
 ?>

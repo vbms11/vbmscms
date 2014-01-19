@@ -7,7 +7,21 @@ class AdminDomainsModule extends XModule {
     function onProcess () {
         
         switch (parent::getAction()) {
-            
+            case "createDomain":
+                if (Context::hasRole("domains.edit")) {
+                    DomainsModel::createDomain(parent::post("domainName"), Context::getSiteId(), parent::post("domainTrackerScript"));
+                }
+                break;
+            case "editDomain":
+                if (Context::hasRole("domains.edit")) {
+                    DomainsModel::updateDomain(parent::get("id"), parent::post("domainName"), Context::getSiteId(), parent::post("domainTrackerScript"));
+                }
+                break;
+            case "deleteDomain":
+                if (Context::hasRole("domains.edit")) {
+                    DomainsModel::deleteDomain(parent::get("id"));
+                }
+                break;
         }
     }
     
@@ -15,35 +29,25 @@ class AdminDomainsModule extends XModule {
         
         switch (parent::getAction()) {
             case "addDomain":
-                
-                $this->renderRegisterTabs();
+                if (Context::hasRole("domains.edit")) {
+                    $this->renderRegisterTabs();
+                }
                 break;
-                
+            case "editDomain":
+                if (Context::hasRole("domains.edit")) {
+                    $domain = DomainsModel::getDomain(parent::get("id"));
+                    $this->renderEditTabs($domain);
+                }
+                break;
             default:
-                $this->renderMainTabs();
+                if (Context::hasRole("domains.view")) {
+                    $this->renderMainTabs();
+                }
         }
     }
     
-    static function getTranslations() {
-        return array("en" => array(
-            "admin.domains.register"            => "Register Domain",
-            "admin.domains.register.save"       => "Save",
-            "admin.domains.domains"             => "Domains",
-            "admin.domains.addDomain"           => "Add Domain",
-            "admin.domains.domainsManager"	=> "Domains Manager",
-            "admin.domains.table.domain"	=> "Domain",
-            "admin.domains.table.sitename"	=> "Site Name",
-            "admin.domains.table.tools"         => "Tools"
-        ),"de" => array(
-            "admin.domains.register"            => "Register Domain",
-            "admin.domains.register.save"       => "Save",
-            "admin.domains.domains"             => "Domains",
-            "admin.domains.addDomain"           => "Add Domain",
-            "admin.domains.domainsManager"	=> "Domains Manager",
-            "admin.domains.table.domain"	=> "Domain",
-            "admin.domains.table.sitename"	=> "Site Name",
-            "admin.domains.table.tools"         => "Tools"
-        ));
+    function getRoles() {
+        return array("domains.edit","domains.view");
     }
     
     function renderMainTabs () {
@@ -88,15 +92,73 @@ class AdminDomainsModule extends XModule {
         <?php
     }
     
+    function renderEditTabs ($domain) {
+        ?>
+        <div class="panel adminDomainsPanel">
+            <div class="adminDomainTabs">
+                <ul>
+                    <li><a href="#adminDomains"><?php echo parent::getTranslation("admin.domains.domains"); ?></a></li>
+                    <li><a href="#adminEditDomains"><?php echo parent::getTranslation("admin.domains.edit"); ?></a></li>
+                </ul>
+                <div id="adminDomains">
+                    <?php $this->renderMainView(); ?>
+                </div>
+                <div id="adminEditDomains">
+                    <?php $this->renderEditView($domain); ?>
+                </div>
+            </div>
+        </div>
+        <script>
+        $(".adminDomainTabs").tabs({
+            active : 1
+        });
+        </script>
+        <?php
+    }
+    
+    function renderEditView ($domain) {
+        ?>
+        <h3><?php echo parent::getTranslation("admin.domains.register"); ?></h3>
+        <form method="post" action="<?php echo parent::link(array("action"=>"editDomain","id"=>$domain->id)) ?>">
+            <table class="formTable"><tr><td>
+                <label for="domainName"><?php echo parent::getTranslation("admin.domains.register.name"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("domainName",$domain->url); ?>
+            </td></tr><tr><td>
+                <label for="domainTrackerScript"><?php echo parent::getTranslation("admin.domains.register.trackerScript"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextArea("domainTrackerScript",$domain->domaintrackerscript); ?>
+            </td></tr></table>
+            <hr/>
+            <div class="alignRight">
+                <button type="submit" id="registerDomain">
+                    <?php echo parent::getTranslation("admin.domains.register.save"); ?>
+                </button>
+            </div>
+        </form>
+        <?php
+    }
+    
     function renderRegisterView () {
         ?>
         <h3><?php echo parent::getTranslation("admin.domains.register"); ?></h3>
-        <label for="domainName"><?php echo parent::getTranslation("admin.domains.register.name"); ?></label>
-        <input type="text" name="domainName" value="" />
-        <hr/>
-        <button id="registerDomain">
-            <?php echo parent::getTranslation("admin.domains.register.save"); ?>
-        </button>
+        <form method="post" action="<?php echo parent::link(array("action"=>"createDomain")) ?>">
+            <table class="formTable"><tr><td>
+                <label for="domainName"><?php echo parent::getTranslation("admin.domains.register.name"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("domainName"); ?>
+            </td></tr><tr><td>
+                <label for="domainTrackerScript"><?php echo parent::getTranslation("admin.domains.register.trackerScript"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextArea("domainTrackerScript"); ?>
+            </td></tr></table>
+            <hr/>
+            <div class="alignRight">
+                <button type="submit" id="registerDomain">
+                    <?php echo parent::getTranslation("admin.domains.register.save"); ?>
+                </button>
+            </div>
+        </form>
         <?php
     }
     
@@ -109,7 +171,7 @@ class AdminDomainsModule extends XModule {
         <thead><tr>
             <td><?php echo parent::getTranslation("admin.domains.table.sitename"); ?></td>
             <td class="expand"><?php echo parent::getTranslation("admin.domains.table.domain"); ?></td>
-            <td><?php echo parent::getTranslation("admin.domains.table.tools"); ?></td>
+            <td colspan="2"><?php echo parent::getTranslation("admin.domains.table.tools"); ?></td>
         </tr></thead>
         <tbody>
         <?php
@@ -119,7 +181,8 @@ class AdminDomainsModule extends XModule {
             <tr>
                 <td><?php echo $domain->name; ?></td>
                 <td><?php echo $domain->url; ?></td>
-                <td></td>
+                <td><a href="<?php echo parent::link(array("action"=>"editDomain","id"=>$domain->id)); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
+                <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("admin.domains.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"deleteDomain","id"=>$domain->id),false); ?>');" /></td>
             </tr>
             <?php
         }

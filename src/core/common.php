@@ -14,6 +14,7 @@ if (!@include_once('config.php')) {
 }
 
 include_once 'core/util/common.php';
+require_once 'core/model/rolesModel.php';
 include_once 'core/model/piwikModel.php';
 include_once 'core/model/sitesModel.php';
 include_once 'core/model/cmsCustomerModel.php';
@@ -21,8 +22,6 @@ include_once 'core/model/resourcesModel.php';
 include_once 'core/model/translationsModel.php';
 include_once 'core/model/sessionModel.php';
 include_once 'core/model/resourcesModel.php';
-include_once 'core/context.php';
-include_once 'core/session.php';
 include_once 'core/model/navigationModel.php';
 include_once 'core/model/confirmModel.php';
 include_once 'core/model/domainsModel.php';
@@ -30,6 +29,9 @@ include_once 'core/model/moduleModel.php';
 include_once 'core/model/pagesModel.php';
 include_once 'core/model/templateModel.php';
 include_once 'core/model/menuModel.php';
+include_once 'core/model/usersModel.php';
+include_once 'core/model/eventsModel.php';
+include_once 'core/model/languagesModel.php';
 include_once 'core/template/templateParser.php';
 include_once 'core/template/baseRenderer.php';
 include_once 'core/template/ajaxRenderer.php';
@@ -37,9 +39,10 @@ include_once 'core/template/vcmsRenderer.php';
 include_once 'core/template/templateRenderer.php';
 include_once 'core/template/editableTemplate.php';
 include_once 'core/template/editableTemplatePreview.php';
-include_once 'core/model/usersModel.php';
-include_once 'core/model/eventsModel.php';
-include_once 'core/model/languagesModel.php';
+include_once 'core/model/installerModel.php';
+include_once 'core/controller/navigationController.php';
+include_once 'core/context.php';
+include_once 'core/session.php';
 include_once 'core/util/infoMessages.php';
 include_once 'core/util/captcha.php';
 include_once 'core/ddm/dmObject.php';
@@ -47,6 +50,5 @@ include_once 'core/ddm/dmSerializer.php';
 include_once 'core/ddm/dataModel.php';
 include_once 'core/ddm/dataView.php';
 include_once 'resource/js/valums-file-uploader/server/php.php';
-include_once 'core/model/installerModel.php';
 
 ?>

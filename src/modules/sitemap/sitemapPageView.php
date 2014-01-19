@@ -5,7 +5,6 @@
  */
 require_once 'core/common.php';
 require_once('core/plugin.php');
-include_once 'core/util/tinyMce.php';
 require_once("core/model/pagesModel.php");
 
 

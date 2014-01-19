@@ -26,7 +26,9 @@ class TemplateRenderer extends BaseRenderer {
             if (Context::hasRole("pages.edit")) {
                 ?>
                 <div class="toolButtonDiv show">
-                    <a class="toolButtonSpacinng" href="<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>$pageId,"area"=>$teplateArea,"position"=>-1)); ?>"><img src="resource/img/new.png" class="imageLink" alt="" title="Neues Modul einpflegen" /></a>
+                    <a class="toolButtonSpacinng" href="<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>$pageId,"area"=>$teplateArea,"position"=>-1)); ?>">
+                        <img src="resource/img/new.png" class="imageLink" alt="" title="<?php echo parent::getTranslation("admin.pages.module.new"); ?>" />
+                    </a>
                 </div>
                 <?php
             }
@@ -82,7 +84,7 @@ class TemplateRenderer extends BaseRenderer {
         
         // render the menu
         echo "<div id='vcms_area_$menuName' >";
-        ModuleModel::renderModuleObject(current($this->getModules($menuName)), true, false);
+        ModuleModel::renderModuleObject(current($this->getModules($menuName)));
         echo "</div>";
     }
 
@@ -166,6 +168,7 @@ class TemplateRenderer extends BaseRenderer {
     function renderHtmlHeader () {
 
         $page = Context::getPage();
+        $site = Context::getSite();
         
         // print page meta data
         $keywords = ""; $title = ""; $description = "";
@@ -220,44 +223,32 @@ class TemplateRenderer extends BaseRenderer {
             echo '<script type="text/javascript" src="'.$script.'" ></script>'.PHP_EOL.'        ';
         }
         
-        ?>
+?>
 <!-- Piwik -->
 <script type="text/javascript"> 
   var _paq = _paq || [];
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://localhost/vbmscms/modules/statistics/piwik//";
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://localhost/vbmscms/modules/statistics/piwik/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', 1]);
+    _paq.push(['setSiteId', <?php echo $site->piwikid; ?>]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
     g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 
 </script>
-<noscript><p><img src="http://localhost/vbmscms/modules/statistics/piwik/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+<noscript><p><img src="http://localhost/vbmscms/modules/statistics/piwik/piwik.php?idsite=<?php echo $site->piwikid; ?>" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Code -->
-
-<script type="text/javascript">
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-45809764-1', 'vbmscode.com');
-  ga('send', 'pageview');
-
-</script>
-        <?php
-    }
-    
-    function renderTrackerScript ($page) {
-        if (!empty($page->pagetrackerscript) || !empty($page->sitetrackerscript) || !empty($page->domaintrackerscript)) {
-            echo "<script>";
-            // echo $page->pagetrackerscript.PHP_EOL;
-            // echo $page->sitetrackerscript.PHP_EOL;
-            // echo $page->domaintrackerscript.PHP_EOL;
-            echo "</script>";
+<?php
+        if (!empty($page->pagetrackerscript)) {
+            echo $page->pagetrackerscript;
+        }
+        if (!empty($site->sitetrackerscript)) {
+            echo $site->sitetrackerscript;
+        }
+        if (!empty($site->domaintrackerscript)) {
+            echo $site->domaintrackerscript;
         }
     }
     
@@ -287,7 +278,6 @@ class TemplateRenderer extends BaseRenderer {
             <?php
         }
         
-        $this->renderTrackerScript(Context::getPage());
     }
     
     function invokeRender () {

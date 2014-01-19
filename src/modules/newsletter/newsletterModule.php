@@ -7,7 +7,6 @@ require_once 'core/common.php';
 require_once 'core/plugin.php';
 require_once 'modules/newsletter/newsletterModel.php';
 require_once 'modules/newsletter/newsletterController.php';
-require_once 'core/util/tinyMce.php';
 
 class NewsletterModule extends XModule {
 

@@ -44,7 +44,7 @@ class PagesModel {
         } else {
             $endQuery = "siteid is null";
         }
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface
+        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page
@@ -69,7 +69,7 @@ class PagesModel {
         $code = mysql_real_escape_string($code);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
+        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
@@ -96,7 +96,7 @@ class PagesModel {
     static function getStaticPage ($_name,$_lang) {
         $name = mysql_real_escape_string($_name);
         $lang = mysql_real_escape_string($_lang);
-        $query = "select p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
+        $query = "select p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -129,7 +129,7 @@ class PagesModel {
      */
     static function getTemplatePreviewPage ($templateId) {
         $templateId = mysql_real_escape_string($templateId);
-        return Database::queryAsObject("select '0' as codeid, '' as code, t.css, t.html, t.js, '0' as id, '0' as type, '0' as namecode, '' as name, '0' as welcome, '' as title, '' as keywords, t.id as template, t.template as templateinclude, t.interface as interface, '' as description
+        return Database::queryAsObject("select '0' as codeid, '' as code, t.css, t.html, t.js, '0' as id, '0' as type, '0' as namecode, '' as name, '0' as welcome, '' as title, '' as keywords, t.id as template, t.template as templateinclude, t.interface as interface, '' as description, '' as pagetrackerscript 
             from  t_template t
             where t.id = '$templateId'");
     }
@@ -154,7 +154,7 @@ class PagesModel {
     static function getPageTemplate ($id, $lang) {
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
+        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -172,7 +172,7 @@ class PagesModel {
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description
+        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
@@ -209,7 +209,7 @@ class PagesModel {
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface
+        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
             left join t_templatearea a on a.id = '$id'
             left join t_template t on p.template = t.id

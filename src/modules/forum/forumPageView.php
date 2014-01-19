@@ -7,7 +7,6 @@
 require_once 'core/common.php';
 require_once('core/plugin.php');
 include_once 'modules/forum/forumPageModel.php';
-include_once 'core/util/tinyMce.php';
 
 class ForumPageView extends XModule {
 

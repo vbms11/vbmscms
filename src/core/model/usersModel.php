@@ -65,7 +65,7 @@ class UsersModel {
         } else {
             $siteId = mysql_real_escape_string($siteId);
         }
-        return Database::queryAsArray("select u.* from t_site_users su join t_users on su.userid = u.id $condition");
+        return Database::queryAsArray("select u.* from t_site_users su join t_users u on su.userid = u.id $condition");
     }
 
     static function getUser ($id) {
@@ -103,7 +103,7 @@ class UsersModel {
             $siteId = mysql_real_escape_string($siteId);
         }
         $sqlCustomRoles = "in ('".implode("','",$customRoles)."')";
-        return Database::queryAsArray("select * from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id $sqlCustomRoles");
+        return Database::queryAsArray("select u.* from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id $sqlCustomRoles");
     }
     
     static function getUsersByCustomRoleId ($customRole, $siteId = null) {

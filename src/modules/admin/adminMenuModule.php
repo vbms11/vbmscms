@@ -29,42 +29,6 @@ class AdminMenuModule extends XModule {
     function getRoles () {
         return array("admin.edit");
     }
-    
-    static function getTranslations() {
-        return array("en" => array(
-            "admin.menu.account" 		=> "Account",
-            "admin.menu.pages"                  => "Pages",
-            "admin.menu.templates" 		=> "Templates",
-            "admin.menu.modules" 		=> "Modules",
-            "admin.menu.shop"                   => "Shop",
-            "admin.menu.products" 		=> "Products",
-            "admin.menu.template.installed"     => "Installed",
-            "admin.menu.template.customize"     => "Customize",
-            "admin.menu.template.available"     => "Available",
-            "admin.menu.account.sites"          => "Sites",
-            "admin.menu.account.domains" 	=> "Domains",
-            "admin.menu.account.package" 	=> "Package",
-            "admin.menu.account.messages" 	=> "Messages",
-            "admin.menu.account.forms"          => "Forms",
-            "admin.menu.account.newsletter" 	=> "Newsletter"
-        ), "de" => array(
-            "admin.menu.account" 		=> "Account",
-            "admin.menu.pages"                  => "Pages",
-            "admin.menu.templates" 		=> "Templates",
-            "admin.menu.modules" 		=> "Modules",
-            "admin.menu.shop"                   => "Shop",
-            "admin.menu.products" 		=> "Products",
-            "admin.menu.template.installed"     => "Installed",
-            "admin.menu.template.customize"     => "Customize",
-            "admin.menu.template.available"     => "Available",
-            "admin.menu.account.sites"          => "Sites",
-            "admin.menu.account.domains" 	=> "Domains",
-            "admin.menu.account.package" 	=> "Package",
-            "admin.menu.account.messages" 	=> "Messages",
-            "admin.menu.account.forms"          => "Forms",
-            "admin.menu.account.newsletter" 	=> "Newsletter"
-        ));
-    }
 
     function printMenuView () {
         Context::addRequiredScript("resource/js/jstree/jquery.jstree.js");
@@ -312,16 +276,16 @@ class AdminMenuModule extends XModule {
             }).bind("select_node.jstree", function (event, data) {
                 switch (data.rslt.obj.attr("id")) {
                     case "adminStatisticsDay":
-                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"day","adminStatisticMode"=>"day")); ?>");
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"day","setAdminMode"=>"statistics","adminStatisticMode"=>"day")); ?>");
                         break;
                     case "adminStatisticsWeek":
-                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"week","adminStatisticMode"=>"week")); ?>");
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"week","setAdminMode"=>"statistics","adminStatisticMode"=>"week")); ?>");
                         break;
                     case "adminStatisticsMonth":
-                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"month","adminStatisticMode"=>"month")); ?>");
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"month","setAdminMode"=>"statistics","adminStatisticMode"=>"month")); ?>");
                         break;
                     case "adminStatisticsYear":
-                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"year","adminStatisticMode"=>"year")); ?>");
+                        callUrl("<?php echo parent::staticLink("statistics",array("action"=>"year","setAdminMode"=>"statistics","adminStatisticMode"=>"year")); ?>");
                         break;
                 }
             });
@@ -416,11 +380,11 @@ class AdminMenuModule extends XModule {
                 <li id="adminDomains"><a href=""><?php echo parent::getTranslation("admin.menu.account.domains"); ?></a></li>
                 <li id="adminPackage"><a href=""><?php echo parent::getTranslation("admin.menu.account.package"); ?></a></li>
                 <li id="adminMessages"><a href=""><?php echo parent::getTranslation("admin.menu.account.messages"); ?> (<?php echo $countNewMessages; ?>)</a></li>
-                <li id="adminForms">
-                    <a href=""><?php echo parent::getTranslation("admin.menu.account.forms"); ?></a>
-                </li>
+                <li id="adminForms"><a href=""><?php echo parent::getTranslation("admin.menu.account.forms"); ?></a></li>
                 <li id="adminNewsletter"><a href=""><?php echo parent::getTranslation("admin.menu.account.newsletter"); ?></a></li>
                 <li id="adminTranslations"><a href=""><?php echo parent::getTranslation("admin.menu.account.translations"); ?></a></li>
+                <li id="adminUsers"><a href=""><?php echo parent::getTranslation("admin.menu.account.users"); ?></a></li>
+                <li id="adminRoles"><a href=""><?php echo parent::getTranslation("admin.menu.account.roles"); ?></a></li>
             </ul>
         </div>
         <script>
@@ -449,6 +413,12 @@ class AdminMenuModule extends XModule {
                         break;
                     case "adminTranslations":
                         callUrl("<?php echo parent::staticLink("adminTranslations"); ?>");
+                        break;
+                    case "adminUsers":
+                        callUrl("<?php echo parent::staticLink("adminUsers"); ?>");
+                        break;
+                    case "adminRoles":
+                        callUrl("<?php echo parent::staticLink("adminRoles"); ?>");
                         break;
                 }
             });

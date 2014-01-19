@@ -36,28 +36,40 @@ class SiteModel {
         
     }
     
-    static function createSite ($name, $cmsCustomerId, $description, $domain = null) {
+    static function createSite ($name, $cmsCustomerId, $description, $domain = null, $trackerScript = '') {
 	$name = mysql_real_escape_string($name);
         $description = mysql_real_escape_string($description);
         $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
+        $trackerScript = mysql_real_escape_string($trackerScript);
         // 
         if (empty($domain)) {
             $defaultDomain = DomainsModel::getSubDomainUrl($name);
         } else {
             $defaultDomain = $domain;
         }
-        
         $piwikSiteId = PiwikModel::createSite($name, $defaultDomain);
         $piwikUser = PiwikModel::getCmsCustomerUserName($cmsCustomerId);
         $userSites = PiwikModel::getUserSites($piwikUser);
         PiwikModel::setUserSites($piwikUser, $userSites);
         
-        Database::query("insert into t_site (name,cmscustomerid,description,piwikid) values ('$name','$cmsCustomerId','$description','$piwikSiteId')");
+        Database::query("insert into t_site (name,cmscustomerid,description,piwikid,sitetrackerscript) values ('$name','$cmsCustomerId','$description','$piwikSiteId','$trackerScript')");
 	$result = Database::queryAsObject("select last_insert_id() as newid from t_site");
         
         DomainsModel::createDomain($defaultDomain, $result->newid);
         
         return $result->newid;
+    }
+    
+    static function updateSite ($siteId, $name, $description, $trackerScript) {
+        $siteId = mysql_real_escape_string($siteId);
+        $name = mysql_real_escape_string($name);
+        $description = mysql_real_escape_string($description);
+        $trackerScript = mysql_real_escape_string($trackerScript);
+        Database::query("update t_site set 
+            name = '$name',
+            description = '$description',
+            sitetrackerscript = '$trackerScript' 
+            where id = '$siteId'");
     }
     
     static function byCmscustomerid ($cmsCustomerId) {

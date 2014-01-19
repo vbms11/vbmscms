@@ -82,7 +82,7 @@ class AdminPagesBaseModule extends XModule {
         $templates = TemplateModel::getTemplates(Context::getSiteId());
         $pageId = parent::get("id");
         $index = parent::get("index");
-        if (!empty($index)) {
+        if ($index !== null) {
             PagesModel::setPageTemplate($pageId,$templates[$index]->id);
         }
         Context::setReturnValue("setTemplate:".$index);
@@ -315,7 +315,12 @@ class AdminPagesBaseModule extends XModule {
         foreach ($areaNames as $areaName) {
             ?>
             <fieldset>
-                <legend><?php echo $areaName; ?></legend>
+                <legend>
+                    <?php echo $areaName; ?>
+                    <a class="toolButtonSpacinng" href="<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>$_SESSION['adminPageId'],"area"=>$areaName,"position"=>-1)); ?>">
+                        <img src="resource/img/new.png" class="imageLink" alt="" title="<?php echo parent::getTranslation("admin.pages.module.new"); ?>" />
+                    </a>
+                </legend>
                 <?php
                 $modules = TemplateModel::getAreaModules($page->id, $areaName);
                 ?>
