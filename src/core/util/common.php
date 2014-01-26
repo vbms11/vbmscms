@@ -90,8 +90,7 @@ class Common {
         return htmlspecialchars($input,$mode);
     }
 
-    static function htmlEntities ($input) {
-        //$input = htmlspecialchars($input, ENT_QUOTES);
+    static function replaceUmls ($input) {
         $search = array("ö","ü","ä","Ö","Ü","Ä");
         $replace = array("&ouml;","&uuml;","&auml;","&Ouml;","&Uuml;","&Auml;");
         return str_replace($search, $replace, $input);
@@ -145,7 +144,7 @@ class InputFeilds {
     }
     
     static function printTextFeild ($name,$value="",$class=null) {
-        ?><input type="text" value="<?php echo Common::htmlEscape($value); ?>" name="<?php echo Common::htmlEscape($name); ?>" id="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
+        ?><input type="text" value="<?php echo $value; /*Common::htmlEscape($value);*/ ?>" name="<?php echo Common::htmlEscape($name); ?>" id="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
     }
     
     static function printTextArea ($name,$value="",$class=null,$rows=null) {

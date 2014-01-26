@@ -169,7 +169,7 @@ class AdminMenuModule extends XModule {
             ?>
             <li class="adminNodeEditorPage <?php echo $liClass; ?>" id="page_<?php echo $page->page->id; ?>">
                 <a class="<?php echo $aClass; ?>" href="#">
-                    <?php echo Common::htmlEntities($page->page->name); ?>
+                    <?php echo htmlentities($page->page->name); ?>
                 </a>
                 <?php
                 if (isset($page->children)) {

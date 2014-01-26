@@ -1,6 +1,6 @@
 <?php
 
-require_once 'core/plugin.php';
+include_once 'core/plugin.php';
 include_once 'modules/editor/wysiwygPageModel.php';
 
 class WysiwygPageView extends XModule {
@@ -37,11 +37,11 @@ class WysiwygPageView extends XModule {
         switch (parent::getAction()) {
             case "edit":
                 if (Context::hasRole("wysiwyg.edit")) {
-                    $this->printEditView(parent::getId());
+                    $this->printEditView();
                 }
                 break;
             default:
-                $this->printMainView(parent::getId());
+                $this->printMainView();
         }
     }
 
@@ -56,51 +56,57 @@ class WysiwygPageView extends XModule {
      * returns search results for given text
      */
     function search ($searchText, $lang) {
-        $searchResults = WysiwygPageModel::search($searchText,Context::getLang());
-        return $searchResults;
+        return WysiwygPageModel::search($searchText,$lang);
     }
 
-    function printMainView ($pageId) {
+    function printMainView () {
 
-        $wysiwygPage = WysiwygPageModel::getWysiwygPage($pageId,Context::getLang());
+        $wysiwygPage = WysiwygPageModel::getWysiwygPage(parent::getId(),Context::getLang());
+        $content = trim($wysiwygPage->content);
+        
         ?>
         <div class="panel wysiwygPanel">
-		<?php
-		if (!Common::isEmpty(trim($wysiwygPage->content))) {
-			echo $wysiwygPage->content;
-		} else {
-			echo "<br/>";
-		}
-            	?>
+            <?php
+            if (empty($content)) {
+                echo "<br/>";
+            } else {
+                echo $wysiwygPage->content;
+            }
+            ?>
         </div>
         <?php
     }
 
-    function printEditView ($pageId) {
+    function printEditView () {
 
-        $article = WysiwygPageModel::getWysiwygPage($pageId, Context::getLang());
+        $article = WysiwygPageModel::getWysiwygPage(parent::getId(), Context::getLang());
+        
         ?>
         <div class="panel wysiwygPanel">
-            <form name="articleForm" method="post" action="<?php echo parent::link(array("action"=>"update")); ?>">
+            <form method="post" action="<?php echo parent::link(array("action"=>"update")); ?>">
                 <div class="formFeildLine">
-                    <b>Diese Seite mit dem Editor &auml;ndern</b>
+                    <b><?php echo parent::getTranslation("editor.label.content"); ?></b>
                 </div>
-                <br/>
                 <div class="formFeild">
                     <?php
                     InputFeilds::printHtmlEditor("articleContent", $article->content);
                     ?>
                 </div>
-                <hr noshade/>
+                <hr/>
                 <div class="alignRight">
-                    <button type="submit">Speichern</button>
-                    <button type="submit" onclick="callUrl('<?php echo parent::link(array("action"=>"cancel")); ?>'); return false;">Abbrechen</button>
+                    <button type="submit" class="btnSave"><?php echo parent::getTranslation("common.save"); ?></button>
+                    <button type="button" class="btnCancel"><?php echo parent::getTranslation("editor.label.cancel"); ?></button>
                 </div>
             </form>
         </div>
 	<script>
-	$(".wysiwygPanel .alignRight button").each(function (index,object) {
-		$(object).button();
+	$(".wysiwygPanel .alignRight .btnSave").each(function (index,object) {
+            $(object).button();
+	});
+        $(".wysiwygPanel .alignRight .btnCancel").each(function (index,object) {
+            $(object).button().click(function () {
+                callUrl("<?php echo parent::link(array("action"=>"cancel")); ?>");
+            });
 	});
 	</script>
         <?php

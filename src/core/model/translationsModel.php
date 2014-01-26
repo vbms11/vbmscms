@@ -26,14 +26,16 @@ class TranslationsModel {
         } else {
             self::addTranslations(array($lang => array($code => $code)));
         }
-        if (!$escape) {
-            $translation = html_entity_decode($translation, ENT_QUOTES);
+        $translation = utf8_decode($translation);
+        if ($escape) {
+            $translation = htmlentities($translation, ENT_QUOTES);
         }
-        if ($replace != null && is_array($replace)) {
+        if (!empty($replace) && is_array($replace)) {
             foreach ($replace as $token => $value) {
                 $translation = str_replace($token, $value, $translation);
             }
         }
+        // $translation = html_entity_decode($translation, ENT_QUOTES);
         return $translation;
     }
 
@@ -47,7 +49,7 @@ class TranslationsModel {
                 $varObj[$langCode] = array();
             }
             foreach ($translation as $key => $value) {
-                $escapedValue = Common::htmlEntities($value);
+                $escapedValue = utf8_encode($value);
                 if (!isset($varObj[$langCode][$key]) || $escapedValue !== $varObj[$langCode][$key]) {
                     self::$newTranslations = true;
                     $varObj[$langCode][$key] = $escapedValue;

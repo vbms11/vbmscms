@@ -358,7 +358,7 @@ class MenuView extends AdminPagesBaseModule {
                         foreach ($menus as $page) {
                             $levelId = "m_".$page->page->id;
                             if (!Common::isEmpty($page->page->name)) {
-                                ?><div><a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>"><?php echo Common::htmlEntities($page->page->name); ?></a><?php
+                                ?><div><a class="<?php echo (($first == true) ? "sddmFirst " : "").(($page->selected == true) ? "sddmSelected " : ""); ?>" href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>"><?php echo htmlentities($page->page->name); ?></a><?php
                                     $this->printMenuNode($page);
                                 ?></div><?php
                                 $first = false;
@@ -382,7 +382,7 @@ class MenuView extends AdminPagesBaseModule {
             ?><div id="<?php echo $thisLevel; ?>" class='sddmHide <?php if ($page->selected == true) echo "sddmSelected"; ?>' ><?php
                 $first = true;
                 foreach ($page->children as $childPage) {
-                    ?><a href="<?php echo NavigationModel::createPageNameLink($childPage->page->name, $childPage->page->id); ?>" <?php if ($childPage->selected == true) echo "class='sddmSelected'"; ?> ><?php echo Common::htmlEntities($childPage->page->name); ?></a><?php
+                    ?><a href="<?php echo NavigationModel::createPageNameLink($childPage->page->name, $childPage->page->id); ?>" <?php if ($childPage->selected == true) echo "class='sddmSelected'"; ?> ><?php echo htmlentities($childPage->page->name); ?></a><?php
                     if (count($childPage->children) > 0) {
                         $this->printMenuNode($childPage);
                     }
