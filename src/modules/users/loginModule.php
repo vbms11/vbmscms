@@ -139,8 +139,9 @@ class LoginModule extends XModule {
         ?>
         <div class="panel loginPanel loginSuccessPanel">
             <?php
+            $user = Context::getUser();
             $text = parent::getTranslation("login.success");
-            $text = str_replace("%1%", Context::getUsername(), $text);
+            $text = str_replace("%1%", $user->username, $text);
             echo $text;
             ?>
         </div>
@@ -160,8 +161,9 @@ class LoginModule extends XModule {
         <div class="panel">
             <form id="loginForm" name="loginForm" method="post" action="<?php echo parent::link(array("action"=>"logout")); ?>">
                 <?php
+                $user = Context::getUser();
                 $text = parent::getTranslation("login.logout.confirm");
-                $text = str_replace("%1%", Context::getUsername(), $text);
+                $text = str_replace("%1%", $user->username, $text);
                 echo $text;
                 ?>
                 <br/><br/>

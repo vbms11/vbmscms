@@ -63,9 +63,10 @@ class CurrentUserModule extends XModule {
      */
     function printMainView () {
         if (Context::isLoggedIn()) {
+            $user = Context::getUser();
             ?>
             <div class="panel currentUserPanel">
-                <?php echo str_replace("%username%",Context::getUsername(),parent::param("users.current.text")); ?>
+                <?php echo str_replace("%username%",$user->username,parent::param("users.current.text")); ?>
             </div>
             <?php
         }

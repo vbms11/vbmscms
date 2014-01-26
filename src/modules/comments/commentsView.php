@@ -184,8 +184,8 @@ class CommentsView extends XModule {
                 $userName = "";
                 $userImage = "modules/comments/img/User.png";
                 if (Context::isLoggedIn()) {
-                    $userName = Context::getUsername();
                     $user = Context::getUser();
+                    $userName = $user->username;
                     if (!empty($user->image)) {
                         $userImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
                     }

@@ -43,7 +43,7 @@ class RolesView extends XModule {
                 case "removeRole":
                     break;
                 default:
-                    $this->printMainView(parent::getId());
+                    $this->printMainTabs();
             }
         }
         
@@ -56,61 +56,75 @@ class RolesView extends XModule {
     function getRoles () {
         return array("admin.roles.edit");
     }
-
-    function printMainView ($pageId) {
+    
+    function printMainTabs () {
+        ?>
+        <div class="adminRolesTabs">
+            <ul>
+                <li><a href="#adminRoles"><?php echo parent::getTranslation("admin.roles.tab"); ?></a></li>
+            </ul>
+            <div id="adminRoles">
+                <?php $this->printMainView(); ?>
+            </div>
+        </div>
+        <script>
+        $(".adminRolesTabs").tabs();
+        </script>
+        <?php
+    }
+    
+    function printMainView () {
         $roleGroups = RolesModel::getCustomRoles();
         $allRoles = Common::toMap(RolesModel::getModuleRoles());
         $roleGroupIds = array_keys($roleGroups);
-        $group = isset($_GET['group']) ? $_GET['group'] : $roleGroupIds[0]; 
+        $group = isset($_GET['group']) ? $_GET['group'] : current($roleGroupIds); 
         $pageRoles = RolesModel::getCustomRoleModuleRoles($group);
         ?>
 	<div class="panel rolesPage">
-            <h3>Configure Role Groups</h3>
-            <div>
-                <form action="<?php echo parent::link(array("action"=>"saveRoles","group"=>$group)); ?>" method="post">
+            <h3><?php echo parent::getTranslation("admin.roles.title"); ?></h3>
+            <form action="<?php echo parent::link(array("action"=>"saveRoles","group"=>$group)); ?>" method="post">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("admin.roles.label.roleGroup"); ?>
+                </td><td>
+                    <select id="rolename">
+                            <?php
+                            foreach ($roleGroups as $roleGroup) {
+                                ?><option value="<?php echo $roleGroup->id; ?>" <?php if ($group == $roleGroup->id) echo "selected=\"true\""; ?>><?php echo $roleGroup->name; ?></option><?php
+                            }
+                            ?>
+                        </select>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("admin.roles.label.roles"); ?>
+                </td><td>
                     <?php
-                    InfoMessages::printInfoMessage("Here you can determin which usergroups can do what!");
+                    InputFeilds::printMultiSelect("roles", $allRoles, $pageRoles);
                     ?>
-                    <br/>
-                    <div>
-                        <table width="100%"><tr><td class="expand" valign="bottom">
-                            Select Role Group:<br/>
-                            <select onchange="onSelectGroup();" class="expand text ui-widget-content ui-corner-all" id="rolegroup" name="rolegroup">
-                                <?php
-                                foreach ($roleGroups as $roleGroup) {
-                                    ?><option value="<?php echo $roleGroup->id; ?>" <?php if ($group == $roleGroup->id) echo "selected=\"true\""; ?>><?php echo $roleGroup->name; ?></option><?php
-                                }
-                                ?>
-                            </select>
-                        </td><td>
-                            <button id="createRole" class="nowrap">Create New Group</button>
-                        </td><td>
-                            <button id="deleteRole" class="nowrap">Delete Group</button>
-                        </td></tr></table>
-                    </div>
-                    <br/>
-                    <div>
-                        <?php 
-                        InputFeilds::printMultiSelect("roles", $allRoles, $pageRoles);
-                        ?>
-                    </div>
-                    <br/><hr/>
-                    <button type="submit">Save</button>
-                </form>
-                <div id="dialog-form" title="Create Role">
-                    <p class="validateTips">Enter the name of the role.</p>
-                    <form action="">
-                        <label for="name">Name</label>
-                        <input type="text" name="rolename" id="rolename" class="expand" />
-                    </form>
+                </td></tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button id="saveRoles" type="submit"><?php echo parent::getTranslation("admin.roles.button.save"); ?></button>
+                    <button id="createRole" class="nowrap"><?php echo parent::getTranslation("admin.roles.button.new"); ?></button>
+                    <button id="deleteRole" class="nowrap"><?php echo parent::getTranslation("admin.roles.button.delete"); ?></button>
                 </div>
+            </form>
+            <div id="dialog-form" title="Create Role">
+                <p class="validateTips">
+                    <?php echo parent::getTranslation("admin.roles.dialog.message"); ?>
+                </p>
+                <form action="">
+                    <table class="formTable"><tr><td>
+                        <?php echo parent::getTranslation("admin.roles.dialog.label"); ?>
+                    </td><td>
+                        <input type="text" name="rolename" id="rolename" class="expand" />
+                    </td></tr></table>
+                </form>
             </div>
             <script type="text/javascript">
-            function onSelectGroup () {
-                var url = "<?php echo parent::link(array(), false); ?>";
-                callUrl(url,{"group":$("#rolegroup").val()});
-            }
             $(function() {
+                $("#rolename").change(function(){
+                    var url = "<?php echo parent::link(array(), false); ?>";
+                    callUrl(url,{"group":$(this).val()});
+                });
                 $( "#dialog-form" ).dialog({
                     autoOpen: false, modal: true,
                     height: 300, width: 350,
@@ -124,6 +138,7 @@ class RolesView extends XModule {
                         }
                     }
                 });
+                $("#saveRoles").button();
                 $( "#createRole" ).button().click(function(e) {
                     $( "#dialog-form" ).dialog( "open" );
                     e.preventDefault();

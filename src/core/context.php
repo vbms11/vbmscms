@@ -2,13 +2,10 @@
 
 class Context {
     
-    // user attribs
+    // user
 
     static function setUser ($user) {
-        $_SESSION["context.userName"] = $user->username;
-        $_SESSION["context.userId"] = $user->id;
         $_SESSION["context.user"] = $user;
-        $_SESSION["context.userLoggedin"] = true;
         Session::setUserFromContext();
     }
     
@@ -16,21 +13,20 @@ class Context {
         return isset($_SESSION["context.user"]) ? $_SESSION["context.user"] : null;
     }
 
-    static function getUsername () {
-        return isset($_SESSION["context.userName"]) ? $_SESSION["context.userName"] : null;
-    }
-
     static function getUserId () {
-        return isset($_SESSION["context.userId"]) ? $_SESSION["context.userId"] : null;
-    }
-
-    static function getUserObjectId () {
-        return isset($_SESSION["context.userObjectId"]) ? $_SESSION["context.userObjectId"] : null;
+        $user = self::getUser();
+        if (empty($user)) {
+            return null;
+        }
+        return $user->id;
     }
     
     static function isLoggedIn () {
-        return (isset($_SESSION["context.userLoggedin"]) && $_SESSION["context.userLoggedin"] == true) ? true : false;
+        $user = self::getUser();
+        return !empty($user);
     }
+    
+    // user home
     
     static function getUserHome ($userId = null) {
         if ($userId != null)
@@ -157,7 +153,7 @@ class Context {
     }
     
     static function isTemplatePreviewRequest () {
-        return (isset($_GET["templatePreview"]));
+        return isset($_GET["templatePreview"]);
     }
     
     static function isAdminMode () {
@@ -169,35 +165,31 @@ class Context {
     }
 
     static function getPage () {
-        return isset($_SESSION["req.page"]) ? $_SESSION["req.page"] : null;
+        return isset($_REQUEST["req.page"]) ? $_REQUEST["req.page"] : null;
     }
 
     static function getPageId () {
-        return isset($_SESSION["req.pageId"]) ? $_SESSION["req.pageId"] : null;
+        $page = self::getPage();
+        if (empty($page)) {
+            return null;
+        }
+        return $page->id;
     }
 
     static function getModuleId () {
-        return isset($_SESSION["req.moduleId"]) ? $_SESSION["req.moduleId"] : null;
+        return isset($_REQUEST["req.moduleId"]) ? $_REQUEST["req.moduleId"] : null;
     }
 
     static function setModuleId ($moduleId) {
-        $_SESSION["req.moduleId"] = $moduleId;
+        $_REQUEST["req.moduleId"] = $moduleId;
     }
     
     static function setService ($moduleName = null) {
-        $_SESSION["req.service"] = $moduleName;
+        $_REQUEST["req.service"] = $moduleName;
     }
     
     static function getService () {
-        return isset($_SESSION["req.service"]) ? $_SESSION["req.service"] : null;
-    }
-
-    static function getPageName () {
-        return isset($_SESSION["req.pageName"]) ? $_SESSION["req.pageName"] : null;
-    }
-
-    static function getPageHash () {
-        return isset($_SESSION["req.pageHash"]) ? $_SESSION["req.pageHash"] : null;
+        return isset($_REQUEST["req.service"]) ? $_REQUEST["req.service"] : null;
     }
 
     static function getLang () {
@@ -264,7 +256,7 @@ class Context {
             LanguagesModel::selectLanguage();
             
             // set the siteid
-            $_SESSION["req.site"] = DomainsModel::getCurrentSite();
+            $_SESSION["req.site"] = self::getSite();
             
             // check if admin mode
             if (isset($_GET["setAdminMode"])) {
@@ -274,15 +266,7 @@ class Context {
             // set the selected page
             $page = NavigationController::selectPage();
             if ($page != null) {
-                $_SESSION["req.page"] = $page;
-                $_SESSION["req.pageId"] = $page->id;
-                $_SESSION["req.pageName"] = $page->name;
-                if (isset($page->code)) {
-                    $_SESSION["req.pageCode"] = $page->code;
-                    if (Context::isAdminMode()) {
-                        Context::setAdminMode($page->code);
-                    }
-                }
+                $_REQUEST["req.page"] = $page;
                 self::loadRenderer();
             }
         }
@@ -304,13 +288,6 @@ class Context {
         
         TranslationsModel::maintainTrnaslationsFile();
         Log::writeLogFile();
-        
-        // unset session request data
-        $_SESSION["req.page"] = null;
-        $_SESSION["req.pageId"] = null;
-        $_SESSION["req.pageName"] = null;
-        $_SESSION["req.pageCode"] = null;
-        $_SESSION["req.service"] = null;
     }
     
     static function setIsFocusedArea ($bool) {

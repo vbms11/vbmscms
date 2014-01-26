@@ -144,10 +144,8 @@ class AdminTemplatesModule extends XModule {
                         $('#myelfinder').elfinder({
                             url : '<?php echo NavigationModel::createServiceLink("fileSystem", array("action"=>"template","id"=>$template->id)); ?>',
                             lang : 'en',
-                            docked: true,
-                            dialog : { width : 900, modal : true, title : 'elFinder - file manager for web' },
-                            closeOnEditorCallback : true
-                        })
+                            docked: true
+                        });
                         $('#myelfinder').elfinder("open");
                         </script>
                     </div>

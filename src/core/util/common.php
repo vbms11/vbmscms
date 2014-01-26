@@ -91,6 +91,7 @@ class Common {
     }
 
     static function htmlEntities ($input) {
+        //$input = htmlspecialchars($input, ENT_QUOTES);
         $search = array("ö","ü","ä","Ö","Ü","Ä");
         $replace = array("&ouml;","&uuml;","&auml;","&Ouml;","&Uuml;","&Auml;");
         return str_replace($search, $replace, $input);

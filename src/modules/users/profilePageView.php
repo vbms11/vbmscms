@@ -59,7 +59,7 @@ class ProfilePageView extends XModule {
                 break;
             case "editAttribs":
                 if (Context::hasRole("user.info.owner") && (parent::param("mode") == self::modeCurrentUser && Context::getUserId() == Context::getSelectedUserId()) || Context::hasRole("user.info.admin")) {
-                    DynamicDataView::editObject("userAttribs",$_GET['id'],Context::getUsername()." Attributes:",
+                    DynamicDataView::editObject("userAttribs",$_GET['id'],"User Attributes:",
                         parent::link(array(),false), parent::link(array("action"=>"editAttribs","id"=>$_GET['id']),false));
                 }
                 break;

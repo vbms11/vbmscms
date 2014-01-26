@@ -169,7 +169,7 @@ class AdminMenuModule extends XModule {
             ?>
             <li class="adminNodeEditorPage <?php echo $liClass; ?>" id="page_<?php echo $page->page->id; ?>">
                 <a class="<?php echo $aClass; ?>" href="#">
-                    <?php echo $page->page->name; ?>
+                    <?php echo Common::htmlEntities($page->page->name); ?>
                 </a>
                 <?php
                 if (isset($page->children)) {
@@ -394,31 +394,31 @@ class AdminMenuModule extends XModule {
             }).bind("select_node.jstree", function (event, data) {
                 switch (data.rslt.obj.attr("id")) {
                     case "adminSites":
-                        callUrl("<?php echo parent::staticLink("adminSites"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminSites", array("setAdminMode"=>"adminSites")); ?>");
                         break;
                     case "adminDomains":
-                        callUrl("<?php echo parent::staticLink("adminDomains"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminDomains", array("setAdminMode"=>"adminDomains")); ?>");
                         break;
                     case "adminPackage":
-                        callUrl("<?php echo parent::staticLink("adminPackage"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminPackage", array("setAdminMode"=>"adminPackage")); ?>");
                         break;
                     case "adminMessages":
-                        callUrl("<?php echo parent::staticLink("adminMessages"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminMessages", array("setAdminMode"=>"adminMessages")); ?>");
                         break;
                     case "adminForms":
-                        callUrl("<?php echo parent::staticLink("configTables"); ?>");
+                        callUrl("<?php echo parent::staticLink("configTables", array("setAdminMode"=>"configTables")); ?>");
                         break;
                     case "adminNewsletter":
-                        callUrl("<?php echo parent::staticLink("adminNewsletter"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminNewsletter", array("setAdminMode"=>"adminNewsletter")); ?>");
                         break;
                     case "adminTranslations":
-                        callUrl("<?php echo parent::staticLink("adminTranslations"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminTranslations", array("setAdminMode"=>"adminTranslations")); ?>");
                         break;
                     case "adminUsers":
-                        callUrl("<?php echo parent::staticLink("adminUsers"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminUsers", array("setAdminMode"=>"adminUsers")); ?>");
                         break;
                     case "adminRoles":
-                        callUrl("<?php echo parent::staticLink("adminRoles"); ?>");
+                        callUrl("<?php echo parent::staticLink("adminRoles", array("setAdminMode"=>"adminRoles")); ?>");
                         break;
                 }
             });
@@ -467,7 +467,7 @@ class AdminMenuModule extends XModule {
             }).bind("select_node.jstree", function (event, data) {
                 if (data.rslt.obj.hasClass("adminNodeEditorTemplate")) {
                     var templateId = data.rslt.obj.attr("id").substring(9);
-                    callUrl("<?php echo parent::staticLink("adminTemplates",array("action"=>"editTemplate")); ?>&adminTemplateId="+templateId+"&id="+templateId);
+                    callUrl("<?php echo parent::staticLink("adminTemplates",array("action"=>"editTemplate","setAdminMode"=>"adminTemplates")); ?>&adminTemplateId="+templateId+"&id="+templateId);
                 }
             });
         });
