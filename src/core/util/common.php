@@ -139,12 +139,16 @@ class Common {
 
 class InputFeilds {
     
-    static function printCheckbox ($name,$checked,$class=null) {
+    static function printCheckbox ($name,$checked=null,$class=null) {
         ?><input type="checkbox" value="1" <?php if ($checked) echo "checked=\"true\""; ?> name="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
     }
     
     static function printTextFeild ($name,$value="",$class=null) {
-        ?><input type="text" value="<?php echo $value; /*Common::htmlEscape($value);*/ ?>" name="<?php echo Common::htmlEscape($name); ?>" id="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
+        ?><input type="text" value="<?php echo htmlentities($value,ENT_QUOTES); ?>" name="<?php echo Common::htmlEscape($name); ?>" id="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
+    }
+    
+    static function printPasswordFeild ($name,$value="",$class=null) {
+        ?><input type="password" value="<?php echo htmlentities($value,ENT_QUOTES); ?>" name="<?php echo Common::htmlEscape($name); ?>" id="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
     }
     
     static function printTextArea ($name,$value="",$class=null,$rows=null) {
@@ -277,14 +281,11 @@ class InputFeilds {
 	<?php
     }
 
-    static function printDataPicker ($name,$value) {
+    static function printDataPicker ($name,$value="") {
+        $dateTime = strtotime('Apr 30, 2010');
+        $value = date('d/m/Y', $dateTime);
 	?>
-	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="textbox" type="text" value="" />
-	<script>
-	$("#<?php echo $name; ?>").datepicker();
-        $("#<?php echo $name; ?>").datepicker("option", "showAnim", "blind");
-        $("#<?php echo $name; ?>").datepicker({changeMonth: true, changeYear: true});
-	</script>
+	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="jquiDate" type="text" value="<?php echo $value; ?>" />
 	<?php
     }
 }

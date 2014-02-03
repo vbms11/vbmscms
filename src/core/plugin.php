@@ -232,7 +232,6 @@ abstract class XModule implements IModule, ITranslatable {
         return $retPaths;
     }
     
-    
     function loadRequiredResources () {
         $styles = $this->getStyles();
         if (!empty($styles)) {
@@ -248,6 +247,33 @@ abstract class XModule implements IModule, ITranslatable {
                 Context::addRequiredScript($scriptPath);
             }
         }
+    }
+    
+    function setMessages ($messages) {
+        $_SESSION["messages.".$this->moduleId] = $messages;
+    }
+    
+    function clearMessages () {
+        $this->setMessages(array());
+    }
+    
+    function getMessages () {
+        if (!isset($_SESSION["messages.".$this->moduleId])) {
+            $this->clearMessages();
+        }
+        return $_SESSION["messages.".$this->moduleId];
+    }
+    
+    function addMessages ($messages) {
+        $this->setMessages(array_merge($this->getMessages(),$messages));
+    }
+    
+    function getMessage ($key = null) {
+        $messages = $this->getMessages();
+        if (isset($messages[$key])) {
+            return $messages[$key];
+        }
+        return null;
     }
 }
 

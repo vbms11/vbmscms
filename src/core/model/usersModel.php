@@ -155,6 +155,52 @@ class UsersModel {
         Database::query("update t_users set image = '$imageId' where id = '$userId'");
     }
     
+    static function validate ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate = null) {
+        $validate = array();
+        if (strlen($username) < 4) {
+            $validate["username"] = "user name must be at least 4 characters!";
+        } else if ($username > 100) {
+            $validate["username"] = "user name must be shorter that 100 characters!";
+        }
+        if (strlen($firstName) < 1) {
+            $validate["firstname"] = "First name cannot be empty!";
+        }
+        if (strlen($lastName) < 1) {
+            $validate["lastname"] = "Last name cannot be empty!";
+        }
+        if ($password != null && strlen($password) < 6) {
+            $validate["password"] = "Password must be at least 6 characters!";
+        }
+        if (preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9_.-]+\.[a-zA-Z]{2,7}$/D", $email) == 0) {
+            $validate["email"] = "Not a valid email address!";
+        }
+        if ($id == null) {
+            $_email = mysql_real_escape_string($email);
+            $result = Database::queryAsObject("select 1 as emailexists from t_users where email = '$_email'");
+            if ($result != null) {
+                $validate["email"] = "Email already registered by another user!";
+            }
+            $_username = mysql_real_escape_string($username);
+            $result = Database::queryAsObject("select 1 as usernameexists from t_users where username = '$_username'");
+            if ($result != null) {
+                $validate["username"] = "Username already registered by another user!";
+            }
+        } else {
+            $_id = mysql_real_escape_string($id);
+            $_email = mysql_real_escape_string($email);
+            $result = Database::queryAsObject("select 1 as emailexists from t_users where email = '$_email' and id != '$id'");
+            if ($result != null) {
+                $validate["email"] = "Email already registered by another user!";
+            }
+            $_username = mysql_real_escape_string($username);
+            $result = Database::queryAsObject("select 1 as usernameexists from t_users where username = '$_username' and id != '$id'");
+            if ($result != null) {
+                $validate["username"] = "Username already registered by another user!";
+            }
+        }
+        return $validate;
+    }
+    
     static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate, $profileImage = null, $siteId = null) {
         $username = mysql_real_escape_string($username);
         $firstName = mysql_real_escape_string($firstName);
@@ -176,21 +222,19 @@ class UsersModel {
             $objectId = DynamicDataView::createObject("userAttribs",false);
             // create user
             Database::query("insert into t_users (username,firstname,lastname,email,birthdate,registerdate,objectid,image)
-                values ('$username','$firstName','$lastName','$email','$birthDate',now(),'$objectId',$profileImage)");
+                values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),'$objectId',$profileImage)");
             $result = Database::queryAsObject("select last_insert_id() as id from t_users");
             $id = $result->id;
             // create site user
             Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
             // set user password
             UsersModel::setPassword($id, $password);
-            // update user attribs
-            VirtualDataModel::loadRefTable("userAttribs",$objectId);
         } else {
             $id = mysql_real_escape_string($id);
             $registerDateSql = "";
             if ($registerDate != null)
                 $registerDateSql = ", registerdate = '".mysql_real_escape_string($registerDate)."'";
-            Database::query("update t_users set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d.%m.%Y')' $registerDateSql where id = '$id'");
+            Database::query("update t_users set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y')' $registerDateSql where id = '$id'");
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
         return $id;

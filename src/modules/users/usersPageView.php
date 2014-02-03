@@ -17,43 +17,43 @@ class UsersPageView extends XModule {
 
             switch (parent::getAction()) {
                 case "create":
-                    $userObjectId = DynamicDataView::createObject("userAttribs");
-                    $user = UsersModel::getUserByObjectId($userObjectId);
-                    parent::redirect(array("action"=>"edit","id"=>$user->id));
+                    parent::clearMessages();
+                    if (parent::post("submit")) {
+                        $validationMessages = UsersModel::validate(null, parent::post("username"), parent::post("firstname"), parent::post("lastname"), parent::post("password"), parent::post("email"), parent::post("dob"));
+                        if (count($validationMessages) == 0) {
+                            $id = UsersModel::saveUser(null, parent::post("username"), parent::post("firstname"), parent::post("lastname"), parent::post("password"), parent::post("email"), parent::post("dob"));
+                            if (parent::post("active") == "1") {
+                                UsersModel::setUserActiveFlag($id, "1");
+                            }
+                            parent::redirect(array("action"=>"edit","id"=>$id));
+                        } else {
+                            parent::addMessages($validationMessages);
+                        }
+                    }
                     break;
-                case "updateUser":
-                    UsersModel::saveUser($_POST['id'], $_POST['userName'], $_POST['firstName'], $_POST['lastName'], null, $_POST['email'], $_POST['birthDate'], null);
-                    parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
+                case "update":
+                    parent::clearMessages();
+                    if (parent::post("submit")) {
+                        $validationMessages = UsersModel::validate(parent::get("id"), parent::post("username"), parent::post("firstname"), parent::post("lastname"), null, parent::post("email"), parent::post("dob"), parent::post("register"));
+                        if (count($validationMessages) == 0) {
+                            UsersModel::saveUser(parent::get("id"), parent::post("username"), parent::post("firstname"), parent::post("lastname"), null, parent::post("email"), parent::post("dob"), parent::post("register"));
+                        } else {
+                            parent::addMessages($validationMessages);
+                        }
+                        parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
+                    }
                     break;
                 case "edit":
                     parent::focus();
                     break;
                 case "delete":
-                    UsersModel::deleteUser($_GET['id']);
+                    UsersModel::deleteUser(parent::get("id"));
                     parent::blur();
                     parent::redirect();
                     break;
                 case "cancel":
                     parent::blur();
                     parent::redirect();
-                    break;
-                case "editAttribs":
-                    DynamicDataView::processAction("userAttribs",
-                        parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
-                        parent::link(array("action"=>"editAttribs","id"=>parent::get("id")),false));
-                    parent::focus();
-                    break;
-                case "configAttribs":
-                    DynamicDataView::processAction("userAttribs",
-                        parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
-                        parent::link(array("action"=>"configAttribs","id"=>parent::get("id")),false));
-                    parent::focus();
-                    break;
-                case "search":
-                    DynamicDataView::processAction("userAttribs",
-                        parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
-                        parent::link(array("action"=>"searchAttribs","id"=>parent::get("id")),false));
-                    parent::focus();
                     break;
                 case "activateUser":
                     UsersModel::setUserActiveFlag(parent::get("id"), "1");
@@ -64,94 +64,17 @@ class UsersPageView extends XModule {
                     parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
                     break;
                 case "changePassword":
-                    UsersModel::setPassword(parent::get("id"),$_POST['password1']);
+                    UsersModel::setPassword(parent::get("id"),parent::post("password1"));
                     parent::redirect(array("action"=>"edit","id"=>parent::get("id")));
                     break;
-                case "export":
-                    if (isset($_GET['selectedTab'])) {
-                        switch ($_GET['selectedTab']) {
-                            case "0":
-                                $_SESSION['dataView.query'] = new DMQuery("userAttribs",DMCriteria::equals("1", "active"));
-                                break;
-                            case "1":
-                                $_SESSION['dataView.query'] = new DMQuery("userAttribs",DMCriteria::addAnd(array(
-                                    DMCriteria::equals("0", "active"),
-                                    DMCriteria::equals("1", "registered")
-                                )));
-                                break;
-                            case "2":
-                                $_SESSION['dataView.query'] = new DMQuery("userAttribs",DMCriteria::addAnd(array(
-                                    DMCriteria::equals("0", "active"),
-                                    DMCriteria::equals("0", "registered")
-                                )));
-                                break;
-                            case "3":
-                                $_SESSION['dataView.query'] = new DMQuery("userAttribs",DMCriteria::all());
-                                break;
-                        }
-                    }
-                    
-                    DynamicDataView::processAction("userAttribs",
-                        parent::link(array(),false),
-                        parent::link(array("action"=>"export","id"=>parent::get("id")),false));
-                    parent::focus();
-                    break;
-                case "import":
-                    DynamicDataView::processAction("userAttribs",
-                        parent::link(array(),false),
-                        parent::link(array("action"=>"import","id"=>parent::get("id")),false));
-                    parent::focus();
-                    break;
-                case "getData":
-                    $users = null;
-                    switch ($_GET['dataType']) {
-                        case "active":
-                            $users = UsersModel::getUsers(true,true);
-                            break;
-                        case "inactive":
-                            $users = UsersModel::getUsers(true,false);
-                            break;
-                        case "unregistered":
-                            $users = UsersModel::getUsers(false);
-                            break;
-                        case "all":
-                            $users = UsersModel::getUsers();
-                            break;
-                    }
-                    break;
                 case "saveRoles":
-                    if (isset($_POST['userRoles'])) {
-                        RolesModel::deleteRoles($_GET['user']);
-                        foreach ($_POST['userRoles'] as $role) {
-                            RolesModel::saveRole(null, $role, $_GET['user'], $role);
+                    if (parent::post("userRoles") != null) {
+                        RolesModel::deleteRoles(parent::get("user"));
+                        foreach (parent::post("userRoles") as $role) {
+                            RolesModel::saveRole(null, $role, parent::get("user"), $role);
                         }
                     }
-                    parent::redirect(array("action"=>"edit","id"=>$_GET['user']));
-                    break;
-                case "generateUsers":
-                    $returnCsv = "";
-                    $defaultroles = isset($_POST["userRoles"]) ? $_POST["userRoles"] : null;
-                    parent::param("defaultroles",$defaultroles);
-                    for ($i=0; $i<$_POST['numUsers']; $i++) {
-                        $username = "user".UsersModel::getMaxUserId();
-                        $password = Common::randHash(10);
-                        $returnCsv .= "$username,$password\r\n";
-                        $userId = UsersModel::saveUser(null, $username, "", "", $password, "", "", null);
-                        UsersModel::setUserActiveFlag($userId, "1");
-                        if (!Common::isEmpty($defaultroles)) {
-                            foreach ($defaultroles as $defaultrole) {
-                                RolesModel::saveRole(-1, $defaultrole, $userId, $defaultrole);
-                            }
-                        }
-                    }
-                    header("Expires: 0");
-                    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-                    header("cache-control: no-store, no-cache, must-revalidate");
-                    header("Pragma: no-cache");
-                    header("content-type: application/csv-tab-delimited-table");
-                    header("content-length: 9999");//.strlen($returnCsv)
-                    header("content-disposition: attachment; filename=newusers".Common::rand().".csv");
-                    Context::setReturnValue($returnCsv);
+                    parent::redirect(array("action"=>"edit","id"=>parent::get("user")));
                     break;
             }
         }
@@ -166,29 +89,13 @@ class UsersPageView extends XModule {
 
             switch (parent::getAction()) {
                 case "edit":
-                    if (parent::get("id") != null) {
-                        $this->printEditUserView(parent::getId(),parent::get("id"));
-                    } else {
-                        $this->printMainView(parent::getId());
-                    }
+                    $this->printEditUserTabs(parent::get("id"));
                     break;
-                case "search":
-                    $this->printSearchView(parent::getId());
-                    break;
-                case "editAttribs":
-                    $this->printEditAttribsView($_GET['object']);
-                    break;
-                case "configAttribs":
-                    $this->printConfigAttribsView($_GET['object']);
-                    break;
-                case "export":
-                    DynamicDataView::renderExport(parent::link(array()), parent::link(array("action"=>"export","id"=>parent::get("id"))), "userAttribs");
-                    break;
-                case "import":
-                    DynamicDataView::renderImport(parent::link(array()), parent::link(array("action"=>"import","id"=>parent::get("id"))), "userAttribs");
+                case "create":
+                    $this->printCreateUserTabs();
                     break;
                 default:
-                    $this->printMainView(parent::getId());
+                    $this->printMainTabs();
             }
         }
     }
@@ -213,75 +120,86 @@ class UsersPageView extends XModule {
     function getRoles () {
         return array("users.edit");
     }
-
-    function printEditAttribsView ($objectId) {
-        DynamicDataView::editObject("userAttribs",$objectId,"User Attributes:",
-            parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
-            parent::link(array("action"=>"editAttribs","id"=>parent::get("id")),false));
-    }
     
-    function printConfigAttribsView ($objectId) {
-        DynamicDataView::configureObject("userAttribs",
-            parent::link(array("action"=>"edit","id"=>parent::get("id")),false),
-            parent::link(array("action"=>"configAttribs","id"=>parent::get("id"),"object"=>$objectId),false));
-    }
-
-    function printMainView ($moduleId) {
-        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
-        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
+    function printMainTabs () {
         ?>
-        <div class="panel">
-            <div id="tabs">
+        <div class="panel userPanel">
+            <div id="usersTabs">
                 <ul>
-                    <li><a href="#tabs-0">User List</a></li>
-                    <li><a href="#tabs-1">Create Users</a></li>
+                    <li><a href="#userListTab"><?php echo parent::getTranslation("users.tab.list"); ?></a></li>
                 </ul>
-                <div id="tabs-0">
-                    <div class="alignRight">
-                        <button class="btnImport">Import</button>
-                        <button class="btnExport">Export</button>
-                        <button class="btnAdd">Add User</button>
-                        <button class="btnEdit">Edit User</button>
-                        <button class="btnDelete">Delete User</button>
-                    </div>
-		    <hr/>
-                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="userList"></table>
-                </div>
-                <div id="tabs-1">
-                    <form action="<?php echo parent::link(array("action"=>"generateUsers")); ?>" method="post" >
-                        <h3>Create many users:</h3>
-                        <table><tr><td>
-                            Number of users to generate
-                        </td><td>
-                            <?php
-                            InputFeilds::printTextFeild("numUsers", "");
-                            ?>
-                        </td></tr><tr><td>
-                            Select initial user roles
-                        </td><td>
-                            <?php
-                            InputFeilds::printMultiSelect("userRoles", Common::toMap(RolesModel::getCustomRoles(),"id","name"), parent::param("defaultroles"));
-                            ?>
-                        </td></tr></table>
-                        <br/>
-                        <input type="submit" value="Generate"/>
-                    </form>
+                <div id="userListTab">
+                    <?php $this->printUserListView() ?>
                 </div>
             </div>
         </div>
-
-        <div id="registerUserDialog" title="Register User">
-            <p class="validateTips">Please fill out these attributes, they are the minimum datafeilds that are required to register a user.</p>
-            <form method="post" id="registerUserForm" action="<?php echo parent::link( array("action"=>"create")); ?>">
-                <?php DynamicDataView::renderCreateObject("userAttribs", parent::link(),parent::link()); ?>
-            </form>
+        <script>
+        $("#usersTabs").tabs();
+        </script>
+        <?php
+    }
+    
+    function printCreateUserTabs () {
+        ?>
+        <div class="panel userPanel">
+            <div id="usersTabs">
+                <ul>
+                    <li><a href="#userListTab"><?php echo parent::getTranslation("users.tab.list"); ?></a></li>
+                    <li><a href="#userCreateTab"><?php echo parent::getTranslation("users.tab.create"); ?></a></li>
+                </ul>
+                <div id="userListTab">
+                    <?php $this->printUserListView(); ?>
+                </div>
+                <div id="userCreateTab">
+                    <?php $this->printCreateUserView(); ?>
+                </div>
+            </div>
         </div>
-
+        <script>
+        $("#usersTabs").tabs({
+            active: 1
+        });
+        </script>
+        <?php
+    }
+    
+    function printEditUserTabs ($id) {
+        ?>
+        <div class="panel userPanel">
+            <div id="usersTabs">
+                <ul>
+                    <li><a href="#userListTab"><?php echo parent::getTranslation("users.tab.list"); ?></a></li>
+                    <li><a href="#userEditTab"><?php echo parent::getTranslation("users.tab.edit"); ?></a></li>
+                </ul>
+                <div id="userListTab">
+                    <?php $this->printUserListView(); ?>
+                </div>
+                <div id="userEditTab">
+                    <?php $this->printEditUserView($id); ?>
+                </div>
+            </div>
+        </div>
+        <script>
+        $("#usersTabs").tabs({
+            active: 1
+        });
+        </script>
+        <?php
+    }
+    
+    function printUserListView () {
+        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
+        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
+        ?>
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="userList"></table>
+        <hr/>
+        <div class="alignRight">
+            <button id="btnAdd" class="jquiButton"><?php echo parent::getTranslation("users.button.create"); ?></button>
+            <button id="btnEdit" class="jquiButton"><?php echo parent::getTranslation("users.button.edit"); ?></button>
+            <button id="btnDelete" class="jquiButton"><?php echo parent::getTranslation("users.button.delete"); ?></button>
+        </div>
+        
         <script type="text/javascript">
-	
-	$("#tabs").tabs();
-	
-	// users table
         <?php
         $users = UsersModel::getUsers();
 	$arUsers = array();
@@ -303,207 +221,276 @@ class UsersPageView extends XModule {
                 "aoColumns": ar_columns
   	});
        	oTable.click(function(event) {
-        	$(oTable.fnSettings().aoData).each(function (){
-                	$(this.nTr).removeClass('row_selected');
-             	});
-                $(event.target.parentNode).addClass('row_selected');
+            $(oTable.fnSettings().aoData).each(function (){
+                    $(this.nTr).removeClass('row_selected');
+            });
+            $(event.target.parentNode).addClass('row_selected');
        	});
-        
-	$("#tabs-0 button").each(function (index, object) {
-		$(object).button();
-	});
-      	$("#tabs-0 .btnDelete").click(function () {
-        	callUrl("<?php echo parent::link(array("action"=>"delete"),false); ?>",{"id":getSelectedRow(oTable)[0].childNodes[0].innerHTML});
+      	$("#btnDelete").click(function () {
+            callUrl("<?php echo parent::link(array("action"=>"delete"),false); ?>",{"id":getSelectedRow(oTable)[0].childNodes[0].innerHTML});
         });
-        $("#tabs-0 .btnEdit").click(function () {
-        	callUrl("<?php echo parent::link(array("action"=>"edit"),false); ?>",{"id":getSelectedRow(oTable)[0].childNodes[0].innerHTML});
+        $("#btnEdit").click(function () {
+            callUrl("<?php echo parent::link(array("action"=>"edit"),false); ?>",{"id":getSelectedRow(oTable)[0].childNodes[0].innerHTML});
         });
-        $("#tabs-0 .btnAdd").click(function () {
-        	$("#registerUserDialog").dialog("open");
+        $("#btnAdd").click(function () {
+            callUrl("<?php echo parent::link(array("action"=>"create"),false); ?>");
        	});
-        $("#tabs-0 .btnImport").click(function () {
-        	callUrl("<?php echo parent::link(array("action"=>"import"),false); ?>");
-       	});
-        $("#tabs-0 .btnExport").click(function () {
-        	callUrl("<?php echo parent::link(array("action"=>"export"),false); ?>");
-     	});
-	
-        // regist user dialog
-        $("#registerUserDialog").dialog({
-            autoOpen: false, height:350, width:450, modal: true,
-            buttons: {
-                "Ok": function() {
-                    $("#registerUserForm").submit();
-                }, "Cancel": function() {
-                    $( this ).dialog("close");
-                }
-            }
-        });
-        $( "#birthDate" ).datepicker();
-        $( "#birthDate" ).datepicker("option", "showAnim", "blind");
-        $( "#birthDate" ).datepicker({changeMonth: true, changeYear: true});
         </script>
         <?php
     }
     
-    function printEditUserView ($moduleId,$id) {
+    function printCreateUserView () {
+        ?>
+        <form method="post" action="<?php echo parent::link(array("action"=>"create")); ?>">
+            <table class="formTable"><tr><td>
+                <?php echo parent::getTranslation("users.attrib.username"); ?>
+            </td><td>
+                <?php 
+                InputFeilds::printTextFeild(parent::alias("username"),parent::post("username")); 
+                $message = parent::getMessage("username");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("users.attrib.firstname"); ?>
+            </td><td>
+                <?php InputFeilds::printTextFeild(parent::alias("firstname"),parent::post("firstname")); 
+                $message = parent::getMessage("firstname");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("users.attrib.lastname"); ?>
+            </td><td>
+                <?php InputFeilds::printTextFeild(parent::alias("lastname"),parent::post("lastname")); 
+                $message = parent::getMessage("lastname");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("users.attrib.email"); ?>
+            </td><td>
+                <?php InputFeilds::printTextFeild(parent::alias("email"),parent::post("email")); 
+                $message = parent::getMessage("email");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("users.attrib.password"); ?>
+            </td><td>
+                <?php InputFeilds::printPasswordFeild(parent::alias("password")); 
+                $message = parent::getMessage("password");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("users.attrib.dob"); ?>
+            </td><td>
+                <?php InputFeilds::printDataPicker(parent::alias("dob"),parent::post("dob")); 
+                $message = parent::getMessage("dob");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("users.attrib.active"); ?>
+            </td><td>
+                <?php InputFeilds::printCheckbox(parent::alias("active"),parent::post("active")); 
+                $message = parent::getMessage("active");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr></table>
+            <hr/>
+            <div class="alignRight">
+                <button id="btnCreate" name="submit" value="1" type="submit" class="jquiButton"><?php echo parent::getTranslation("users.create.button.save"); ?></button>
+                <button id="btnCancel" type="button" class="jquiButton"><?php echo parent::getTranslation("users.create.button.cancel"); ?></button>
+            </div>
+        </form>
+        <script>
+        $("#btnCancel").click(function(){
+            callUrl("<?php echo parent::link(); ?>");
+        });
+        </script>
+        <?php
+    }
+    
+    function printEditUserView ($id) {
         $user = UsersModel::getUser($id);
         ?>
-        <div class="panel">
-            
-            <div id="accordion">
-            
-                <h3><a href="#">User Attributes:</a></h3>
-                <div>
-                    
-                    <?php
-                    InfoMessages::printInfoMessage("Here are the main user details");
-                    ?>
-                    <br/>
-                    <div style="text-align:right;">
-                        <input type="submit" onclick="$('#dialog-form-password').dialog('open'); return false;" value="Change Password" />
-                        <a href="<?php echo parent::link(array("action"=>"editAttribs","id"=>$user->id,"object"=>$user->objectid)); ?>">Edit User Attributes</a> |
-                        <a href="<?php echo parent::link(array("action"=>"configAttribs","id"=>$user->id,"object"=>$user->objectid)); ?>">Configure Attributes</a>
-                    </div>
-                    <br/>
-                    <?php
-                    DynamicDataView::displayObject("userAttribs", $user->objectid);
-                    ?>
-                    <br/>
-                </div>
+        <div id="userAccordion">
 
-
-                <h3><a href="#">User Status:</a></h3>
-                <div>
-                    <?php
-                    InfoMessages::printInfoMessage("Here you can change the users status for example if he is allowed to login with his account.");
-                    ?>
-                    <br/>
-                    <table width="100%"><tr>
-                        <td rowspan="2" valign="top" style="padding-right:100px;"><img src="resource/img/icons/Statistics.png" alt=""/></td>
-                        <td class="expand">
-                            <div style="float:left;">
-                                <?php
-                                if ($user->active) {
-                                    echo '<img src="resource/img/icons/Tick.png" alt=""/>';
-                                } else {
-                                    echo '<img src="resource/img/icons/Block.png" alt=""/>';
-                                }
-                                ?>
-                            </div>
-                            <div style="float:left; margin: 20px 20px">
-                                <?php
-                                if ($user->active) {
-                                    echo 'This user is active<br/>
-                                        <button style="float:right;" onclick="callUrl(\''.NavigationModel::createModuleAjaxLink($moduleId,array("action"=>"deactivateUser","id"=>parent::get("id")),false).'\');">Click to deactivate the user</button>';
-                                } else {
-                                    echo 'This user is not active<br/>
-                                        <button style="float:right;"  onclick="callUrl(\''.NavigationModel::createModuleAjaxLink($moduleId,array("action"=>"activateUser","id"=>parent::get("id")),false).'\');">Click to activate the user</button>';
-                                }
-                                ?>
-                            </div>
-                        </td></tr><tr><td>
-
-                        </td></tr>
-                    </tr></table>
-                    <br/>
-                </div>
-
-
-                <h3><a href="#">User Roles:</a></h3>
-                <div>
-                    <form action="<?php echo parent::link(array("action"=>"saveRoles","user"=>$user->id)); ?>" method="post">
-                        <?php
-                        InfoMessages::printInfoMessage("Here you can edit the users roles in the system by assigning him a role group that you can configure in the roles adminstration module.");
-
-                        $allRoles = RolesModel::getCustomRoles();
-                        $userRoles = RolesModel::getUserCustomRoles($user->id);
-                        ?>
-                        <br/>
-
+            <h3><a href="#"><?php echo parent::getTranslation("user.edit.title.attributes"); ?></a></h3>
+            <div>
+                <form method="post" action="<?php echo parent::link(array("action"=>"update","id"=>$id)); ?>">
+                    <table class="formTable"><tr><td>
+                        <?php echo parent::getTranslation("users.attrib.username"); ?>
+                    </td><td>
                         <?php 
-                        // print user roles selection
-                        if ($allRoles != null && count($allRoles) != 0) {
-                            $allRolesArray = Common::toMap($allRoles, "id", "name");
-                            $rolesSelection = Common::toMap($userRoles, "roleid","roleid");
-                            InputFeilds::printMultiSelect("userRoles", $allRolesArray, $rolesSelection);
+                        InputFeilds::printTextFeild(parent::alias("username"),parent::post("username") == null ? $user->username : parent::post("username")); 
+                        $message = parent::getMessage("username");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
                         }
                         ?>
-
-                        <br/><hr/>
-                        <div>
-                            <button id="createRole">Create a new Role</button>
-                            <button id="saveRole" type="submit">Save</button>
-                        </div>
-                    </form>
-                    
-                    <br/>
-                </div>
-                
+                    </td></tr><tr><td>
+                        <?php echo parent::getTranslation("users.attrib.firstname"); ?>
+                    </td><td>
+                        <?php InputFeilds::printTextFeild(parent::alias("firstname"),parent::post("firstname") == null ? $user->firstname : parent::post("firstname")); 
+                        $message = parent::getMessage("firstname");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
+                    </td></tr><tr><td>
+                        <?php echo parent::getTranslation("users.attrib.lastname"); ?>
+                    </td><td>
+                        <?php InputFeilds::printTextFeild(parent::alias("lastname"),parent::post("lastname") == null ? $user->lastname : parent::post("lastname")); 
+                        $message = parent::getMessage("lastname");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
+                    </td></tr><tr><td>
+                        <?php echo parent::getTranslation("users.attrib.email"); ?>
+                    </td><td>
+                        <?php InputFeilds::printTextFeild(parent::alias("email"),parent::post("email") == null ? $user->email : parent::post("email")); 
+                        $message = parent::getMessage("email");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
+                    </td></tr><tr><td>
+                        <?php echo parent::getTranslation("users.attrib.dob"); ?>
+                    </td><td>
+                        <?php InputFeilds::printDataPicker(parent::alias("dob"),parent::post("dob") == null ? $user->birthdate : parent::post("dob")); 
+                        $message = parent::getMessage("dob");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
+                    </td></tr><tr><td>
+                        <?php echo parent::getTranslation("users.attrib.active"); ?>
+                    </td><td>
+                        <?php InputFeilds::printCheckbox(parent::alias("active"),parent::post("active") == null ? $user->active : parent::post("active")); 
+                        $message = parent::getMessage("active");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
+                    </td></tr></table>
+                    <hr/>
+                    <div class="alignRight">
+                        <button type="submit" class="jquiButton" name="submit" value="1"><?php echo parent::getTranslation("common.save"); ?></button>
+                        <button type="button" class="jquiButton" id="cancelButton"><?php echo parent::getTranslation("common.cancel"); ?></button>
+                        <button type="button" class="jquiButton" id="changePasswordButton"><?php echo parent::getTranslation("users.edit.changePassword"); ?></button>
+                    </div>
+                </form>
             </div>
+
+
+            <h3><a href="#"><?php echo parent::getTranslation("user.edit.title.status"); ?></a></h3>
+            <div>
+                <table width="100%"><tr>
+                <td valign="top" style="padding-right:100px;"><img src="resource/img/icons/Statistics.png" alt=""/></td>
+                <td class="expand">
+                    <div style="float:left;">
+                        <?php
+                        if ($user->active) {
+                            echo '<img src="resource/img/icons/Tick.png" alt=""/>';
+                        } else {
+                            echo '<img src="resource/img/icons/Block.png" alt=""/>';
+                        }
+                        ?>
+                    </div>
+                    <div style="float:left; margin: 20px 20px">
+                        <?php
+                        if ($user->active) {
+                            echo parent::getTranslation("user.edit.status.active");
+                            ?>
+                            <br/>
+                            <button class="jquiButton" style="float:right;" onclick="callUrl('<?php echo parent::ajaxLink(array("action"=>"deactivateUser","id"=>parent::get("id")),false); ?>');">
+                                <?php echo parent::getTranslation("user.edit.status.deactivate"); ?>
+                            </button>
+                            <?php
+                        } else {
+                            echo parent::getTranslation("user.edit.status.inactive");
+                            ?>
+                            <button class="jquiButton" style="float:right;" onclick="callUrl('<?php echo parent::ajaxLink(array("action"=>"activateUser","id"=>parent::get("id")),false); ?>');">
+                                <?php echo parent::getTranslation("user.edit.status.activate"); ?>
+                            </button>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </td></tr></table>
+            </div>
+
+            <h3><a href="#"><?php echo parent::getTranslation("user.edit.title.roles"); ?></a></h3>
+            <div>
+                <form action="<?php echo parent::link(array("action"=>"saveRoles","user"=>$user->id)); ?>" method="post">
+                    <?php
+                    $allRoles = RolesModel::getCustomRoles();
+                    $userRoles = RolesModel::getUserCustomRoles($user->id);
+                    // print user roles selection
+                    if ($allRoles != null && count($allRoles) != 0) {
+                        $allRolesArray = Common::toMap($allRoles, "id", "name");
+                        $rolesSelection = Common::toMap($userRoles, "roleid","roleid");
+                        InputFeilds::printMultiSelect("userRoles", $allRolesArray, $rolesSelection);
+                    }
+                    ?>
+                    <hr/>
+                    <div class="alignRight">
+                        <button class="jquiButton" id="saveRole" type="submit"><?php echo parent::getTranslation("user.edit.button.role.save"); ?></button>
+                    </div>
+                </form>
+            </div>
+
         </div>
         
-        <div id="dialog-form-roles" title="Create Role">
-            <p class="validateTips">Enter the name of the role.</p>
-            <form>
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
-            </form>
-        </div>
-        
-        <div id="dialog-form-password" title="Change Password">
-            <p class="validateTips">Please enter the users new password in both feilds then click ok.</p>
+        <div id="dialog-form-password" title="<?php echo parent::getTranslation("user.edit.password.title"); ?>">
+            <p class="validateTips"><?php echo parent::getTranslation("user.edit.password.message"); ?></p>
             <form id="passwordForm" method="post" action="<?php echo parent::link(array("action"=>"changePassword","id"=>$user->id)); ?>">
-                <label for="password1">Password:</label>
+                <label for="password1"><?php echo parent::getTranslation("user.edit.password.password1"); ?></label>
                 <input type="password" name="password1" class="expand" id="password1" class="text ui-widget-content ui-corner-all" />
                 <br/><br/>
-                <label for="password2">Password:</label>
+                <label for="password2"><?php echo parent::getTranslation("user.edit.password.password2"); ?></label>
                 <input type="password" name="password2" class="expand" id="password2" class="text ui-widget-content ui-corner-all" />
             </form>
         </div>
         
         <script type="text/javascript">
-        $("#accordion").accordion({
-            collapsible: true,
+        $("#userAccordion").accordion({
+            navigation: true,
+            heightStyle: "content",
             icons : {
                 header: "ui-icon-circle-arrow-e",
                 headerSelected: "ui-icon-circle-arrow-s"
             }
         });
-
-        $( "#dialog-form-roles" ).dialog({
-            autoOpen: false, height: 300, width: 350, modal: true,
-            buttons: {
-                "Create Role": function() {
-                    $( "#rolesAll" ).append( "<li class='ui-state-default'>"+$( "#name" ).val()+"</li>" );
-                    $( "#rolesAll, #rolesAllowed" ).sortable({
-                        connectWith: ".connectedSortable"
-                    }).disableSelection();
-                    $( this ).dialog( "close" );
-                }, "Cancel": function() {
-                    $( this ).dialog( "close" );
-                }
-            }
+        $("#cancelButton").click(function () {
+            callUrl("<?php echo parent::link(array("action"=>"cancel")); ?>");
         });
-        $( "#createRole" ).button().click(function() {
-            $( "#dialog-form" ).dialog( "open" );
+        $("#changePasswordButton").click(function () {
+            $("#dialog-form-password").dialog('open');
         });
-        $( "#saveRole" ).button();
-        $( "#accordion" ).accordion({
-            autoHeight: false,
-            navigation: true
-        });
-        $( "#dialog-form-password" ).dialog({
+        $("#dialog-form-password").dialog({
             autoOpen: false, height: 300, width: 350, modal: true,
             buttons: {
                 "Ok": function(e) {
                     var pass1 = $( "#password1" ).val();
 		    var pass2 = $( "#password2" ).val();
-                    if (pass1 == pass2) {
+                    if (pass1 === pass2) {
                         $("#passwordForm").submit();
                     } else {
                         // validation error
-			alert("passwords do not match!");
+			alert("<?php echo parent::getTranslation("user.edit.password.fail"); ?>");
 			e.preventDefault();
                     }
                 }, "Cancel": function() {
