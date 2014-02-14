@@ -22,11 +22,10 @@ class TranslationsModel {
         $translations = self::getTranslations();
         $translation = $code;
         if (isset($translations[$lang]) && isset($translations[$lang][$code])) {
-            $translation = $translations[$lang][$code];
+            $translation = base64_decode($translations[$lang][$code]);
         } else {
             self::addTranslations(array($lang => array($code => $code)));
         }
-        $translation = utf8_decode($translation);
         if ($escape) {
             $translation = htmlentities($translation, ENT_QUOTES);
         }
@@ -35,7 +34,6 @@ class TranslationsModel {
                 $translation = str_replace($token, $value, $translation);
             }
         }
-        // $translation = html_entity_decode($translation, ENT_QUOTES);
         return $translation;
     }
 
@@ -49,7 +47,7 @@ class TranslationsModel {
                 $varObj[$langCode] = array();
             }
             foreach ($translation as $key => $value) {
-                $escapedValue = utf8_encode($value);
+                $escapedValue = $value;
                 if (!isset($varObj[$langCode][$key]) || $escapedValue !== $varObj[$langCode][$key]) {
                     self::$newTranslations = true;
                     $varObj[$langCode][$key] = $escapedValue;
@@ -104,7 +102,7 @@ class TranslationsModel {
                     foreach ($allTranslationCodes as $key) {
                         $value = $key;
                         if (isset($translations[$key]) && !empty($translations[$key])) {
-                            $value = $translations[$key];
+                            $value = base64_encode($translations[$key]);
                         }
                         $ar_translations[] = "'".addslashes($key)."'=>'".addslashes($value)."'".PHP_EOL;
                     }

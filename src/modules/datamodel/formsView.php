@@ -51,7 +51,7 @@ class FormsView extends XModule {
                 	}
                 	$detailsText .= "</table>";
 
-                	$emailText = str_replace("&lt;detailText&gt;", $detailsText, $emailText);
+                	$emailText = str_replace("&lt;formData&gt;", $detailsText, $emailText);
                 	
                 	// send to role group
                     	$emails = UsersModel::getUsersEmailsByCustomRoleId(parent::param("roleGroup"));
@@ -64,6 +64,7 @@ class FormsView extends XModule {
                 parent::focus();
                 break;
             default:
+                parent::blur();
                 break;
         }
     }
@@ -151,69 +152,69 @@ class FormsView extends XModule {
             $valueNameArray = Common::toMap($tables, "name", "name");
             ?>
             <div class="panel">
-                <h3>Configure Data View</h3>
+                <h3><?php echo parent::getTranslation("data.form.edit.title.view"); ?></h3>
                 <form method="post" id="formForm" action="<?php echo parent::link(array("action"=>"save")); ?>">
-                    <table width="100%" style="white-space: nowrap;"><tr><td>
-                        <b>Select Form:</b>
+                    <table class="formTable"><tr><td>
+                        <?php echo parent::getTranslation("data.form.edit.selectForm"); ?>
                     </td><td class="expand">
                         <?php
                         InputFeilds::printSelect("orderForm", parent::param("orderForm"), $valueNameArray);
                         ?>
                     </td><td>
-                        <button id="configTable">Configure</button>
+                        <button id="configTable"><?php echo parent::getTranslation("common.configure"); ?></button>
                     </td></tr><tr><td>
-                        <b>Send Email:</b>
+                        <?php echo parent::getTranslation("data.form.edit.submitMessage"); ?> 
+                    </td><td class="expand" colspan="2">
+                        <?php
+                        InputFeilds::printTextArea("submitMessage", parent::param("submitMessage"));
+                        ?>
+                    </td></tr><tr><td>
+                        <?php echo parent::getTranslation("data.form.edit.sendEmail"); ?>
                     </td><td class="expand" colspan="2">
                         <?php
                         InputFeilds::printCheckbox("sendEmail", parent::param("sendEmail"));
                         ?>
                     </td></tr><tr><td>
-                        <b>Captcha:</b> 
+                        <?php echo parent::getTranslation("data.form.edit.captcha"); ?>
                     </td><td class="expand" colspan="2">
                         <?php
                         InputFeilds::printCheckbox("captcha", parent::param("captcha"));
-                        ?>
-                    </td></tr><tr><td>
-                        <b>Submit Message:</b> 
-                    </td><td class="expand" colspan="2">
-                        <?php
-                        InputFeilds::printTextArea("submitMessage", parent::param("submitMessage"));
                         ?>
                     </td></tr></table>
                     <br/>
                     
                     <div id="notificationEmailDiv">
                         <hr/>
-                        <h3>Configure Notification Email</h3>
-                        <table width="100%" style="white-space: nowrap;"><tr><td>
-                            <b>Rolegroup that receives email:</b>
-                        </td><td class="expand">
+                        <h3><?php echo parent::getTranslation("data.form.edit.title.email"); ?></h3>
+                        <table class="formTable"><tr><td>
+                            <?php echo parent::getTranslation("data.form.edit.roleGroups"); ?>
+                        </td><td>
                             <?php
                             InputFeilds::printSelect("roleGroup", parent::param("roleGroup"), Common::toMap(RolesModel::getCustomRoles(),"id","name"));
                             ?>
                         </td></tr><tr><td>
-                            <b>Email Subject:</b>
-                        </td><td class="expand">
+                            <?php echo parent::getTranslation("data.form.edit.emailSubject"); ?>
+                        </td><td>
                             <?php
                             InputFeilds::printTextFeild("emailSubject", parent::param("emailSubject"));
                             ?>
                         </td><tr><td>
-                            <b>Email Sender:</b>
-                        </td><td class="expand">
+                            <?php echo parent::getTranslation("data.form.edit.emailSender"); ?>
+                        </td><td>
                             <?php
                             InputFeilds::printTextFeild("emailSender", parent::param("emailSender"));
                             ?>
                         </td></tr><tr><td colspan="2" style="white-space: normal;">
-                            <br/><b><?php echo Common::htmlEscape('Here you can configure the text or the order email. "<detailText>" will be replaced with the content or the orderform.'); ?></b><br/>
-                        </td></tr><tr><td class="expand" colspan="2">
+                            <?php echo parent::getTranslation("data.form.edit.title.emailContent"); ?>
+                        </td></tr><tr><td colspan="2">
                             <?php
                             InputFeilds::printHtmlEditor("emailText", parent::param("emailText"));
                             ?>
                         </td></tr></table>
                     </div>
                     <hr/>
-                    <div style="text-align:right;">
-                        <button id="saveButton">Save</button>
+                    <div class="alignRight">
+                        <button id="saveButton" type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
                     </div>
                 </form>
             </div>
@@ -222,12 +223,6 @@ class FormsView extends XModule {
             $('#configTable').button().click(function (e) {
                 callUrl("<?php echo NavigationModel::createStaticPageLink("configTables",array(),false); ?>",{"table":$("#orderForm").val()});
                 e.preventDefault();
-            })
-            $('#saveButton').button().click(function () {
-                $('#formForm').submit();
-            })
-            $('#sendEmail').click(function(){
-                $('#notificationEmailDiv').slideToggle("slow");
             });
             </script>
             <?php

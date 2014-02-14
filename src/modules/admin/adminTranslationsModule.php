@@ -104,7 +104,7 @@ class AdminTranslationsModule extends XModule {
                                 <?php
                                 $translation = "";
                                 if (isset($translations[$languageCode]) && isset($translations[$languageCode][$key])) {
-                                    $translation = TranslationsModel::getTranslation($key, $languageCode);
+                                    $translation = TranslationsModel::getTranslation($key, $languageCode, false);
                                 }
                                 InputFeilds::printTextFeild("translations[".$languageCode."][".$key."]", $translation);
                                 ?>
