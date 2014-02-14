@@ -13,6 +13,14 @@ if (!@include_once('config.php')) {
     $GLOBALS['noDatabase'] = false;
 }
 
+include_once 'core/template/templateParser.php';
+include_once 'core/template/baseRenderer.php';
+include_once 'core/template/ajaxRenderer.php';
+include_once 'core/template/vcmsRenderer.php';
+include_once 'core/template/templateRenderer.php';
+include_once 'core/template/editableTemplate.php';
+include_once 'core/template/editableTemplatePreview.php';
+
 include_once 'core/util/common.php';
 require_once 'core/model/rolesModel.php';
 include_once 'core/model/piwikModel.php';
@@ -33,13 +41,6 @@ include_once 'core/model/menuModel.php';
 include_once 'core/model/usersModel.php';
 include_once 'core/model/eventsModel.php';
 include_once 'core/model/languagesModel.php';
-include_once 'core/template/templateParser.php';
-include_once 'core/template/baseRenderer.php';
-include_once 'core/template/ajaxRenderer.php';
-include_once 'core/template/vcmsRenderer.php';
-include_once 'core/template/templateRenderer.php';
-include_once 'core/template/editableTemplate.php';
-include_once 'core/template/editableTemplatePreview.php';
 
 include_once 'core/controller/installerController.php';
 include_once 'core/controller/navigationController.php';

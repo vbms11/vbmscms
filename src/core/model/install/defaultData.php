@@ -77,14 +77,24 @@ CREATE TABLE IF NOT EXISTS `t_code` (
   `code` int(10) unsigned NOT NULL,
   `value` blob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Daten für Tabelle `t_code`
 --
 
 INSERT INTO `t_code` (`id`, `lang`, `code`, `value`) VALUES
-(1, 'en', 1, 0x756e72656769737465726564);
+(1, 'en', 1, 0x756e72656769737465726564),
+(2, 'en', 2, 0x6c6f67696e),
+(3, 'en', 3, 0x70616765436f6e666967),
+(4, 'en', 4, 0x73746172747570),
+(5, 'en', 5, 0x486f6d65),
+(6, 'en', 6, 0x696e736572744d6f64756c65),
+(7, 'en', 7, 0x4c6f67696e),
+(8, 'en', 8, 0x496d7072657373756d),
+(9, 'en', 9, 0x41474273),
+(10, 'en', 10, 0x436f6e74616374),
+(11, 'en', 11, 0x61646d696e5061676573);
 
 -- --------------------------------------------------------
 
@@ -302,7 +312,18 @@ CREATE TABLE IF NOT EXISTS `t_menu` (
   `lang` varchar(5) NOT NULL DEFAULT 'en',
   `position` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+--
+-- Daten für Tabelle `t_menu`
+--
+
+INSERT INTO `t_menu` (`id`, `page`, `type`, `parent`, `active`, `lang`, `position`) VALUES
+(1, 5, 1, NULL, 1, 'en', 1),
+(2, 7, 3, NULL, 1, 'en', 2),
+(3, 8, 2, NULL, 1, 'en', 3),
+(4, 9, 2, NULL, 1, 'en', 4),
+(5, 10, 2, NULL, 1, 'en', 5);
 
 -- --------------------------------------------------------
 
@@ -315,7 +336,16 @@ CREATE TABLE IF NOT EXISTS `t_menu_instance` (
   `name` varchar(100) NOT NULL,
   `siteid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Daten für Tabelle `t_menu_instance`
+--
+
+INSERT INTO `t_menu_instance` (`id`, `name`, `siteid`) VALUES
+(1, 'Main Menu', 1),
+(2, 'Top Menu', 1),
+(3, 'Bottom Menu', 1);
 
 -- --------------------------------------------------------
 
@@ -481,6 +511,25 @@ CREATE TABLE IF NOT EXISTS `t_module_instance_params` (
   `name` varchar(100) COLLATE latin1_german2_ci NOT NULL,
   `value` blob NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci;
+
+--
+-- Daten für Tabelle `t_module_instance_params`
+--
+
+INSERT INTO `t_module_instance_params` (`instanceid`, `name`, `value`) VALUES
+(3, 'selectedStyle', 0x733a313a2231223b),
+(4, 'selectedStyle', 0x733a313a2231223b),
+(5, 'selectedStyle', 0x733a313a2231223b),
+(4, 'selectedMenu', 0x733a313a2231223b),
+(5, 'selectedMenu', 0x733a313a2233223b),
+(3, 'selectedMenu', 0x733a313a2232223b),
+(11, 'orderForm', 0x733a373a224b6f6e74616b74223b),
+(11, 'submitMessage', 0x733a37313a225468616e6b20796f7520666f7220796f7572206d6573736167652077652077696c6c20676574206261636b20746f20796f7520617320736f6f6e20617320706f737369626c652e223b),
+(11, 'roleGroup', 0x733a323a223130223b),
+(11, 'sendEmail', 0x733a313a2231223b),
+(11, 'emailText', 0x733a33353a223c7374726f6e673e266c743b64657461696c546578742667743b3c2f7374726f6e673e223b),
+(11, 'emailSubject', 0x733a31353a22436f6e746163742052657175657374223b),
+(11, 'captcha', 0x733a313a2231223b);
 
 -- --------------------------------------------------------
 
@@ -703,14 +752,24 @@ CREATE TABLE IF NOT EXISTS `t_page` (
   `pagetrackerscript` blob,
   `modifydate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Daten für Tabelle `t_page`
 --
 
 INSERT INTO `t_page` (`id`, `type`, `namecode`, `welcome`, `title`, `keywords`, `description`, `template`, `siteid`, `code`, `codeid`, `pagetrackerscript`, `modifydate`) VALUES
-(1, 0, 1, 0, 'unregistered', 0x756e72656769737465726564, 0x756e72656769737465726564, 0, 1, 'unregistered', 1, NULL, '2014-02-14 12:43:02');
+(1, 0, 1, 0, 'unregistered', 0x756e72656769737465726564, 0x756e72656769737465726564, 0, 1, 'unregistered', 1, NULL, '2014-02-14 11:43:02'),
+(2, 0, 2, 0, 'login', 0x6c6f67696e, 0x6c6f67696e, 5, 1, 'login', 2, NULL, '2014-02-14 13:27:55'),
+(3, 0, 3, 0, 'pageConfig', 0x70616765436f6e666967, 0x70616765436f6e666967, 5, 1, 'pageConfig', 6, NULL, '2014-02-14 13:28:52'),
+(4, 0, 4, 0, 'startup', 0x73746172747570, 0x73746172747570, 5, 1, 'startup', 7, NULL, '2014-02-14 13:28:52'),
+(5, 0, 5, 1, 'Home', 0x486f6d65, 0x486f6d65, 5, 1, '', NULL, NULL, '2014-02-14 13:32:16'),
+(6, 0, 6, 0, 'insertModule', 0x696e736572744d6f64756c65, 0x696e736572744d6f64756c65, 5, 1, 'insertModule', 8, NULL, '2014-02-14 13:29:24'),
+(7, 0, 7, 0, 'Login', 0x4c6f67696e, 0x4c6f67696e, 5, 1, '', NULL, NULL, '2014-02-14 13:32:45'),
+(8, 0, 8, 0, 'Impressum', 0x496d7072657373756d, 0x496d7072657373756d, 5, 1, '', NULL, NULL, '2014-02-14 13:33:45'),
+(9, 0, 9, 0, 'AGBs', 0x41474273, 0x41474273, 5, 1, '', NULL, NULL, '2014-02-14 13:34:08'),
+(10, 0, 10, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-02-14 13:34:38'),
+(11, 0, 11, 0, 'adminPages', 0x61646d696e5061676573, 0x61646d696e5061676573, 5, 1, 'adminPages', 12, NULL, '2014-02-14 13:40:09');
 
 -- --------------------------------------------------------
 
@@ -723,7 +782,38 @@ CREATE TABLE IF NOT EXISTS `t_page_roles` (
   `roleid` int(10) NOT NULL,
   `pageid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+
+--
+-- Daten für Tabelle `t_page_roles`
+--
+
+INSERT INTO `t_page_roles` (`id`, `roleid`, `pageid`) VALUES
+(30, 13, 5),
+(29, 10, 5),
+(28, 9, 5),
+(27, 8, 5),
+(26, 7, 5),
+(6, 7, 7),
+(7, 8, 7),
+(8, 9, 7),
+(9, 10, 7),
+(10, 13, 7),
+(11, 7, 8),
+(12, 8, 8),
+(13, 9, 8),
+(14, 10, 8),
+(15, 13, 8),
+(16, 7, 9),
+(17, 8, 9),
+(18, 9, 9),
+(19, 10, 9),
+(20, 13, 9),
+(21, 7, 10),
+(22, 8, 10),
+(23, 9, 10),
+(24, 10, 10),
+(25, 13, 10);
 
 -- --------------------------------------------------------
 
@@ -825,13 +915,6 @@ CREATE TABLE IF NOT EXISTS `t_session` (
   `logintime` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Daten für Tabelle `t_session`
---
-
-INSERT INTO `t_session` (`userid`, `sessionid`, `sessionkey`, `ip`, `name`, `lastpolltime`, `logintime`) VALUES
-(NULL, 'a1413e04529fdce63a8b87b857280339bde6f148', 'lv+OSnQBwBMl6ZL3V5M7oKGNO26ovOvA6Ve8Lj7x', '127.0.0.1', 'guest_2921545', '2014-02-14 12:43:02', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -929,14 +1012,26 @@ CREATE TABLE IF NOT EXISTS `t_templatearea` (
   `position` int(10) NOT NULL,
   `code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
 -- Daten für Tabelle `t_templatearea`
 --
 
 INSERT INTO `t_templatearea` (`id`, `name`, `pageid`, `type`, `position`, `code`) VALUES
-(1, '', 1, 77, 0, 'unregistered');
+(1, '', 1, 77, 0, 'unregistered'),
+(2, 'center', 2, 13, 0, 'login'),
+(3, 'topMenu', 0, 59, 0, 'menu'),
+(4, 'headerMenu', 0, 59, 0, 'menu'),
+(5, 'footerMenu', 0, 59, 0, 'menu'),
+(6, 'center', 3, 60, 0, 'pageConfig'),
+(7, 'center', 4, 44, 0, 'startup'),
+(8, 'center', 6, 45, 0, 'insertModule'),
+(9, 'center', 5, 2, 0, ''),
+(10, 'center', 7, 13, 0, ''),
+(11, 'center', 10, 50, 0, ''),
+(12, 'center', 11, 70, 0, 'adminPages'),
+(13, 'adminMenu', 0, 69, 0, 'adminMenu');
 
 -- --------------------------------------------------------
 
@@ -969,7 +1064,14 @@ CREATE TABLE IF NOT EXISTS `t_users` (
   `active` tinyint(1) NOT NULL,
   `image` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `t_users`
+--
+
+INSERT INTO `t_users` (`id`, `username`, `password`, `authkey`, `email`, `firstname`, `lastname`, `objectid`, `registerdate`, `birthdate`, `active`, `image`) VALUES
+(1, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@hotmail.de', 'sil', 'muh', 16, '2014-02-14', '2014-02-05', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -1049,24 +1151,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
   `tableid` int(10) NOT NULL,
   `viewed` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=16 ;
-
---
--- Daten für Tabelle `t_vdb_object`
---
-
-INSERT INTO `t_vdb_object` (`id`, `tableid`, `viewed`) VALUES
-(4, 2, 1),
-(5, 2, 1),
-(7, 9, 0),
-(8, 2, 0),
-(9, 9, 1),
-(10, 2, 0),
-(11, 2, 0),
-(12, 2, 0),
-(13, 2, 0),
-(14, 2, 0),
-(15, 2, 0);
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1212,7 +1297,18 @@ INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
 (15, 8, ''),
 (15, 55, ''),
 (15, 24, ''),
-(15, 49, '');
+(15, 49, ''),
+(16, 1, ''),
+(16, 2, ''),
+(16, 3, ''),
+(16, 4, ''),
+(16, 5, ''),
+(16, 6, ''),
+(16, 7, ''),
+(16, 8, ''),
+(16, 55, ''),
+(16, 24, ''),
+(16, 49, '');
 
 -- --------------------------------------------------------
 
@@ -1228,5 +1324,12 @@ CREATE TABLE IF NOT EXISTS `t_wysiwygpage` (
   `title` varchar(100) DEFAULT NULL,
   `area` int(5) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `t_wysiwygpage`
+--
+
+INSERT INTO `t_wysiwygpage` (`id`, `pageid`, `lang`, `content`, `title`, `area`) VALUES
+(NULL, 9, 'en', 0x3c68313e57656c636f6d653c2f68313e0d0a3c703e5468697320697320746865207374617274207061676520666f7220796f75722077656220736974652e20546f206564697420636f6e74656e74206c6f67696e207468656e206d6f766520796f7572206d6f757365206f7665722074686520636f6e74656e7420796f75207769736820746f20656469742c20726967687420636c69636b20616e642073656c6563742065646974206d6f64756c652e20446f207468652073616d6520746f2065646974206d656e75732e20546f2067657420746f207468652061646d696e206172656120636c69636b20656469742061742074686520746f70207269676874206f66207468652070616765207768656e20796f7520617265206c6f67656420696e2e3c2f703e, NULL, 0);
 
 ; */ ?>

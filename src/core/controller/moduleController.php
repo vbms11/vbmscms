@@ -93,7 +93,7 @@ class ModuleController {
      */
     static function processService ($serviceName, $params = array()) {
         
-        $serviceClass = ModuleModel::getModuleClass(self::getModuleBySysname($serviceName));
+        $serviceClass = ModuleModel::getModuleClass(ModuleModel::getModuleBySysname($serviceName));
         Context::setIsFocusedArea(true);
         $serviceClass->process($serviceName);
         Context::setIsFocusedArea(false);
