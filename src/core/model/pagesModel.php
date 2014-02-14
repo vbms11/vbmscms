@@ -1,8 +1,6 @@
 <?php
 
-require_once 'core/common.php';
-require_once 'core/model/codeModel.php';
-require_once 'core/model/templateModel.php';
+require_once 'core/plugin.php';
 
 class PagesModel {
     

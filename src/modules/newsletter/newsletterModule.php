@@ -3,7 +3,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once 'core/common.php';
 require_once 'core/plugin.php';
 require_once 'modules/newsletter/newsletterModel.php';
 require_once 'modules/newsletter/newsletterController.php';

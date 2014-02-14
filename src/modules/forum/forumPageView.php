@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-require_once 'core/common.php';
 require_once('core/plugin.php');
 include_once 'modules/forum/forumPageModel.php';
 

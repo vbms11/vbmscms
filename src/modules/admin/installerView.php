@@ -39,12 +39,12 @@ class InstallView extends XModule {
 				break;
 			case "install":
 				// create config file
-				InstallerModel::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
+				InstallerController::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
 				require_once('config.php');
 				// install datamodel
-                                InstallerModel::installModel();
+                                InstallerController::installModel();
 				// create initial user
-                                InstallerModel::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate']);
+                                InstallerController::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate']);
                                 // redirect to startpage
 				NavigationModel::redirect("?session=nodb",false);
 				break;

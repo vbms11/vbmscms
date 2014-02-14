@@ -4,11 +4,8 @@
  * and open the template in the editor.
  */
 
-require_once('core/common.php');
 require_once('core/plugin.php');
-require_once('core/model/usersModel.php');
 require_once('modules/forum/forumPageModel.php');
-
 
 class MessagePageView extends XModule {
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'core/common.php';
+require_once 'core/includes.php';
 
 // start the request context
 Context::startRequest();

@@ -1,10 +1,7 @@
 <?php
-require_once('core/common.php');
-require_once('core/plugin.php');
-require_once('core/model/usersModel.php');
 
+include_once('core/plugin.php');
 include_once('modules/forum/forumPageModel.php');
-include_once('core/ddm/dataView.php');
 
 class UsersPageView extends XModule {
 

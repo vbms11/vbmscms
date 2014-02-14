@@ -1,6 +1,6 @@
 <?php
 
-include_once('core/common.php');
+include_once('core/includes.php');
 
 interface IModule {
 

@@ -1,6 +1,5 @@
 <?php
 
-require_once 'core/common.php';
 require_once 'core/plugin.php';
 require_once 'core/model/searchModel.php';
 
