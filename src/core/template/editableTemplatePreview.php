@@ -28,7 +28,7 @@ class EditableTemplatePreview extends EditableTemplate {
         $areaModules = $this->getModules($teplateArea);
         if (count($areaModules) > 0) {
             foreach ($areaModules as $areaModule) {
-                ModuleModel::renderModuleObject($areaModule);
+                ModuleController::renderModuleObject($areaModule);
             }
         } else {
             if (Context::hasRole("pages.edit")) {
@@ -59,7 +59,7 @@ class EditableTemplatePreview extends EditableTemplate {
         
         // render the menu
         echo "<div id='vcms_area_$menuName' >";
-        ModuleModel::renderModuleObject(current($this->getModules($menuName)), false);
+        ModuleController::renderModuleObject(current($this->getModules($menuName)), false);
         echo "</div>";
     }
 }

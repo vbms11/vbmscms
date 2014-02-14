@@ -8,7 +8,7 @@
 /**
  * Description of navigationController
  *
- * @author Administrator
+ * @author vbms
  */
 class NavigationController {
      

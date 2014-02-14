@@ -337,7 +337,7 @@ class AdminPagesBaseModule extends XModule {
                             </div>
                             <?php
                             $moduleClass = ModuleModel::getModuleClass($module);
-                            ModuleModel::renderModuleObject($moduleClass,false);
+                            ModuleController::renderModuleObject($moduleClass,false);
                             ?>
                         </div>
                         <?php

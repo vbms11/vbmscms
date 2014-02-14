@@ -20,7 +20,7 @@ class TemplateRenderer extends BaseRenderer {
         $areaModules = $this->getModules($teplateArea);
         if (count($areaModules) > 0) {
             foreach ($areaModules as $areaModule) {
-                ModuleModel::renderModuleObject($areaModule);
+                ModuleController::renderModuleObject($areaModule);
             }
         } else {
             if (Context::hasRole("pages.edit")) {
@@ -66,7 +66,7 @@ class TemplateRenderer extends BaseRenderer {
         if (!empty($focusedModuleId)) {
             echo "<div id='vcms_area_$teplateArea' >";
             Context::setIsFocusedArea(true);
-            ModuleModel::renderModuleObject($this->getModule($focusedModuleId));
+            ModuleController::renderModuleObject($this->getModule($focusedModuleId));
             Context::setIsFocusedArea(false);
             echo "</div>";
         } else {
@@ -84,7 +84,7 @@ class TemplateRenderer extends BaseRenderer {
         
         // render the menu
         echo "<div id='vcms_area_$menuName' >";
-        ModuleModel::renderModuleObject(current($this->getModules($menuName)));
+        ModuleController::renderModuleObject(current($this->getModules($menuName)),true,false);
         echo "</div>";
     }
 
@@ -149,12 +149,12 @@ class TemplateRenderer extends BaseRenderer {
         // render area with module in it
         echo "<div id='vcms_area_$areaName' >";
         if ($targetOnly) {
-            ModuleModel::renderModuleObject($targetModule, $contextMenu);
+            ModuleController::renderModuleObject($targetModule, $contextMenu);
         } else {
             foreach ($modules as $areaModules) {
                 foreach ($areaModules as $areaModule) {
                     if ($areaModule->moduleAreaName == $areaName) {
-                        ModuleModel::renderModuleObject($module);
+                        ModuleController::renderModuleObject($module);
                     }
                 }
             }

@@ -11,7 +11,7 @@ try {
     if (Context::getPage() != null) {
 
         // process any module or system actions that need to be run
-        ModuleModel::processActions();
+        ModuleController::processActions();
 
         // check if a return value is already known
         if (Context::getReturnValue() !== null) {
@@ -25,11 +25,11 @@ try {
     } else if (Context::getService() != null) {
 
         // run the service
-        ModuleModel::processService(Context::getService());
+        ModuleController::processService(Context::getService());
 
         // render the return value or service
         if (Context::getReturnValue() == null) {
-            ModuleModel::renderService(Context::getService());
+            ModuleController::renderService(Context::getService());
         } else {
             echo Context::getReturnValue();
         }

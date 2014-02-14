@@ -41,6 +41,7 @@ include_once 'core/template/editableTemplate.php';
 include_once 'core/template/editableTemplatePreview.php';
 include_once 'core/model/installerModel.php';
 include_once 'core/controller/navigationController.php';
+include_once 'core/controller/moduleController.php';
 include_once 'core/context.php';
 include_once 'core/session.php';
 include_once 'core/util/infoMessages.php';

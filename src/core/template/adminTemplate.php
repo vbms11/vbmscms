@@ -107,7 +107,7 @@ class AdminTemplate extends XTemplate {
                         if (!empty($focusedModuleId)) {
                             Context::setIsFocusedArea(true);
                         }
-                        ModuleModel::renderModuleObject($areaModule, false);
+                        ModuleController::renderModuleObject($areaModule, false);
                         if (!empty($focusedModuleId)) {
                             Context::setIsFocusedArea(false);
                         }
@@ -127,7 +127,7 @@ class AdminTemplate extends XTemplate {
                     <?php 
                     echo "<div id='vcms_area_$teplateArea' >";
                     Context::setIsFocusedArea(true);
-                    ModuleModel::renderModuleObject($this->getModule($focusedModuleId));
+                    ModuleController::renderModuleObject($this->getModule($focusedModuleId));
                     Context::setIsFocusedArea(false);
                     echo "</div>";
                     ?>
@@ -156,7 +156,7 @@ class AdminTemplate extends XTemplate {
         $areaModules = $this->getModules($teplateArea);
         if (count($areaModules) > 0) {
             foreach ($areaModules as $areaModule) {
-                ModuleModel::renderModuleObject($areaModule, false);
+                ModuleController::renderModuleObject($areaModule, false);
             }
         }
         

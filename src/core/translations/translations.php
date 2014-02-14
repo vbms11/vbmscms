@@ -297,6 +297,12 @@ $ar_translations = array(
 ,'users.create.button.save'=>'users.create.button.save'
 ,'users.create.button.cancel'=>'users.create.button.cancel'
 ,'users.attrib.password'=>'users.attrib.password'
+,'ukash.buy.title'=>'ukash.buy.title'
+,'ukash.buy.description'=>'ukash.buy.description'
+,'ukash.buy.label.email'=>'ukash.buy.label.email'
+,'ukash.buy.label.amount'=>'ukash.buy.label.amount'
+,'ukash.buy.label.cost'=>'ukash.buy.label.cost'
+,'ukash.buy.button.pay'=>'ukash.buy.button.pay'
 ),'de'=>array(
 'login.email'=>'Geben sie eine Emailadresse ein:'
 ,'login.reset'=>'Passwort zurÃ¼cksetzen'
@@ -594,5 +600,11 @@ $ar_translations = array(
 ,'users.create.button.save'=>'users.create.button.save'
 ,'users.create.button.cancel'=>'users.create.button.cancel'
 ,'users.attrib.password'=>'users.attrib.password'
+,'ukash.buy.title'=>'ukash.buy.title'
+,'ukash.buy.description'=>'ukash.buy.description'
+,'ukash.buy.label.email'=>'ukash.buy.label.email'
+,'ukash.buy.label.amount'=>'ukash.buy.label.amount'
+,'ukash.buy.label.cost'=>'ukash.buy.label.cost'
+,'ukash.buy.button.pay'=>'ukash.buy.button.pay'
 )); 
 ?>

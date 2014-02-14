@@ -181,10 +181,10 @@ abstract class XModule implements IModule, ITranslatable {
     }
     // recrusive modules
     function processService ($moduleName) {
-        ModuleModel::processService($moduleName);
+        ModuleController::processService($moduleName);
     }
     function renderService ($moduleName) {
-        ModuleModel::renderService($moduleName);
+        ModuleController::renderService($moduleName);
     }
     // creates an alias for a value
     function alias ($var) {

@@ -243,8 +243,9 @@ class Context {
         return isset($_REQUEST["req.renderer"]) ? $_REQUEST["req.renderer"] : null;
     }
 
-    // methods called at the start and end of the context
-
+    /**
+     * called at the start of a request
+     */
     static function startRequest () {
         
         if (Config::getNoDatabase()) {
@@ -272,30 +273,21 @@ class Context {
         }
     }
     
+    /**
+     * called at the end of a request
+     */
     static function endRequest () {
-        
-        // save module parameters
-        /*
-        $moduleParams = array();
-        $modules = self::getRenderer()->getModules();
-        foreach ($modules as $module) {
-            if ($module->paramsDirty) {
-                $moduleParams[$module->getId()] = $module->params();
-            }
-        }
-        ModuleModel::saveModuleParams($moduleParams);
-        */
         
         TranslationsModel::maintainTrnaslationsFile();
         Log::writeLogFile();
     }
     
+    // is the module currently being rendered or processed 
+    // the module that should receive the action parameter
     static function setIsFocusedArea ($bool) {
         $_SESSION["req.mainArea"] = $bool;
     }
     
-    // is the module currently being rendered or processed 
-    // the module that should receive the action parameter
     static function getIsFocusedArea () {
         if (!isset($_SESSION["req.mainArea"]))
             return false;
@@ -401,10 +393,6 @@ class Context {
     }
     
     
-    
-    static function addQueryToLog ($query) {
-        self::$queryLog[] = $query;
-    }
 }
 
 

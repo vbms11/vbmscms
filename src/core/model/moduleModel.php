@@ -61,6 +61,12 @@ class ModuleModel {
         Database::query("delete from t_site_module where siteid = '$siteId' and templateid = '$moduleId'");
     }
     
+    /**
+     * get a module object by module db object
+     * @param type $moduleObj
+     * @param type $params
+     * @return type
+     */
     static function getModuleClass ($moduleObj, $params = true) {
         // get the module instance
         require_once($moduleObj->include);
@@ -81,173 +87,12 @@ class ModuleModel {
         }
         return $obj;
     }
-
-    static function processModule ($moduleId) {
-        $module = self::getModule($moduleId);
-        if (!empty($module)) {
-            self::processModuleObject($module);
-        } else {
-            //log("invalid moduleId: $moduleId");
-        }
-    }
-    
-    static function processModuleObject ($moduleObject) {
-        if (!empty($moduleObject)) {
-            Context::setIsFocusedArea(true);
-            $moduleObject->process($moduleObject->getId());
-            Context::setIsFocusedArea(false);
-        } else {
-            //log("invalid moduleId: $moduleId");
-        }
-    }
-
-    static function renderModule ($moduleObj) {
-        
-        self::renderModuleObject(self::getModuleClass($moduleObj));
-    }
-    
-    static function renderModuleObject ($moduleObject, $contextMenu = true) {
-        ?>
-        <div class="vcms_module" id="vcms_module_<?php echo $moduleObject->getId(); ?>">
-            <?php
-            $moduleObject->view($moduleObject->getId());
-            ?>
-        </div>
-        <?php
-        if ($contextMenu && (!Context::isAjaxRequest() || Context::isRenderRequest())) {
-            $roles = $moduleObject->getRoles();
-            if (Context::hasRole($roles) && Context::getFocusedArea() != $moduleObject->getId()) {
-                self::renderContextMenu($moduleObject);
-            }
-        }
-    }
-
-    static function renderContextMenu ($moduleClass) {
-
-        $page = Context::getPage();
-        ?>
-        <script>
-        var moduleMenuDiv = $('#vcms_module_<?php echo $moduleClass->getId(); ?>');
-        moduleMenuDiv.contextMenu([
-            {'Edit Module':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createModuleLink($moduleClass->getId(),array("action"=>"edit"),false); ?>'); }},
-            <?php
-            if (empty($moduleClass->sysname)) {
-                ?>
-                {'Insert Module':function (menuItem,menu) { callUrl('<?php echo NavigationModel::createStaticPageLink("insertModule",array("action"=>"insertModule","selectedPage"=>Context::getPageId(),"area"=>$moduleClass->getAreaName(),"position"=>$moduleClass->getPosition()),false); ?>'); }},
-                <?php
-            }
-            ?>
-            {'Configure Page':function (menuItem,menu) {   callUrl('<?php echo NavigationModel::createStaticPageLink("pageConfig",array("action"=>"edit","id"=>Context::getPageId()),false); ?>'); }},
-            <?php
-            if (empty($moduleClass->sysname)) {
-                ?>
-                $.contextMenu.separator,
-                {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleClass->getId()),false); ?>'); }},
-                {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleClass->getId()),false); ?>'); }},
-                $.contextMenu.separator,
-                {'Delete Module':function (menuItem,menu) { doIfConfirm('Wollen Sie wirklich dieses Modul l&ouml;schen?','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$moduleClass->getId()),false); ?>'); }}
-                <?php
-            }
-            ?>
-            ],{theme:'vista'});
-        moduleMenuDiv.mouseover(function(){
-            $(this).addClass("vcms_module_show_border");
-        });
-        moduleMenuDiv.mouseout(function(){
-            $(this).removeClass("vcms_module_show_border");
-        });
-        </script>
-        <?php
-    }
     
     /*
      * gets service module instance by service name
      */
     static function getServiceClass ($serviceName) {
         return self::getModuleClass(self::getModuleBySysname($serviceName));
-    }
-    
-    /*
-     * processes module class as service
-     */
-    static function processService ($serviceName, $params = array()) {
-        
-        $serviceClass = self::getModuleClass(self::getModuleBySysname($serviceName));
-        Context::setIsFocusedArea(true);
-        $serviceClass->process($serviceName);
-        Context::setIsFocusedArea(false);
-    }
-    
-    /*
-     * render module class as service
-     */
-    static function renderService ($serviceName, $params = array()) {
-        $serviceClass = self::getServiceClass($serviceName);
-        Context::setIsFocusedArea(true);
-        $serviceClass->setParams($params);
-        $serviceClass->view($serviceName);
-        Context::setIsFocusedArea(false);
-    }
-    
-    /**
-     * calls the destroy method on the module interface
-     */
-    static function destroyModule ($moduleObj) {
-
-        $moduleClass = self::getModuleClass($moduleObj);
-        $moduleClass->destroy($moduleObj->id);
-    }
-
-    /**
-     * performs page module management actions
-     */
-    static function processAction () {
-
-        if (Context::hasRole("pages.edit") && isset($_GET['action'])) {
-
-            $id = isset($_GET['id']) ? $_GET['id'] : null;
-
-            switch ($_GET['action']) {
-                case "new":
-                    NavigationModel::redirectStaticModule("pages", array("action"=>"insertModule","module"=>$id));
-                    break;
-                case "delete":
-                    TemplateModel::deleteAreaModule($id);
-                    break;
-                case "moveup":
-                    TemplateModel::moveTemplateModuleUp(Context::getPageId(),$id);
-                    break;
-                case "movedown":
-                    TemplateModel::moveTemplateModuleDown(Context::getPageId(),$id);
-                    break;
-                case "movemodule":
-                    TemplateModel::moveTemplateModule(Context::getPageId(),$id,$_GET["area"],$_GET["pos"]);
-                    Context::setReturnValue("");
-                    break;
-                case "logdata":
-                    LogDataModel::logThis($_GET['data']);
-                default:
-            }
-        }
-    }
-
-    static function processActions () {
-        
-        // decide if to unfocus the main content area
-        $moduleId = Context::getModuleId();
-        if (Context::getFocusedArea() != $moduleId || empty($moduleId)) {
-            Context::setFocusedArea(null);
-        }
-
-        // process system or module actions
-        if (empty($moduleId)) {
-            self::processAction();
-        } else {
-            
-            $moduleClass = self::getModuleClass(TemplateModel::getTemplateModule($moduleId));
-            $moduleClass->setParams(self::getModuleParams($moduleId));
-            self::processModuleObject($moduleClass);
-        }
     }
     
     /**

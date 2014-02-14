@@ -63,7 +63,7 @@ class TemplateModel {
         // Context::getRenderer()->removeModule($moduleId);
         // call destroy on the module interface
         $moduleObj = TemplateModel::getTemplateModule($moduleId);
-        ModuleModel::destroyModule($moduleObj);
+        ModuleController::destroyModule($moduleObj);
         // remove the template area include
         Database::query("delete from t_templatearea where id = '$moduleId'");
     }
