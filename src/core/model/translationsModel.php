@@ -22,6 +22,7 @@ class TranslationsModel {
         $translations = self::getTranslations();
         $translation = $code;
         if (isset($translations[$lang]) && isset($translations[$lang][$code])) {
+            //$translation = $translations[$lang][$code];
             $translation = base64_decode($translations[$lang][$code]);
         } else {
             self::addTranslations(array($lang => array($code => $code)));
@@ -50,7 +51,7 @@ class TranslationsModel {
                 $escapedValue = $value;
                 if (!isset($varObj[$langCode][$key]) || $escapedValue !== $varObj[$langCode][$key]) {
                     self::$newTranslations = true;
-                    $varObj[$langCode][$key] = $escapedValue;
+                    $varObj[$langCode][$key] = base64_encode($escapedValue);
                 }
             }
         }
@@ -102,7 +103,8 @@ class TranslationsModel {
                     foreach ($allTranslationCodes as $key) {
                         $value = $key;
                         if (isset($translations[$key]) && !empty($translations[$key])) {
-                            $value = base64_encode($translations[$key]);
+                            //$value = $translations[$key];
+                            $value = $translations[$key];
                         }
                         $ar_translations[] = "'".addslashes($key)."'=>'".addslashes($value)."'".PHP_EOL;
                     }

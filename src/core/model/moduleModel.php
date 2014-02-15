@@ -81,10 +81,6 @@ class ModuleModel {
         if ($params) {
             $obj->setParams(self::getModuleParams($moduleObj->id));
         }
-        // add the translations
-        if (in_array("ITranslatable", class_implements($obj))) {
-            TranslationsModel::addTranslations($obj->getTranslations());
-        }
         return $obj;
     }
     
