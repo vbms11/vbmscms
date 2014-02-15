@@ -12,7 +12,7 @@ class InsertModuleView extends XModule {
                 break;
             case "doInsertModule":
                 if (Context::hasRole("modules.insert")) {
-                    $newModuleId = TemplateModel::insertTemplateModule($_GET["selectedPage"], $_GET["area"], $_POST["module"], $_GET["position"]);
+                    $newModuleId = TemplateModel::insertTemplateModule(parent::get("selectedPage"), parent::get("area"), parent::post("module"), parent::get("position"));
                     parent::blur();
                     parent::redirect($newModuleId, array("action"=>"edit"));
                     break;
@@ -25,7 +25,7 @@ class InsertModuleView extends XModule {
         switch (parent::getAction()) {
             
             default:
-                $this->renderMainView();
+                $this->renderMainTabs();
         }
     }
     
@@ -33,80 +33,89 @@ class InsertModuleView extends XModule {
         return array("modules.insert");
     }
     
-    function renderMainView() {
-        
+    function renderMainTabs () {
         ?>
-        <div class="panel">
+        <div class="panel insertModulePanel">
+            <div class="insertModuleTabs">
+                <ul>
+                    <li><a href="#insertModuleTab"><?php echo parent::getTranslation("insertModule.tab.insert"); ?></a></li>
+                </ul>
+                <div id="insertModuleTab">
+                    <?php $this->renderMainView(); ?>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $(".insertModuleTabs").tabs();
+        </script>
+        <?php
+    }
+    
+    function renderMainView () {
+        ?>
+        <h1><?php echo parent::getTranslation("insertModule.insert.title"); ?></h1>
+        <form method="post" action="<?php echo parent::link(array("action"=>"doInsertModule","selectedPage"=>parent::get("selectedPage"), "area"=>parent::get("area"), "position"=>parent::get("position"))); ?>">
 
-            <?php
-            InfoMessages::printInfoMessage("insertModule.info");
+            <table class="expand"><tr><td class="nowrap">
+                <?php echo parent::getTranslation("insertModule.insert.category"); ?>
+            </td><td class="expand">
+                <?php
+                $categorys = Common::toMap(ModuleModel::getModuleCategorys(), "id", "name");
+                InputFeilds::printSelect("category", null, $categorys);
+                ?>
+            </td></tr><tr><td class="nowrap">
+                <?php echo parent::getTranslation("insertModule.insert.module"); ?>
+            </td><td class="expand">
+                <?php
+                $modulesInMenu = ModuleModel::getModulesInMenu();
+                $modules = Common::toMap($modulesInMenu, "id", "name");
+                InputFeilds::printSelect("module", null, $modules);
+                ?>
+            </td></tr></table>
+            
+            <hr/>
+            <div class="alignRight">
+                <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
+                <button type="button" class="jquiButton" onclick="history.back(); return false;"><?php echo parent::getTranslation("common.cancel"); ?></button>
+            </div>
+
+            <script>
+            $('#category').change(function () {
+                $('#module').empty();
+                $.each(modules[$('#category').val()], function(val, text) {
+                    $('#module').append(
+                        $('<option></option>').val(val).html(text)
+                    );
+                });
+
+            })
+            <?php 
+            echo "var modules = {";
+            $first = true;
+            foreach ($categorys as $ckey => $cvalue) {
+                if (!$first) {
+                    echo ",";
+                }
+                $first = false;
+                echo "'".Common::htmlEscape($ckey)."' : {";
+                $firstm = true;
+                foreach ($modulesInMenu as $module) {
+                    if ($module->category == $ckey) {
+                        if (!$firstm) {
+                            echo ",";
+                        }
+                        $firstm = false;
+                        echo "'".Common::htmlEscape($module->id)."' : '".Common::htmlEscape($module->name)."'";
+                    }
+                }
+                echo "}".PHP_EOL;
+            }
+            echo "};";
             ?>
 
-            <br/>
-            <form method="post" action="<?php echo parent::link(array("action"=>"doInsertModule","selectedPage"=>$_GET["selectedPage"], "area"=>$_GET["area"], "position"=>$_GET["position"])); ?>">
+            </script>
 
-                <table class="expand"><tr><td class="nowrap">
-                    Category:
-                </td><td class="expand">
-                    <?php
-                    $categorys = Common::toMap(ModuleModel::getModuleCategorys(), "id", "name");
-                    InputFeilds::printSelect("category", null, $categorys);
-                    ?>
-                </td></tr><tr><td class="nowrap">
-                    Module:
-                </td><td class="expand">
-                    <?php
-                    $modulesInMenu = ModuleModel::getModulesInMenu();
-                    $modules = Common::toMap($modulesInMenu, "id", "name");
-                    InputFeilds::printSelect("module", null, $modules);
-                    ?>
-                </td></tr></table><hr/>
-		<div class="alignRight">
-		    <button type="submit">Save</button>
-                    <button type="button" onclick="history.back(); return false;">Abbrechen</button>
-		</div>
-
-                <script>
-		$('.alignRight button').each(function (index,object) {
-			$(object).button();
-		});
-                $('#category').change(function () {
-                    $('#module').empty();
-                    $.each(modules[$('#category').val()], function(val, text) {
-                        $('#module').append(
-                            $('<option></option>').val(val).html(text)
-                        );
-                    });
-
-                })
-                <?php 
-                echo "var modules = {";
-                $first = true;
-                foreach ($categorys as $ckey => $cvalue) {
-                    if (!$first) {
-                        echo ",";
-                    }
-                    $first = false;
-                    echo "'".Common::htmlEscape($ckey)."' : {";
-                    $firstm = true;
-                    foreach ($modulesInMenu as $module) {
-                        if ($module->category == $ckey) {
-                            if (!$firstm) {
-                                echo ",";
-                            }
-                            $firstm = false;
-                            echo "'".Common::htmlEscape($module->id)."' : '".Common::htmlEscape($module->name)."'";
-                        }
-                    }
-                    echo "}".PHP_EOL;
-                }
-                echo "};";
-                ?>
-                
-                </script>
-                
-            </form>
-        </div>
+        </form>
         <?php
     }
     

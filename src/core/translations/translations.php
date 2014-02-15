@@ -264,7 +264,12 @@ $ar_translations = array(
 ,'data.form.edit.emailSubject'=>'RW1haWwgc3ViamVjdDog'
 ,'data.form.edit.emailSender'=>'RW1haWwgc2VuZGVyOg=='
 ,'data.form.edit.title.emailContent'=>'Q29udGVudCBvZiB0aGUgbm90aWZpY2F0aW9uIGVtYWlsIDxmb3JtRGF0YT4gd2lsbCBiZSByZXBsYWNlZCB3aXRoIHRoZSBmb3JtIGlucHV0Lg=='
-,'admin.template.module.edit'=>'YWRtaW4udGVtcGxhdGUubW9kdWxlLmVkaXQ='
+,'admin.template.module.edit'=>'RWRpdCBNb2R1bGU='
+,'insertModule.insert.title'=>'SW5zZXJ0IE1vZHVsZQ=='
+,'insertModule.insert.category'=>'Q2F0ZWdvcnk6IA=='
+,'insertModule.insert.module'=>'TW9kdWxlOiA='
+,'common.cancel'=>'Q2FuY2Vs'
+,'insertModule.tab.insert'=>'SW5zZXJ0IE1vZHVsZQ=='
 ),'de'=>array(
 'login.email'=>'R2ViZW4gc2llIGVpbmUgRW1haWxhZHJlc3NlIGVpbjo='
 ,'login.reset'=>'UGFzc3dvcnQgenVy/GNrc2V0emVu'
@@ -530,5 +535,10 @@ $ar_translations = array(
 ,'data.form.edit.emailSender'=>'ZGF0YS5mb3JtLmVkaXQuZW1haWxTZW5kZXI='
 ,'data.form.edit.title.emailContent'=>'ZGF0YS5mb3JtLmVkaXQudGl0bGUuZW1haWxDb250ZW50'
 ,'admin.template.module.edit'=>'YWRtaW4udGVtcGxhdGUubW9kdWxlLmVkaXQ='
+,'insertModule.insert.title'=>'SW5zZXJ0IE1vZHVsZQ=='
+,'insertModule.insert.category'=>'Q2F0ZWdvcnk6IA=='
+,'insertModule.insert.module'=>'TW9kdWxlOiA='
+,'common.cancel'=>'QWJicmVjaGVu'
+,'insertModule.tab.insert'=>'SW5zZXJ0IE1vZHVsZQ=='
 )); 
 ?>

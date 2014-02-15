@@ -41,7 +41,7 @@ class TranslationsModel {
     static function addTranslations ($translations) {
         
         $varObj = self::getTranslations();
-        // add the translations
+        
         foreach ($translations as $langCode => $translation) {
             if (!isset($varObj[$langCode])) {
                 self::$newTranslations = true;
