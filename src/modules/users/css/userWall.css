@@ -1,0 +1,53 @@
+
+.userWallPostCommentBox, 
+.userWallPostThread, 
+.userWallPostReply, 
+.userWallPostReplyBox {
+    clear: left;
+}
+
+.userWallPostThread {
+    border: 1px solid silver;
+    padding: 5px;
+    margin-top: 10px;
+    background: url('../img/gradSmall.gif') white repeat-x;
+}
+
+.userWallPostImage {
+    float: left;
+    width: 70px;
+}
+
+.userWallPostBody {
+    margin-left: 70px;
+}
+
+.userWallPostTitle {
+    border-bottom: 1px solid silver;
+    padding: 0px 0px 5px 0px;
+}
+
+.userWallPostTitleDate {
+    float: right;
+    color: silver;
+}
+
+.userWallPostTitleTools {
+    float: right;
+}
+
+.userWallPostTextarea textarea {
+    border: 1px solid silver;
+    height: 50px;
+    resize: none;
+    width: 100%;
+}
+
+.userWallPostTextarea hr {
+    background-color: silver;
+    color: silver;
+}
+
+
+
+

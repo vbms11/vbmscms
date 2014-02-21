@@ -53,24 +53,24 @@ class RolesModel {
 
 
 
-// user roles
-static function getUserCustomRoles ($userId) {
-	$userId = mysql_real_escape_string($userId);
-	return Database::queryAsArray("select * from t_roles where userid = '$userId'");
-}
-static function addCustomRoleToUser ($roleId,$userId) {
-	$userId = mysql_real_escape_string($userId);
-	$roleId = mysql_real_escape_string($roleId);
-	$exists = Database::queryAsObject("select 1 as res from t_roles where userid = '$userId' and roleid = '$roleId'");
-	if ($exists == null) {
-		Database::query("insert into t_roles(userid,roleid) values('$userId','$roleId')");
-	}
-}
-static function removeCustomRoleFromUser ($roleId,$userId) {
-	$userId = mysql_real_escape_string($userId);
-	$roleId = mysql_real_escape_string($roleId);
-	Database::query("delete from t_roles where userid = '$userId' and roleid = '$roleId'");
-}
+    // user roles
+    static function getUserCustomRoles ($userId) {
+        $userId = mysql_real_escape_string($userId);
+        return Database::queryAsArray("select * from t_roles where userid = '$userId'");
+    }
+    static function addCustomRoleToUser ($roleId,$userId) {
+        $userId = mysql_real_escape_string($userId);
+        $roleId = mysql_real_escape_string($roleId);
+        $exists = Database::queryAsObject("select 1 as res from t_roles where userid = '$userId' and roleid = '$roleId'");
+        if ($exists == null) {
+            Database::query("insert into t_roles(userid,roleid) values('$userId','$roleId')");
+        }
+    }
+    static function removeCustomRoleFromUser ($roleId,$userId) {
+        $userId = mysql_real_escape_string($userId);
+        $roleId = mysql_real_escape_string($roleId);
+        Database::query("delete from t_roles where userid = '$userId' and roleid = '$roleId'");
+    }
 
 
 

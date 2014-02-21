@@ -32,15 +32,15 @@ class AdminPagesBaseModule extends XModule {
         } else {
             PagesModel::updatePage($_GET['id'], $_POST['pagename'], "", Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['pagedescription'],$_POST['template'],null);
             MenuModel::updatePageInMenu($_GET['id'], $_GET["menu"], $_GET["parent"], Context::getLang());
-            MenuModel::setPageActivateInMenu($_GET['id'], $_POST['active'], Context::getLang());
+            MenuModel::setPageActivateInMenu($_GET['id'], parent::post('active'), Context::getLang());
         }
         
         // save page roles
-        $roleGroups = $_POST['roleGroups'];
-        RolesModel::clearPageRoles($_GET['id']);
+        $roleGroups = parent::post('roleGroups');
+        RolesModel::clearPageRoles(parent::get('id'));
         if ($roleGroups != null && count($roleGroups) > 0) {
             foreach ($roleGroups as $roleGroup) {
-                RolesModel::savePageRole($_GET['id'], $roleGroup);
+                RolesModel::savePageRole(parent::get('id'), $roleGroup);
             }
         }
     }

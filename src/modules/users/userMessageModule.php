@@ -5,7 +5,7 @@ require_once('core/model/usersModel.php');
 require_once('core/ddm/dataView.php');
 
 
-class UserProfileModule extends XModule {
+class UserMessageModule extends XModule {
     
     const modeCurrentUser = 1;
     const modeSelectedUser = 2;
@@ -29,10 +29,6 @@ class UserProfileModule extends XModule {
                     parent::focus();
                 }
                 break;
-            default:
-                if (parent::get("userId")) {
-                    Context::setSelectedUser(parent::get("userId"));
-                }
         }
     }
 
@@ -62,19 +58,30 @@ class UserProfileModule extends XModule {
         return array("user.profile.edit","user.profile.view","user.profile.owner");
     }
     
-    function getStyles() {
-        return array("css/userProfile.css");
+    static function getTranslations() {
+        return array(
+            "en"=>array(
+                "users.profile.edit.mode" => "Display Mode:"
+            ),
+            "de"=>array(
+                "users.profile.edit.mode" => "Anzige Modus:"
+            ));
     }
     
     function printEditView () {
         ?>
         <div class="panel usersProfilePanel">
             <form action="<?php echo parent::link(array("action"=>"save")); ?>" method="post">
-                <table class="formTable"><tr><td>
+                <table><tr><td>
                     <?php echo parent::getTranslation("users.profile.edit.mode"); ?>
                 </td><td>
                     <?php InputFeilds::printSelect("mode", parent::param("mode"), array(self::modeCurrentUser => parent::getTranslation("common.user.current"), self::modeSelectedUser => parent::getTranslation("common.user.selected"))); ?>
-                </td></tr></table>
+                </td></tr><tr><td colspan="2">
+                    <?php echo parent::getTranslation("users.profile.edit.template"); ?>
+                </td></tr><tr><td colspan="2">
+                    <?php InputFeilds::printHtmlEditor("profileTemplate", parent::param("profileTemplate")); ?>
+                </td></tr>
+                </table>
                 <hr/>
                 <div class="alignRight">
                     <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
@@ -90,64 +97,31 @@ class UserProfileModule extends XModule {
     function printMainView () {
         ?>
         <div class="panel usersProfilePanel">
+            user profile:
             <?php
             $userId = null;
             switch (parent::param("mode")) {
                 case self::modeSelectedUser:
                     $userId = Context::getSelectedUserId();
                     break;
-                case self::modeCurrentUser:
                 default:
-                    if (Context::hasRole("user.profile.owner")) {
+                case self::modeCurrentUser:
+                    if (Context::hasRole("user.profile.own")) {
                         $userId = Context::getUserId();
                     }
                     break;
             }
             if (!empty($userId)) {
                 $user = UsersModel::getUser($userId);
-                $username = htmlentities($user->firstname." ".$user->lastname);
-                $userProfileImage = null;
-                if (empty($userProfileImage)) {
-                    $userProfileImage = "modules/users/img/User.png";
+                if (!empty($user)) {
+                    $user->profileImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
+                    $userInfo = VirtualDataModel::getRowByObjectIds(parent::param("userAttribs"), $user->objectId);
+                    $placeholderReplacer = new TemplateParser();
+                    $placeholderReplacer->addObject("user", $user);
+                    $placeholderReplacer->addObject("userInfo", $userInfo);
+                    $placeholderReplacer->setTemplate(parent::param("profileTemplate"));
+                    echo $placeholderReplacer->render();
                 }
-                ?>
-                <div class="userProfileImage">
-                    <img src="<?php echo $userProfileImage; ?>" title="<?php echo $username; ?>" alt="<?php echo $username; ?>" />
-                </div>
-                <div class="userProfileMenu">
-                    <div>
-                        <a href="<?php echo parent::staticLink("userDetails",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.details"); ?>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="<?php echo parent::staticLink("userWall",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.wall"); ?>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="<?php echo parent::staticLink("userGallery",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.gallery"); ?>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="<?php echo parent::staticLink("userMessage",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.message"); ?>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="<?php echo parent::staticLink("userFriends",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.friends"); ?>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="<?php echo parent::staticLink("userAddFriends",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.addFriends"); ?>
-                        </a>
-                    </div>
-                </div>
-                <?php
-                
             }
             ?>
         </div>

@@ -1,0 +1,28 @@
+
+.usersProfilePanel {
+    
+}
+
+.userProfileImage {
+    background: url('../img/gradSmall.gif') white repeat-x;
+    border: 1px solid silver;
+    margin: 0 0 3px;
+    text-align: center;
+}
+
+.userProfileMenu {
+    
+}
+
+.userProfileMenu a {
+    background: url('../img/gradSmall.gif') repeat-x;
+    border: 1px solid #C0C0C0;
+    display: block;
+    margin: 0 0 3px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.userProfileMenu a:hover {
+    background: rgb(240,240,240);
+}

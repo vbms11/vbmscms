@@ -109,6 +109,9 @@ class PagesModel {
             }
             $template = TemplateModel::getMainTemplate($site->siteid);
             $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
+            foreach (RolesModel::getCustomRoles() as $roleId => $role) {
+                RolesModel::savePageRole($pageId, $roleId);
+            }
             $page = PagesModel::getPageTemplate($pageId, $_lang);
             $templateAreas = TemplateModel::getAreaNames($page);
             $moduleTypeId = ModuleModel::getModuleByName($_name);

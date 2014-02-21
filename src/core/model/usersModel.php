@@ -261,11 +261,6 @@ class UsersModel {
         Database::query("delete from t_site_users where userid = '$userId'");
         Database::query("delete from t_users where id = '$userId'");
     }
-    
-    static function getMaxUserId () {
-        $ret = Database::queryAsObject("select max(id) as max from t_users");
-        return $ret->max;
-    }
 
 }
 
