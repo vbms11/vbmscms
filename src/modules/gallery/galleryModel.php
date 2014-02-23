@@ -2,6 +2,9 @@
 
 class GalleryModel {
     
+    const type_user = 1;
+    const type_module = 2;
+    
     // ordering
     
     static function getNextImageOrderKey () {
@@ -16,27 +19,101 @@ class GalleryModel {
         return intval($row['max']) + 1;
     }
 
-    static function setCategoryOrderKey ($id, $orderKey) {
-        $id = mysql_real_escape_string($id);
-        $orderKey = mysql_real_escape_string($orderKey);
-        Database::query("update t_gallery_category set orderkey='$orderKey' where id='$id'");
-    }
-
     static function setImageOrderKey ($id, $orderKey) {
         $id = mysql_real_escape_string($id);
         $orderKey = mysql_real_escape_string($orderKey);
         Database::query("update t_gallery_image set orderkey='$orderKey' where id='$id'");
     }
+    
+    static function setCategoryOrderKey ($id, $orderKey) {
+        $id = mysql_real_escape_string($id);
+        $orderKey = mysql_real_escape_string($orderKey);
+        Database::query("update t_gallery_category set orderkey='$orderKey' where id='$id'");
+    }
+    
+    static function moveImageUp ($id) {
+        $theImage = self::getImage($id);
+        $images = self::getImages($theImage->categoryid);
+        $lastImage = null;
+        foreach ($images as $image) {
+            if ($image->id == $id) {
+                if ($lastImage != null) {
+                    self::setImageOrderKey($id, $lastImage->orderkey);
+                    self::setImageOrderKey($lastImage->id, $image->orderkey);
+                }
+                return;
+            }
+            $lastImage = $image;
+        }
+    }
+    
+    static function moveImageDown ($id) {
+        $theImage = self::getImage($id);
+        $images = self::getImages($theImage->categoryid);
+        $swapImage = null;
+        foreach ($images as $image) {
+            if ($swapImage != null) {
+                self::setImageOrderKey($id, $image->orderkey);
+                self::setImageOrderKey($image->id, $swapImage->orderkey);
+                return;
+            } else {
+                if ($image->id == $id) {
+                    $swapImage = $image;
+                }
+            }
+        }
+    }
+    
+    static function moveCategoryUp ($id) {
+        $theCategory = self::getCategory($id);
+        $categories = self::getImages($theCategory->parent);
+        $lastCategory = null;
+        foreach ($categories as $category) {
+            if ($category->id == $id) {
+                if ($lastCategory != null) {
+                    self::setCategoryOrderKey($id, $lastCategory->orderkey);
+                    self::setCategoryOrderKey($lastCategory->id, $category->orderkey);
+                }
+                return;
+            }
+            $lastCategory = $category;
+        }
+    }
+    
+    static function moveCategoryDown ($id) {
+        $theCategory = self::getCategory($id);
+        $categories = self::getCategorys($theCategory->parent);
+        $swapCategory = null;
+        foreach ($categories as $category) {
+            if ($swapCategory != null) {
+                self::setCategoryOrderKey($id, $category->orderkey);
+                self::setCategoryOrderKey($category->id, $swapCategory->orderkey);
+                return;
+            } else {
+                if ($category->id == $id) {
+                    $swapCategory = $category;
+                }
+            }
+        }
+    }
 
     // acces
     
-    static function getGallery ($theId, $galleryType = 'page') {
+    static function getUserGallery ($userId) {
+        return self::getGallery($userId, self::type_user);
+    }
+    
+    static function getPageGallery ($moduleId) {
+        return self::getGallery($moduleId, self::type_module);
+    }
+    
+    static function getGallery ($theId, $galleryType) {
         $moduleId = mysql_real_escape_string($theId);
         $galleryType = mysql_real_escape_string($galleryType);
-        $gallery = Database::queryAsObject("select * from t_gallery_page where pageid = '$moduleId' and type = '$galleryType'");
+        $gallery = Database::queryAsObject("select * from t_gallery_page where typeid = '$moduleId' and type = '$galleryType'");
         if ($gallery == null) {
             $rootCategory = GalleryModel::createCategory("root_$moduleId", "root_$moduleId", null, null);
-            Database::query("insert into t_gallery_page (pageid,type,rootcategory) values('$moduleId','$galleryType','$rootCategory')");
+            Database::query("insert into t_gallery_page (typeid,type,rootcategory) values('$moduleId','$galleryType','$rootCategory')");
             return GalleryModel::getGallery($theId, $galleryType);
         }
         return $gallery;
@@ -175,68 +252,8 @@ class GalleryModel {
         imagejpeg($img,$outputFile,90);
         imagedestroy($img);
     }
-
-    static function nameUploadedImages ($category, $imageName, $title, $description) {
-        
-        if (isset($_SESSION["gallery.upload.files"])) {
-            $files = $_SESSION["gallery.upload.files"];
-            foreach ($files as $file) {
-                // name image
-                $exists = array_key_exists($imageName, $files);
-                if ($exists) {
-                    GalleryModel::addImage($category,$imageName,$title,$description);
-                    unset($files[$imageName]);
-                }
-            }
-        } else {
-            echo "no files";
-        }
-    }
-    
     
     static function uploadImage ($inputName,$category) {
-        /*
-        //  5MB maximum file size
-        $MAXIMUM_FILESIZE = 5 * 1024 * 1024;
-        $rEFileTypes = "/^\.(jpg|jpeg|gif|png){1}$/i";
-        
-        
-        $dirName = ResourcesModel::getResourcePath("gallery");
-        $dirNameSmall = ResourcesModel::getResourcePath("gallery/small");
-        Log::info("uploading file");
-        // move uploaded file if safe
-        $isFile = is_uploaded_file($_FILES[$inputName]['tmp_name']);
-        $imageName = $_FILES[$inputName]['name'];
-        Log::info("uploading file $imageName");
-        if ($isFile) {
-            if (preg_match($rEFileTypes, $imageName)) {
-                if ($_FILES[$inputName]['size'] <= $MAXIMUM_FILESIZE) {
-                    $isMove = move_uploaded_file($_FILES[$inputName]['tmp_name'],
-                            ResourcesModel::getResourcePath("gallery",$imageName));
-                } else {
-                    Log::error("file larger than maximum file size (".($MAXIMUM_FILESIZE /(1024*1024))."MB)");
-                }
-            } else {
-                Log::error("invalid filetype allowed filetypes are jpg jpeg gif png");
-            }
-        } else {
-            Log::error("Error uploading file sorry");
-        }
-        
-        
-        // GalleryModel::addImage($category,$imageName,$title,$description);
-        if ($isMove) {
-            // create preview image
-            GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$imageName),170,170,
-                ResourcesModel::getResourcePath("gallery/small",$imageName));
-            // add to list of pending images
-            if (!isset($_SESSION["gallery.upload.files"]))
-                $_SESSION["gallery.upload.files"] = array();
-            $_SESSION["gallery.upload.files"][$imageName] = $imageName;
-            
-        }
-
-        */
         
         // list of valid extensions, ex. array("jpeg", "xml", "bmp")
         $allowedExtensions = array("jpeg", "jpg", "png", "gif");

@@ -50,9 +50,26 @@ class UserWallModule extends XModule {
                 }
                 break;
             case "deleteComment":
-                
+                $userId = $this->getModeUserId();
+                $comment = UserWallModel::getUserPost(parent::get("id"));
+                if ($userId == Context::getUserId() || $comment->srcuserid == Context::getUserId()) {
+                    UserWallmodel::deleteUserPost(parent::get("id"));
+                }
+                parent::redirect();
                 break;
             case "editComment":
+                if (parent::post("submitButton")) {
+                    $post = UserWallModel::getUserPost(parent::get("id"));
+                    $validationMessages = UserWallModel::validateWallPost($post->userid, Context::getUserId(), parent::post("comment"));
+                    if (count($validationMessages) > 0) {
+                        parent::setMessages($validationMessages);
+                    } else {
+                        if ($post->srcuserid == Context::getUserId()) {
+                            UserWallModel::updateUserPost(parent::get("id"), parent::post("comment"));
+                            parent::redirect();
+                        }
+                    }
+                }
                 break;
             default:
                 parent::clearMessages();
@@ -69,6 +86,9 @@ class UserWallModule extends XModule {
                 if (Context::hasRole("user.profile.edit")) {
                     $this->printEditView();
                 }
+                break;
+            case "editComment":
+                $this->printEditPostView(parent::get("id"));
                 break;
             case "reply":
             case "comment":
@@ -102,17 +122,14 @@ class UserWallModule extends XModule {
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
-                    <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
                 </div>
             </form>
-            <script>
-            $(".usersProfilePanel button").button();
-            </script>
         </div>
         <?php
     }
     
-    function printMainView () {
+    function getModeUserId () {
         
         $userId = null;
         switch (parent::param("mode")) {
@@ -126,6 +143,48 @@ class UserWallModule extends XModule {
                 }
                 break;
         }
+        return $userId;
+    }
+    
+    function printEditPostView ($postId) {
+        
+        $post = UserWallModel::getUserPost($postId);
+        $userProfileImage = "modules/users/img/User.png";
+        
+        ?>
+        <div class="panel usersWallPanel">
+            <?php
+            
+            if (!empty($post)) {
+                ?>
+                <div class="userWallPostCommentBox">
+                    <div class="userWallPostImage">
+                        <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+                    </div>
+                    <div class="userWallPostBody">
+                        <form method="post" action="<?php echo parent::link(array("action"=>"editComment","id"=>$post->id)); ?>">
+                            <div class="userWallPostTextarea">
+                                <textarea name="<?php echo parent::alias("comment") ?>"><?php echo htmlentities($post->comment); ?></textarea>
+                            </div>
+                            <hr/>
+                            <div class="alignRight">
+                                <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
+                                    <?php echo parent::getTranslation("userWall.button.save"); ?>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+    
+    function printMainView () {
+        
+        $userId = $this->getModeUserId();
         
         $wallPosts = array();
         if (!empty($userId)) {
@@ -180,31 +239,39 @@ class UserWallModule extends XModule {
                             </div>
                             <div class="userWallPostBody">
                                 <div class="userWallPostTitle">
-                                    <div class="userWallPostTitleTools">
-                                        <?php
-                                        $allowDelete = false;
-                                        $allowEdit = false;
-                                        if (Context::getUserId() == $wallPostReply->srcuserid) {
-                                            $allowDelete = true;
-                                            $allowEdit = true;
-                                        }
-                                        if ($userId == Context::getUserId()) {
-                                            $allowDelete = true;
-                                        }
-                                        if ($allowDelete) {
-                                            ?>
-                                            <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPost->id),false); ?>');" />
-                                            <?php
-                                        }
-                                        if ($allowEdit) {
-                                            ?>
-                                            <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPost->id)); ?>">
-                                                <img src="resource/img/preferences.png" alt="" />
-                                            </a>
-                                            <?php
-                                        }
+                                    <?php
+                                    $allowDelete = false;
+                                    $allowEdit = false;
+                                    if (Context::getUserId() == $wallPost->srcuserid) {
+                                        $allowDelete = true;
+                                        $allowEdit = true;
+                                    }
+                                    if ($userId == Context::getUserId()) {
+                                        $allowDelete = true;
+                                    }
+                                    if ($allowDelete || $allowEdit) {
                                         ?>
-                                    </div>
+                                        <div class="userWallPostTitleTools">
+                                        <?php
+                                    }
+                                    if ($allowDelete) {
+                                        ?>
+                                        <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPost->id),false); ?>');" />
+                                        <?php
+                                    }
+                                    if ($allowEdit) {
+                                        ?>
+                                        <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPost->id)); ?>">
+                                            <img src="resource/img/preferences.png" alt="" />
+                                        </a>
+                                        <?php
+                                    }
+                                    if ($allowDelete || $allowEdit) {
+                                        ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
                                     <div class="userWallPostTitleDate">
                                         <?php echo $wallPost->date; ?>
                                     </div>
@@ -229,31 +296,39 @@ class UserWallModule extends XModule {
                                     </div>
                                     <div class="userWallPostBody">
                                         <div class="userWallPostTitle">
-                                            <div class="userWallPostTitleTools">
-                                                <?php
-                                                $allowDelete = false;
-                                                $allowEdit = false;
-                                                if (Context::getUserId() == $wallPostReply->srcuserid) {
-                                                    $allowDelete = true;
-                                                    $allowEdit = true;
-                                                }
-                                                if ($userId == Context::getUserId()) {
-                                                    $allowDelete = true;
-                                                }
-                                                if ($allowDelete) {
-                                                    ?>
-                                                    <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPostReply->id),false); ?>');" />
-                                                    <?php
-                                                }
-                                                if ($allowEdit) {
-                                                    ?>
-                                                    <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPostReply->id)); ?>">
-                                                        <img src="resource/img/preferences.png" alt="" />
-                                                    </a>
-                                                    <?php
-                                                }
+                                            <?php
+                                            $allowDelete = false;
+                                            $allowEdit = false;
+                                            if (Context::getUserId() == $wallPostReply->srcuserid) {
+                                                $allowDelete = true;
+                                                $allowEdit = true;
+                                            }
+                                            if ($userId == Context::getUserId()) {
+                                                $allowDelete = true;
+                                            }
+                                            if ($allowDelete || $allowEdit) {
                                                 ?>
-                                            </div>
+                                                <div class="userWallPostTitleTools">
+                                                <?php
+                                            }
+                                            if ($allowDelete) {
+                                                ?>
+                                                <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPostReply->id),false); ?>');" />
+                                                <?php
+                                            }
+                                            if ($allowEdit) {
+                                                ?>
+                                                <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPostReply->id)); ?>">
+                                                    <img src="resource/img/preferences.png" alt="" />
+                                                </a>
+                                                <?php
+                                            }
+                                            if ($allowDelete || $allowEdit) {
+                                                ?>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
                                             <div class="userWallPostTitleDate">
                                                 <?php echo $wallPostReply->date; ?>
                                             </div>

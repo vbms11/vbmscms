@@ -36,8 +36,7 @@ class ModuleController {
         </div>
         <?php
         if ($contextMenu && (!Context::isAjaxRequest() && !Context::isRenderRequest())) {
-            $roles = $moduleObject->getRoles();
-            if (Context::hasRole($roles) && Context::getFocusedArea() != $moduleObject->getId()) {
+            if (Context::hasRole("pages.edit") && Context::getFocusedArea() != $moduleObject->getId()) {
                 self::renderContextMenu($moduleObject, $multiModuleContextMenu);
             }
         }
