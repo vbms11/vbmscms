@@ -290,6 +290,18 @@ class InputFeilds {
         </script>
 	<?php
     }
+    
+    static function printSpinner ($name, $value = null) {
+        if ($value == null) {
+            $value = 0;
+        }
+        ?>
+	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>" type="text"/>
+        <script>
+        $("#<?php echo $name; ?>").spinner();
+        </script>
+	<?php
+    }
 }
 
 

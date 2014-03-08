@@ -46,6 +46,9 @@ class LoginModule extends XModule {
     function onView () {
 
         switch (parent::getAction()) {
+            case "edit":
+                $this->printEditView();
+                break;
             case "logout":
                 $this->printLoggedOutView();
                 break;
@@ -103,7 +106,11 @@ class LoginModule extends XModule {
                 "login.register"        => "Registrieren, ich bin ein neuer Kunde"
             ));
     }
-
+    
+    function printEditView () {
+        
+    }
+    
     function printForgotView () {
         ?>
         <div class="panel loginPanel">
@@ -181,6 +188,10 @@ class LoginModule extends XModule {
         <div class="panel loginPanel">
             <form method="post" action="<?php echo parent::link(array("action"=>"login")); ?>">
                 <table width="100%" class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("login.openId"); ?>
+                </td><td>
+                    
+                </td></tr><tr><td>
                     <?php echo parent::getTranslation("login.username"); ?>
                 </td><td>
                     <input type="text" class="expand" name="username" />

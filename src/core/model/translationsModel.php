@@ -101,7 +101,7 @@ class TranslationsModel {
                 $ar_translations = array();
                 if (count($translations) > 0) {
                     foreach ($allTranslationCodes as $key) {
-                        $value = $key;
+                        $value = base64_encode($key);
                         if (isset($translations[$key]) && !empty($translations[$key])) {
                             //$value = $translations[$key];
                             $value = $translations[$key];

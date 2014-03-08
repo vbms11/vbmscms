@@ -12,7 +12,7 @@ class ConfirmModel {
         // build the message
         $serverName = NavigationModel::getSitePath();
         $confirmLink = "<a href=\"$serverName?static=confirm&action=confirm&code=$hash\">Click Here To Confirm</a>";
-        $content = str_replace("<link>",$confirmLink,$content);
+        $content = str_replace("%link%",$confirmLink,$content);
 
         // send the message
         EmailUtil::sendHtmlEmail($to,$subject,$content,$from);

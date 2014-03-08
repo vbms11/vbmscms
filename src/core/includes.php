@@ -22,6 +22,8 @@ include_once 'core/template/editableTemplate.php';
 include_once 'core/template/editableTemplatePreview.php';
 
 include_once 'core/util/common.php';
+
+require_once 'core/model/countriesModel.php';
 require_once 'core/model/rolesModel.php';
 include_once 'core/model/piwikModel.php';
 include_once 'core/model/sitesModel.php';

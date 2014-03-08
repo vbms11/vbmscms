@@ -40,7 +40,7 @@ class UserGalleryModule extends XModule {
                     if (parent::get("id")) {
                         GalleryModel::updateCategory(parent::get("id"), parent::post("title"), parent::post("imageId"), parent::post("description"));
                     } else {
-                        GalleryModel::createCategory(parent::post("title"), parent::post("description"), null, parent::post("category"));
+                        GalleryModel::createCategory(parent::post("title"), parent::post("description"), null, parent::get("category"));
                     }
                     PagesModel::updateModifyDate();
                     parent::blur();

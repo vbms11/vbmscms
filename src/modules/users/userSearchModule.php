@@ -71,8 +71,9 @@ class UserSearchModule extends XModule {
             $conditions["country"] = parent::post("country");
         }
         
-        
-        
+    }
+    
+    function printEditView () {
         
     }
     
@@ -80,27 +81,32 @@ class UserSearchModule extends XModule {
         ?>
         <div class="usersListSearch">
             <div class="searchTypeTabs">
-                <a href="#simpleSearch"><?php echo parent::getTranslation('users.search.tab.simple'); ?></a>
+                <ul>
+                    <li><a href="#simpleSearch"><?php echo parent::getTranslation('users.search.tab.simple'); ?></a></li>
+                </ul>
                 <div id="simpleSearch">
-                    <form method="post" action="<?php echo parent::link(array("action"=>"searchResults")); ?>">
-                        <table width="100%"><tr>
-                            <td class="contract"><?php echo parent::getTranslation('users.list.search'); ?></td>
-                            <td class="expand"><?php InputFeilds::printSelect("country", $_GET['country'], array()); ?></td>
-                            <td class="contract"><?php echo parent::getTranslation('users.search.age.min'); ?></td>
-                            <td class="expand"><?php InputFeilds::printSlider("agemin", $_GET['agemin'], array()); ?></td>
+                    <form method="get" action="<?php echo parent::link(array("action"=>"searchResults")); ?>">
+                        <table><tr>
+                            <td><?php echo parent::getTranslation('users.search.country'); ?></td>
+                            <td><?php InputFeilds::printSelect("country", parent::get('country'), array()); ?></td>
+                            <td><?php echo parent::getTranslation('users.search.age.min'); ?></td>
+                            <td><?php InputFeilds::printSpinner("agemin", parent::get('agemin') ? parent::get('agemin') : 18); ?></td>
                         </tr><tr>
-                            <td class="contract"><?php echo parent::getTranslation('users.list.search'); ?></td>
-                            <td class="expand"><?php InputFeilds::printSelect("region", parent::post('country'), array()); ?></td>
-                            <td class="contract"><?php echo parent::getTranslation('users.search.age.max'); ?></td>
-                            <td class="expand"><?php InputFeilds::printSlider("agemax", $_GET['agemax'], array()); ?></td>
+                            <td><?php echo parent::getTranslation('users.search.region'); ?></td>
+                            <td><?php InputFeilds::printSelect("region", parent::get('region'), array()); ?></td>
+                            <td><?php echo parent::getTranslation('users.search.age.max'); ?></td>
+                            <td><?php InputFeilds::printSpinner("agemax", parent::get('agemax') ? parent::get('agemax') : 50); ?></td>
                         </tr></table>
                         <div class="alignRight">
-                            <button class="userSearchSearchButton" value="simpleSearchButton" type="submit"><?php echo parent::getTranslation('users.search.button.search'); ?></button>
+                            <button class="userSearchSearchButton jquiButton" value="simpleSearchButton" type="submit">
+                                <?php echo parent::getTranslation('users.search.button.search'); ?>
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
             <script>
+            $(".searchTypeTabs").tabs();
             $(".searchToggle button").click(function(e){
                 $(".usersListSearch").toggle();
             });
@@ -126,7 +132,7 @@ class UserSearchModule extends XModule {
     }
     
     function printSearchResultsPanel () {
-        
+        return;
         $users = UsersModel::search($this->getConditions());
         $usersCount = count($users);
         $usersPerPage = $_POST["usersPerPage"];
@@ -172,10 +178,10 @@ class UserSearchModule extends XModule {
         ?>
         <div class="usersListPanel">
             <div class="usersListSearchToggle"><?php echo parent::getTranslation('users.search.button.toggle'); ?></div>
-            <div class="usersSearchContent" align="center">
+            <div class="usersSearchContent">
                 <?php $this->printSearchPanel(); ?>
             </div>
-            <div class="usersListContent" align="center">
+            <div class="usersListContent">
                 <?php $this->printSearchResultsPanel(); ?>
             </div>
         </div>
