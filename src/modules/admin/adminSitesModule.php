@@ -12,11 +12,11 @@ class AdminSitesModule extends XModule {
             switch (parent::getAction()) {
                 case "createSite":
                     $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
-                    SiteModel::createSite(parent::post("siteName"), $customer->id, parent::post("siteDescription"), null, parent::post("siteTrackerScript"));
+                    SiteModel::createSite(parent::post("siteName"), $customer->id, parent::post("siteDescription"), null, parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
                     parent::redirect();
                     break;
                 case "updateSite":
-                    SiteModel::updateSite(parent::get("id"), parent::post("siteName"), parent::post("siteDescription"), parent::post("siteTrackerScript"));
+                    SiteModel::updateSite(parent::get("id"), parent::post("siteName"), parent::post("siteDescription"), parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
                     parent::redirect();
                     break;
                 case "deleteSite":
@@ -141,6 +141,22 @@ class AdminSitesModule extends XModule {
                 <label for="siteTrackerScript"><?php echo parent::getTranslation("admin.sites.label.trackerScript"); ?></label>
             </td><td>
                 <?php InputFeilds::printTextArea("siteTrackerScript", $site->sitetrackerscript); ?>
+            </td></tr><tr><td>
+                <label for="facebookAppId"><?php echo parent::getTranslation("admin.sites.label.facebookAppId"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("facebookAppId", $site->facebookappid); ?>
+            </td></tr><tr><td>
+                <label for="facebookSecret"><?php echo parent::getTranslation("admin.sites.label.facebookSecret"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("facebookSecret", $site->facebooksecret); ?>
+            </td></tr><tr><td>
+                <label for="twitterKey"><?php echo parent::getTranslation("admin.sites.label.twitterKey"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("twitterId", $site->twitterid); ?>
+            </td></tr><tr><td>
+                <label for="twitterSecret"><?php echo parent::getTranslation("admin.sites.label.twitterSecret"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("twitterSecret", $site->twittersecret); ?>
             </td></tr>
             </table>
             <hr/>
@@ -169,6 +185,22 @@ class AdminSitesModule extends XModule {
                 <label for="siteTrackerScript"><?php echo parent::getTranslation("admin.sites.label.trackerScript"); ?></label>
             </td><td>
                 <?php InputFeilds::printTextArea("siteTrackerScript"); ?>
+            </td></tr><tr><td>
+                <label for="facebookAppId"><?php echo parent::getTranslation("admin.sites.label.facebookAppId"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("facebookAppId"); ?>
+            </td></tr><tr><td>
+                <label for="facebookSecret"><?php echo parent::getTranslation("admin.sites.label.facebookSecret"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("facebookSecret"); ?>
+            </td></tr><tr><td>
+                <label for="twitterKey"><?php echo parent::getTranslation("admin.sites.label.twitterKey"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("twitterId"); ?>
+            </td></tr><tr><td>
+                <label for="twitterSecret"><?php echo parent::getTranslation("admin.sites.label.twitterSecret"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("twitterSecret"); ?>
             </td></tr>
             </table>
             <hr/>

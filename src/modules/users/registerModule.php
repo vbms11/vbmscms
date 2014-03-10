@@ -25,12 +25,37 @@ class RegisterModule extends XModule {
             case "register":
                 if (Captcha::validateInput('captcha')) {
                     
-                    $userValidationMessages = UsersModel::validate(null, parent::post('userName'), parent::post('firstName'), parent::post('lastName'), parent::post('password1'), parent::post('email'), parent::post('birthDate'));
+                    $username = parent::post('userName');
+                    $firstName = parent::post('firstName');
+                    $lastName = parent::post('lastName');
+                    $password = parent::post('password1');
+                    $email = parent::post('email');
+                    $birthDate = parent::post('birthDate');
+                    
+                    if (isset($_SESSION['register.user'])) {
+                        $registerUser = $_SESSION['register.user'];
+                        if (parent::get("type") == 'facebook') {
+                            $firstName = $registerUser['first_name'];
+                            $lastName = $registerUser['last_name'];
+                            $email = $registerUser['email'];
+                            if ($registerUser['gender'] == "male") {
+                                $gender = '1';
+                            } else {
+                                $gender = '0';
+                            }
+                        } else if (parent::get("type" == "google")) {
+                            $firstName = $registerUser['namePerson/first'];
+                            $lastName = $registerUser['namePerson/last'];
+                            $email = $registerUser['contact/email'];
+                        }
+                    }
+                    
+                    $userValidationMessages = UsersModel::validate(null, $username, $firstName, $lastName, $password, $email, $birthDate);
                     $addressValidationMessages = UserAddressModel::validate(parent::post('country'), parent::post('city'), parent::post('address'), parent::post('postcode'));
                             
                     if (count($userValidationMessages) == 0 && count($addressValidationMessages) == 0) {
                         
-                        $userId = UsersModel::saveUser(null, parent::post('userName'), parent::post('firstName'), parent::post('lastName'), parent::post('password1'), parent::post('email'), parent::post('birthDate'), null);
+                        $userId = UsersModel::saveUser(null, $username, $firstName, $lastName, $password, $email, $birthDate, null);
                         if (count(parent::param("userRoles")) > 0) {
                             foreach (parent::param("userRoles") as $roleId) {
                                 RolesModel::addCustomRoleToUser($roleId,$userId);
@@ -39,16 +64,27 @@ class RegisterModule extends XModule {
                         if (parent::param("requireConfirmEmail")) {
                             // send the confirm email
                             $emailText = parent::param("confirmEmail");
-                            $emailText = str_replace("%userName%", parent::post('userName'), $emailText);
-                            $emailText = str_replace("%firstName%", parent::post('firstName'), $emailText);
-                            $emailText = str_replace("%lastName%", parent::post('lastName'), $emailText);
-                            $emailText = str_replace("%email%", parent::post('email'), $emailText);
-                            $emailText = str_replace("%birthDate%", parent::post('birthDate'), $emailText);
+                            $emailText = str_replace("%userName%", $username, $emailText);
+                            $emailText = str_replace("%firstName%", $firstName, $emailText);
+                            $emailText = str_replace("%lastName%", $lastName, $emailText);
+                            $emailText = str_replace("%email%", $email, $emailText);
+                            $emailText = str_replace("%birthDate%", $birthDate, $emailText);
                             ConfirmModel::sendConfirmation(parent::post('email'), parent::param("subject"), $emailText, parent::param("from"), parent::getId(), array("action"=>"confirm","userid"=>$userId), parent::param("expiredays"));
                         } else {
                             // activate user and login
                             UsersModel::setUserActiveFlag($userId,"1");
-                            UsersModel::login(parent::post('userName'), parent::post('password1'));
+                            
+                            if (isset($_SESSION['register.user'])) {
+                                $registerUser = $_SESSION['register.user'];
+                                if (parent::get("type") == 'facebook') {
+                                    UsersModel::loginWithFacebookId($registerUser['id']);
+                                } else if (parent::get("type" == "google")) {
+                                    UsersModel::loginWithEmail($email);
+                                }
+                            } else {
+                                UsersModel::login($username, $password);
+                            }
+                            
                             if (NavigationModel::hasNextAction()) {
                                 NavigationModel::redirectNextAction();
                             }

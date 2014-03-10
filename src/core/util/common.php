@@ -104,8 +104,10 @@ class Common {
         
     }
     
-    static function toUiDate () {
-        
+    static function toUiDate ($dbDate) {
+        $dateInfo = date_parse_from_format("Y-m-d", $dbDate);
+        $uiDate = $dateInfo['day']."/".$dateInfo['month'].'/'.$dateInfo['year'];
+        return $uiDate;
     }
     
     static function removeFormatChars ($string) {

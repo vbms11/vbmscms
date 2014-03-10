@@ -17,7 +17,45 @@ class UsersModel {
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
             join t_users u on su.userid = u.id 
-            where (username = '$username' or email = '$username') and password = '$password' and active = '1'");
+            where (u.username = '$username' or u.email = '$username') and u.password = '$password' and u.active = '1'");
+        // validate login
+        if ($userObj != null) {
+            Context::setUser($userObj);
+            Context::reloadRoles();
+            return true;
+        }
+        return false;
+    }
+    
+    static function loginWithEmail ($email, $siteId = null) {
+        $email = mysql_real_escape_string($email);
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
+        $userObj = Database::queryAsObject("select u.* from t_site_users su 
+            join t_users u on su.userid = u.id 
+            where u.email = '$email' and u.active = '1'");
+        // validate login
+        if ($userObj != null) {
+            Context::setUser($userObj);
+            Context::reloadRoles();
+            return true;
+        }
+        return false;
+    }
+    
+    static function loginWithFacebookId ($facebookId, $siteId = null) {
+        $facebookId = mysql_real_escape_string($facebookId);
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = mysql_real_escape_string($siteId);
+        }
+        $userObj = Database::queryAsObject("select u.* from t_site_users su 
+            join t_users u on su.userid = u.id 
+            where u.facebookid = '$facebookId' and u.active = '1'");
         // validate login
         if ($userObj != null) {
             Context::setUser($userObj);
@@ -155,7 +193,7 @@ class UsersModel {
         Database::query("update t_users set image = '$imageId' where id = '$userId'");
     }
     
-    static function validate ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate = null) {
+    static function validate ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $gender, $registerDate = null) {
         $validate = array();
         if (strlen($username) < 4) {
             $validate["username"] = "user name must be at least 4 characters!";
@@ -173,6 +211,9 @@ class UsersModel {
         }
         if (preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9_.-]+\.[a-zA-Z]{2,7}$/D", $email) == 0) {
             $validate["email"] = "Not a valid email address!";
+        }
+        if ($gender != "0" && $gender != "1") {
+            $validate["gender"] = "invalid value!";
         }
         if ($id == null) {
             $_email = mysql_real_escape_string($email);
@@ -233,7 +274,7 @@ class UsersModel {
             $id = mysql_real_escape_string($id);
             $registerDateSql = "";
             if ($registerDate != null)
-                $registerDateSql = ", registerdate = '".mysql_real_escape_string($registerDate)."'";
+                $registerDateSql = ", registerdate = STR_TO_DATE('".mysql_real_escape_string($registerDate)."','%d/%m/%Y')";
             Database::query("update t_users set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y')' $registerDateSql where id = '$id'");
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);

@@ -6,7 +6,8 @@
  */
 
 require_once('core/plugin.php');
-require_once 'core/model/usersModel.php';
+require_once('core/model/usersModel.php');
+require_once('core/lib/facebook/facebook.php');
 
 class LoginModule extends XModule {
 
@@ -18,6 +19,83 @@ class LoginModule extends XModule {
         switch (parent::getAction()) {
             case "edit":
                 parent::focus();
+                break;
+            case "facebookLogin":
+                $site = Context::getSite();
+                $facebook = new Facebook(array(
+                    'appId'  => $site->facebookappid,
+                    'secret' => $site->facebooksecret,
+                ));
+                $user = $facebook->getUser();
+                if ($user) {
+                    try {
+                        $user_profile = $facebook->api('/me');
+                        $user = UsersModel::loginWithFacebookId($user_profile['id']);
+                        if ($user) {
+                            if ($user->email != $user_profile['email'] || 
+                                $user->firstname != $user_profile['first_name'] || 
+                                $user->lastname != $user_profile['last_name'] || 
+                                (($user->gender == "1" && $user_profile['gender'] != "male") ||
+                                ($user->gender == "0" && $user_profile['gender'] != "female"))) {
+                                UsersModel::saveUser($user->id, $user->username, $user_profile['first_name'], $user_profile['last_name'], null, $user_profile['email'], Common::toUiDate($user->birthdate));
+                            }
+                            parent::redirect(array("action"=>"welcome"));
+                        } else {
+                            $_SESSION['register.user'] = $user_profile;
+                            NavigationModel::redirectStaticModule("register",array("type"=>"facebook"));
+                        }
+                    } catch (FacebookApiException $e) {
+                        error_log($e);
+                        $user = null;
+                    }
+                } else {
+                    parent::focus();
+                    parent::redirect(array("action"=>"bad"));
+                }
+                break;
+            case "googleLogin":
+                require 'core/lib/openid/openid.php';
+                try {
+                    # Change 'localhost' to your domain name.
+                    $site = Context::getSite();
+                    $openid = new LightOpenID($site->url);
+                    if(!$openid->mode) {
+                        if(parent::post('googleLoginButton')) {
+                            $openid->identity = 'https://www.google.com/accounts/o8/id';
+                            $openid->required = array(
+                                'contact/email' , 
+                                'namePerson/first' , 
+                                'namePerson/last' , 
+                                'pref/language' , 
+                                'contact/country/home'
+                            );
+                            NavigationModel::redirect($openid->authUrl(),false);
+                        }
+                    } elseif($openid->mode == 'cancel') {
+                        parent::redirect();
+                    } else {
+                        if ($openid->validate()) {
+                            $openIdAttributes = $openid->getAttributes();
+                            $user = UsersModel::loginWithEmail($openIdAttributes['contact/email']);
+                            if ($user) {
+                                if ($user->firstname != $openIdAttributes['namePerson/first'] || 
+                                    $user->lastname != $openIdAttributes['namePerson/last']) {
+                                    UsersModel::saveUser($user->id, $user->username, $openIdAttributes['namePerson/first'], $openIdAttributes['namePerson/last'], null, $user->email, Common::toUiDate($user->birthdate));
+                                }
+                                parent::redirect(array("action"=>"welcome"));
+                            } else {
+                                $_SESSION['register.user'] = $openIdAttributes;
+                                NavigationModel::redirectStaticModule("register",array("type"=>"google"));
+                            }
+                        } else {
+                            parent::redirect();
+                        }
+                    }
+                } catch(ErrorException $e) {
+                    echo $e->getMessage();
+                }
+                break;
+            case "twitterLogin":
                 break;
             case "login":
                 if (UsersModel::login($_POST['username'],$_POST['password'])) {
