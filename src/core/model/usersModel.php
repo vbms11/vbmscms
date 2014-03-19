@@ -6,7 +6,7 @@ require_once 'core/util/common.php';
 require_once 'core/context.php';
 
 class UsersModel {
-
+    
     static function login ($username, $password, $siteId = null) {
         $username = mysql_real_escape_string($username);
         $password = md5($password);
@@ -191,6 +191,34 @@ class UsersModel {
         $userId = mysql_real_escape_string($userId);
         $imageId = mysql_real_escape_string($imageId);
         Database::query("update t_users set image = '$imageId' where id = '$userId'");
+    }
+    
+    static function getUserImageUrl ($userId) {
+        $user = self::getUser($userId);
+        $imageUrl = "";
+        if (!empty($user->image)) {
+            $image = GalleryModel::getImage($user->image);
+            $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
+        } else if (!empty($user->facebook_uid)) {
+            $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture";
+        } else if (!empty($user->twitter_uid)) {
+            
+        }
+        return $imageUrl;
+    }
+    
+    static function getUserImageSmallUrl ($userId) {
+        $user = self::getUser($userId);
+        $imageUrl = "";
+        if (!empty($user->image)) {
+            $image = GalleryModel::getImage($user->image);
+            $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
+        } else if (!empty($user->facebook_uid)) {
+            $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture";
+        } else if (!empty($user->twitter_uid)) {
+            
+        }
+        return $imageUrl;
     }
     
     static function validate ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $gender, $registerDate = null) {

@@ -189,7 +189,7 @@ formActionsToolbar button {
     width: 1%;
     white-space: nowrap;
 }
-.formTable input, .formTable select, .formTable textarea {
+.formTable input, .formTable select, .formTable textarea, .formTable .ui-spinner {
     width: 99%;
 }
 .formTable input[type="checkbox"] {

@@ -284,6 +284,9 @@ class InputFeilds {
     }
 
     static function printDataPicker ($name,$value="") {
+        if (empty($value)) {
+            $value = date("Y-m-d");
+        }
         $dateInfo = date_parse_from_format("Y-m-d", $value);
         ?>
 	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="jquiDate" type="text" value="<?php echo $value; ?>" />

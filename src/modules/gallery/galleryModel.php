@@ -272,6 +272,7 @@ class GalleryModel {
             $filename = substr($file, strrpos($file, "/"));
             copy(ResourcesModel::getResourcePath("gallery/new",$filename), ResourcesModel::getResourcePath("gallery",$filename));
             GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$filename),170,170,ResourcesModel::getResourcePath("gallery/small",$filename));
+            GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$filename),50,50,ResourcesModel::getResourcePath("gallery/tiny",$filename));
             
             unlink(ResourcesModel::getResourcePath("gallery/new",$filename));
             GalleryModel::addImage($category,$filename,$filename,"");

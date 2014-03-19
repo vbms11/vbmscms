@@ -8,6 +8,7 @@
 require_once('core/plugin.php');
 require_once('core/model/usersModel.php');
 require_once('core/lib/facebook/facebook.php');
+require_once('core/lib/openid/openid.php');
 
 class LoginModule extends XModule {
 
@@ -19,6 +20,9 @@ class LoginModule extends XModule {
         switch (parent::getAction()) {
             case "edit":
                 parent::focus();
+                break;
+            case "save":
+                parent::blur();
                 break;
             case "facebookLogin":
                 $site = Context::getSite();
@@ -47,30 +51,28 @@ class LoginModule extends XModule {
                     } catch (FacebookApiException $e) {
                         error_log($e);
                         $user = null;
+                        parent::focus();
+                        parent::redirect(array("action"=>"bad"));
                     }
                 } else {
                     parent::focus();
-                    parent::redirect(array("action"=>"bad"));
+                    NavigationModel::redirect($facebook->getLoginUrl(),false);
                 }
                 break;
             case "googleLogin":
-                require 'core/lib/openid/openid.php';
                 try {
-                    # Change 'localhost' to your domain name.
                     $site = Context::getSite();
                     $openid = new LightOpenID($site->url);
                     if(!$openid->mode) {
-                        if(parent::post('googleLoginButton')) {
-                            $openid->identity = 'https://www.google.com/accounts/o8/id';
-                            $openid->required = array(
-                                'contact/email' , 
-                                'namePerson/first' , 
-                                'namePerson/last' , 
-                                'pref/language' , 
-                                'contact/country/home'
-                            );
-                            NavigationModel::redirect($openid->authUrl(),false);
-                        }
+                        $openid->identity = 'https://www.google.com/accounts/o8/id';
+                        $openid->required = array(
+                            'contact/email' , 
+                            'namePerson/first' , 
+                            'namePerson/last' , 
+                            'pref/language' , 
+                            'contact/country/home'
+                        );
+                        NavigationModel::redirect($openid->authUrl(),false);
                     } elseif($openid->mode == 'cancel') {
                         parent::redirect();
                     } else {
@@ -152,37 +154,9 @@ class LoginModule extends XModule {
     function getRoles () {
         return array("login.edit");
     }
-
-    static function getTranslations () {
-        return array(
-            "en" => array(
-                "login.email"           => "Enter your email address:",
-                "login.reset"           => "Reset Password",
-                "login.cancel"          => "Cancel",
-                "login.invalid"         => "Username / Password invalid.",
-                "login.success"         => "Welcome %1% your login was successful",
-                "login.logout.success"  => "You are logged out!",
-                "login.logout.confirm"  => "Are you sure you want to logout user %1%?",
-                "login.logout"          => "Logout",
-                "login.login"           => "Login, I am already customer",
-                "login.username"        => "Username:",
-                "login.password"        => "Password:",
-                "login.register"        => "Register, I am a new customer"
-            ),
-            "de" => array(
-                "login.email"           => "Geben sie eine Emailadresse ein:",
-                "login.reset"           => "Passwort zurücksetzen",
-                "login.cancel"          => "Abbrechen",
-                "login.invalid"         => "Benutzername oder Kennwort falsch.",
-                "login.success"         => "Willkommen %1% Sie haben sich erfolgreich angemeldet",
-                "login.logout.success"  => "Sie sind abgemeldet!",
-                "login.logout.confirm"  => "Sind sie sicher dass Sie sich als Benutzer %1% abmelden wollen?",
-                "login.logout"          => "Abmelden",
-                "login.login"           => "Anmelden, ich bin schon Kunde",
-                "login.username"        => "Benutzername:",
-                "login.password"        => "Passwort:",
-                "login.register"        => "Registrieren, ich bin ein neuer Kunde"
-            ));
+    
+    function getStyles() {
+        return array("css/login.css");
     }
     
     function printEditView () {
@@ -265,10 +239,11 @@ class LoginModule extends XModule {
         ?>
         <div class="panel loginPanel">
             <form method="post" action="<?php echo parent::link(array("action"=>"login")); ?>">
-                <table width="100%" class="formTable"><tr><td>
+                <table class="formTable"><tr><td>
                     <?php echo parent::getTranslation("login.openId"); ?>
                 </td><td>
-                    
+                    <a class="googleLoginButton" href="<?php echo parent::link(array("action"=>"googleLogin"),true,true); ?>"></a>
+                    <a class="facebookLoginButton" href="<?php echo parent::link(array("action"=>"facebookLogin"),true,true); ?>"></a>
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("login.username"); ?>
                 </td><td>

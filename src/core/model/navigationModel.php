@@ -98,7 +98,7 @@ class NavigationModel {
     }
 
     static function redirectModule ($moduleId,$params=null) {
-        NavigationModel::redirect(NavigationModel::createModuleLink($moduleId, $params, false, false));
+        NavigationModel::redirect(NavigationModel::createModuleLink($moduleId, $params, false, false, false));
     }
     
     static function redirectStaticModule ($name,$params=null) {
@@ -169,9 +169,9 @@ class NavigationModel {
         }
     }
 
-    static function createModuleLink ($moduleId,$params=null,$xhtml=true,$secure=null) {
-        $link = "?moduleid=$moduleId".NavigationModel::buildParams($params,$xhtml).NavigationModel::addSessionKeys($xhtml);
-        return ($secure == null ? NavigationModel::$secureLink : $secure) ? NavigationModel::registerSecureLink($link,$xhtml):$link;
+    static function createModuleLink ($moduleId,$params=null,$xhtml=true,$sessonKeysOnUrl=false,$secure=null) {
+        $link = "?moduleid=$moduleId".NavigationModel::buildParams($params,$xhtml);
+        return ($secure == null ? NavigationModel::$secureLink : $secure) ? NavigationModel::registerSecureLink($link,$xhtml,$sessonKeysOnUrl):$link;
     }
     
     static function createTemplatePreviewLink ($templateId,$xhtml=true,$secure=null) {
@@ -240,7 +240,7 @@ class NavigationModel {
         return $params;
     }
     
-    static function registerSecureLink ($url,$xhtml=true) {
+    static function registerSecureLink ($url,$xhtml=true,$sessonKeysOnUrl=false) {
         $links = array();
         if ($xhtml) {
             $url = html_entity_decode($url);
@@ -251,7 +251,7 @@ class NavigationModel {
         $authHash = NavigationModel::generateAuthHash($url);
         $links[$authHash] = $url;
         $_SESSION['nav.links'] = $links;
-        return "?c=".urlencode($authHash).NavigationModel::addSessionKeys($xhtml);
+        return "?c=".urlencode($authHash).NavigationModel::addSessionKeys($xhtml,$sessonKeysOnUrl);
     }
 
     static function getSecureLink ($hash) {

@@ -1,0 +1,25 @@
+
+.loginPanel {
+    margin: 0 auto;
+    width: 345px;
+}
+
+.facebookLoginButton {
+    background: url("../img/loginButtons.png") 0 0;
+    display: block;
+    height: 43px;
+    width: 254px;
+}
+.facebookLoginButton:hover {
+    background-position: 0 -86px;
+}
+
+.googleLoginButton {
+    background: url("../img/loginButtons.png") 0 -258px;
+    display: block;
+    height: 43px;
+    width: 254px;
+}
+.googleLoginButton:hover {
+    background-position: 0 -344px;
+}

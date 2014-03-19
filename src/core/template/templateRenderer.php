@@ -240,6 +240,15 @@ class TemplateRenderer extends BaseRenderer {
 </script>
 <noscript><p><img src="http://localhost/vbmscms/modules/statistics/piwik/piwik.php?idsite=<?php echo $site->piwikid; ?>" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Code -->
+<!-- facebook -->
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=<?php echo Context::getSite()->facebookappid; ?>";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- end facebook -->
 <?php
         if (!empty($page->pagetrackerscript)) {
             echo $page->pagetrackerscript;
@@ -290,9 +299,10 @@ class TemplateRenderer extends BaseRenderer {
         
         echo '<?xml version="1.0" encoding="ISO-8859-1" ?>'.PHP_EOL;
         echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'.PHP_EOL;
-        echo '<html xmlns="http://www.w3.org/1999/xhtml">'.PHP_EOL.'<head>'.PHP_EOL;
+        echo '<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">'.PHP_EOL.'<head>'.PHP_EOL;
         $this->renderHtmlHeader();
         echo '</head>'.PHP_EOL.'<body>'.PHP_EOL;
+        echo '<div id="fb-root"></div>'.PHP_EOL;
         echo $bodyHtml;
         echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
         

@@ -152,7 +152,7 @@ class AdminSitesModule extends XModule {
             </td></tr><tr><td>
                 <label for="twitterKey"><?php echo parent::getTranslation("admin.sites.label.twitterKey"); ?></label>
             </td><td>
-                <?php InputFeilds::printTextFeild("twitterId", $site->twitterid); ?>
+                <?php InputFeilds::printTextFeild("twitterKey", $site->twitterkey); ?>
             </td></tr><tr><td>
                 <label for="twitterSecret"><?php echo parent::getTranslation("admin.sites.label.twitterSecret"); ?></label>
             </td><td>
@@ -196,7 +196,7 @@ class AdminSitesModule extends XModule {
             </td></tr><tr><td>
                 <label for="twitterKey"><?php echo parent::getTranslation("admin.sites.label.twitterKey"); ?></label>
             </td><td>
-                <?php InputFeilds::printTextFeild("twitterId"); ?>
+                <?php InputFeilds::printTextFeild("twitterKey"); ?>
             </td></tr><tr><td>
                 <label for="twitterSecret"><?php echo parent::getTranslation("admin.sites.label.twitterSecret"); ?></label>
             </td><td>

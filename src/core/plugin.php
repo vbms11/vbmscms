@@ -132,8 +132,8 @@ abstract class XModule implements IModule, ITranslatable {
         }
         return null;
     }
-    function link ($params = null, $xhtml = true) {
-        return NavigationModel::createModuleLink($this->moduleId,$params,$xhtml);
+    function link ($params = null, $xhtml = true, $sessionKeysOnUrl = false) {
+        return NavigationModel::createModuleLink($this->moduleId,$params,$xhtml,$sessionKeysOnUrl);
     }
     function ajaxLink ($params = null, $xhtml = false) {
         return NavigationModel::createModuleAjaxLink($this->moduleId,$params,$xhtml);

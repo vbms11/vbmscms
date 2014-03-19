@@ -56,7 +56,7 @@ class SiteModel {
         $userSites = PiwikModel::getUserSites($piwikUser);
         PiwikModel::setUserSites($piwikUser, $userSites);
         
-        Database::query("insert into t_site (name,cmscustomerid,description,piwikid,sitetrackerscript,facebookappid,facebooksecret,twitterkey,twittersecret) values ('$name','$cmsCustomerId','$description','$piwikSiteId','$trackerScript','$facebookappid','$facebooksecret','$twitterKey','$twitterSecret')");
+        Database::query("insert into t_site (name,cmscustomerid,description,piwikid,sitetrackerscript,facebookappid,facebooksecret,twitterkey,twittersecret) values ('$name','$cmsCustomerId','$description','$piwikSiteId','$trackerScript','$facebookAppId','$facebookSecret','$twitterKey','$twitterSecret')");
 	$result = Database::queryAsObject("select last_insert_id() as newid from t_site");
         
         DomainsModel::createDomain($defaultDomain, $result->newid);
