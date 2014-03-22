@@ -270,3 +270,19 @@ a img {
 .validateTips {
     color: red;
 }
+
+/* notifications */
+
+.notificationsBox {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: auto;
+    height: auto;
+}
+.notification {
+    border: 1px solid black;
+    background: black;
+    color: white;
+    padding: 5px;
+}

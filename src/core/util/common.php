@@ -289,7 +289,7 @@ class InputFeilds {
         }
         $dateInfo = date_parse_from_format("Y-m-d", $value);
         ?>
-	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="jquiDate" type="text" value="<?php echo $value; ?>" />
+	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="jquiDate" type="text" />
         <script>
         $("#<?php echo $name; ?>").datepicker( "setDate", new Date(<?php echo $dateInfo["year"]; ?>,<?php echo $dateInfo["month"]; ?>,<?php echo $dateInfo["day"]; ?>) );
         </script>

@@ -289,6 +289,34 @@ class TemplateRenderer extends BaseRenderer {
         
     }
     
+    function renderNotifications () {
+        
+        $alertNotifications = Context::getAlertNotifications();
+        if (!empty($alertNotifications)) {
+            ?>
+            <div class="notificationsBox">
+                <?php
+                foreach ($alertNotifications as $alertNotification) {
+                    ?>
+                    <div class="notification alertNotification">
+                        <?php echo $alertNotification; ?>
+                        <button><?php echo TranslationsModel::getTranslation("common.ok"); ?></button>
+                    </div>
+                    <?php
+                }
+                ?>
+                <script>
+                $(".alertNotification").each(function(index,object){
+                    $(object).click(function(){
+                        $(this).remove();
+                    });
+                });
+                </script>
+            </div>
+            <?php
+        }
+    }
+    
     function invokeRender () {
         
         ob_start();
@@ -304,6 +332,7 @@ class TemplateRenderer extends BaseRenderer {
         echo '</head>'.PHP_EOL.'<body>'.PHP_EOL;
         echo '<div id="fb-root"></div>'.PHP_EOL;
         echo $bodyHtml;
+        $this->renderNotifications();
         echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
         
     }

@@ -34,6 +34,10 @@ class LoginModule extends XModule {
                 if ($user) {
                     try {
                         $user_profile = $facebook->api('/me');
+                        $userByEmail = UsersModel::getUserByEmail($user_profile['email']);
+                        if (!empty($userByEmail) && empty($userByEmail->facebookid)) {
+                            UsersModel::setFacebookId($user_profile['id']);
+                        }
                         $user = UsersModel::loginWithFacebookId($user_profile['id']);
                         if ($user) {
                             if ($user->email != $user_profile['email'] || 

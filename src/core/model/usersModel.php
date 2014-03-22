@@ -65,6 +65,12 @@ class UsersModel {
         return false;
     }
     
+    static function setFacebookId ($userId, $facebookId) {
+        $userId = mysql_real_escape_string($userId);
+        $facebookId = mysql_real_escape_string($facebookId);
+        Database::query("update t_users set facebookid = '$facebookId' where id = '$userId'");
+    }
+    
     static function loginWithKey ($key) {
         $key = mysql_real_escape_string($key);
         $userObj = Database::queryAsObject("select * from t_users where authkey = '$key' and active = '1'") or die (mysql_error());

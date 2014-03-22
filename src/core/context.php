@@ -251,10 +251,16 @@ class Context {
         if (Config::getNoDatabase()) {
             Session::startDefaultSession();
         } else {
-
+            
             Session::useSession();
             NavigationModel::startRequest();
             LanguagesModel::selectLanguage();
+            
+            // notify about cookies
+            if (!isset($_COOKIE["cookiesAllowed"])) {
+                setcookie("cookiesAllowed","1", 0, "/");
+                Context::addAlertNotification(TranslationsModel::getTranslation("session.cookies"));
+            }
             
             // set the siteid
             $_SESSION["req.site"] = self::getSite();
@@ -346,7 +352,19 @@ class Context {
         $_REQUEST['context.messages'][] = $message;
     }
     
+    static function addAlertNotification ($message) {
+        if (!isset($_REQUEST['context.alertNotification'])) {
+            $_REQUEST['context.alertNotification'] = array();
+        }
+        $_REQUEST['context.alertNotification'][] = $message;
+    }
     
+    static function getAlertNotifications () {
+        if (!isset($_REQUEST['context.alertNotification'])) {
+            $_REQUEST['context.alertNotification'] = array();
+        }
+        return $_REQUEST['context.alertNotification'];
+    }
     
     static function addRequiredScript ($script) {
         if (!isset($_REQUEST['context.scripts'])) {

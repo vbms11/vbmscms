@@ -311,7 +311,7 @@ class RegisterModule extends XModule {
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.country"); ?></td>
                     <td><select name="countryId" type="text" value="<?php echo parent::post("countryId"); ?>" />
-                        <input name="continent" type="hidden" value="<?php echo parent::post("continent"); ?>" /><?php
+                        <input name="country" type="hidden" value="<?php echo parent::post("country"); ?>" /><?php
                     $message = parent::getMessage("country");
                     if (!empty($message)) {
                         echo '<span class="validateTips">'.$message.'</span>';
@@ -379,21 +379,47 @@ class RegisterModule extends XModule {
                     e.preventDefault();
                 }
             }).end().find("select[name=continentId]").change(function(){
+                $(this).css({"color":"black"});
                 $("#<?php echo parent::alias("registerUserForm"); ?> input[name=continent]").val($(this).find("option:selected").html());
                 getPlaces($("#<?php echo parent::alias("registerUserForm"); ?> select[name=countryId]"),$(this).val());
             }).end().find("select[name=countryId]").change(function(){
+                $(this).css({"color":"black"});
                 $("#<?php echo parent::alias("registerUserForm"); ?> input[name=country]").val($(this).find("option:selected").html());
                 getPlaces($("#<?php echo parent::alias("registerUserForm"); ?> select[name=stateId]"),$(this).val());
             }).end().find("select[name=stateId]").change(function(){
+                $(this).css({"color":"black"});
                 $("#<?php echo parent::alias("registerUserForm"); ?> input[name=state]").val($(this).find("option:selected").html());
                 getPlaces($("#<?php echo parent::alias("registerUserForm"); ?> select[name=regionId]"),$(this).val());
             }).end().find("select[name=regionId]").change(function(){
+                $(this).css({"color":"black"});
                 $("#<?php echo parent::alias("registerUserForm"); ?> input[name=region]").val($(this).find("option:selected").html());
                 getPlaces($("#<?php echo parent::alias("registerUserForm"); ?> select[name=cityId]"),$(this).val());
             }).end().find("select[name=cityId]").change(function(){
+                $(this).css({"color":"black"});
                 $("#<?php echo parent::alias("registerUserForm"); ?> input[name=city]").val($(this).find("option:selected").html());
             });
-            getPlaces($("#<?php echo parent::alias("registerUserForm"); ?> select[name=continentId]"),6295630);
+            if ($("#<?php echo parent::alias("registerUserForm"); ?> select[name=continentId]").val() !== null) {
+                var selectObject = $("#<?php echo parent::alias("registerUserForm"); ?> select[name=continentId]");
+                getPlaces(selectObject,6295630,selectObject.val());
+            } else {
+                getPlaces($("#<?php echo parent::alias("registerUserForm"); ?> select[name=continentId]"),6295630);
+            }
+            if ($("#<?php echo parent::alias("registerUserForm"); ?> select[name=countryId]").val() !== null) {
+                var selectObject = $("#<?php echo parent::alias("registerUserForm"); ?> select[name=countryId]");
+                getPlaces(selectObject,$("#<?php echo parent::alias("registerUserForm"); ?> select[name=continentId]").val(),selectObject.val());
+            }
+            if ($("#<?php echo parent::alias("registerUserForm"); ?> select[name=stateId]").val() !== null) {
+                var selectObject = $("#<?php echo parent::alias("registerUserForm"); ?> select[name=stateId]");
+                getPlaces(selectObject,$("#<?php echo parent::alias("registerUserForm"); ?> select[name=countryId]").val(),selectObject.val());
+            }
+            if ($("#<?php echo parent::alias("registerUserForm"); ?> select[name=regionId]").val() !== null) {
+                var selectObject = $("#<?php echo parent::alias("registerUserForm"); ?> select[name=regionId]");
+                getPlaces(selectObject,$("#<?php echo parent::alias("registerUserForm"); ?> select[name=stateId]").val(),selectObject.val());
+            }
+            if ($("#<?php echo parent::alias("registerUserForm"); ?> select[name=cityId]").val() !== null) {
+                var selectObject = $("#<?php echo parent::alias("registerUserForm"); ?> select[name=cityId]");
+                getPlaces(selectObject,$("#<?php echo parent::alias("registerUserForm"); ?> select[name=regionId]").val(),selectObject.val());
+            }
             </script>
         </div>
         <?php

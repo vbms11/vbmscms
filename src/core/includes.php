@@ -41,6 +41,7 @@ include_once 'core/model/templateModel.php';
 require_once 'core/model/codeModel.php';
 include_once 'core/model/menuModel.php';
 include_once 'core/model/usersModel.php';
+include_once 'core/model/userAddressModel.php';
 include_once 'core/model/eventsModel.php';
 include_once 'core/model/languagesModel.php';
 

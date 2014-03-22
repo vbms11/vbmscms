@@ -275,7 +275,7 @@ class GalleryModel {
             GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$filename),50,50,ResourcesModel::getResourcePath("gallery/tiny",$filename));
             
             unlink(ResourcesModel::getResourcePath("gallery/new",$filename));
-            GalleryModel::addImage($category,$filename,$filename,"");
+            GalleryModel::addImage($category,$filename,"","");
         }
         
         // to pass data through iframe you will need to encode all html tags
