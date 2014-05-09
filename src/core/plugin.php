@@ -75,6 +75,7 @@ abstract class XModule implements IModule, ITranslatable {
     public $moduleAreaName;
     public $modulePosition;
     public $sysname;
+    public $includeId;
     function getAreaName () {
         return $this->moduleAreaName;
     }
@@ -83,6 +84,9 @@ abstract class XModule implements IModule, ITranslatable {
     }
     function getId () {
         return $this->moduleId;
+    }
+    function getIncludeId () {
+        return $this->includeId;
     }
     function process ($moduleId) {
         $this->moduleId = $moduleId;

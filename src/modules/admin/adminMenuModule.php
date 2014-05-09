@@ -250,7 +250,7 @@ class AdminMenuModule extends XModule {
             }).bind("select_node.jstree", function (event, data) {
                 if (data.rslt.obj.hasClass("adminNodeEditorModule")) {
                     var id = data.rslt.obj.attr("id").substring(7);
-                    callUrl("<?php echo parent::staticLink("adminModules", array("action"=>"editModule","setAdminMode"=>"adminModules")); ?>&adminModuleId="+id+"&id="+id);
+                    callUrl("<?php echo parent::staticLink("adminModules", array("action"=>"editModule","setAdminMode"=>"adminModules")); ?>",{"adminModuleId" : id});
                 }
             });
         });

@@ -83,16 +83,17 @@ class RolesModel {
         return Database::queryAsObject("select * from t_roles_custom where id = '$id'");
     }
     
-    static function createCustomRole ($name) {
+    static function createCustomRole ($name, $system) {
         $name = mysql_real_escape_string($name);
-        Database::query("insert into t_roles_custom (name) values ('$name')");
+        $system = mysql_real_escape_string($system);
+        Database::query("insert into t_roles_custom (name,system) values ('$name','$system')");
         $newRole = Database::queryAsObject("select last_insert_id() as newid from t_roles_custom");
         return $newRole->newid;
     }
     
     static function deleteCustomRole ($id) {
         $id = mysql_real_escape_string($id);
-        Database::query("delete from t_roles_custom where id = '$id'");
+        Database::query("delete from t_roles_custom where id = '$id' and system = '0'");
     }
     
     static function getCustomRoleModuleRoles ($customRoleId) {

@@ -150,9 +150,12 @@ class Captcha {
         $captcha = Captcha::getCaptcha($inputName);
         // validate the users input
         $valid = false;
-        if (Common::hash(strtolower($_POST[$captcha->inputName."_answer"])) != $_POST[$captcha->inputName."_key"]) {
-            $valid = false;
-        } else {
+        if (!isset($_POST[$captcha->inputName."_answer"]) || !isset($_POST[$captcha->inputName."_key"])) {
+            return false;
+        }
+        $answer = $_POST[$captcha->inputName."_answer"];
+        $key = $_POST[$captcha->inputName."_key"];
+        if (Common::hash(strtolower($answer)) == $key) {
             $valid = true;
         }
 	unset($_SESSION['captcha.'.$inputName]);

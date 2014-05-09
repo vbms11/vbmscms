@@ -16,9 +16,9 @@ class UsersPageView extends XModule {
                 case "create":
                     parent::clearMessages();
                     if (parent::post("submit")) {
-                        $validationMessages = UsersModel::validate(null, parent::post("username"), parent::post("firstname"), parent::post("lastname"), parent::post("password"), parent::post("email"), parent::post("dob"));
+                        $validationMessages = UsersModel::validate(null, parent::post("username"), parent::post("firstname"), parent::post("lastname"), parent::post("password"), parent::post("email"), parent::post("dob"), parent::post("gender"));
                         if (count($validationMessages) == 0) {
-                            $id = UsersModel::saveUser(null, parent::post("username"), parent::post("firstname"), parent::post("lastname"), parent::post("password"), parent::post("email"), parent::post("dob"));
+                            $id = UsersModel::saveUser(null, parent::post("username"), parent::post("firstname"), parent::post("lastname"), parent::post("password"), parent::post("email"), parent::post("dob"), parent::post("gender"));
                             if (parent::post("active") == "1") {
                                 UsersModel::setUserActiveFlag($id, "1");
                             }
@@ -31,9 +31,9 @@ class UsersPageView extends XModule {
                 case "update":
                     parent::clearMessages();
                     if (parent::post("submit")) {
-                        $validationMessages = UsersModel::validate(parent::get("id"), parent::post("username"), parent::post("firstname"), parent::post("lastname"), null, parent::post("email"), parent::post("dob"), parent::post("register"));
+                        $validationMessages = UsersModel::validate(parent::get("id"), parent::post("username"), parent::post("firstname"), parent::post("lastname"), null, parent::post("email"), parent::post("dob"), parent::post("register"), parent::post("gender"));
                         if (count($validationMessages) == 0) {
-                            UsersModel::saveUser(parent::get("id"), parent::post("username"), parent::post("firstname"), parent::post("lastname"), null, parent::post("email"), parent::post("dob"), parent::post("register"));
+                            UsersModel::saveUser(parent::get("id"), parent::post("username"), parent::post("firstname"), parent::post("lastname"), null, parent::post("email"), parent::post("dob"), parent::post("register"), parent::post("gender"));
                         } else {
                             parent::addMessages($validationMessages);
                         }
@@ -268,6 +268,15 @@ class UsersPageView extends XModule {
                 }
                 ?>
             </td></tr><tr><td>
+                <?php echo parent::getTranslation("users.attrib.gender"); ?>
+            </td><td>
+                <?php InputFeilds::printSelect(parent::alias("gender"),parent::post("gender"),array("0"=>parent::getTranslation("common.female"),"1"=>parent::getTranslation("common.male"))); 
+                $message = parent::getMessage("gender");
+                if (!empty($message)) {
+                    echo '<span class="validateTips">'.$message.'</span>';
+                }
+                ?>
+            </td></tr><tr><td>
                 <?php echo parent::getTranslation("users.attrib.email"); ?>
             </td><td>
                 <?php InputFeilds::printTextFeild(parent::alias("email"),parent::post("email")); 
@@ -350,6 +359,15 @@ class UsersPageView extends XModule {
                     </td><td>
                         <?php InputFeilds::printTextFeild(parent::alias("lastname"),parent::post("lastname") == null ? $user->lastname : parent::post("lastname")); 
                         $message = parent::getMessage("lastname");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
+                    </td></tr><tr><td>
+                        <?php echo parent::getTranslation("users.attrib.gender"); ?>
+                    </td><td>
+                        <?php InputFeilds::printSelect(parent::alias("gender"),parent::post("gender"),array("0"=>parent::getTranslation("common.female"),"1"=>parent::getTranslation("common.male"))); 
+                        $message = parent::getMessage("gender");
                         if (!empty($message)) {
                             echo '<span class="validateTips">'.$message.'</span>';
                         }

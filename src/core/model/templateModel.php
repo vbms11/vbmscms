@@ -14,7 +14,6 @@ class TemplateModel {
     
     static function getTemplatePreviewObj ($page) {
         $templateClass = null;
-        // echo "p=".$page;
         if (!empty($page->templateinclude) && !empty($page->interface)) {
             require_once($page->templateinclude);
             $templateClass = eval("return new $page->interface();");
@@ -41,19 +40,7 @@ class TemplateModel {
         }
         return $templateClass;
     }
-    /*
-    static function renderTemplate ($page) {
-        $templateClass = null;
-        if (Common::isEmpty($page->html)) {
-            $templateClass = TemplateModel::getTemplateObj($page);
-        } else {
-            $templateClass = new EditableTemplate();
-            $templateClass->setData($page->html);
-        }
-        Context::setRenderer($templateClass);
-        $templateClass->invokeRender();
-    }
-*/
+    
     static function getAreaNames ($page) {
         $templateObj = TemplateModel::getTemplateObj($page);
         return $templateObj->getAreas();
@@ -65,7 +52,8 @@ class TemplateModel {
         $moduleObj = TemplateModel::getTemplateModule($moduleId);
         ModuleController::destroyModule($moduleObj);
         // remove the template area include
-        Database::query("delete from t_templatearea where id = '$moduleId'");
+        Database::query("delete from t_templatearea where instanceid = '$moduleId'");
+        ModuleInstanceModel::deleteModuleInstance($moduleId);
     }
 
     static function getAreaModules ($pageId, $templateArea = null, $staticModules = null) {
@@ -92,9 +80,9 @@ class TemplateModel {
             foreach ($staticModules as $staticModule) {
                 $staticModuleNames[$staticModule['type']] = mysql_real_escape_string($staticModule['type']);
             }
-            $staticModulesCondition = "a.code in ('".implode("','", $staticModuleNames)."') ";
+            $staticModulesCondition = "m.sysname in ('".implode("','", $staticModuleNames)."') ";
         } else {
-            $staticModulesCondition = "a.code = '".mysql_real_escape_string($staticModules['type'])."' ";
+            $staticModulesCondition = "m.sysname = '".mysql_real_escape_string($staticModules['type'])."' ";
         }
 
         // make the condition
@@ -109,9 +97,10 @@ class TemplateModel {
 
         // 
         $pageId = mysql_real_escape_string($pageId);
-        $moduleIncludes = Database::queryAsArray("select a.id, a.name as name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.name as modulename, pt.sysname as sysname, a.code
+        $moduleIncludes = Database::queryAsArray("select a.id as includeid, mi.id, a.name as name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.name as modulename, m.sysname as sysname 
             from t_templatearea a
-            left join t_module pt on pt.id = a.type
+            join t_module_instance mi on a.instanceid = mi.id
+            join t_module m on m.id = mi.moduleid
             where $conditionSql
             order by a.position asc");
         
@@ -121,7 +110,7 @@ class TemplateModel {
             foreach ($staticModules as $staticModule) {
                 $staticModuleExists = false;
                 foreach ($moduleIncludes as $moduleInclude) {
-                    if ($moduleInclude->code == $staticModule['type'] && $moduleInclude->name == $staticModule['name']) {
+                    if ($moduleInclude->sysname == $staticModule['type'] && $moduleInclude->name == $staticModule['name']) {
                         $staticModuleExists = true;
                     }
                 }
@@ -137,48 +126,52 @@ class TemplateModel {
 	return $moduleIncludes;
     }
 
-    static function getStaticModule ($code, $sysName) {
-        $acode = mysql_real_escape_string($code);
+    static function getStaticModule ($areaName, $sysName) {
+        $areaName = mysql_real_escape_string($areaName);
         $sysName = mysql_real_escape_string($sysName);
-        $result = Database::queryAsObject("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.sysname as sysname, pt.name as modulename
-            from t_templatearea a
-            left join t_module pt on pt.id = a.type
-            where a.code = '$sysName'");
-        if ($result == null) {
-            TemplateModel::createStaticModule($code,$sysName);
-            return TemplateModel::getStaticModule($code,$sysName);
+        $result = Database::queryAsObject("select a.id as includeid, mi.id, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname as sysname, m.name as modulename
+            from t_templatearea a 
+            join t_module_instance mi on a.instanceid = mi.id
+            join t_module m on m.id = mi.moduleid
+            where m.sysname = '$sysName' and name = '$areaName'");
+        if (empty($result)) {
+            TemplateModel::createStaticModule($areaName,$sysName);
+            return TemplateModel::getStaticModule($areaName,$sysName);
         }
         return $result;
     }
     
-    static function createStaticModule ($code, $sysName) {
-        $code = mysql_real_escape_string($code);
+    static function createStaticModule ($areaName, $sysName) {
+        $areaName = mysql_real_escape_string($areaName);
         $module = ModuleModel::getModuleByName($sysName);
         if ($module == null) {
             return null;
         }
-        Database::query("insert into t_templatearea(name,pageid,type,position,code) values('$code','','".($module->id)."','','$sysName')");
-        $result = Database::queryAsObject("select last_insert_id() as max from t_templatearea");
-        return $result->max;
+        $instanceId = ModuleInstanceModel::createModuleInstance($module->id);
+        Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$areaName','$instanceId','','')");
+        return $instanceId;
     }
 
     static function getTemplateAreas ($pageId) {
         $pageId = mysql_real_escape_string($pageId);
-        $result = Database::query("select a.id, a.name, a.pageid, pt.id as typeid, pt.include, pt.interface
+        $result = Database::queryAsArray("select a.id as includeid, mi.id, a.name, a.pageid, m.id as typeid, m.include, m.interface
             from t_templatearea a
-            left join t_module pt on pt.id = a.type
+            join t_module_instance mi on a.instanceid = mi.id 
+            join t_module m on m.id = mi.moduleid
             where a.pageid = '$pageId' order by a.position asc");
         $areasByName = array();
-        while ($obj = mysql_fetch_object($result))
+        foreach ($result as $obj) {
             $areasByName[$obj->name][] = $obj;
+        }
         return $areasByName;
     }
 
     static function getTemplateModule ($moduleId) {
         $moduleId = mysql_real_escape_string($moduleId);
-        $result = Database::query("select a.id, a.name, a.pageid, a.position, pt.id as typeid, pt.include, pt.interface, pt.sysname, pt.name as modulename
+        $result = Database::query("select mi.id, a.id as includeid, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname, m.name as modulename
             from t_templatearea a
-            left join t_module pt on pt.id = a.type
+            join t_module_instance mi on a.instanceid = mi.id 
+            join t_module m on m.id = mi.moduleid
             where a.id = '$moduleId'");
         return mysql_fetch_object($result);
     }
@@ -190,7 +183,7 @@ class TemplateModel {
         Database::query("update t_templatearea set position = position + 1 where pageid = '$pageId' and name = '$area' and position >= '$fromPosition'");
     }
 
-    static function insertTemplateModule ($pageId,$area,$moduleId,$position = -1,$code = null) {
+    static function insertTemplateModule ($pageId,$area,$moduleId,$position = -1) {
         if ($position == -1) {
             TemplateModel::shiftTemplateModulesDown($pageId, $area, $position);
             $result = Database::queryAsObject("select min(position)-1 as max from t_templatearea where name = '$area' and pageid = '$pageId'");
@@ -201,24 +194,10 @@ class TemplateModel {
         }
         $pageId = mysql_real_escape_string($pageId);
         $area = mysql_real_escape_string($area);
-        $moduleId = mysql_real_escape_string($moduleId);
         $position = mysql_real_escape_string($position);
-        $code = mysql_real_escape_string($code);
-        // stop hack
-        //if (1==1) 
-            //return;
-        Database::query("insert into t_templatearea(name,pageid,type,position,code) values('$area','$pageId','$moduleId','$position','$code')");
-        $result = Database::queryAsObject("select last_insert_id() as max from t_templatearea");
-        return $result->max;
-    }
-
-    static function createTemplateAreas ($pageId,$areas) {
-        $pageId = mysql_real_escape_string($pageId);
-        foreach ($areas as $name => $type) {
-            $name = mysql_real_escape_string($name);
-            $type = mysql_real_escape_string($type);
-            Database::query("insert into t_templatearea(name,pageid,type,position) values('$name','$pageId','$type',(select max(id)+1 from t_templatearea))");
-        }
+        $instanceId = ModuleInstanceModel::createModuleInstance($moduleId);
+        Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$area','$instanceId','$pageId','$position')");
+        return $instanceId;
     }
 
     static function moveTemplateModuleUp ($pageId, $moduleId) {
@@ -269,21 +248,12 @@ class TemplateModel {
         }
     }
 
-    static function setArea ($pageId,$name,$type) {
-        $pageId = mysql_real_escape_string($pageId);
-        $name = mysql_real_escape_string($name);
-        $type = mysql_real_escape_string($type);
-	$result = Database::query("select 1 from t_templatearea where pageid = '$pageId' and name = '$name'");
-        $numRows = mysql_num_rows($result);
-        if ($numRows == 0) {
-            Database::query("insert into t_templatearea(type,name,pageid) values('$type','$name','$pageId')");
-        } else {
-            Database::query("update t_templatearea set type = '$type' where pageid = '$pageId' and name = '$name'");
-        }
-    }
-
     static function deleteTemplateAreas ($pageId) {
         $pageId = mysql_real_escape_string($pageId);
+        $moduleInstances = Database::query("select instanceid from t_templatearea where pageid = '$pageId'");
+        foreach ($moduleInstances as $moduleInstance) {
+            ModuleInstanceModel::deleteModuleInstance($moduleInstance->instanceid);
+        }
         Database::query("delete from t_templatearea where pageid = '$pageId'");
     }
     
@@ -370,7 +340,6 @@ class TemplateModel {
         $result = Database::query("select id, name, template, interface, css, html, js from t_template where id = '$id'");
         return mysql_fetch_object($result);
     }
-
     
 }
 

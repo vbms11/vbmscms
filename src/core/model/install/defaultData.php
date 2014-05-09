@@ -1,47 +1,78 @@
 ﻿<?php /* ;
 
+CREATE TABLE IF NOT EXISTS `ajax_chat_bans` (
+  `userID` int(11) NOT NULL,
+  `userName` varchar(64) COLLATE utf8_bin NOT NULL,
+  `dateTime` datetime NOT NULL,
+  `ip` varbinary(16) NOT NULL,
+  PRIMARY KEY (`userID`),
+  KEY `userName` (`userName`),
+  KEY `dateTime` (`dateTime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `ajax_chat_invitations`
+--
+
+CREATE TABLE IF NOT EXISTS `ajax_chat_invitations` (
+  `userID` int(11) NOT NULL,
+  `channel` int(11) NOT NULL,
+  `dateTime` datetime NOT NULL,
+  PRIMARY KEY (`userID`,`channel`),
+  KEY `dateTime` (`dateTime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `ajax_chat_messages`
+--
+
+CREATE TABLE IF NOT EXISTS `ajax_chat_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userID` int(11) NOT NULL,
+  `userName` varchar(64) COLLATE utf8_bin NOT NULL,
+  `userRole` int(1) NOT NULL,
+  `channel` int(11) NOT NULL,
+  `dateTime` datetime NOT NULL,
+  `ip` varbinary(16) NOT NULL,
+  `text` text COLLATE utf8_bin,
+  PRIMARY KEY (`id`),
+  KEY `message_condition` (`id`,`channel`,`dateTime`),
+  KEY `dateTime` (`dateTime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `ajax_chat_online`
+--
+
+CREATE TABLE IF NOT EXISTS `ajax_chat_online` (
+  `userID` int(11) NOT NULL,
+  `userName` varchar(64) COLLATE utf8_bin NOT NULL,
+  `userRole` int(1) NOT NULL,
+  `channel` int(11) NOT NULL,
+  `dateTime` datetime NOT NULL,
+  `ip` varbinary(16) NOT NULL,
+  PRIMARY KEY (`userID`),
+  KEY `userName` (`userName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `t_backup`
+--
+
 CREATE TABLE IF NOT EXISTS `t_backup` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `t_chat_message`
---
-
-CREATE TABLE IF NOT EXISTS `t_chat_message` (
-  `room` int(10) NOT NULL,
-  `version` int(10) NOT NULL,
-  `message` blob NOT NULL,
-  `user` int(10) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `t_chat_room`
---
-
-CREATE TABLE IF NOT EXISTS `t_chat_room` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `t_chat_room_session`
---
-
-CREATE TABLE IF NOT EXISTS `t_chat_room_session` (
-  `room` int(10) NOT NULL,
-  `sessionid` int(10) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci;
 
 -- --------------------------------------------------------
 
@@ -77,24 +108,7 @@ CREATE TABLE IF NOT EXISTS `t_code` (
   `code` int(10) unsigned NOT NULL,
   `value` blob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
-
---
--- Daten für Tabelle `t_code`
---
-
-INSERT INTO `t_code` (`id`, `lang`, `code`, `value`) VALUES
-(1, 'en', 1, 0x756e72656769737465726564),
-(2, 'en', 2, 0x6c6f67696e),
-(3, 'en', 3, 0x70616765436f6e666967),
-(4, 'en', 4, 0x73746172747570),
-(5, 'en', 5, 0x486f6d65),
-(6, 'en', 6, 0x696e736572744d6f64756c65),
-(7, 'en', 7, 0x4c6f67696e),
-(8, 'en', 8, 0x496d7072657373756d),
-(9, 'en', 9, 0x41474273),
-(10, 'en', 10, 0x436f6e74616374),
-(11, 'en', 11, 0x61646d696e5061676573);
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -255,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `t_gallery_image` (
   `categoryid` int(10) NOT NULL,
   `description` blob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -265,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `t_gallery_image` (
 
 CREATE TABLE IF NOT EXISTS `t_gallery_page` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `pageid` int(10) NOT NULL,
+  `typeid` int(11) NOT NULL,
   `rootcategory` int(10) NOT NULL,
   `type` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
@@ -312,18 +326,7 @@ CREATE TABLE IF NOT EXISTS `t_menu` (
   `lang` varchar(5) NOT NULL DEFAULT 'en',
   `position` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
-
---
--- Daten für Tabelle `t_menu`
---
-
-INSERT INTO `t_menu` (`id`, `page`, `type`, `parent`, `active`, `lang`, `position`) VALUES
-(1, 5, 1, NULL, 1, 'en', 1),
-(2, 7, 3, NULL, 1, 'en', 2),
-(3, 8, 2, NULL, 1, 'en', 3),
-(4, 9, 2, NULL, 1, 'en', 4),
-(5, 10, 2, NULL, 1, 'en', 5);
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -336,16 +339,7 @@ CREATE TABLE IF NOT EXISTS `t_menu_instance` (
   `name` varchar(100) NOT NULL,
   `siteid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
-
---
--- Daten für Tabelle `t_menu_instance`
---
-
-INSERT INTO `t_menu_instance` (`id`, `name`, `siteid`) VALUES
-(1, 'Main Menu', 1),
-(2, 'Top Menu', 1),
-(3, 'Bottom Menu', 1);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -407,7 +401,7 @@ CREATE TABLE IF NOT EXISTS `t_module` (
   `position` int(10) NOT NULL,
   `static` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=82 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 
 --
 -- Daten für Tabelle `t_module`
@@ -472,7 +466,15 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (77, 'unregistered', 'unregistered', 'modules/admin/unregisteredModule.php', NULL, 'UnregisteredModule', 0, 0, 0, 1),
 (78, 'Email List', 'emailList', 'modules/newsletter/emailListModule.php', NULL, 'EmailListModule', 1, 0, 0, 1),
 (80, 'Email List Send Module', 'emailListSend', 'modules/newsletter/emailListSendModule.php', NULL, 'EmailListSendModule', 1, 0, 0, 1),
-(81, 'ukash paypal', 'ukashpaypal', 'modules/ukashpaypal/ukashpaypalModule.php', NULL, 'UkashPaypalModule', 1, 0, 0, 1);
+(81, 'ukash paypal', 'ukashpaypal', 'modules/ukashpaypal/ukashpaypalModule.php', NULL, 'UkashPaypalModule', 1, 0, 0, 1),
+(82, 'User Profile', 'userProfile', 'modules/users/userProfileModule.php', NULL, 'UserProfileModule', 1, 0, 0, 1),
+(83, 'User Details', 'userDetails', 'modules/users/userDetailsModule.php', NULL, 'UserDetailsModule', 1, 0, 0, 1),
+(84, 'User Gallery', 'userGallery', 'modules/users/userGalleryModule.php', NULL, 'UserGalleryModule', 1, 0, 0, 1),
+(85, 'User Wall', 'userWall', 'modules/users/userWallModule.php', NULL, 'UserWallModule', 1, 0, 0, 1),
+(86, 'User Message', 'userMessage', 'modules/users/userMessageModule.php', NULL, 'UserMessageModule', 1, 0, 0, 1),
+(87, 'User Search', 'userSearch', 'modules/users/userSearchModule.php', NULL, 'UserSearchModule', 1, 0, 0, 1),
+(88, 'Facebook Comments', 'facebookComments', 'modules/social/facebookCommentsModule.php', NULL, 'FacebookCommentsModule', 1, 0, 0, 0),
+(89, 'Facebook Like Button', 'facebookLikeButton', 'modules/social/facebookLikeButtonModule.php', NULL, 'FacebookLikeButtonModule', 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -496,8 +498,7 @@ CREATE TABLE IF NOT EXISTS `t_module_category` (
 CREATE TABLE IF NOT EXISTS `t_module_instance` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `moduleid` int(10) NOT NULL,
-  `templateareaid` int(10) NOT NULL,
-  PRIMARY KEY (`id`,`moduleid`,`templateareaid`)
+  PRIMARY KEY (`id`,`moduleid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -507,29 +508,11 @@ CREATE TABLE IF NOT EXISTS `t_module_instance` (
 --
 
 CREATE TABLE IF NOT EXISTS `t_module_instance_params` (
-  `instanceid` int(10) NOT NULL,
+  `instanceid` int(10) DEFAULT NULL,
+  `moduleid` int(11) DEFAULT NULL,
   `name` varchar(100) COLLATE latin1_german2_ci NOT NULL,
   `value` blob NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci;
-
---
--- Daten für Tabelle `t_module_instance_params`
---
-
-INSERT INTO `t_module_instance_params` (`instanceid`, `name`, `value`) VALUES
-(3, 'selectedStyle', 0x733a313a2231223b),
-(4, 'selectedStyle', 0x733a313a2231223b),
-(5, 'selectedStyle', 0x733a313a2231223b),
-(4, 'selectedMenu', 0x733a313a2231223b),
-(5, 'selectedMenu', 0x733a313a2233223b),
-(3, 'selectedMenu', 0x733a313a2232223b),
-(11, 'orderForm', 0x733a373a224b6f6e74616b74223b),
-(11, 'submitMessage', 0x733a37313a225468616e6b20796f7520666f7220796f7572206d6573736167652077652077696c6c20676574206261636b20746f20796f7520617320736f6f6e20617320706f737369626c652e223b),
-(11, 'roleGroup', 0x733a323a223130223b),
-(11, 'sendEmail', 0x733a313a2231223b),
-(11, 'emailText', 0x733a33353a223c7374726f6e673e266c743b64657461696c546578742667743b3c2f7374726f6e673e223b),
-(11, 'emailSubject', 0x733a31353a22436f6e746163742052657175657374223b),
-(11, 'captcha', 0x733a313a2231223b);
 
 -- --------------------------------------------------------
 
@@ -542,99 +525,110 @@ CREATE TABLE IF NOT EXISTS `t_module_roles` (
   `customrole` int(10) NOT NULL,
   `modulerole` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1519 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1787 ;
 
 --
 -- Daten für Tabelle `t_module_roles`
 --
 
 INSERT INTO `t_module_roles` (`id`, `customrole`, `modulerole`) VALUES
-(1117, 8, 'forum.thread.create'),
-(1118, 8, 'chat.user'),
-(1119, 8, 'chat.view'),
-(1120, 8, 'comment.post'),
-(1121, 8, 'users.profile'),
-(1122, 8, 'message.inbox'),
-(1123, 8, 'events.callender'),
-(1124, 8, 'events.list'),
-(1125, 8, 'shop.basket.view'),
-(1126, 8, 'shop.basket.details.edit'),
-(1185, 7, 'products.view'),
-(1186, 7, 'forum.view'),
-(1187, 7, 'comment.post'),
-(1188, 7, 'gallery.view'),
-(1189, 7, 'shop.basket.view'),
-(1190, 7, 'shop.basket.details.edit'),
-(1449, 10, 'wysiwyg.edit'),
-(1450, 10, 'login.edit'),
-(1451, 10, 'newsletter.edit'),
-(1452, 10, 'newsletter.send'),
-(1453, 10, 'products.edit'),
-(1454, 10, 'products.view'),
-(1455, 10, 'roles.register.edit'),
-(1456, 10, 'users.edit'),
-(1457, 10, 'sitemap.edit'),
-(1458, 10, 'modules.insert'),
-(1459, 10, 'forum.topic.create'),
-(1460, 10, 'forum.thread.create'),
-(1461, 10, 'forum.view'),
-(1462, 10, 'forum.admin'),
-(1463, 10, 'forum.moderator'),
-(1464, 10, 'forum.thread.post'),
-(1465, 10, 'chat.user'),
-(1466, 10, 'chat.view'),
-(1467, 10, 'comment.post'),
-(1468, 10, 'comment.edit'),
-(1469, 10, 'comment.delete'),
-(1470, 10, 'comment.show.email'),
-(1471, 10, 'backup.create'),
-(1472, 10, 'backup.load'),
-(1473, 10, 'backup.delete'),
-(1474, 10, 'users.register.edit'),
-(1475, 10, 'user.info.edit'),
-(1476, 10, 'user.info.admin'),
-(1477, 10, 'user.info.owner'),
-(1478, 10, 'admin.roles.edit'),
-(1479, 10, 'gallery.edit'),
-(1480, 10, 'gallery.view'),
-(1481, 10, 'message.inbox'),
-(1482, 10, 'events.callender'),
-(1483, 10, 'events.list'),
-(1484, 10, 'events.edit'),
-(1485, 10, 'template.edit'),
-(1486, 10, 'template.view'),
-(1487, 10, 'domains.edit'),
-(1488, 10, 'domains.view'),
-(1489, 10, 'orders.edit'),
-(1490, 10, 'orders.view'),
-(1491, 10, 'orders.all'),
-(1492, 10, 'orders.confirm'),
-(1493, 10, 'orders.finnish'),
-(1494, 10, 'dm.tables.config'),
-(1495, 10, 'dm.forms.edit'),
-(1496, 10, 'shop.basket.view'),
-(1497, 10, 'shop.basket.status.edit'),
-(1498, 10, 'shop.basket.edit'),
-(1499, 10, 'shop.basket.details.view'),
-(1500, 10, 'shop.basket.details.edit'),
-(1501, 10, 'slideshow.edit'),
-(1502, 10, 'filesystem.all'),
-(1503, 10, 'filesystem.user'),
-(1504, 10, 'filesystem.www'),
-(1505, 10, 'filesystem.edit'),
-(1506, 10, 'events.users.all'),
-(1507, 10, 'menu.edit'),
-(1508, 10, 'pages.editmenu'),
-(1509, 10, 'pages.edit'),
-(1510, 10, 'payment.edit'),
-(1511, 10, 'social.edit'),
-(1512, 10, 'admin.edit'),
-(1513, 10, 'site.edit'),
-(1514, 10, 'site.view'),
-(1515, 10, 'translations.edit'),
-(1516, 10, 'emailList.edit'),
-(1517, 10, 'emailSent.edit'),
-(1518, 10, 'ukash.edit');
+(1603, 7, 'products.view'),
+(1604, 7, 'forum.view'),
+(1605, 7, 'comment.post'),
+(1606, 7, 'gallery.view'),
+(1607, 7, 'shop.basket.view'),
+(1608, 7, 'shop.basket.details.edit'),
+(1609, 7, 'user.profile.view'),
+(1697, 8, 'forum.thread.create'),
+(1698, 8, 'chat.user'),
+(1699, 8, 'chat.view'),
+(1700, 8, 'comment.post'),
+(1701, 8, 'gallery.view'),
+(1702, 8, 'gallery.owner'),
+(1703, 8, 'message.inbox'),
+(1704, 8, 'events.callender'),
+(1705, 8, 'events.list'),
+(1706, 8, 'shop.basket.view'),
+(1707, 8, 'shop.basket.details.edit'),
+(1708, 8, 'user.profile.view'),
+(1709, 8, 'user.profile.owner'),
+(1710, 8, 'user.search.view'),
+(1711, 10, 'wysiwyg.edit'),
+(1712, 10, 'login.edit'),
+(1713, 10, 'newsletter.edit'),
+(1714, 10, 'newsletter.send'),
+(1715, 10, 'products.edit'),
+(1716, 10, 'products.view'),
+(1717, 10, 'roles.register.edit'),
+(1718, 10, 'users.edit'),
+(1719, 10, 'sitemap.edit'),
+(1720, 10, 'modules.insert'),
+(1721, 10, 'forum.topic.create'),
+(1722, 10, 'forum.thread.create'),
+(1723, 10, 'forum.view'),
+(1724, 10, 'forum.admin'),
+(1725, 10, 'forum.moderator'),
+(1726, 10, 'forum.thread.post'),
+(1727, 10, 'chat.user'),
+(1728, 10, 'chat.view'),
+(1729, 10, 'comment.post'),
+(1730, 10, 'comment.edit'),
+(1731, 10, 'comment.delete'),
+(1732, 10, 'comment.show.email'),
+(1733, 10, 'backup.create'),
+(1734, 10, 'backup.load'),
+(1735, 10, 'backup.delete'),
+(1736, 10, 'users.register.edit'),
+(1737, 10, 'user.info.edit'),
+(1738, 10, 'user.info.admin'),
+(1739, 10, 'user.info.owner'),
+(1740, 10, 'admin.roles.edit'),
+(1741, 10, 'gallery.edit'),
+(1742, 10, 'gallery.view'),
+(1743, 10, 'gallery.owner'),
+(1744, 10, 'message.inbox'),
+(1745, 10, 'events.callender'),
+(1746, 10, 'events.list'),
+(1747, 10, 'events.edit'),
+(1748, 10, 'template.edit'),
+(1749, 10, 'template.view'),
+(1750, 10, 'domains.edit'),
+(1751, 10, 'domains.view'),
+(1752, 10, 'orders.edit'),
+(1753, 10, 'orders.view'),
+(1754, 10, 'orders.all'),
+(1755, 10, 'orders.confirm'),
+(1756, 10, 'orders.finnish'),
+(1757, 10, 'dm.tables.config'),
+(1758, 10, 'dm.forms.edit'),
+(1759, 10, 'shop.basket.view'),
+(1760, 10, 'shop.basket.status.edit'),
+(1761, 10, 'shop.basket.edit'),
+(1762, 10, 'shop.basket.details.view'),
+(1763, 10, 'shop.basket.details.edit'),
+(1764, 10, 'slideshow.edit'),
+(1765, 10, 'filesystem.all'),
+(1766, 10, 'filesystem.user'),
+(1767, 10, 'filesystem.www'),
+(1768, 10, 'filesystem.edit'),
+(1769, 10, 'events.users.all'),
+(1770, 10, 'menu.edit'),
+(1771, 10, 'pages.editmenu'),
+(1772, 10, 'pages.edit'),
+(1773, 10, 'payment.edit'),
+(1774, 10, 'social.edit'),
+(1775, 10, 'admin.edit'),
+(1776, 10, 'site.edit'),
+(1777, 10, 'site.view'),
+(1778, 10, 'translations.edit'),
+(1779, 10, 'emailList.edit'),
+(1780, 10, 'emailSent.edit'),
+(1781, 10, 'ukash.edit'),
+(1782, 10, 'user.profile.edit'),
+(1783, 10, 'user.profile.view'),
+(1784, 10, 'user.profile.owner'),
+(1785, 10, 'user.search.edit'),
+(1786, 10, 'user.search.view');
 
 -- --------------------------------------------------------
 
@@ -714,7 +708,7 @@ CREATE TABLE IF NOT EXISTS `t_order_attribute` (
   `value` blob NOT NULL,
   `orderid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=59 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -752,24 +746,7 @@ CREATE TABLE IF NOT EXISTS `t_page` (
   `pagetrackerscript` blob,
   `modifydate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
-
---
--- Daten für Tabelle `t_page`
---
-
-INSERT INTO `t_page` (`id`, `type`, `namecode`, `welcome`, `title`, `keywords`, `description`, `template`, `siteid`, `code`, `codeid`, `pagetrackerscript`, `modifydate`) VALUES
-(1, 0, 1, 0, 'unregistered', 0x756e72656769737465726564, 0x756e72656769737465726564, 0, 1, 'unregistered', 1, NULL, '2014-02-14 11:43:02'),
-(2, 0, 2, 0, 'login', 0x6c6f67696e, 0x6c6f67696e, 5, 1, 'login', 2, NULL, '2014-02-14 13:27:55'),
-(3, 0, 3, 0, 'pageConfig', 0x70616765436f6e666967, 0x70616765436f6e666967, 5, 1, 'pageConfig', 6, NULL, '2014-02-14 13:28:52'),
-(4, 0, 4, 0, 'startup', 0x73746172747570, 0x73746172747570, 5, 1, 'startup', 7, NULL, '2014-02-14 13:28:52'),
-(5, 0, 5, 1, 'Home', 0x486f6d65, 0x486f6d65, 5, 1, '', NULL, NULL, '2014-02-14 13:32:16'),
-(6, 0, 6, 0, 'insertModule', 0x696e736572744d6f64756c65, 0x696e736572744d6f64756c65, 5, 1, 'insertModule', 8, NULL, '2014-02-14 13:29:24'),
-(7, 0, 7, 0, 'Login', 0x4c6f67696e, 0x4c6f67696e, 5, 1, '', NULL, NULL, '2014-02-14 13:32:45'),
-(8, 0, 8, 0, 'Impressum', 0x496d7072657373756d, 0x496d7072657373756d, 5, 1, '', NULL, NULL, '2014-02-14 13:33:45'),
-(9, 0, 9, 0, 'AGBs', 0x41474273, 0x41474273, 5, 1, '', NULL, NULL, '2014-02-14 13:34:08'),
-(10, 0, 10, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-02-14 13:34:38'),
-(11, 0, 11, 0, 'adminPages', 0x61646d696e5061676573, 0x61646d696e5061676573, 5, 1, 'adminPages', 12, NULL, '2014-02-14 13:40:09');
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -782,38 +759,7 @@ CREATE TABLE IF NOT EXISTS `t_page_roles` (
   `roleid` int(10) NOT NULL,
   `pageid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
-
---
--- Daten für Tabelle `t_page_roles`
---
-
-INSERT INTO `t_page_roles` (`id`, `roleid`, `pageid`) VALUES
-(30, 13, 5),
-(29, 10, 5),
-(28, 9, 5),
-(27, 8, 5),
-(26, 7, 5),
-(6, 7, 7),
-(7, 8, 7),
-(8, 9, 7),
-(9, 10, 7),
-(10, 13, 7),
-(11, 7, 8),
-(12, 8, 8),
-(13, 9, 8),
-(14, 10, 8),
-(15, 13, 8),
-(16, 7, 9),
-(17, 8, 9),
-(18, 9, 9),
-(19, 10, 9),
-(20, 13, 9),
-(21, 7, 10),
-(22, 8, 10),
-(23, 9, 10),
-(24, 10, 10),
-(25, 13, 10);
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -885,6 +831,7 @@ CREATE TABLE IF NOT EXISTS `t_roles` (
 CREATE TABLE IF NOT EXISTS `t_roles_custom` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
+  `system` int(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
@@ -892,12 +839,12 @@ CREATE TABLE IF NOT EXISTS `t_roles_custom` (
 -- Daten für Tabelle `t_roles_custom`
 --
 
-INSERT INTO `t_roles_custom` (`id`, `name`) VALUES
-(7, 'guest'),
-(8, 'user'),
-(9, 'editor'),
-(10, 'admin'),
-(13, 'newsletter');
+INSERT INTO `t_roles_custom` (`id`, `name`, `system`) VALUES
+(7, 'guest', 1),
+(8, 'user', 1),
+(9, 'moderator', 1),
+(10, 'admin', 1),
+(13, 'newsletter', 1);
 
 -- --------------------------------------------------------
 
@@ -928,6 +875,10 @@ CREATE TABLE IF NOT EXISTS `t_site` (
   `sitetrackerscript` blob,
   `cmscustomerid` int(11) DEFAULT NULL,
   `piwikid` int(11) NOT NULL,
+  `facebookappid` blob NOT NULL,
+  `facebooksecret` blob NOT NULL,
+  `twitterkey` blob NOT NULL,
+  `twittersecret` blob NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -1006,32 +957,12 @@ INSERT INTO `t_template` (`id`, `name`, `template`, `interface`, `html`, `css`, 
 
 CREATE TABLE IF NOT EXISTS `t_templatearea` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `instanceid` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `pageid` int(10) NOT NULL,
-  `type` int(10) NOT NULL,
   `position` int(10) NOT NULL,
-  `code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
-
---
--- Daten für Tabelle `t_templatearea`
---
-
-INSERT INTO `t_templatearea` (`id`, `name`, `pageid`, `type`, `position`, `code`) VALUES
-(1, '', 1, 77, 0, 'unregistered'),
-(2, 'center', 2, 13, 0, 'login'),
-(3, 'topMenu', 0, 59, 0, 'menu'),
-(4, 'headerMenu', 0, 59, 0, 'menu'),
-(5, 'footerMenu', 0, 59, 0, 'menu'),
-(6, 'center', 3, 60, 0, 'pageConfig'),
-(7, 'center', 4, 44, 0, 'startup'),
-(8, 'center', 6, 45, 0, 'insertModule'),
-(9, 'center', 5, 2, 0, ''),
-(10, 'center', 7, 13, 0, ''),
-(11, 'center', 10, 50, 0, ''),
-(12, 'center', 11, 70, 0, 'adminPages'),
-(13, 'adminMenu', 0, 69, 0, 'adminMenu');
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1058,20 +989,62 @@ CREATE TABLE IF NOT EXISTS `t_users` (
   `email` varchar(200) NOT NULL,
   `firstname` varchar(100) NOT NULL,
   `lastname` varchar(100) NOT NULL,
+  `gender` int(1) NOT NULL,
   `objectid` int(10) NOT NULL,
   `registerdate` date NOT NULL,
   `birthdate` date NOT NULL,
   `active` tinyint(1) NOT NULL,
   `image` int(10) DEFAULT NULL,
+  `facebook_uid` varchar(100) DEFAULT NULL,
+  `twitter_uid` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
--- Daten für Tabelle `t_users`
+-- Tabellenstruktur für Tabelle `t_user_address`
 --
 
-INSERT INTO `t_users` (`id`, `username`, `password`, `authkey`, `email`, `firstname`, `lastname`, `objectid`, `registerdate`, `birthdate`, `active`, `image`) VALUES
-(1, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@hotmail.de', 'sil', 'muh', 16, '2014-02-14', '2014-02-05', 1, NULL);
+CREATE TABLE IF NOT EXISTS `t_user_address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `address` blob NOT NULL,
+  `postcode` varchar(30) COLLATE utf8_bin NOT NULL,
+  `continent` varchar(100) COLLATE utf8_bin NOT NULL,
+  `continentid` int(20) NOT NULL,
+  `country` varchar(100) COLLATE utf8_bin NOT NULL,
+  `countryid` int(20) NOT NULL,
+  `state` varchar(100) COLLATE utf8_bin NOT NULL,
+  `stateid` int(20) NOT NULL,
+  `region` varchar(100) COLLATE utf8_bin NOT NULL,
+  `regionid` int(20) NOT NULL,
+  `city` varchar(100) COLLATE utf8_bin NOT NULL,
+  `cityid` int(20) NOT NULL,
+  `longditude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `vectorx` double DEFAULT NULL,
+  `vectory` double DEFAULT NULL,
+  `vectorz` double DEFAULT NULL,
+  `userid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `t_user_wall_post`
+--
+
+CREATE TABLE IF NOT EXISTS `t_user_wall_post` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL,
+  `typeid` int(11) NOT NULL,
+  `srcuserid` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `comment` blob NOT NULL,
+  `parent` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1151,7 +1124,17 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
   `tableid` int(10) NOT NULL,
   `viewed` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=5 ;
+
+--
+-- Daten für Tabelle `t_vdb_object`
+--
+
+INSERT INTO `t_vdb_object` (`id`, `tableid`, `viewed`) VALUES
+(1, 2, 0),
+(2, 2, 0),
+(3, 2, 0),
+(4, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -1199,116 +1182,50 @@ CREATE TABLE IF NOT EXISTS `t_vdb_value` (
 --
 
 INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
+(1, 1, ''),
+(1, 2, ''),
+(1, 3, ''),
+(1, 4, ''),
+(1, 5, ''),
+(1, 6, ''),
+(1, 7, ''),
+(1, 8, ''),
+(1, 55, ''),
+(1, 24, ''),
+(1, 49, ''),
+(2, 1, ''),
+(2, 2, ''),
+(2, 3, ''),
+(2, 4, ''),
+(2, 5, ''),
+(2, 6, ''),
+(2, 7, ''),
+(2, 8, ''),
+(2, 55, ''),
+(2, 24, ''),
+(2, 49, ''),
+(3, 1, ''),
+(3, 2, ''),
+(3, 3, ''),
+(3, 4, ''),
+(3, 5, ''),
+(3, 6, ''),
+(3, 7, ''),
+(3, 8, ''),
+(3, 55, ''),
+(3, 24, ''),
+(3, 49, ''),
 (4, 1, ''),
 (4, 2, ''),
 (4, 3, ''),
 (4, 4, ''),
 (4, 5, ''),
 (4, 6, ''),
-(4, 7, 0x30),
+(4, 7, ''),
 (4, 8, ''),
+(4, 55, ''),
 (4, 24, ''),
-(4, 49, ''),
-(5, 1, ''),
-(5, 2, ''),
-(5, 3, ''),
-(5, 4, ''),
-(5, 5, ''),
-(5, 6, ''),
-(5, 7, 0x30),
-(5, 8, ''),
-(5, 24, ''),
-(5, 49, ''),
-(7, 36, 0x74657374206e616d652032),
-(7, 37, 0x6672696564726963682e61737472696440676d61696c2e636f6d),
-(7, 39, 0x74657374207375626a65637432),
-(7, 38, 0x74657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d657373617374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d657373617374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d65737361676520322074657374206d657373616765203220),
-(8, 1, ''),
-(8, 2, ''),
-(8, 3, ''),
-(8, 4, ''),
-(8, 5, ''),
-(8, 6, ''),
-(8, 7, 0x30),
-(8, 8, ''),
-(8, 24, ''),
-(8, 49, ''),
-(9, 36, 0x74657374206e616d65),
-(9, 37, 0x6672696564726963682e61737472696440676d61696c2e636f6d),
-(9, 39, 0x73616566),
-(9, 38, 0x736466736566736466736466736466),
-(10, 1, ''),
-(10, 2, ''),
-(10, 3, ''),
-(10, 4, ''),
-(10, 5, ''),
-(10, 6, ''),
-(10, 7, 0x30),
-(10, 8, ''),
-(10, 24, ''),
-(10, 49, ''),
-(11, 1, ''),
-(11, 2, ''),
-(11, 3, ''),
-(11, 4, ''),
-(11, 5, ''),
-(11, 6, ''),
-(11, 7, 0x30),
-(11, 8, ''),
-(11, 24, ''),
-(11, 49, ''),
-(12, 1, ''),
-(12, 2, ''),
-(12, 3, ''),
-(12, 4, ''),
-(12, 5, ''),
-(12, 6, ''),
-(12, 7, 0x30),
-(12, 8, 0x30),
-(12, 24, ''),
-(12, 49, ''),
-(13, 1, ''),
-(13, 2, ''),
-(13, 3, ''),
-(13, 4, ''),
-(13, 5, ''),
-(13, 6, ''),
-(13, 7, 0x30),
-(13, 8, ''),
-(13, 24, ''),
-(13, 49, ''),
-(14, 1, 0x7465737431),
-(14, 2, 0x74657374),
-(14, 3, 0x74657374),
-(14, 4, 0x7465737440656d61696c2e636f6d),
-(14, 5, 0x30322f31372f32303134),
-(14, 6, 0x30322f30332f32303134),
-(14, 7, 0x31),
-(14, 8, 0x31),
-(14, 24, 0x74657374),
-(14, 49, 0x74657374),
-(15, 1, ''),
-(15, 2, ''),
-(15, 3, ''),
-(15, 4, ''),
-(15, 5, ''),
-(15, 6, ''),
-(15, 7, ''),
-(15, 8, ''),
-(15, 55, ''),
-(15, 24, ''),
-(15, 49, ''),
-(16, 1, ''),
-(16, 2, ''),
-(16, 3, ''),
-(16, 4, ''),
-(16, 5, ''),
-(16, 6, ''),
-(16, 7, ''),
-(16, 8, ''),
-(16, 55, ''),
-(16, 24, ''),
-(16, 49, '');
+(4, 49, '');
 
 -- --------------------------------------------------------
 
@@ -1318,18 +1235,11 @@ INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
 
 CREATE TABLE IF NOT EXISTS `t_wysiwygpage` (
   `id` int(10) unsigned DEFAULT NULL,
-  `pageid` int(10) unsigned DEFAULT NULL,
+  `moduleid` int(10) unsigned DEFAULT NULL,
   `lang` varchar(5) NOT NULL,
   `content` blob,
   `title` varchar(100) DEFAULT NULL,
   `area` int(5) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Daten für Tabelle `t_wysiwygpage`
---
-
-INSERT INTO `t_wysiwygpage` (`id`, `pageid`, `lang`, `content`, `title`, `area`) VALUES
-(NULL, 9, 'en', 0x3c68313e57656c636f6d653c2f68313e0d0a3c703e5468697320697320746865207374617274207061676520666f7220796f75722077656220736974652e20546f206564697420636f6e74656e74206c6f67696e207468656e206d6f766520796f7572206d6f757365206f7665722074686520636f6e74656e7420796f75207769736820746f20656469742c20726967687420636c69636b20616e642073656c6563742065646974206d6f64756c652e20446f207468652073616d6520746f2065646974206d656e75732e20546f2067657420746f207468652061646d696e206172656120636c69636b20656469742061742074686520746f70207269676874206f66207468652070616765207768656e20796f7520617265206c6f67656420696e2e3c2f703e, NULL, 0);
 
 ; */ ?>

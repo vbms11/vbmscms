@@ -94,17 +94,14 @@ class WysiwygPageView extends XModule {
                 </div>
                 <hr/>
                 <div class="alignRight">
-                    <button type="submit" class="btnSave"><?php echo parent::getTranslation("common.save"); ?></button>
-                    <button type="button" class="btnCancel"><?php echo parent::getTranslation("editor.label.cancel"); ?></button>
+                    <button type="submit" class="jquiButton btnSave"><?php echo parent::getTranslation("common.save"); ?></button>
+                    <button type="button" class="jquiButton btnCancel"><?php echo parent::getTranslation("editor.label.cancel"); ?></button>
                 </div>
             </form>
         </div>
 	<script>
-	$(".wysiwygPanel .alignRight .btnSave").each(function (index,object) {
-            $(object).button();
-	});
         $(".wysiwygPanel .alignRight .btnCancel").each(function (index,object) {
-            $(object).button().click(function () {
+            $(object).click(function () {
                 callUrl("<?php echo parent::link(array("action"=>"cancel")); ?>");
             });
 	});

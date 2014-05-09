@@ -35,6 +35,7 @@ include_once 'core/model/resourcesModel.php';
 include_once 'core/model/navigationModel.php';
 include_once 'core/model/confirmModel.php';
 include_once 'core/model/domainsModel.php';
+include_once 'core/model/moduleInstanceModel.php';
 include_once 'core/model/moduleModel.php';
 include_once 'core/model/pagesModel.php';
 include_once 'core/model/templateModel.php';

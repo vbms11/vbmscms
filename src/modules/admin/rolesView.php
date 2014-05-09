@@ -21,7 +21,7 @@ class RolesView extends XModule {
                     parent::redirect();
                     break;
                 case "createRole":
-                    RolesModel::createCustomRole($_GET['rolename'], "");
+                    RolesModel::createCustomRole($_GET['rolename'], "0");
                     parent::redirect();
                     break;
                 case "deleteRole":
@@ -82,6 +82,7 @@ class RolesView extends XModule {
         ?>
 	<div class="panel rolesPage">
             <h3><?php echo parent::getTranslation("admin.roles.title"); ?></h3>
+            <p><?php echo parent::getTranslation("admin.roles.description"); ?></p>
             <form action="<?php echo parent::link(array("action"=>"saveRoles","group"=>$group)); ?>" method="post">
                 <table class="formTable"><tr><td>
                     <?php echo parent::getTranslation("admin.roles.label.roleGroup"); ?>

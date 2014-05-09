@@ -106,10 +106,7 @@ class UserProfileModule extends XModule {
             if (!empty($userId)) {
                 $user = UsersModel::getUser($userId);
                 $username = htmlentities($user->firstname." ".$user->lastname);
-                $userProfileImage = null;
-                if (empty($userProfileImage)) {
-                    $userProfileImage = "modules/users/img/User.png";
-                }
+                $userProfileImage = UsersModel::getUserImageUrl($user->id);
                 ?>
                 <div class="userProfileImage">
                     <img src="<?php echo $userProfileImage; ?>" title="<?php echo $username; ?>" alt="<?php echo $username; ?>" />

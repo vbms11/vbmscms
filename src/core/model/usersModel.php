@@ -7,6 +7,33 @@ require_once 'core/context.php';
 
 class UsersModel {
     
+    static function search ($ageMin, $ageMax, $country, $place, $distance) {
+        
+        $coordinates = UserAddressModel::getCoordinatesFromAddress("$country $place");
+        
+        $radiusOfEarthKM = 6371;
+        $x = (sin($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
+        $y = (cos($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
+        $z = sin($coordinates->y) * $radiusOfEarthKM;
+        
+        $x = mysql_real_escape_string($x);
+        $y = mysql_real_escape_string($y);
+        $z = mysql_real_escape_string($z);
+        
+        return Database::queryAsArray("select 
+            u.*, 
+            year(now()) - year(birthdate) as age, 
+            math.sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) as distance 
+            a.country as country, a.city as city 
+            from t_users 
+            join t_user_address a on u.id = a.userid 
+            where 
+            distance <= '$distance' and 
+            age >= '$ageMin' and 
+            age <= '$ageMax' 
+            order by distance asc");
+    }
+    
     static function login ($username, $password, $siteId = null) {
         $username = mysql_real_escape_string($username);
         $password = md5($password);
@@ -55,7 +82,7 @@ class UsersModel {
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
             join t_users u on su.userid = u.id 
-            where u.facebookid = '$facebookId' and u.active = '1'");
+            where u.facebook_uid = '$facebookId' and u.active = '1'");
         // validate login
         if ($userObj != null) {
             Context::setUser($userObj);
@@ -68,7 +95,7 @@ class UsersModel {
     static function setFacebookId ($userId, $facebookId) {
         $userId = mysql_real_escape_string($userId);
         $facebookId = mysql_real_escape_string($facebookId);
-        Database::query("update t_users set facebookid = '$facebookId' where id = '$userId'");
+        Database::query("update t_users set facebook_uid = '$facebookId' where id = '$userId'");
     }
     
     static function loginWithKey ($key) {
@@ -201,7 +228,7 @@ class UsersModel {
     
     static function getUserImageUrl ($userId) {
         $user = self::getUser($userId);
-        $imageUrl = "";
+        $imageUrl = null;
         if (!empty($user->image)) {
             $image = GalleryModel::getImage($user->image);
             $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
@@ -209,6 +236,8 @@ class UsersModel {
             $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture";
         } else if (!empty($user->twitter_uid)) {
             
+        } else {
+            $imageUrl = "modules/users/img/User.png";
         }
         return $imageUrl;
     }
@@ -276,12 +305,13 @@ class UsersModel {
         return $validate;
     }
     
-    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate, $profileImage = null, $siteId = null) {
+    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate = null, $gender = "1", $profileImage = null, $siteId = null) {
         $username = mysql_real_escape_string($username);
         $firstName = mysql_real_escape_string($firstName);
         $lastName = mysql_real_escape_string($lastName);
         $email = mysql_real_escape_string($email);
         $birthDate = mysql_real_escape_string($birthDate);
+        $gender = mysql_real_escape_string($gender);
         if ($profileImage == null) {
             $profileImage = "null";
         } else {
@@ -296,20 +326,22 @@ class UsersModel {
             // create user objectid
             $objectId = DynamicDataView::createObject("userAttribs",false);
             // create user
-            Database::query("insert into t_users (username,firstname,lastname,email,birthdate,registerdate,objectid,image)
-                values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),'$objectId',$profileImage)");
+            Database::query("insert into t_users (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender)
+                values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),'$objectId',$profileImage,'$gender')");
             $result = Database::queryAsObject("select last_insert_id() as id from t_users");
             $id = $result->id;
             // create site user
             Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
             // set user password
-            UsersModel::setPassword($id, $password);
+            if ($password != null) {
+                UsersModel::setPassword($id, $password);
+            }
         } else {
             $id = mysql_real_escape_string($id);
             $registerDateSql = "";
             if ($registerDate != null)
                 $registerDateSql = ", registerdate = STR_TO_DATE('".mysql_real_escape_string($registerDate)."','%d/%m/%Y')";
-            Database::query("update t_users set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y')' $registerDateSql where id = '$id'");
+            Database::query("update t_users set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y')', gender = '$gender' $registerDateSql where id = '$id'");
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
         return $id;

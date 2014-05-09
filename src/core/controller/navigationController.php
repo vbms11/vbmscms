@@ -33,15 +33,15 @@ class NavigationController {
             $page = PagesModel::getStaticPage($_GET['static'], Context::getLang());
             Context::setModuleId($page->codeid);
             NavigationModel::addToHistory();
-        } else if (Context::isAdminMode()) {
-            $page = PagesModel::getStaticPage(Context::isAdminMode(), Context::getLang());
-            Context::setModuleId($page->codeid);
-            NavigationModel::addToHistory();
         } else if (isset($_GET['service'])) {
             Context::setService($_GET['service']);
         } else if (isset($_GET['templatePreview'])) {
             $page = PagesModel::getTemplatePreviewPage($_GET['templatePreview']);
-        }
+        }/* else if (Context::isAdminMode()) {
+            $page = PagesModel::getStaticPage(Context::isAdminMode(), Context::getLang());
+            Context::setModuleId($page->codeid);
+            NavigationModel::addToHistory();
+        }*/
         
         if (Context::getSiteId() == null) {
             $page = PagesModel::getStaticPage("unregistered", Context::getLang());

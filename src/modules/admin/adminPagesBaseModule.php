@@ -30,7 +30,7 @@ class AdminPagesBaseModule extends XModule {
             MenuModel::setPageActivateInMenu($newPageId, $_POST['active'], Context::getLang());
             $_GET['id'] = $newPageId;
         } else {
-            PagesModel::updatePage($_GET['id'], $_POST['pagename'], "", Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['pagedescription'],$_POST['template'],null);
+            PagesModel::updatePage($_GET['id'], $_POST['pagename'], "", Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['pagedescription'],$_POST['template']);
             MenuModel::updatePageInMenu($_GET['id'], $_GET["menu"], $_GET["parent"], Context::getLang());
             MenuModel::setPageActivateInMenu($_GET['id'], parent::post('active'), Context::getLang());
         }
@@ -331,8 +331,8 @@ class AdminPagesBaseModule extends XModule {
                         <div class="adminPagesModule">
                             <div class="adminPagesModuleTools">
                                 <img src="resource/img/preferences.png" alt="" onclick="callUrl('<?php echo NavigationModel::createModuleLink($module->id,array("action"=>"edit"),false); ?>');" />
-                                <img src="resource/img/moveup.png" alt="" onclick="callUrl('<?php echo NavigationModel::createPageLink($page->id,array("action"=>"moveup","id"=>$module->id),false); ?>');" />
-                                <img src="resource/img/movedown.png" alt="" onclick="callUrl('<?php echo NavigationModel::createPageLink($page->id,array("action"=>"movedown","id"=>$module->id),false); ?>');" />
+                                <img src="resource/img/moveup.png" alt="" onclick="callUrl('<?php echo NavigationModel::createPageLink($page->id,array("action"=>"moveup","id"=>$module->includeid),false); ?>');" />
+                                <img src="resource/img/movedown.png" alt="" onclick="callUrl('<?php echo NavigationModel::createPageLink($page->id,array("action"=>"movedown","id"=>$module->includeid),false); ?>');" />
                                 <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("admin.pages.modules.delete.confirm"); ?>','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$module->id),false); ?>');" />
                             </div>
                             <?php

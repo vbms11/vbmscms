@@ -32,19 +32,9 @@ class UserSearchModule extends XModule {
                     $this->printEditView();
                 }
                 break;
-            case "search":
-                if (Context::hasRole("user.search.view")) {
-                    $this->printSearchPanel();
-                }
-                break;
-            case "searchResults":
-                if (Context::hasRole("user.search.view")) {
-                    $this->printResultsPanel();
-                }
-                break;
             default:
                 if (Context::hasRole("user.search.view")) {
-                    $this->printListUsers();
+                    $this->printSearchView();
                 }
                 break;
         }
@@ -84,26 +74,7 @@ class UserSearchModule extends XModule {
                 <ul>
                     <li><a href="#simpleSearch"><?php echo parent::getTranslation('users.search.tab.simple'); ?></a></li>
                 </ul>
-                <div id="simpleSearch">
-                    <form method="get" action="<?php echo parent::link(array("action"=>"searchResults")); ?>">
-                        <table><tr>
-                            <td><?php echo parent::getTranslation('users.search.country'); ?></td>
-                            <td><?php InputFeilds::printSelect("country", parent::get('country'), array()); ?></td>
-                            <td><?php echo parent::getTranslation('users.search.age.min'); ?></td>
-                            <td><?php InputFeilds::printSpinner("agemin", parent::get('agemin') ? parent::get('agemin') : 18); ?></td>
-                        </tr><tr>
-                            <td><?php echo parent::getTranslation('users.search.region'); ?></td>
-                            <td><?php InputFeilds::printSelect("region", parent::get('region'), array()); ?></td>
-                            <td><?php echo parent::getTranslation('users.search.age.max'); ?></td>
-                            <td><?php InputFeilds::printSpinner("agemax", parent::get('agemax') ? parent::get('agemax') : 50); ?></td>
-                        </tr></table>
-                        <div class="alignRight">
-                            <button class="userSearchSearchButton jquiButton" value="simpleSearchButton" type="submit">
-                                <?php echo parent::getTranslation('users.search.button.search'); ?>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                
             </div>
             <script>
             $(".searchTypeTabs").tabs();
@@ -131,60 +102,45 @@ class UserSearchModule extends XModule {
         <?php
     }
     
-    function printSearchResultsPanel () {
-        return;
-        $users = UsersModel::search($this->getConditions());
-        $usersCount = count($users);
-        $usersPerPage = $_POST["usersPerPage"];
-        $pagerPages = ceil($usersCount / $usersPerPage);
+    function printSearchView () {
         ?>
-        <div class="usersList" align="center">
-            <?php
-            foreach ($users as $user) {
-                ?>
-                <div class="usersSearchUserDiv shadow">
-                    <div class="usersSearchUserImage">
-                        <a href="<?php echo parent::staticLink('profile',array('id' => $user->getId())); ?>">
-                            <img class="imageLink" width="170" height="170" src="<?php echo $user->getImage()->getPreviewUrl(parent::param('previewSize')); ?>" alt=""/>
-                        </a>
-                    </div>
-                    <div class="usersSearchUserDetails">
-                        <a href="<?php echo parent::staticLink('profile',array('id' => $user->getId())); ?>">
-                            <?php echo $user->getObjectDisplayName(); ?>
-                            <?php echo ' ('.$user->getAgeYears().')'; ?>
-                        </a>
-                    </div>
+        <div class="usersSearchPanel">
+            <form method="get" action="<?php echo parent::link(array("action"=>"searchResults")); ?>">
+                <table>
+                <tr>
+                    <td><?php echo parent::getTranslation('users.search.gender'); ?></td>
+                    <td><?php 
+                        $selectedValue = "0";
+                        $user = Context::getUser();
+                        if (!empty($user)) {
+                            if ($user->gender == "0") {
+                                $selectedValue = "1";
+                            }
+                        }
+                        InputFeilds::printSelect("gender", $selectedValue, array("0" => parent::getTranslation("common.female"), "1" => parent::getTranslation("common.male")));
+                    ?></td>
+                </tr><tr>
+                    <td><?php echo parent::getTranslation('users.search.age'); ?></td>
+                    <td><?php InputFeilds::printSpinner("agemin", parent::get('agemin') ? parent::get('agemin') : 16); ?></td>
+                    <td><?php echo parent::getTranslation('users.search.ageto'); ?></td>
+                    <td><?php InputFeilds::printSpinner("agemax", parent::get('agemax') ? parent::get('agemax') : 99); ?></td>
+                </tr><tr>
+                    <td><?php echo parent::getTranslation('users.search.country'); ?></td>
+                    <td><?php InputFeilds::printSelect("country", parent::get('country'), array()); ?></td>
+                </tr><tr>
+                    <td><?php echo parent::getTranslation('users.search.place'); ?></td>
+                    <td><?php InputFeilds::printSelect("place", parent::get('place'), array()); ?></td>
+                </tr><tr>
+                    <td><?php echo parent::getTranslation('users.search.distance'); ?></td>
+                    <td><?php InputFeilds::printSelect("place", parent::get('place'), array()); ?></td>
+                </tr></table>
+                <div class="alignRight">
+                    <button class="userSearchSearchButton jquiButton" value="simpleSearchButton" type="submit">
+                        <?php echo parent::getTranslation('users.search.button.search'); ?>
+                    </button>
                 </div>
-                <?php
-            }
-            ?>
-            <div clear="both"></div>
-        </div>
-        <div class="userListPager">
-            <?php
-            for ($i=1; $i<=$pagerPages; $i++) {
-                echo '<div><a href="'.parent::link(array("action"=>"searchResults","page"=>$i)).'">'.$i.'</div>';
-            }
-            ?>
-        </div>
-        <div class="userListPages">
-            <label><?php echo parent::getTranslation("users.search.pager.pages"); ?></label>
-            <?php InputFeilds::printSelect("pages", $_POST['pages'], array()); ?>
-        </div>
-        <?php
-    }
-    
-    function printListUsers () {
-        ?>
-        <div class="usersListPanel">
-            <div class="usersListSearchToggle"><?php echo parent::getTranslation('users.search.button.toggle'); ?></div>
-            <div class="usersSearchContent">
-                <?php $this->printSearchPanel(); ?>
-            </div>
-            <div class="usersListContent">
-                <?php $this->printSearchResultsPanel(); ?>
-            </div>
-        </div>
+            </form>
+</div>
         <?php    
     }
     

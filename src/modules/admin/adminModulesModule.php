@@ -50,7 +50,14 @@ class AdminModulesModule extends XModule {
     }
     
     function renderModuleConfigView () {
-        
+        $theModule = ModuleModel::getModule(parent::get("adminModuleId"));
+        $theModule->typeid = $theModule->id;
+        $theModule->id = null;
+        $theModule->modulename = $theModule->name;
+        $theModule->name = null;
+        $theModule->position = null;
+        $moduleObject = ModuleModel::getModuleClass($theModule);
+        ModuleController::renderModule($moduleObject);
     }
     
     function renderModuleAttributesView () {

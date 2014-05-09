@@ -54,7 +54,7 @@ class ProductsPageModel {
         $obj;
         $results = array();
         while (($obj = mysql_fetch_object($result)) != null) {
-            $pageId = PagesModel::getPageIdFromIncludeId($obj->pageid);
+            $pageId = PagesModel::getPageIdFromModuleId($obj->pageid);
             $content = SearchModel::cleanPreviewText($obj->text,$searchText);
             $title = PagesModel::getPageNameInMenu($pageId,$lang);
             if ($pageId == null || $title == null)

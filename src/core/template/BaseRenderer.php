@@ -28,7 +28,7 @@ abstract class BaseRenderer {
         }
         
         // load the module parameters
-        $this->setModuleParams(ModuleModel::getModuleParams(array_keys($pageAreaNames)));
+        $this->setModuleParams(ModuleModel::getModulesParams(array_keys($pageAreaNames)));
     }
     
     /**

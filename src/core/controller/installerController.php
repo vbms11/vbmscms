@@ -147,10 +147,10 @@ PluginsInstalled[] = "SegmentEditor"';
         }
     }
 
-    static function createInitialUser ($username,$firstname,$lastname,$password,$email,$birthDate) {
+    static function createInitialUser ($username,$firstname,$lastname,$password,$email,$birthDate,$gender) {
         
         // create user
-        $initialUserId = UsersModel::saveUser(null, $username, $firstname, $lastname, $password, $email, $birthDate, null);
+        $initialUserId = UsersModel::saveUser(null, $username, $firstname, $lastname, $password, $email, $birthDate, null, $gender);
         UsersModel::setUserActiveFlag($initialUserId,1);
         
         // add roles

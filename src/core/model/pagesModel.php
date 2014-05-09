@@ -28,9 +28,9 @@ class PagesModel {
         return $obj->name;
     }
 
-    static function getPageIdFromIncludeId ($includeId) {
-        $includeId = mysql_real_escape_string($includeId);
-        $result = Database::queryAsObject("select pageid from t_templatearea where id = '$includeId'");
+    static function getPageIdFromModuleId ($moduleId) {
+        $moduleId = mysql_real_escape_string($moduleId);
+        $result = Database::queryAsObject("select pageid from t_templatearea where instanceid = '$moduleId'");
         return $result->pageid;
     }
     
@@ -42,12 +42,12 @@ class PagesModel {
         } else {
             $endQuery = "siteid is null";
         }
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
-            where welcome = '1' and p.id in (
+            where p.welcome = '1' and p.id in (
                     select p1.id from t_page p1 
                     inner join t_page_roles as pc on p1.id = pc.pageid and 
                     pc.roleid in (".implode(array_values(Context::getRoleGroups()),',').")
@@ -55,10 +55,13 @@ class PagesModel {
                 ) and $endQuery";
         
         $pageObj = Database::queryAsObject($query);
-        $pageObj = self::ensureAdminTemplate($pageObj);
+        
+        if (!empty($pageObj)) {
+            $pageObj = self::ensureAdminTemplate($pageObj);
+        }
         
 	if (count(Context::getRoleGroups()) > 0) {
-		return $pageObj;
+            return $pageObj;
 	}
         return null;
     }
@@ -67,7 +70,7 @@ class PagesModel {
         $code = mysql_real_escape_string($code);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
@@ -94,7 +97,7 @@ class PagesModel {
     static function getStaticPage ($_name,$_lang) {
         $name = mysql_real_escape_string($_name);
         $lang = mysql_real_escape_string($_lang);
-        $query = "select p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -115,7 +118,7 @@ class PagesModel {
             $page = PagesModel::getPageTemplate($pageId, $_lang);
             $templateAreas = TemplateModel::getAreaNames($page);
             $moduleTypeId = ModuleModel::getModuleByName($_name);
-            $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id, -1, $name);
+            $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id);
             Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");
             return PagesModel::getStaticPage($_name,$_lang);
         }
@@ -155,7 +158,7 @@ class PagesModel {
     static function getPageTemplate ($id, $lang) {
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -173,7 +176,7 @@ class PagesModel {
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
@@ -210,7 +213,7 @@ class PagesModel {
         $id = mysql_real_escape_string($id);
         $lang = mysql_real_escape_string($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
             left join t_templatearea a on a.id = '$id'
             left join t_template t on p.template = t.id
@@ -248,7 +251,7 @@ class PagesModel {
         return $pageId;
     }
 
-    static function updatePage ($id,$name,$type,$lang,$welcome,$title,$keywords,$description,$template,$areas) {
+    static function updatePage ($id,$name,$type,$lang,$welcome,$title,$keywords,$description,$template) {
         $name = mysql_real_escape_string($name);
         $id = mysql_real_escape_string($id);
         $title = mysql_real_escape_string($title);
@@ -274,12 +277,7 @@ class PagesModel {
         $query = "update t_page set title = '$title', keywords = '$keywords', description = '$description', type = '$type' $templateSql where id = '$id'";
         Database::query($query);
         PagesModel::setWelcome($id,$welcome);
-        // update template areas
-        if (is_array($areas)) {
-            foreach ($areas as $areaName => $areaType)
-                TemplateModel::setArea($id, $areaName, $areaType);
-        }
-            
+           
     }
     
     static function deletePage ($pageId) {

@@ -149,8 +149,7 @@ class UserWallModule extends XModule {
     function printEditPostView ($postId) {
         
         $post = UserWallModel::getUserPost($postId);
-        $userProfileImage = "modules/users/img/User.png";
-        
+        $userProfileImage = UsersModel::getUserImageSmallUrl($post->srcuserid);
         ?>
         <div class="panel usersWallPanel">
             <?php
@@ -190,8 +189,7 @@ class UserWallModule extends XModule {
         if (!empty($userId)) {
             $wallPosts = UserWallModel::getUserWallPosts($userId);
         }
-        
-        $userProfileImage = "modules/users/img/User.png";
+        $userProfileImage = UsersModel::getUserImageSmallUrl($userId);
         
         ?>
         <div class="panel usersWallPanel">

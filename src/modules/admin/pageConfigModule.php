@@ -51,21 +51,24 @@ class PageConfigModule extends AdminPagesBaseModule {
                 <?php
                 if (isset($_GET['menuModuleId']) && !empty($_GET['menuModuleId'])) {
                     ?>
-                    <button onclick="callUrl('<?php echo NavigationModel::createModuleLink($_GET['menuModuleId'],array("action"=>"edit","parent"=>$_GET['parent'])); ?>');">Back to Menu</button>
+                    <button onclick="callUrl('<?php echo NavigationModel::createModuleLink($_GET['menuModuleId'],array("action"=>"edit","parent"=>$_GET['parent'])); ?>');" class="jquiButton"><?php echo parent::getTranslation("pageConfig.button.backToMenu"); ?></button>
+                    <?php
+                }
+                if (!empty($id)) {
+                    ?>
+                    <button onclick="callUrl('<?php echo NavigationModel::createPageLink($id); ?>');" class="jquiButton"><?php echo parent::getTranslation("pageConfig.button.backToPage"); ?></button>
                     <?php
                 }
                 ?>
-		<button onclick="callUrl('<?php echo NavigationModel::createPageLink($id); ?>');">Back to Page</button>
             </div>
             <div class="pageConfigPanel">
-                <h3><a href="#pageConfigPanelSection1">Page Configuration</a></h3>
+                <h3><a href="#pageConfigPanelSection1"><?php echo parent::getTranslation("pageConfig.label.configPage"); ?></a></h3>
                 <div id="pageConfigPanelSection1">
                     <?php $this->printPageSettingsView($page) ?>
                 </div>
             </div>
         </div>
         <script type="text/javascript">
-        $(".pageConfigBackBtn button").button();
         $(".pageConfigPanel").accordion({
                 heightStyle: "content"
         });

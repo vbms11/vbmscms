@@ -77,9 +77,12 @@ class ModuleModel {
         $obj->modulePosition = $moduleObj->position;
         $obj->sysname = $moduleObj->sysname;
         $obj->include = $moduleObj->include;
+        if (isset($moduleObj->includeid)) {
+            $obj->includeId = $moduleObj->includeid;
+        }
         // set module parameters
         if ($params) {
-            $obj->setParams(self::getModuleParams($moduleObj->id));
+            $obj->setParams(self::getModulesParams($moduleObj->id));
         }
         return $obj;
     }
@@ -96,7 +99,7 @@ class ModuleModel {
      * @param type $moduleIds int or array
      * @return type
      */
-    static function getModuleParams ($moduleIds) {
+    static function getModulesParams ($moduleIds) {
         
         $moduleParams = array();
         if (is_array($moduleIds)) {

@@ -30,22 +30,23 @@ class LoginModule extends XModule {
                     'appId'  => $site->facebookappid,
                     'secret' => $site->facebooksecret,
                 ));
-                $user = $facebook->getUser();
-                if ($user) {
+                $userLogin = $facebook->getUser();
+                if ($userLogin) {
                     try {
                         $user_profile = $facebook->api('/me');
                         $userByEmail = UsersModel::getUserByEmail($user_profile['email']);
-                        if (!empty($userByEmail) && empty($userByEmail->facebookid)) {
-                            UsersModel::setFacebookId($user_profile['id']);
+                        if (!empty($userByEmail) && empty($userByEmail->facebook_uid)) {
+                            UsersModel::setFacebookId($userByEmail->id, $user_profile['id']);
                         }
-                        $user = UsersModel::loginWithFacebookId($user_profile['id']);
-                        if ($user) {
-                            if ($user->email != $user_profile['email'] || 
-                                $user->firstname != $user_profile['first_name'] || 
-                                $user->lastname != $user_profile['last_name'] || 
-                                (($user->gender == "1" && $user_profile['gender'] != "male") ||
-                                ($user->gender == "0" && $user_profile['gender'] != "female"))) {
-                                UsersModel::saveUser($user->id, $user->username, $user_profile['first_name'], $user_profile['last_name'], null, $user_profile['email'], Common::toUiDate($user->birthdate));
+                        $userLogin = UsersModel::loginWithFacebookId($user_profile['id']);
+                        if ($userLogin) {
+                            if ($userByEmail->email != $user_profile['email'] || 
+                                $userByEmail->firstname != $user_profile['first_name'] || 
+                                $userByEmail->lastname != $user_profile['last_name'] || 
+                                (($userByEmail->gender == "1" && $user_profile['gender'] != "male") ||
+                                ($userByEmail->gender == "0" && $user_profile['gender'] != "female"))) {
+                                $gender = $user_profile['gender'] == "male" ? "1" : "0";
+                                UsersModel::saveUser($userByEmail->id, $userByEmail->username, $user_profile['first_name'], $user_profile['last_name'], null, $user_profile['email'], Common::toUiDate($userByEmail->birthdate), null, $gender);
                             }
                             parent::redirect(array("action"=>"welcome"));
                         } else {
@@ -54,7 +55,7 @@ class LoginModule extends XModule {
                         }
                     } catch (FacebookApiException $e) {
                         error_log($e);
-                        $user = null;
+                        $userLogin = null;
                         parent::focus();
                         parent::redirect(array("action"=>"bad"));
                     }
@@ -82,11 +83,12 @@ class LoginModule extends XModule {
                     } else {
                         if ($openid->validate()) {
                             $openIdAttributes = $openid->getAttributes();
-                            $user = UsersModel::loginWithEmail($openIdAttributes['contact/email']);
-                            if ($user) {
+                            $userLogin = UsersModel::loginWithEmail($openIdAttributes['contact/email']);
+                            if ($userLogin) {
+                                $user = Context::getUser();
                                 if ($user->firstname != $openIdAttributes['namePerson/first'] || 
                                     $user->lastname != $openIdAttributes['namePerson/last']) {
-                                    UsersModel::saveUser($user->id, $user->username, $openIdAttributes['namePerson/first'], $openIdAttributes['namePerson/last'], null, $user->email, Common::toUiDate($user->birthdate));
+                                    UsersModel::saveUser($user->id, $user->username, $openIdAttributes['namePerson/first'], $openIdAttributes['namePerson/last'], null, $user->email, Common::toUiDate($user->birthdate), null, $user->gender);
                                 }
                                 parent::redirect(array("action"=>"welcome"));
                             } else {

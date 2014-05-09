@@ -65,13 +65,13 @@ class ModuleController {
             <?php
             if ($multiModuleContextMenu) {
                 ?>
-                {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleClass->getId()),false); ?>'); }},
-                {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleClass->getId()),false); ?>'); }},
+                {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleClass->getIncludeId()),false); ?>'); }},
+                {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleClass->getIncludeId()),false); ?>'); }},
                 <?php
                 if ($moduleClass->getId() != Context::getPage()->codeid) {
                     ?>
                     $.contextMenu.separator,
-                    {'Delete Module':function (menuItem,menu) { doIfConfirm('Wollen Sie wirklich dieses Modul l&ouml;schen?','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$moduleClass->getId()),false); ?>'); }}
+                    {'Delete Module':function (menuItem,menu) { doIfConfirm('<?php echo TranslationsModel::getTranslation("admin.pages.modules.delete.confirm"); ?>','<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"delete","id"=>$moduleClass->getId()),false); ?>'); }}
                     <?php
                 }
             }
@@ -168,7 +168,7 @@ class ModuleController {
             self::processAction();
         } else {
             $moduleClass = ModuleModel::getModuleClass(TemplateModel::getTemplateModule($moduleId));
-            $moduleClass->setParams(ModuleModel::getModuleParams($moduleId));
+            $moduleClass->setParams(ModuleModel::getModulesParams($moduleId));
             self::processModuleObject($moduleClass);
         }
     }    
