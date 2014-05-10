@@ -53,7 +53,10 @@ class Session {
                 
                 // start database session
                 Database::getDataSource();
-            
+                
+                // remove old sessions
+                SessionModel::cleanOldSessions();
+                
                 // check if session valid
                 $sessionValid = Session::isValid($sessionId,$sessionKey);
             }
@@ -82,6 +85,9 @@ class Session {
             // start database session
             Database::getDataSource();
 	    
+            // remove old sessions
+            SessionModel::cleanOldSessions();
+                
             // start a clean session in the model
             Context::clear();
             SessionModel::startSession($sessionId, $sessionKey, $_SERVER['REMOTE_ADDR']);
@@ -90,7 +96,7 @@ class Session {
     }
     
     static function setUserFromContext () {
-        SessionModel::setSessionUser($_SESSION["session.started"], Context::getUserId());
+        SessionModel::setSessionUser(session_id(), Context::getUserId());
     }
     
     static function clear () {

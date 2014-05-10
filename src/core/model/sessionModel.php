@@ -6,8 +6,8 @@ class SessionModel {
         $name = null;
         while (true) {
             $name = "guest_".Common::rand(1000,10000000);
-            $result = Database::query("select 1 from t_session where name = '$name'");
-            if (Database::numRows($result) == 0) {
+            $result = Database::queryAsObject("select 1 from t_session where name = '$name'");
+            if (empty($result)) {
                 return $name;
             }
         }
@@ -24,7 +24,7 @@ class SessionModel {
         $rSes = Database::queryAsObject("select 1 as sesexist from t_session where sessionid = '$sessionId' and sessionkey = '$sessionKey'");
         // update the last poll time
         if ($rSes != null && $rSes->sesexist == "1") {
-            $result = Database::query("update t_session set lastpolltime = now() where sessionid = '$sessionId' and sessionkey = '$sessionKey'");
+            Database::query("update t_session set lastpolltime = now() where sessionid = '$sessionId' and sessionkey = '$sessionKey'");
             return true;
         } else {
             // session not valid
@@ -55,11 +55,11 @@ class SessionModel {
             $userIdStr = "'".mysql_real_escape_string($userId)."'";
             $nameStr = "(select username from t_users where id = $userIdStr)";
         }
-        Database::query("update t_session set userid = $userIdStr, name = $nameStr where sessionid = '$sessionId'");
+        Database::query("update t_session set userid = $userIdStr, name = $nameStr, logintime = now() where sessionid = '$sessionId'");
     }
     
     static function cleanOldSessions () {
-        Database::query("delete from t_session where lastpolltime < now() - INTERVAL 20 MINUTE");
+        Database::query("delete from t_session where lastpolltime < now() - INTERVAL ".$GLOBALS['cmsSessionExpireTime']." MINUTE");
     }
 }
 
