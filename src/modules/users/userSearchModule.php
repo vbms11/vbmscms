@@ -1,9 +1,9 @@
 <?php
 
 require_once('core/plugin.php');
-require_once('modules/gallery/galleryModel.php');
+require_once('modules/users/userSearchBaseModule.php');
 
-class UserSearchModule extends XModule {
+class UserSearchModule extends UserSearchBaseModule {
     
     function onProcess () {
         
@@ -52,63 +52,35 @@ class UserSearchModule extends XModule {
         return array("user.search.edit","user.search.view");
     }
     
-    function getConditions () {
-        $conditions = array();
-        if (parent::post("simpleSearchButton") == "simpleSearchButton") {
-            $conditions["country"] = parent::post("country");
-            $conditions["agemin"] = parent::post("country");
-            $conditions["agemax"] = parent::post("country");
-            $conditions["country"] = parent::post("country");
-        }
-        
-    }
-    
     function printEditView () {
-        
-    }
-    
-    function printSearchPanel () {
         ?>
-        <div class="usersListSearch">
-            <div class="searchTypeTabs">
-                <ul>
-                    <li><a href="#simpleSearch"><?php echo parent::getTranslation('users.search.tab.simple'); ?></a></li>
-                </ul>
-                
-            </div>
-            <script>
-            $(".searchTypeTabs").tabs();
-            $(".searchToggle button").click(function(e){
-                $(".usersListSearch").toggle();
-            });
-            $(".usersSearchSearchButton").click(function(e){
-                var searchParams;
-                $("#simpleSearch select, #simpleSearch input").each(function(index,object){
-                    searchParams[$(object).attr("name")] = $(object).val();
-                });
-                $(".usersListContent").slideUp(function(){
-                    $.ajax({
-                        type: "POST",
-                        url: "<?php echo parent::ajaxLink(array("action"=>"searchResults")); ?>",
-                        data: searchParams
-                    }).done(function(msg) {
-                        $(".usersListContent").html(msg).slideDown();
-                    });
-                });
-                return false;
-            });
-            </script>
-        </div>
+        <form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
+            <hr/>
+            <button><?php echo parent::getTranslation("common.save"); ?></button>
+        </form>
         <?php
     }
     
     function printSearchView () {
+        
+        $countryOptions = array();
+        $countires = CountryModel::getCountries();
+        foreach ($countires as $country) {
+            $countryOptions[$country->geonameid] = htmlentities($country->name,ENT_QUOTES);
+        }
+        
+        $ageOptions = array();
+        for ($i=16; $i<100; $i++) {
+            $ageOptions[$i] = $i;
+        }
+        
         ?>
         <div class="usersSearchPanel">
-            <form method="get" action="<?php echo parent::link(array("action"=>"searchResults")); ?>">
-                <table>
-                <tr>
+            <form method="get" action="">
+                <input type="hidden" name="static" value="userSearchResult" />
+                <table><tr>
                     <td><?php echo parent::getTranslation('users.search.gender'); ?></td>
+                </tr><tr>
                     <td><?php 
                         $selectedValue = "0";
                         $user = Context::getUser();
@@ -121,26 +93,33 @@ class UserSearchModule extends XModule {
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.age'); ?></td>
-                    <td><?php InputFeilds::printSpinner("agemin", parent::get('agemin') ? parent::get('agemin') : 16); ?></td>
+                </tr><tr>
+                    <td><?php InputFeilds::printSelect("agemin", parent::get('agemin') ? parent::get('agemin') : 16, $ageOptions); ?></td>
+                </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.ageto'); ?></td>
-                    <td><?php InputFeilds::printSpinner("agemax", parent::get('agemax') ? parent::get('agemax') : 99); ?></td>
+                </tr><tr>
+                    <td><?php InputFeilds::printSelect("agemax", parent::get('agemax') ? parent::get('agemax') : 99, $ageOptions); ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.country'); ?></td>
-                    <td><?php InputFeilds::printSelect("country", parent::get('country'), array()); ?></td>
+                </tr><tr>
+                    <td><?php InputFeilds::printSelect("country", parent::get('country'),$countryOptions); ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.place'); ?></td>
-                    <td><?php InputFeilds::printSelect("place", parent::get('place'), array()); ?></td>
+                </tr><tr>
+                    <td><?php InputFeilds::printTextFeild("place", parent::get('place'), array()); ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.distance'); ?></td>
-                    <td><?php InputFeilds::printSelect("place", parent::get('place'), array()); ?></td>
+                </tr><tr>
+                    <td><?php InputFeilds::printSelect("distance", parent::get('distance'), $this->distanceOptions); ?></td>
                 </tr></table>
+                <hr/>
                 <div class="alignRight">
                     <button class="userSearchSearchButton jquiButton" value="simpleSearchButton" type="submit">
                         <?php echo parent::getTranslation('users.search.button.search'); ?>
                     </button>
                 </div>
             </form>
-</div>
+        </div>
         <?php    
     }
     

@@ -81,10 +81,10 @@ CREATE TABLE IF NOT EXISTS `t_backup` (
 --
 
 CREATE TABLE IF NOT EXISTS `t_cms_customer` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `userid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -141,6 +141,17 @@ CREATE TABLE IF NOT EXISTS `t_confirm` (
   `expiredate` date NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `t_country`
+--
+
+CREATE TABLE IF NOT EXISTS `t_country` (
+  `geonameid` varchar(20) COLLATE utf8_bin NOT NULL,
+  `name` varchar(100) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -401,7 +412,7 @@ CREATE TABLE IF NOT EXISTS `t_module` (
   `position` int(10) NOT NULL,
   `static` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=92 ;
 
 --
 -- Daten für Tabelle `t_module`
@@ -474,7 +485,8 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (86, 'User Message', 'userMessage', 'modules/users/userMessageModule.php', NULL, 'UserMessageModule', 1, 0, 0, 1),
 (87, 'User Search', 'userSearch', 'modules/users/userSearchModule.php', NULL, 'UserSearchModule', 1, 0, 0, 1),
 (88, 'Facebook Comments', 'facebookComments', 'modules/social/facebookCommentsModule.php', NULL, 'FacebookCommentsModule', 1, 0, 0, 0),
-(89, 'Facebook Like Button', 'facebookLikeButton', 'modules/social/facebookLikeButtonModule.php', NULL, 'FacebookLikeButtonModule', 1, 0, 0, 0);
+(89, 'Facebook Like Button', 'facebookLikeButton', 'modules/social/facebookLikeButtonModule.php', NULL, 'FacebookLikeButtonModule', 1, 0, 0, 0),
+(91, 'User Search Results', 'userSearchResult', 'modules/users/userSearchResultModule.php', 0x30, 'UserSearchResultModule', 1, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1124,7 +1136,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
   `tableid` int(10) NOT NULL,
   `viewed` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=11 ;
 
 --
 -- Daten für Tabelle `t_vdb_object`
@@ -1134,7 +1146,13 @@ INSERT INTO `t_vdb_object` (`id`, `tableid`, `viewed`) VALUES
 (1, 2, 0),
 (2, 2, 0),
 (3, 2, 0),
-(4, 2, 0);
+(4, 2, 0),
+(5, 2, 0),
+(6, 2, 0),
+(7, 2, 0),
+(8, 2, 0),
+(9, 2, 0),
+(10, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -1225,7 +1243,172 @@ INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
 (4, 8, ''),
 (4, 55, ''),
 (4, 24, ''),
-(4, 49, '');
+(4, 49, ''),
+(5, 1, ''),
+(5, 2, ''),
+(5, 3, ''),
+(5, 4, ''),
+(5, 5, ''),
+(5, 6, ''),
+(5, 7, ''),
+(5, 8, ''),
+(5, 55, ''),
+(5, 24, ''),
+(5, 49, ''),
+(6, 1, ''),
+(6, 2, ''),
+(6, 3, ''),
+(6, 4, ''),
+(6, 5, ''),
+(6, 6, ''),
+(6, 7, ''),
+(6, 8, ''),
+(6, 55, ''),
+(6, 24, ''),
+(6, 49, ''),
+(7, 1, ''),
+(7, 2, ''),
+(7, 3, ''),
+(7, 4, ''),
+(7, 5, ''),
+(7, 6, ''),
+(7, 7, ''),
+(7, 8, ''),
+(7, 55, ''),
+(7, 24, ''),
+(7, 49, ''),
+(8, 1, ''),
+(8, 2, ''),
+(8, 3, ''),
+(8, 4, ''),
+(8, 5, ''),
+(8, 6, ''),
+(8, 7, ''),
+(8, 8, ''),
+(8, 55, ''),
+(8, 24, ''),
+(8, 49, ''),
+(9, 1, ''),
+(9, 2, ''),
+(9, 3, ''),
+(9, 4, ''),
+(9, 5, ''),
+(9, 6, ''),
+(9, 7, ''),
+(9, 8, ''),
+(9, 55, ''),
+(9, 24, ''),
+(9, 49, ''),
+(1, 1, ''),
+(1, 2, ''),
+(1, 3, ''),
+(1, 4, ''),
+(1, 5, ''),
+(1, 6, ''),
+(1, 7, ''),
+(1, 8, ''),
+(1, 55, ''),
+(1, 24, ''),
+(1, 49, ''),
+(2, 1, ''),
+(2, 2, ''),
+(2, 3, ''),
+(2, 4, ''),
+(2, 5, ''),
+(2, 6, ''),
+(2, 7, ''),
+(2, 8, ''),
+(2, 55, ''),
+(2, 24, ''),
+(2, 49, ''),
+(3, 1, ''),
+(3, 2, ''),
+(3, 3, ''),
+(3, 4, ''),
+(3, 5, ''),
+(3, 6, ''),
+(3, 7, ''),
+(3, 8, ''),
+(3, 55, ''),
+(3, 24, ''),
+(3, 49, ''),
+(4, 1, ''),
+(4, 2, ''),
+(4, 3, ''),
+(4, 4, ''),
+(4, 5, ''),
+(4, 6, ''),
+(4, 7, ''),
+(4, 8, ''),
+(4, 55, ''),
+(4, 24, ''),
+(4, 49, ''),
+(5, 1, ''),
+(5, 2, ''),
+(5, 3, ''),
+(5, 4, ''),
+(5, 5, ''),
+(5, 6, ''),
+(5, 7, ''),
+(5, 8, ''),
+(5, 55, ''),
+(5, 24, ''),
+(5, 49, ''),
+(6, 1, ''),
+(6, 2, ''),
+(6, 3, ''),
+(6, 4, ''),
+(6, 5, ''),
+(6, 6, ''),
+(6, 7, ''),
+(6, 8, ''),
+(6, 55, ''),
+(6, 24, ''),
+(6, 49, ''),
+(7, 1, ''),
+(7, 2, ''),
+(7, 3, ''),
+(7, 4, ''),
+(7, 5, ''),
+(7, 6, ''),
+(7, 7, ''),
+(7, 8, ''),
+(7, 55, ''),
+(7, 24, ''),
+(7, 49, ''),
+(8, 1, ''),
+(8, 2, ''),
+(8, 3, ''),
+(8, 4, ''),
+(8, 5, ''),
+(8, 6, ''),
+(8, 7, ''),
+(8, 8, ''),
+(8, 55, ''),
+(8, 24, ''),
+(8, 49, ''),
+(9, 1, ''),
+(9, 2, ''),
+(9, 3, ''),
+(9, 4, ''),
+(9, 5, ''),
+(9, 6, ''),
+(9, 7, ''),
+(9, 8, ''),
+(9, 55, ''),
+(9, 24, ''),
+(9, 49, ''),
+(10, 1, ''),
+(10, 2, ''),
+(10, 3, ''),
+(10, 4, ''),
+(10, 5, ''),
+(10, 6, ''),
+(10, 7, ''),
+(10, 8, ''),
+(10, 55, ''),
+(10, 24, ''),
+(10, 49, '');
 
 -- --------------------------------------------------------
 

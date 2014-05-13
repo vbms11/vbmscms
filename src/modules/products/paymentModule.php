@@ -388,10 +388,10 @@ class PaymentModule extends XModule {
                 <?php
                 InputFeilds::printSelect("paymentMethod", $_GET['type'], array(
                     ""                      => "",
-                    self::type_paypal       => parent::getTranslation("payments.payment.paypall",false),
-                    self::type_creditcard   => parent::getTranslation("payments.payment.creditcard",false),
-                    self::type_transfer     => parent::getTranslation("payments.payment.transfer",false),
-                    self::type_debit        => parent::getTranslation("payments.payment.debit",false)),
+                    self::type_paypal       => parent::getTranslation("payments.payment.paypall",null,false),
+                    self::type_creditcard   => parent::getTranslation("payments.payment.creditcard",null,false),
+                    self::type_transfer     => parent::getTranslation("payments.payment.transfer",null,false),
+                    self::type_debit        => parent::getTranslation("payments.payment.debit",null,false)),
                     null, "selectPaymentType();");
                 ?>
                 </td></tr></table>

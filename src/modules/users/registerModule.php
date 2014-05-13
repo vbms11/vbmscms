@@ -62,7 +62,8 @@ class RegisterModule extends XModule {
                     if (count($userValidationMessages) == 0 && count($addressValidationMessages) == 0) {
                         
                         $userId = UsersModel::saveUser(null, $username, $firstName, $lastName, $password, $email, $birthDate, null, $gender);
-                        if (count(parent::param("userRoles")) > 0) {
+                        $userRoles = parent::param("userRoles");
+                        if (!empty($userRoles)) {
                             foreach (parent::param("userRoles") as $roleId) {
                                 RolesModel::addCustomRoleToUser($roleId,$userId);
                             }

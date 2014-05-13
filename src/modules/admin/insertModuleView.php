@@ -56,16 +56,16 @@ class InsertModuleView extends XModule {
         <h1><?php echo parent::getTranslation("insertModule.insert.title"); ?></h1>
         <form method="post" action="<?php echo parent::link(array("action"=>"doInsertModule","selectedPage"=>parent::get("selectedPage"), "area"=>parent::get("area"), "position"=>parent::get("position"))); ?>">
 
-            <table class="expand"><tr><td class="nowrap">
+            <table class="formTable"><tr><td>
                 <?php echo parent::getTranslation("insertModule.insert.category"); ?>
-            </td><td class="expand">
+            </td><td>
                 <?php
                 $categorys = Common::toMap(ModuleModel::getModuleCategorys(), "id", "name");
                 InputFeilds::printSelect("category", null, $categorys);
                 ?>
-            </td></tr><tr><td class="nowrap">
+            </td></tr><tr><td>
                 <?php echo parent::getTranslation("insertModule.insert.module"); ?>
-            </td><td class="expand">
+            </td><td>
                 <?php
                 $modulesInMenu = ModuleModel::getModulesInMenu();
                 $modules = Common::toMap($modulesInMenu, "id", "name");

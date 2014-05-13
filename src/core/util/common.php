@@ -214,7 +214,7 @@ class InputFeilds {
     
     static function printSelect ($name,$selectedValue,$valueNameArray,$style=null,$onChange=null) {
         $selectedValue = Common::htmlEscape($selectedValue);
-        echo "<select class='expand' id='".Common::htmlEscape($name)."' name='".Common::htmlEscape($name)."'";
+        echo "<select id='".Common::htmlEscape($name)."' name='".Common::htmlEscape($name)."'";
         if ($style != null)
             echo " style='$style'";
         if ($onChange != null)

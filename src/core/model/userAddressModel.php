@@ -16,15 +16,20 @@ class UserAddressModel {
         
         $coordinates = null;
         
-        $googleUrl = "maps.google.com/maps/api/geocode/json?sensor=false&address=".urlencode($address);
+        $googleUrl = "http://maps.google.com/maps/api/geocode/json?sensor=false&address=".urlencode($address);
         $json = Http::getContent($googleUrl);
         
         if ($json != null) {
             $obj = json_decode($json);
         
-            if ($obj['status'] == 'OK') {
-                $location = $obj['results']['geometry']['location'];
-                $coordinates = array('x'=>$location['lat'],'y'=>$location['lng']);
+            if ($obj->status == 'OK') {
+                
+                if (!empty($obj->results[0])) {
+                    
+                    $location = $obj->results[0]->geometry->location;
+                    $coordinates->x = $location->lat;
+                    $coordinates->y = $location->lng;
+                }
             }
         }
         
@@ -67,7 +72,7 @@ class UserAddressModel {
     }
     
     static function updateCoordinates ($addressId) {
-        $address = self::getAddress($addressId);
+        $address = self::getUserAddress($addressId);
         $str_address = $address->country." ".$address->city." ".$address->address;
         $coordinates = self::getCoordinatesFromAddress($str_address);
         
@@ -90,6 +95,11 @@ class UserAddressModel {
             vectory = '$y', 
             vectorz = '$z' 
             where id = '$addressId'");
+    }
+    
+    static function getUserAddress ($addressId) {
+        $addressId = mysql_real_escape_string($addressId);
+        return Database::queryAsObject("select * from t_user_address where id = '$addressId'");
     }
     
     static function createUserAddress ($userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode) {

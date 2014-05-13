@@ -208,6 +208,9 @@ class Context {
     
     static function getSiteId () {
         $site = self::getSite();
+        if (!isset($site->siteid)) {
+            return null;
+        }
         return $site->siteid;
     }
 

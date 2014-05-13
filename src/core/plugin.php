@@ -174,7 +174,7 @@ abstract class XModule implements IModule, ITranslatable {
     static function getTranslations () {
         return array();
     }
-    static function getTranslation ($key,$escape=true,$lang=null,$replace=null) {
+    static function getTranslation ($key,$replace=null,$escape=true,$lang=null,$replace=null) {
         return TranslationsModel::getTranslation($key,$lang,$escape,$replace);
     }
     function getRoles () {

@@ -1,9 +1,15 @@
 
+.usersSearchPanel input, .usersSearchPanel select {
+    width: 100%;
+}
+
+
+
 /*  */
 .userList {
 }
 .usersSearchUserDiv {
-    
+    float: left;
 }
 .usersSearchUserImage {
     

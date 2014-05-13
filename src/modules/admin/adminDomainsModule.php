@@ -12,7 +12,7 @@ class AdminDomainsModule extends XModule {
                     DomainsModel::createDomain(parent::post("domainName"), Context::getSiteId(), parent::post("domainTrackerScript"));
                 }
                 break;
-            case "editDomain":
+            case "editSaveDomain":
                 if (Context::hasRole("domains.edit")) {
                     DomainsModel::updateDomain(parent::get("id"), parent::post("domainName"), Context::getSiteId(), parent::post("domainTrackerScript"));
                 }
@@ -119,7 +119,7 @@ class AdminDomainsModule extends XModule {
     function renderEditView ($domain) {
         ?>
         <h3><?php echo parent::getTranslation("admin.domains.register"); ?></h3>
-        <form method="post" action="<?php echo parent::link(array("action"=>"editDomain","id"=>$domain->id)) ?>">
+        <form method="post" action="<?php echo parent::link(array("action"=>"editSaveDomain","id"=>$domain->id)) ?>">
             <table class="formTable"><tr><td>
                 <label for="domainName"><?php echo parent::getTranslation("admin.domains.register.name"); ?></label>
             </td><td>

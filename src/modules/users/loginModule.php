@@ -22,6 +22,9 @@ class LoginModule extends XModule {
                 parent::focus();
                 break;
             case "save":
+                parent::param("networks", parent::post("networks") == "1" ? true : false);
+                parent::param("register", parent::post("register") == "1" ? true : false);
+                parent::param("reset", parent::post("reset") == "1" ? true : false);
                 parent::blur();
                 break;
             case "facebookLogin":
@@ -145,7 +148,9 @@ class LoginModule extends XModule {
                 $this->printBadView();
                 break;
             case "forgot":
-                $this->printForgotView();
+                if (parent::param("reset")) {
+                    $this->printForgotView();
+                }
                 break;
             default:
                 if (Context::isLoggedIn()) {
@@ -166,7 +171,24 @@ class LoginModule extends XModule {
     }
     
     function printEditView () {
-        
+        ?>
+        <form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
+            <table class="formTable"><tr>
+                <td><?php echo parent::getTranslation("login.edit.networks"); ?></td>
+                <td><?php InputFeilds::printCheckbox("networks"); ?></td>
+            </tr><tr>
+                <td><?php echo parent::getTranslation("login.edit.register"); ?></td>
+                <td><?php InputFeilds::printCheckbox("register"); ?></td>
+            </tr><tr>
+                <td><?php echo parent::getTranslation("login.edit.reset"); ?></td>
+                <td><?php InputFeilds::printCheckbox("reset"); ?></td>
+            </tr></table>
+            <hr/>
+            <div class="alignRight">
+                <button class="jquiButton" type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+            </div>
+        </form>
+        <?php
     }
     
     function printForgotView () {
@@ -245,12 +267,20 @@ class LoginModule extends XModule {
         ?>
         <div class="panel loginPanel">
             <form method="post" action="<?php echo parent::link(array("action"=>"login")); ?>">
-                <table class="formTable"><tr><td>
-                    <?php echo parent::getTranslation("login.openId"); ?>
-                </td><td>
-                    <a class="googleLoginButton" href="<?php echo parent::link(array("action"=>"googleLogin"),true,true); ?>"></a>
-                    <a class="facebookLoginButton" href="<?php echo parent::link(array("action"=>"facebookLogin"),true,true); ?>"></a>
-                </td></tr><tr><td>
+                <table class="formTable">
+                    <?php
+                    if (parent::param("networks")) {
+                        ?>
+                        <tr><td>
+                            <?php echo parent::getTranslation("login.openId"); ?>
+                        </td><td>
+                            <a class="googleLoginButton" href="<?php echo parent::link(array("action"=>"googleLogin"),true,true); ?>"></a>
+                            <a class="facebookLoginButton" href="<?php echo parent::link(array("action"=>"facebookLogin"),true,true); ?>"></a>
+                        </td></tr>
+                        <?php
+                    }
+                    ?>
+                <tr><td>
                     <?php echo parent::getTranslation("login.username"); ?>
                 </td><td>
                     <input type="text" class="expand" name="username" />
@@ -262,8 +292,18 @@ class LoginModule extends XModule {
                 <hr/>
                 <div class="alignRight">
                     <button type="submit" class="jquiButton" id="login"><?php echo parent::getTranslation("login.login"); ?></button>
-                    <button type="button" class="jquiButton" id="register" onclick="callUrl('<?php echo parent::staticLink("register"); ?>');"><?php echo parent::getTranslation("login.register"); ?></button>
-                    <button type="button" class="jquiButton" id="forgot" onclick="callUrl('<?php echo parent::link(array("action"=>"forgot")); ?>');"><?php echo parent::getTranslation("login.reset"); ?></button>
+                    <?php
+                    if (parent::param("register")) {
+                        ?>
+                        <button type="button" class="jquiButton" id="register" onclick="callUrl('<?php echo parent::staticLink("register"); ?>');"><?php echo parent::getTranslation("login.register"); ?></button>
+                        <?php
+                    }
+                    if (parent::param("reset")) {
+                        ?>
+                        <button type="button" class="jquiButton" id="forgot" onclick="callUrl('<?php echo parent::link(array("action"=>"forgot")); ?>');"><?php echo parent::getTranslation("login.reset"); ?></button>
+                        <?php
+                    }
+                    ?>
                 </div>
             </form>
         </div>

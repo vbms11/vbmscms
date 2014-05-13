@@ -7,9 +7,11 @@ require_once 'core/context.php';
 
 class UsersModel {
     
-    static function search ($ageMin, $ageMax, $country, $place, $distance) {
+    static function search ($ageMin, $ageMax, $countryGeonameId, $place, $distance) {
         
-        $coordinates = UserAddressModel::getCoordinatesFromAddress("$country $place");
+        $country = CountryModel::getCountryByGeonameId($countryGeonameId);
+        
+        $coordinates = UserAddressModel::getCoordinatesFromAddress($country->name." ".$place);
         
         $radiusOfEarthKM = 6371;
         $x = (sin($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
@@ -22,15 +24,15 @@ class UsersModel {
         
         return Database::queryAsArray("select 
             u.*, 
-            year(now()) - year(birthdate) as age, 
-            math.sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) as distance 
+            year(now()) - year(u.birthdate) as age, 
+            sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) as distance,  
             a.country as country, a.city as city 
-            from t_users 
+            from t_users u 
             join t_user_address a on u.id = a.userid 
             where 
-            distance <= '$distance' and 
-            age >= '$ageMin' and 
-            age <= '$ageMax' 
+            sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) <= '$distance' and 
+            year(now()) - year(u.birthdate) >= '$ageMin' and 
+            year(now()) - year(u.birthdate) <= '$ageMax' 
             order by distance asc");
     }
     

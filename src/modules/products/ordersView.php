@@ -344,7 +344,7 @@ class OrdersView extends XModule {
         echo "<table>";
         $orderAttributes = OrdersModel::getOrderAttributes($order->id);
         foreach ($orderAttributes as $orderAttribute) {
-            echo "<tr><td>".TranslationsModel::getTranslation($orderAttribute->name).": </td><td>".($orderAttribute->value)."</td></tr>";
+            echo "<tr><td>".$orderAttribute->name.": </td><td>".($orderAttribute->value)."</td></tr>";
         }
         echo "</table>";
         ?>
