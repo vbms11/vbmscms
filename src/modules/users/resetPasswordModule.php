@@ -63,20 +63,19 @@ class LoginModule extends XModule {
     function printResetPasswordView () {
 	?>
         <div class="panel resetPasswordPanel">
+            <h1><?php echo parent::getTranslation("reset.title"); ?></h1>
+            <p><?php echo parent::getTranslation("reset.description"); ?></p>
             <form method="post" action="<?php echo parent::link(array("action"=>"reset")); ?>">
-            	<table width="100%"><tr><td class="contract nowrap">
-                	Enter your email:
-           	</td><td class="expand">
-                	<input class="textbox" type="textbox" name="email" />
+            	<table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("reset.label.email"); ?>
+           	</td><td>
+                    <input type="textbox" name="<?php echo parent::alias("email"); ?>" />
          	</td></tr></table>
            	<hr/>
                 <div class="alignRight">
-                	<button type="submit" id="reset">Reset Password</button>
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("reset.botton.submit"); ?></button>
                 </div>
             </form>
-	    <script>
-            $(".resetPasswordPanel button").button();
-            </script>
         </div>
         <?php
     }
@@ -84,33 +83,30 @@ class LoginModule extends XModule {
     function printEditView () {
         ?>
         <div class="panel resetPasswordPanel">
-		<form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
-			<div>
-				Email sender
-			</div>
-			<div>
-				<?php InputFeilds::printTextFeild("from",parent::param("from")); ?>
-			</div>
-			<div>
-				Email subject
-			</div>
-			<div>
-				<?php InputFeilds::printTextFeild("subject",parent::param("subject")); ?>
-			</div>
-			<div>
-				Reset passwod email text
-			</div>
-			<div>
-				InputFeilds::printHtmlEditor("resetConfirmText","<?php echo parent::param("resetConfirmText"); ?>");
-			</div>
-			<hr/>
-			<div class="alignRight">
-				<button type="submit">Save</button>
-			</div>
-			<script>
-			$(".resetPasswordPanel .alignRight button").button();
-			</script>
-		</form>
+            <form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
+                <div>
+                    Email sender
+                </div>
+                <div>
+                    <?php InputFeilds::printTextFeild("from",parent::param("from")); ?>
+                </div>
+                <div>
+                    Email subject
+                </div>
+                <div>
+                    <?php InputFeilds::printTextFeild("subject",parent::param("subject")); ?>
+                </div>
+                <div>
+                    Reset passwod email text. &tl;password&gt; is replaced with the password, 
+                </div>
+                <div>
+                    InputFeilds::printHtmlEditor("resetConfirmText","<?php echo parent::param("resetConfirmText"); ?>");
+                </div>
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
+                </div>
+            </form>
         </div>
         <?php
     }

@@ -189,7 +189,7 @@ class UserWallModule extends XModule {
         if (!empty($userId)) {
             $wallPosts = UserWallModel::getUserWallPosts($userId);
         }
-        $userProfileImage = UsersModel::getUserImageSmallUrl($userId);
+        $currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
         
         ?>
         <div class="panel usersWallPanel">
@@ -199,7 +199,7 @@ class UserWallModule extends XModule {
                 ?>
                 <div class="userWallPostCommentBox">
                     <div class="userWallPostImage">
-                        <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+                        <img src="<?php echo $currentUserProfileImage; ?>" alt="" title="" />
                     </div>
                     <div class="userWallPostBody">
                         <form method="post" action="<?php echo parent::link(array("action"=>"comment","userId"=>$userId)); ?>">
@@ -227,6 +227,7 @@ class UserWallModule extends XModule {
                     
                     $srcUser = UsersModel::getUser($wallPost->srcuserid);
                     $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
+                    $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
                     ?>
                     <div class="userWallPostThread">
                         <div class="userWallPost">

@@ -16,6 +16,8 @@ class UserAddressModel {
         
         $coordinates = null;
         
+        $address = htmlentities($address);
+        
         $googleUrl = "http://maps.google.com/maps/api/geocode/json?sensor=false&address=".urlencode($address);
         $json = Http::getContent($googleUrl);
         

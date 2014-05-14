@@ -8,27 +8,57 @@ require_once('core/plugin.php');
 require_once('modules/forum/forumPageModel.php');
 
 class UserMessageModule extends XModule {
-
+    
+    const modeSelectedUser = 1;
+    const modeCurrentUser = 2;
+    
     function onProcess () {
         
-        switch ($this->getAction()) {
+        switch (parent::getAction()) {
+            case "save":
+                if (Context::hasRole("message.edit")) {
+                    parent::param("mode",parent::post("mode"));
+                }
+                break;
+            case "edit":
+                if (Context::hasRole("message.edit")) {
+                    parent::focus();
+                }
+                break;
             case "deleteMessage":
-                ForumPageModel::deletePm(parent::get("id"));
-                setFocusedArea(null);
-                NavigationModel::redirectPage(Context::getPageId());
+                if (Context::hasRole(array("message.inbox"))) {
+                    ForumPageModel::deletePm(parent::get("id"));
+                    parent::blur();
+                    parent::redirect();
+                }
                 break;
             case "send":
-                $userNameEnd = stripos($_POST['dstuser'], "-");
-                if ($userNameEnd == -1) {
-                    $userName = $_POST['dstuser'];
-                } else {
-                    $userName = trim(substr($_POST['dstuser'], 0, $userNameEnd-1));
+                if (Context::hasRole(array("message.inbox"))) {
+                    ForumPageModel::savePm(Context::getUserId(), Context::getSelectedUserId(), parent::post('subject'), parent::post('message'));
+                    parent::blur();
+                    parent::redirect(array("action"=>"sent"));
                 }
-                $user = UsersModel::getUserByUserName($userName);
-                ForumPageModel::savePm(Context::getUserId(), $user->id, $_POST['subject'], $_POST['message']);
-                setFocusedArea(null);
-                NavigationModel::redirectPage(Context::getPageId());
                 break;
+            case "doReply":
+                if (Context::hasRole(array("message.inbox"))) {
+                    ForumPageModel::savePm(Context::getUserId(), parent::get("dstUserId"), parent::post('subject'), parent::post('message'));
+                    parent::blur();
+                    parent::redirect(array("action"=>"sent"));
+                }
+                break;
+            case "view":
+                ForumPageModel::viewPm(parent::get("id"));
+                break;
+            case "reply":
+                break;
+            case "sent":
+                break;
+            default:
+                if (parent::param("mode") == self::modeSelectedUser && parent::get("userId")) {
+                    Context::setSelectedUser(parent::get("userId"));
+                } else if (parent::param("mode") == self::modeCurrentUser) {
+                    Context::setSelectedUser(Context::getUserId());
+                }
         }
     }
 
@@ -37,65 +67,125 @@ class UserMessageModule extends XModule {
      */
     function onView () {
         
-        if (Context::hasRole(array("message.inbox"))) {
-            switch ($this->getAction()) {
-                case "new":
+        switch (parent::getAction()) {
+            case "edit":
+                if (Context::hasRole("message.edit")) {
+                    $this->printEditView();
+                }
+            case "new":
+                if (Context::hasRole(array("message.inbox"))) {
                     $this->printCreateMessageView();
-                    break;
-                default:
-                    $this->printMainView();
-            }
+                }
+                break;
+            case "sent":
+                $this->printSentView();
+                break;
+            case "view":
+                $this->printViewView();
+                break;
+            case "reply":
+                $this->printReplyView();
+                break;
+            default:
+                if (Context::hasRole(array("message.inbox"))) {
+                    if (Context::getSelectedUserId() == Context::getUserId() || Context::hasRoleGroup("admin")) {
+                        $this->printMainView();
+                    }
+                }
         }
     }
     
     function getRoles () {
-        return array("message.inbox");
+        return array("message.inbox","message.edit");
     }
     
     function getStyles () {
-        return array("css/message.css");
+        return array("css/userMessages.css");
     }
-
+    
+    function printEditView () {
+        ?>
+        <div class="panel userMessageEditPanel">
+            <form method="post" action="<?php echo parent::link(array("action"=>"edit")); ?>">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("userMessage.edit.mode"); ?>
+                </td><td>
+                    <?php InputFeilds::printSelect("mode", parent::param("mode"), array(self::modeCurrentUser=>"Current User Messages",self::modeSelectedUser=>"Selected User Messages")); ?>
+                </td></tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
+                </div>
+            </form>
+        </div>
+        <?php
+    }
+    
     function printMainView () {
         
         $messages = ForumPageModel::getPms(Context::getUserId());
         ?>
         <div class="panel userMessagePanel">
             <h1><?php echo parent::getTranslation("userMessage.title"); ?></h1>
-            <p><?php echo parent::getTranslation("userMessage.description"); ?></p>
-            <table class="resultTable">
-                <thead><tr><td>
-                    <?php echo parent::getTranslation("userMessage.table.user"); ?>
-                </td><td>
-                    <?php echo parent::getTranslation("userMessage.table.title"); ?>
-                </td><td>
-                    <?php echo parent::getTranslation("userMessage.table.date"); ?>
-                </td><td class="contract">
-                    <?php echo parent::getTranslation("userMessage.table.tools"); ?>
-                </td></tr></thead>
-                <tbody>
-                    <?php
-                    foreach ($messages as $message) {
-                        ?>
-                        <tr><td>
-                            <?php echo htmlentities($message->srcusername); ?>
-                        </td><td>
-                            <?php echo htmlentities($message->subject); ?>
-                        </td><td>
-                            <?php echo htmlentities($message->senddate); ?>
-                        </td><td class="contract">
-                            <a onclick="return confirm('<?php echo parent::getTranslation("userMessage.table.delete"); ?>')" href="<?php echo parent::link(array("action"=>"deleteMessage","id"=>$message->id)); ?>"><img src="resource/img/delete.png" alt=""/></a>
-                        </td></tr>
+            <?php
+            if (empty($messages)) {
+                ?>
+                <p><?php echo parent::getTranslation("userMessage.noMessages"); ?></p>
+                <?php
+            } else {
+                ?>
+                <p><?php echo parent::getTranslation("userMessage.description"); ?></p>
+                <table class="resultTable" cellspacing="0">
+                    <thead><tr><td class="contract nowrap">
+                        <?php echo parent::getTranslation("userMessage.table.user"); ?>
+                    </td><td>
+                        <?php echo parent::getTranslation("userMessage.table.title"); ?>
+                    </td><td class="contract">
+                        <?php echo parent::getTranslation("userMessage.table.status"); ?>
+                    </td><td class="contract">
+                        <?php echo parent::getTranslation("userMessage.table.date"); ?>
+                    </td><td class="contract">
+                        <?php echo parent::getTranslation("userMessage.table.tools"); ?>
+                    </td></tr></thead>
+                    <tbody>
                         <?php
-                    }
-                    ?>
-            </tbody></table>
+                        foreach ($messages as $message) {
+                            ?>
+                            <tr><td>
+                                <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$message->srcuser)); ?>">
+                                    <img alt="" src="<?php echo UsersModel::getUserImageSmallUrl($message->srcuser); ?>" />
+                                </a>
+                                <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$message->srcuser)); ?>">
+                                    <?php echo htmlentities($message->srcusername); ?>
+                                </a>
+                            </td><td>
+                                <a href="<?php echo parent::link(array("action"=>"view","id"=>$message->id)); ?>">
+                                    <?php echo htmlentities($message->subject); ?>
+                                </a>
+                            </td><td>
+                                <?php
+                                if ($message->opened != "1") {
+                                    echo parent::getTranslation("userMessage.table.new");
+                                }
+                                ?>
+                            </td><td>
+                                <?php echo htmlentities($message->senddate); ?>
+                            </td><td>
+                                <a onclick="return confirm('<?php echo parent::getTranslation("userMessage.table.delete"); ?>')" href="<?php echo parent::link(array("action"=>"deleteMessage","id"=>$message->id)); ?>"><img src="resource/img/delete.png" alt=""/></a>
+                            </td></tr>
+                            <?php
+                        }
+                        ?>
+                </tbody></table>
+                <?php
+            }
+            ?>
         </div>
         <?php
     }
     
-    function printCreateMessageView ($userId) {
-        $user = UsersModel::getUser($userId);
+    function printCreateMessageView () {
+        $user = UsersModel::getUser(Context::getSelectedUserId());
         ?>
         <div class="panel createUserMessagePanel">
             <h1><?php echo parent::getTranslation("userMessage.create.title"); ?></h1>
@@ -113,10 +203,94 @@ class UserMessageModule extends XModule {
                     <?php echo parent::getTranslation("userMessage.create.message"); ?>
                 </td><td>
                     <textarea name="message" cols="4" rows="4"></textarea>
-                </td></tr>
+                </td></tr></table>
                 <hr/>
                 <div class="alignRight">
                     <button type="submit" class="jquiButton"><?php echo parent::getTranslation("userMessage.create.send"); ?></button> 
+                </div>
+            </form>
+        </div>
+        <?php
+    }
+    
+    function printSentView () {
+        ?>
+        <div class="panel sentUserMessagePanel">
+            <h1><?php echo parent::getTranslation("userMessage.sent.title"); ?></h1>
+            <p><?php echo parent::getTranslation("userMessage.sent.description"); ?></p>
+        </div>
+        <?php
+    }
+    
+    function printViewView () {
+        $message = ForumPageModel::getPm(parent::get("id"));
+        $srcUserImageUrl = UsersModel::getUserImageSmallUrl($message->srcuser);
+        ?>
+        <div class="panel viewUserMessagePanel">
+            <h1><?php echo parent::getTranslation("userMessage.view.title"); ?></h1>
+            <p><?php echo parent::getTranslation("userMessage.view.description"); ?></p>
+            <hr/>
+            <form name="viewMessageForm" method="post" action="<?php echo parent::link(array("action"=>"reply","id"=>parent::get("id"))); ?>">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("userMessage.view.fromUser"); ?>
+                </td><td>
+                    <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$message->srcuser)); ?>">
+                        <img alt="<?php echo htmlentities($message->srcusername,ENT_QUOTES); ?>" src="<?php echo $srcUserImageUrl; ?>">
+                    </a> 
+                    <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$message->srcuser)); ?>">
+                        <?php echo htmlentities($message->srcusername); ?>
+                    </a>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("userMessage.view.subject"); ?>
+                </td><td>
+                    <?php echo htmlentities($message->subject); ?>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("userMessage.view.message"); ?>
+                </td><td>
+                    <?php echo htmlentities($message->message); ?>
+                </td></tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("userMessage.create.reply"); ?></button>
+                    <button type="button" class="jquiButton" id="deleteMessage"><?php echo parent::getTranslation("userMessage.create.delete"); ?></button>
+                    <button type="button" class="jquiButton" id="backToInbox"><?php echo parent::getTranslation("userMessage.create.back"); ?></button>
+                </div>
+            </form>
+            <script>
+            $("#deleteMessage").click(function(){
+                callUrl("<?php echo parent::link(array("action"=>"deleteMessage","id"=>$message->id),false); ?>");
+            });
+            $("#backToInbox").click(function(){
+                callUrl("<?php echo parent::link(); ?>");
+            });
+            </script>
+        </div>
+        <?php
+    }
+    
+    function printReplyView () {
+        $message = ForumPageModel::getPm(parent::get("id"));
+        ?>
+        <div class="panel replyUserMessagePanel">
+            <h1><?php echo parent::getTranslation("userMessage.reply.title"); ?></h1>
+            <p><?php echo parent::getTranslation("userMessage.reply.description"); ?></p>
+            <form method="post" action="<?php echo parent::link(array("action"=>"doReply","dstUserId"=>$message->srcuser)); ?>">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("userMessage.reply.toUser"); ?>
+                </td><td>
+                    <input type="textbox" name="dstuser" value="<?php echo htmlentities($message->srcusername); ?>" disabled="true" />
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("userMessage.reply.subject"); ?>
+                </td><td>
+                    <input type="textbox" name="subject" value="<?php echo "RE: ".htmlentities($message->subject, ENT_QUOTES); ?>" />
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("userMessage.reply.message"); ?>
+                </td><td>
+                    <textarea name="message" cols="4" rows="4"></textarea>
+                </td></tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("userMessage.reply.send"); ?></button> 
                 </div>
             </form>
         </div>

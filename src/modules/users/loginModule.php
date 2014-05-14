@@ -51,7 +51,7 @@ class LoginModule extends XModule {
                                 $gender = $user_profile['gender'] == "male" ? "1" : "0";
                                 UsersModel::saveUser($userByEmail->id, $userByEmail->username, $user_profile['first_name'], $user_profile['last_name'], null, $user_profile['email'], Common::toUiDate($userByEmail->birthdate), null, $gender);
                             }
-                            parent::redirect(array("action"=>"welcome"));
+                            NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
                         } else {
                             $_SESSION['register.user'] = $user_profile;
                             NavigationModel::redirectStaticModule("register",array("type"=>"facebook"));
@@ -93,7 +93,7 @@ class LoginModule extends XModule {
                                     $user->lastname != $openIdAttributes['namePerson/last']) {
                                     UsersModel::saveUser($user->id, $user->username, $openIdAttributes['namePerson/first'], $openIdAttributes['namePerson/last'], null, $user->email, Common::toUiDate($user->birthdate), null, $user->gender);
                                 }
-                                parent::redirect(array("action"=>"welcome"));
+                                NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
                             } else {
                                 $_SESSION['register.user'] = $openIdAttributes;
                                 NavigationModel::redirectStaticModule("register",array("type"=>"google"));
@@ -114,7 +114,7 @@ class LoginModule extends XModule {
                     if (NavigationModel::hasNextAction()) {
                         NavigationModel::redirectNextAction();
                     } else {
-                        parent::redirect(array("action"=>"welcome"));
+                        NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
                     }
                 } else {
                     parent::focus();
@@ -138,20 +138,23 @@ class LoginModule extends XModule {
             case "edit":
                 $this->printEditView();
                 break;
-            case "logout":
-                $this->printLoggedOutView();
-                break;
+            //case "logout":
+            //    $this->printLoggedOutView();
+            //    break;
             case "welcome":
                 $this->printLoggedInView();
                 break;
-            case "bad":
-                $this->printBadView();
-                break;
+            //case "bad":
+            //    $this->printBadView();
+            //    break;
             case "forgot":
                 if (parent::param("reset")) {
                     $this->printForgotView();
                 }
                 break;
+            case "bad":
+                $this->printBadView();
+            case "logout":
             default:
                 if (Context::isLoggedIn()) {
                     $this->printLogoutConfirmView();

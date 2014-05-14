@@ -20,7 +20,7 @@ class ForumPageModel {
     
     static function viewPm ($pmId) {
         $pmId = mysql_real_escape_string($pmId);
-        Database::query("update t_message set opened = '1' where id = '$pmId'");
+        Database::query("update t_user_message set opened = '1' where id = '$pmId'");
     }
 
     static function getThread ($threadId) {
@@ -43,7 +43,7 @@ class ForumPageModel {
     
     static function getPm ($pmId) {
         $pmId = mysql_real_escape_string($pmId);
-        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_message as m left join t_users as srcu on srcu.id = m.srcuser left join t_users as dstu on dstu.id = m.dstuser where m.id = '$pmId'");
+        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_users as srcu on srcu.id = m.srcuser left join t_users as dstu on dstu.id = m.dstuser where m.id = '$pmId'");
         return mysql_fetch_object($result);
     }
 
@@ -78,7 +78,7 @@ class ForumPageModel {
     
     static function getPms ($userId) {
         $userId = mysql_real_escape_string($userId);
-        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_message as m left join t_users as srcu on srcu.id = m.srcuser left join t_users as dstu on dstu.id = m.dstuser where m.dstuser = '$userId'");
+        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_users as srcu on srcu.id = m.srcuser left join t_users as dstu on dstu.id = m.dstuser where m.dstuser = '$userId'");
         $pms = array();
         while ($obj = mysql_fetch_object($result))
             $pms[] = $obj;
@@ -138,7 +138,7 @@ class ForumPageModel {
         $dstUserId = mysql_real_escape_string($dstUserId);
         $message = mysql_real_escape_string($message);
         $title = mysql_real_escape_string($title);
-        Database::query("insert into t_message (srcuser,dstuser,subject,message,senddate) values ('$srcUserId','$dstUserId','$title','$message',now())");
+        Database::query("insert into t_user_message (srcuser,dstuser,subject,message,senddate) values ('$srcUserId','$dstUserId','$title','$message',now())");
     }
 
     static function deleteTopic ($topicId) {
@@ -158,7 +158,7 @@ class ForumPageModel {
 
     static function deletePm ($pmId) {
         $pmId = mysql_real_escape_string($pmId);
-        Database::query("delete from t_message where id = '$pmId'");
+        Database::query("delete from t_user_message where id = '$pmId'");
     }
 }
 ?>

@@ -83,12 +83,12 @@ class UserSearchResultModule extends UserSearchBaseModule {
                     ?>
                     <div class="usersSearchUserDiv shadow">
                         <div class="usersSearchUserImage">
-                            <a href="<?php echo parent::staticLink('profile',array('id' => $user->id)); ?>">
+                            <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
                                 <img class="imageLink" width="170" height="170" src="<?php echo UsersModel::getUserImageUrl($user->id); ?>" alt=""/>
                             </a>
                         </div>
                         <div class="usersSearchUserDetails">
-                            <a href="<?php echo parent::staticLink('profile',array('id' => $user->id)); ?>">
+                            <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
                                 <?php echo $user->username; ?>
                                 <?php echo ' ('.$user->age.')'; ?>
                             </a>
@@ -99,25 +99,32 @@ class UserSearchResultModule extends UserSearchBaseModule {
                 ?>
                 <div class="clear"></div>
             </div>
-            <div class="userListPager">
-                <?php
-                for ($i=0; $i<$pagerPages; $i++) {
-                    echo '<div><a href="'.parent::link(array(
-                        "action" => "searchResults",
-                        "page" => $i,
-                        "agemin" => parent::get("agemin"), 
-                        "agemax" => parent::get("agemax"), 
-                        "country" => parent::get("country"), 
-                        "place" => parent::get("place"), 
-                        "distance" => parent::get("distance"),
-                        "usersPerPage" => $usersPerPage)).'">'.($i+1).'</div>';
-                }
+            <?php
+            if ($pagerPages > 1) {
                 ?>
-            </div>
-            <div class="userListPages">
-                <label><?php echo parent::getTranslation("users.search.pager.pages"); ?></label>
-                <?php InputFeilds::printSelect("pages", $usersPerPage, array()); ?>
-            </div>
+                <div class="userListPager">
+                    <?php
+                    for ($i=0; $i<$pagerPages; $i++) {
+                        echo '<div><a href="'.parent::link(array(
+                            "action" => "searchResults",
+                            "page" => $i,
+                            "agemin" => parent::get("agemin"), 
+                            "agemax" => parent::get("agemax"), 
+                            "country" => parent::get("country"), 
+                            "place" => parent::get("place"), 
+                            "distance" => parent::get("distance"),
+                            "usersPerPage" => $usersPerPage)).'">'.($i+1).'</div>';
+                    }
+                    ?>
+                </div>
+                <div class="userListPages">
+                    <label><?php echo parent::getTranslation("users.search.pager.pages"); ?></label>
+                    <?php InputFeilds::printSelect("pages", $usersPerPage, array()); ?>
+                </div>
+                <?php
+            }
+            ?>
+            <div class="clear"></div>
             <?php
             
         } else {

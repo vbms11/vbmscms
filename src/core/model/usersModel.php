@@ -10,8 +10,16 @@ class UsersModel {
     static function search ($ageMin, $ageMax, $countryGeonameId, $place, $distance) {
         
         $country = CountryModel::getCountryByGeonameId($countryGeonameId);
+        $countryName = "";
+        if (isset($country->name)) {
+            $countryName = $country->name;
+        }
         
-        $coordinates = UserAddressModel::getCoordinatesFromAddress($country->name." ".$place);
+        $coordinates = UserAddressModel::getCoordinatesFromAddress($countryName." ".$place);
+        
+        if (empty($coordinates)) {
+            return array();
+        }
         
         $radiusOfEarthKM = 6371;
         $x = (sin($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
@@ -143,7 +151,7 @@ class UsersModel {
 
     static function getUser ($id) {
         $id = mysql_real_escape_string($id);
-        return Database::queryAsObject("select * from t_users where id = '$id'");
+        return Database::queryAsObject("select u.*, year(now()) - year(u.birthdate) as age from t_users u where u.id = '$id'");
     }
     
     static function getUserByUserName ($username, $siteId = null) {
@@ -235,7 +243,7 @@ class UsersModel {
             $image = GalleryModel::getImage($user->image);
             $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
         } else if (!empty($user->facebook_uid)) {
-            $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture";
+            $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture?type=large";
         } else if (!empty($user->twitter_uid)) {
             
         } else {

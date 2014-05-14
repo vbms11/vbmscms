@@ -67,6 +67,9 @@ class ModuleController {
                 ?>
                 {'Move Up':function (menuItem,menu) {       callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"moveup","id"=>$moduleClass->getIncludeId()),false); ?>'); }},
                 {'Move Down':function (menuItem,menu) {     callUrl('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movedown","id"=>$moduleClass->getIncludeId()),false); ?>'); }},
+                {'Move':function (menuItem,menu) {
+                    initSortableAreas(<?php echo $moduleClass->getId(); ?>,'<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movemodule"),false); ?>');
+                }},
                 <?php
                 if ($moduleClass->getId() != Context::getPage()->codeid) {
                     ?>

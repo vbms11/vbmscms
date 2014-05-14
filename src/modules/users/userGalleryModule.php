@@ -138,6 +138,11 @@ class UserGalleryModule extends XModule {
                 break;
             
             default:
+                if (parent::param("mode") == self::modeSelectedUserGallery && parent::get("userId")) {
+                    Context::setSelectedUser(parent::get("userId"));
+                } else if (parent::param("mode") == self::modeCurrentUserGallery) {
+                    Context::setSelectedUser(Context::getUserId());
+                }
                 parent::blur();
         }
     }

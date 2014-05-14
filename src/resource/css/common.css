@@ -255,8 +255,13 @@ a img {
 }
 
 .vcms_module_show_border {
-	border: 1px dashed silver;
-	padding: 0px;
+    border: 1px dashed silver;
+    padding: 0px;
+}
+
+.vcms_module_show_move_border {
+    border: 1px dashed red;
+    padding: 0px;
 }
 
 /* style */

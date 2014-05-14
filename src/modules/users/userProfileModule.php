@@ -32,6 +32,8 @@ class UserProfileModule extends XModule {
             default:
                 if (parent::get("userId")) {
                     Context::setSelectedUser(parent::get("userId"));
+                } else if (parent::param("mode") == self::modeCurrentUser) {
+                    Context::setSelectedUser(Context::getUserId());
                 }
         }
     }
@@ -111,12 +113,10 @@ class UserProfileModule extends XModule {
                 <div class="userProfileImage">
                     <img src="<?php echo $userProfileImage; ?>" title="<?php echo $username; ?>" alt="<?php echo $username; ?>" />
                 </div>
+                <div class="userProfileName">
+                    <?php echo $username." (".$user->age.")"; ?>
+                </div>
                 <div class="userProfileMenu">
-                    <div>
-                        <a href="<?php echo parent::staticLink("userDetails",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.details"); ?>
-                        </a>
-                    </div>
                     <div>
                         <a href="<?php echo parent::staticLink("userWall",array("userId"=>$userId)); ?>">
                             <?php echo parent::getTranslation("userProfile.wall"); ?>
@@ -128,20 +128,45 @@ class UserProfileModule extends XModule {
                         </a>
                     </div>
                     <div>
-                        <a href="<?php echo parent::staticLink("userMessage",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.message"); ?>
+                        <a href="<?php echo parent::staticLink("userDetails",array("userId"=>$userId)); ?>">
+                            <?php echo parent::getTranslation("userProfile.details"); ?>
                         </a>
                     </div>
+                    <?php
+                    if ($userId !== Context::getUserId()) {
+                        ?>
+                        <div>
+                            <a href="<?php echo parent::staticLink("userMessage",array("action"=>"new","userId"=>$userId)); ?>">
+                                <?php echo parent::getTranslation("userProfile.message"); ?>
+                            </a>
+                        </div>
+                        <?php
+                    } else {
+                        ?>
+                        <div>
+                            <a href="<?php echo parent::staticLink("userMessage",array("userId"=>$userId)); ?>">
+                                <?php echo parent::getTranslation("userProfile.messages"); ?>
+                            </a>
+                        </div>
+                        <?php
+                    }
+                    ?>
                     <div>
                         <a href="<?php echo parent::staticLink("userFriends",array("userId"=>$userId)); ?>">
                             <?php echo parent::getTranslation("userProfile.friends"); ?>
                         </a>
                     </div>
-                    <div>
-                        <a href="<?php echo parent::staticLink("userAddFriends",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.addFriends"); ?>
-                        </a>
-                    </div>
+                    <?php
+                    if ($userId !== Context::getUserId()) {
+                        ?>
+                        <div>
+                            <a href="<?php echo parent::staticLink("userAddFriends",array("userId"=>$userId)); ?>">
+                                <?php echo parent::getTranslation("userProfile.addFriends"); ?>
+                            </a>
+                        </div>
+                        <?php
+                    }
+                    ?>
                 </div>
                 <?php
                 

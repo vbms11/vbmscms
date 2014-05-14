@@ -90,42 +90,51 @@ function callUrl (url,replace,anchor) {
     document.location.href = url;
 }
 
-
-/*
-                var vcmsArea = $(".vcms_area")
-                $.each(vcmsArea,function (index,object) {
-                    $(object).sortable({
-                        connectWith: ".vcms_area, .toolButtonDiv",
-                        cancel: ".toolButtonDiv, form, input, textarea, button",
-                        update: function(event, ui) {
-                            var areaId = $(object).attr("id").substr(10);
-                            var moduleId = ui.item.attr("id");
-                            $("#vcms_area_"+areaId+" #"+moduleId).each(function (index,o) {
-                                $(object).find(".vcms_module").each(function (i,child) {
-                                    if (moduleId == $(child).attr("id")) {
-                                         ajaxRequest('<?php echo NavigationModel::createPageLink(Context::getPageId(),array("action"=>"movemodule"),false); ?>',function(data){},{"id":moduleId.substr(12),"area":areaId,"pos":i});
-                                    }
-                                });
-                            });
-                            var toolbar = $("#vcms_area_"+areaId+", .toolButtonDiv");
-                            if ($("#vcms_area_"+areaId+" .vcms_module").length > 0) {
-                                if (toolbar.hasClass("show")) {
-                                    toolbar.fadeOut("fast", function () {
-                                        toolbar.addClass("hide");
-                                        toolbar.removeClass("show");
-                                    });
-                                }
-                            } else if (toolbar.hasClass("hide")) {
-                                toolbar.fadeIn("fast", function () {
-                                    toolbar.addClass("show");
-                                    toolbar.removeClass("hide");
-                                });
-                            }
+function initSortableAreas (moduleId, sortLink) {
+    
+    var vcmsArea = $(".vcms_area");
+    $("#vcms_module_"+moduleId).addClass("vcms_module_show_move_border");
+    $(".vcms_module:not(#vcms_module_"+moduleId+")").each(function(index,object){
+        $(object).click(function(){
+            $(".vcms_module_show_move_border").removeClass("vcms_module_show_move_border");
+            vcmsArea.sortable("destroy");
+        });
+    });
+    $.each(vcmsArea,function (index,object) {
+        $(object).sortable({
+            connectWith: ".vcms_area",
+            cancel: ".toolButtonDiv, vcms_module:not(#vcms_module_"+moduleId+")",
+            update: function(event, ui) {
+                var areaId = $(object).attr("id").substr(10);
+                var moduleId = ui.item.attr("id").substr(12);
+                $("#vcms_area_"+areaId+" #vcms_module_"+moduleId).each(function (index,o) {
+                    $(object).find(".vcms_module").each(function (i,child) {
+                        if (moduleId === $(child).attr("id").substr(12)) {
+                             ajaxRequest(sortLink,function(data){},{"id":moduleId,"area":areaId,"pos":i});
                         }
                     });
                 });
-                 *
+                /*
+                var toolbar = $("#vcms_area_"+areaId+", .toolButtonDiv");
+                if ($("#vcms_area_"+areaId+" .vcms_module").length > 0) {
+                    if (toolbar.hasClass("show")) {
+                        toolbar.fadeOut("fast", function () {
+                            toolbar.addClass("hide");
+                            toolbar.removeClass("show");
+                        });
+                    }
+                } else if (toolbar.hasClass("hide")) {
+                    toolbar.fadeIn("fast", function () {
+                        toolbar.addClass("show");
+                        toolbar.removeClass("hide");
+                    });
+                }
                  */
+            }
+        });
+    });
+}
+                
 
 
 /* datatable util */

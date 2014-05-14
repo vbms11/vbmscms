@@ -102,7 +102,22 @@ class UserSearchModule extends UserSearchBaseModule {
                 </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.country'); ?></td>
                 </tr><tr>
-                    <td><?php InputFeilds::printSelect("country", parent::get('country'),$countryOptions); ?></td>
+                    <td><?php 
+                    $countryId = parent::get('country');
+                    echo "<select name='country'>";
+                    if (empty($countryId)) {
+                        echo "<option style='display:none;' selected='true'>(Please Select)</option>";
+                    }
+                    foreach ($countryOptions as $key => $valueNames) {
+                        if (!empty($countryId) && $key == $countryId) {
+                            echo "<option value='".Common::htmlEscape($key)."' selected='true'>".Common::htmlEscape($valueNames)."</option>";
+                        } else {
+                            echo "<option value='".Common::htmlEscape($key)."'>".Common::htmlEscape($valueNames)."</option>";
+                        }
+                        
+                    }
+                    echo "</select>";
+                    ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.place'); ?></td>
                 </tr><tr>

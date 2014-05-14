@@ -8,6 +8,16 @@
     border: 1px solid silver;
     margin: 0 0 3px;
     text-align: center;
+    font-size: 0;
+}
+
+.userProfileImage img {
+    max-width: 176px;
+}
+
+.userProfileName {
+    text-align: center;
+    margin: 0 0 3px;
 }
 
 .userProfileMenu {
