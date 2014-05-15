@@ -15,11 +15,15 @@
 
 .userWallPostImage {
     float: left;
-    width: 70px;
+    width: 60px;
+}
+
+.userWallPostImage img {
+    width: 50px;
 }
 
 .userWallPostBody {
-    margin-left: 70px;
+    margin-left: 60px;
 }
 
 .userWallPostTitle {

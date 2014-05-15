@@ -262,6 +262,8 @@ class UsersModel {
             $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture";
         } else if (!empty($user->twitter_uid)) {
             
+        } else {
+            $imageUrl = "modules/users/img/User.png";
         }
         return $imageUrl;
     }

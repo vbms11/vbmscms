@@ -125,7 +125,7 @@ class UserSearchModule extends UserSearchBaseModule {
                 </tr><tr>
                     <td><?php echo parent::getTranslation('users.search.distance'); ?></td>
                 </tr><tr>
-                    <td><?php InputFeilds::printSelect("distance", parent::get('distance'), $this->distanceOptions); ?></td>
+                    <td><?php InputFeilds::printSelect("distance", parent::get('distance') ? parent::get('distance') : "200", $this->distanceOptions);  ?></td>
                 </tr></table>
                 <hr/>
                 <div class="alignRight">

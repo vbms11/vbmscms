@@ -28,24 +28,28 @@ class UserWallModule extends XModule {
                 }
                 break;
             case "comment":
-                if (parent::post("submitButton")) {
-                    $validationMessages = UserWallModel::validateWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
-                    if (count($validationMessages) > 0) {
-                        parent::setMessages($validationMessages);
-                    } else {
-                        UserWallModel::createUserWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
-                        parent::redirect();
+                if (Context::hasRole("user.profile.owner")) {
+                    if (parent::post("submitButton") && UserWallModel::canUserPost(parent::get("userId"))) {
+                        $validationMessages = UserWallModel::validateWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
+                        if (count($validationMessages) > 0) {
+                            parent::setMessages($validationMessages);
+                        } else {
+                            UserWallModel::createUserWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
+                            parent::redirect();
+                        }
                     }
                 }
                 break;
             case "reply":
-                if (parent::post("submitButton")) {
-                    $validationMessages = UserWallModel::validateWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("parent"));
-                    if (count($validationMessages) > 0) {
-                        parent::setMessages($validationMessages);
-                    } else {
-                        UserWallModel::createUserWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("parent"));
-                        parent::redirect();
+                if (Context::hasRole("user.profile.owner")) {
+                    if (parent::post("submitButton") && UserWallModel::canUserPost(parent::get("userId"))) {
+                        $validationMessages = UserWallModel::validateWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("parent"));
+                        if (count($validationMessages) > 0) {
+                            parent::setMessages($validationMessages);
+                        } else {
+                            UserWallModel::createUserWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("parent"));
+                            parent::redirect();
+                        }
                     }
                 }
                 break;
@@ -195,7 +199,7 @@ class UserWallModule extends XModule {
         <div class="panel usersWallPanel">
             <?php
             
-            if (!empty($userId)) {
+            if (!empty($userId) && UserWallModel::canUserPost($userId)) {
                 ?>
                 <div class="userWallPostCommentBox">
                     <div class="userWallPostImage">
@@ -282,6 +286,7 @@ class UserWallModule extends XModule {
                                     <?php echo htmlentities($wallPost->comment); ?>
                                 </div>
                             </div>
+                            <div class="clear"></div>
                         </div>
                         <?php
                         foreach (array_reverse($wallPosts) as $wallPostReply) {
@@ -339,29 +344,35 @@ class UserWallModule extends XModule {
                                             <?php echo htmlentities($wallPostReply->comment); ?>
                                         </div>
                                     </div>
+                                    <div class="clear"></div>
                                 </div>
                                 <?php
                             }
                         }
+                        if (UserWallModel::canUserPost($userId)) {
+                            ?>
+                            <div class="userWallPostReplyBox">
+                                <div class="userWallPostImage">
+                                    <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+                                </div>
+                                <div class="userWallPostBody">
+                                    <form method="post" action="<?php echo parent::link(array("action"=>"reply","parent"=>$wallPost->id,"userId"=>$userId)); ?>">
+                                        <div class="userWallPostTextarea">
+                                            <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
+                                        </div>
+                                        <hr/>
+                                        <div class="alignRight">
+                                            <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
+                                                <?php echo parent::getTranslation("userWall.button.reply"); ?>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            <?php
+                        }
                         ?>
-                        <div class="userWallPostReplyBox">
-                            <div class="userWallPostImage">
-                                <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
-                            </div>
-                            <div class="userWallPostBody">
-                                <form method="post" action="<?php echo parent::link(array("action"=>"reply","parent"=>$wallPost->id,"userId"=>$userId)); ?>">
-                                    <div class="userWallPostTextarea">
-                                        <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
-                                    </div>
-                                    <hr/>
-                                    <div class="alignRight">
-                                        <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
-                                            <?php echo parent::getTranslation("userWall.button.reply"); ?>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                     </div>
                     <?php
                 }

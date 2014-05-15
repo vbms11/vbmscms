@@ -15,6 +15,16 @@ class UserWallModel {
     const type_wall = 1;
     const type_image = 2;
     
+    static function canUserPost ($friendId, $userId = null) {
+        if ($userId == null) {
+            $userId = Context::getUserId();
+        }
+        if ($userId == $friendId) {
+            return true;
+        }
+        return UserFriendModel::isFriend($userId, $friendId);
+    }
+    
     static function validateWallPost ($userId, $srcUserId, $comment, $parent = null) {
         $errors = array();
         if (strlen($comment) > 5000) {

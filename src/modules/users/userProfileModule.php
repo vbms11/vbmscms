@@ -153,6 +153,14 @@ class UserProfileModule extends XModule {
                             </a>
                         </div>
                         <?php
+                    } else if (Context::getUserId() == null) {
+                        ?>
+                        <div>
+                            <a href="<?php echo parent::staticLink("login"); ?>">
+                                <?php echo parent::getTranslation("userProfile.message"); ?>
+                            </a>
+                        </div>
+                        <?php
                     } else {
                         ?>
                         <div>
@@ -171,7 +179,15 @@ class UserProfileModule extends XModule {
                     <?php
                     if ($userId !== Context::getUserId()) {
                         $userFriend = UserFriendModel::getUserFriendRequest(Context::getUserId(),$userId);
-                        if (empty($userFriend)) {
+                        if (Context::getUserId() == null) {
+                            ?>
+                            <div>
+                                <a href="<?php echo parent::staticLink("login"); ?>">
+                                    <?php echo parent::getTranslation("userProfile.addFriends"); ?>
+                                </a>
+                            </div>
+                            <?php
+                        } else if (empty($userFriend)) {
                             ?>
                             <div>
                                 <a href="<?php echo parent::link(array("action"=>"addFriend","id"=>$userId)); ?>">

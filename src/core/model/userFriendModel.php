@@ -7,6 +7,13 @@
  */
 class UserFriendModel {
     
+    static function isFriend ($userId, $friendUserId) {
+        $userId = mysql_real_escape_string($userId);
+        $friendUserId = mysql_real_escape_string($friendUserId);
+        $result = Database::queryAsArray("select 1 as friend from t_user_friend uf where (uf.srcuserid = '$userId' and uf.dstuserid = '$friendUserId') or (uf.dstuserid = '$userId' and uf.srcuserid = '$friendUserId') and uf.confirmed = '1'");
+        return (!empty($result) && $result->friend == "1");
+    }
+    
     static function getCountUserFriends ($userId) {
         $userId = mysql_real_escape_string($userId);
         return Database::queryAsArray("select count(*) from t_user_friend where (srcuserid = '$userId' or dstuserid = '$userId') and confirmed = '1'");

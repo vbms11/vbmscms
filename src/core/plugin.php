@@ -35,11 +35,6 @@ interface IModule {
     function getScripts ();
     
     /**
-     * returns the dependencies used by this module
-     */
-    function getDependencies ();
-
-    /**
      * returns the roles defined by this module
      */
     function getRoles ();
@@ -168,13 +163,10 @@ abstract class XModule implements IModule, ITranslatable {
     function getScripts () {
         return array();
     }
-    function getDependencies () {
-        return array();
-    }
     static function getTranslations () {
         return array();
     }
-    static function getTranslation ($key,$replace=null,$escape=true,$lang=null,$replace=null) {
+    static function getTranslation ($key,$replace=null,$escape=true,$lang=null) {
         return TranslationsModel::getTranslation($key,$lang,$escape,$replace);
     }
     function getRoles () {

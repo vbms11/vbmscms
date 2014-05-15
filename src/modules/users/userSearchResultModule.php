@@ -73,7 +73,7 @@ class UserSearchResultModule extends UserSearchBaseModule {
         if (count($users) > 0) {
             
             ?>
-            <p><?php echo parent::getTranslation("user.search.result.description"); ?></p>
+            <p><?php echo parent::getTranslation("user.search.result.description",array("%total%"=>count($users),"%amount%"=>$usersPerPage < count($users) ? $usersPerPage : count($users))); ?></p>
             <div class="usersList">
                 <?php
                 $iStart = $page * $usersPerPage;
