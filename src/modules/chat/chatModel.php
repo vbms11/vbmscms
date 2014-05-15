@@ -5,7 +5,7 @@ class ChatModel {
     static function getRoomMessages ($room,$version) {
         $room = mysql_real_escape_string($room);
         $version = mysql_real_escape_string($version);
-        return Database::queryAsArray("select cm.*, u.username as username from t_chatmessage cm join t_users u on cm.user = u.id where room = '$room' and version > '$version' order by version asc");
+        return Database::queryAsArray("select cm.*, u.username as username from t_chatmessage cm join t_user u on cm.user = u.id where room = '$room' and version > '$version' order by version asc");
     }
     
     static function getUserMessages ($sessionId,$version) {

@@ -29,6 +29,18 @@ class UserProfileModule extends XModule {
                     parent::focus();
                 }
                 break;
+            case "addFriend":
+                if (Context::hasRole("user.profile.owner")) {
+                    UserFriendModel::createUserFriendRequest(Context::getUserId(), parent::get("id"));
+                    parent::redirect();
+                }
+                break;
+            case "removeFriend":
+                if (Context::hasRole("user.profile.owner")) {
+                    UserFriendModel::deleteUserFriend(parent::get("id"));
+                    parent::redirect();
+                }
+                break;
             default:
                 if (parent::get("userId")) {
                     Context::setSelectedUser(parent::get("userId"));
@@ -107,7 +119,7 @@ class UserProfileModule extends XModule {
             }
             if (!empty($userId)) {
                 $user = UsersModel::getUser($userId);
-                $username = htmlentities($user->firstname." ".$user->lastname);
+                $username = htmlentities($user->username);
                 $userProfileImage = UsersModel::getUserImageUrl($user->id);
                 ?>
                 <div class="userProfileImage">
@@ -152,19 +164,38 @@ class UserProfileModule extends XModule {
                     }
                     ?>
                     <div>
-                        <a href="<?php echo parent::staticLink("userFriends",array("userId"=>$userId)); ?>">
+                        <a href="<?php echo parent::staticLink("userFriend",array("userId"=>$userId)); ?>">
                             <?php echo parent::getTranslation("userProfile.friends"); ?>
                         </a>
                     </div>
                     <?php
                     if ($userId !== Context::getUserId()) {
-                        ?>
-                        <div>
-                            <a href="<?php echo parent::staticLink("userAddFriends",array("userId"=>$userId)); ?>">
-                                <?php echo parent::getTranslation("userProfile.addFriends"); ?>
-                            </a>
-                        </div>
-                        <?php
+                        $userFriend = UserFriendModel::getUserFriendRequest(Context::getUserId(),$userId);
+                        if (empty($userFriend)) {
+                            ?>
+                            <div>
+                                <a href="<?php echo parent::link(array("action"=>"addFriend","id"=>$userId)); ?>">
+                                    <?php echo parent::getTranslation("userProfile.addFriends"); ?>
+                                </a>
+                            </div>
+                            <?php
+                        } else if ($userFriend->confirmed == "0") {
+                            ?>
+                            <div>
+                                <a href="#">
+                                    <?php echo parent::getTranslation("userProfile.addFriendsSent"); ?>
+                                </a>
+                            </div>
+                            <?php
+                        } else if ($userFriend->confirmed == "1") {
+                            ?>
+                            <div>
+                                <a href="<?php echo parent::link(array("action"=>"removeFriend","id"=>$userFriend->id)); ?>">
+                                    <?php echo parent::getTranslation("userProfile.removeFriends"); ?>
+                                </a>
+                            </div>
+                            <?php
+                        }
                     }
                     ?>
                 </div>

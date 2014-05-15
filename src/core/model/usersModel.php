@@ -35,7 +35,7 @@ class UsersModel {
             year(now()) - year(u.birthdate) as age, 
             sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) as distance,  
             a.country as country, a.city as city 
-            from t_users u 
+            from t_user u 
             join t_user_address a on u.id = a.userid 
             where 
             sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) <= '$distance' and 
@@ -53,7 +53,7 @@ class UsersModel {
             $siteId = mysql_real_escape_string($siteId);
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
-            join t_users u on su.userid = u.id 
+            join t_user u on su.userid = u.id 
             where (u.username = '$username' or u.email = '$username') and u.password = '$password' and u.active = '1'");
         // validate login
         if ($userObj != null) {
@@ -72,7 +72,7 @@ class UsersModel {
             $siteId = mysql_real_escape_string($siteId);
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
-            join t_users u on su.userid = u.id 
+            join t_user u on su.userid = u.id 
             where u.email = '$email' and u.active = '1'");
         // validate login
         if ($userObj != null) {
@@ -91,7 +91,7 @@ class UsersModel {
             $siteId = mysql_real_escape_string($siteId);
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
-            join t_users u on su.userid = u.id 
+            join t_user u on su.userid = u.id 
             where u.facebook_uid = '$facebookId' and u.active = '1'");
         // validate login
         if ($userObj != null) {
@@ -105,12 +105,12 @@ class UsersModel {
     static function setFacebookId ($userId, $facebookId) {
         $userId = mysql_real_escape_string($userId);
         $facebookId = mysql_real_escape_string($facebookId);
-        Database::query("update t_users set facebook_uid = '$facebookId' where id = '$userId'");
+        Database::query("update t_user set facebook_uid = '$facebookId' where id = '$userId'");
     }
     
     static function loginWithKey ($key) {
         $key = mysql_real_escape_string($key);
-        $userObj = Database::queryAsObject("select * from t_users where authkey = '$key' and active = '1'") or die (mysql_error());
+        $userObj = Database::queryAsObject("select * from t_user where authkey = '$key' and active = '1'") or die (mysql_error());
         
         // validate login
         if ($userObj != null) {
@@ -146,12 +146,12 @@ class UsersModel {
         } else {
             $siteId = mysql_real_escape_string($siteId);
         }
-        return Database::queryAsArray("select u.* from t_site_users su join t_users u on su.userid = u.id $condition");
+        return Database::queryAsArray("select u.* from t_site_users su join t_user u on su.userid = u.id $condition");
     }
 
     static function getUser ($id) {
         $id = mysql_real_escape_string($id);
-        return Database::queryAsObject("select u.*, year(now()) - year(u.birthdate) as age from t_users u where u.id = '$id'");
+        return Database::queryAsObject("select u.*, year(now()) - year(u.birthdate) as age from t_user u where u.id = '$id'");
     }
     
     static function getUserByUserName ($username, $siteId = null) {
@@ -161,12 +161,12 @@ class UsersModel {
         } else {
             $siteId = mysql_real_escape_string($siteId);
         }
-        return Database::query("select u.* from t_site_users join t_users u on su.userid = u.id where username = '$username'");
+        return Database::query("select u.* from t_site_users join t_user u on su.userid = u.id where username = '$username'");
     }
     
     static function getUserByObjectId ($objectId) {
         $objectId = mysql_real_escape_string($objectId);
-        return Database::queryAsObject("select * from t_users where objectid = '$objectId'");
+        return Database::queryAsObject("select * from t_user where objectid = '$objectId'");
     }
     
     static function getUsersByCustomRole ($customRole, $siteId = null) {
@@ -184,7 +184,7 @@ class UsersModel {
             $siteId = mysql_real_escape_string($siteId);
         }
         $sqlCustomRoles = "in ('".implode("','",$customRoles)."')";
-        return Database::queryAsArray("select u.* from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id $sqlCustomRoles");
+        return Database::queryAsArray("select u.* from t_site_users su join t_user u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id $sqlCustomRoles");
     }
     
     static function getUsersByCustomRoleId ($customRole, $siteId = null) {
@@ -194,7 +194,7 @@ class UsersModel {
         } else {
             $siteId = mysql_real_escape_string($siteId);
         }
-        return Database::queryAsArray("select u.* from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
+        return Database::queryAsArray("select u.* from t_site_users su join t_user u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
     }
     
     static function getUsersEmailsByCustomRoleId ($customRole, $siteId = null) {
@@ -204,20 +204,20 @@ class UsersModel {
         } else {
             $siteId = mysql_real_escape_string($siteId);
         }
-        $result = Database::queryAsArray("select email as email from t_site_users su join t_users u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
+        $result = Database::queryAsArray("select email as email from t_site_users su join t_user u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
         return Common::toMap($result, "email", "email");
     }
     
     static function getUserEmailById ($userId) {
         $userId = mysql_real_escape_string($userId);
-        $userEmail = Database::queryAsObject("select email as email from t_users where id = '$userId'");
+        $userEmail = Database::queryAsObject("select email as email from t_user where id = '$userId'");
         return $userEmail->email;
     }
     
     static function setUserActiveFlag ($id,$flag) {
         $id = mysql_real_escape_string($id);
         $flag = mysql_real_escape_string($flag);
-        Database::query("update t_users set active = '$flag' where id = '$id'");
+        Database::query("update t_user set active = '$flag' where id = '$id'");
     }
 
     static function getUserByEmail ($email, $siteId = null) {
@@ -227,13 +227,13 @@ class UsersModel {
         } else {
             $siteId = mysql_real_escape_string($siteId);
         }
-        return Database::queryAsObject("select u.* from t_site_users su join t_users u on su.userid = u.id where email = '$email'");
+        return Database::queryAsObject("select u.* from t_site_users su join t_user u on su.userid = u.id where email = '$email'");
     }
     
     static function setUserImage ($userId, $imageId) {
         $userId = mysql_real_escape_string($userId);
         $imageId = mysql_real_escape_string($imageId);
-        Database::query("update t_users set image = '$imageId' where id = '$userId'");
+        Database::query("update t_user set image = '$imageId' where id = '$userId'");
     }
     
     static function getUserImageUrl ($userId) {
@@ -290,24 +290,24 @@ class UsersModel {
         }
         if ($id == null) {
             $_email = mysql_real_escape_string($email);
-            $result = Database::queryAsObject("select 1 as emailexists from t_users where email = '$_email'");
+            $result = Database::queryAsObject("select 1 as emailexists from t_user where email = '$_email'");
             if ($result != null) {
                 $validate["email"] = "Email already registered by another user!";
             }
             $_username = mysql_real_escape_string($username);
-            $result = Database::queryAsObject("select 1 as usernameexists from t_users where username = '$_username'");
+            $result = Database::queryAsObject("select 1 as usernameexists from t_user where username = '$_username'");
             if ($result != null) {
                 $validate["username"] = "Username already registered by another user!";
             }
         } else {
             $_id = mysql_real_escape_string($id);
             $_email = mysql_real_escape_string($email);
-            $result = Database::queryAsObject("select 1 as emailexists from t_users where email = '$_email' and id != '$id'");
+            $result = Database::queryAsObject("select 1 as emailexists from t_user where email = '$_email' and id != '$id'");
             if ($result != null) {
                 $validate["email"] = "Email already registered by another user!";
             }
             $_username = mysql_real_escape_string($username);
-            $result = Database::queryAsObject("select 1 as usernameexists from t_users where username = '$_username' and id != '$id'");
+            $result = Database::queryAsObject("select 1 as usernameexists from t_user where username = '$_username' and id != '$id'");
             if ($result != null) {
                 $validate["username"] = "Username already registered by another user!";
             }
@@ -336,9 +336,9 @@ class UsersModel {
             // create user objectid
             $objectId = DynamicDataView::createObject("userAttribs",false);
             // create user
-            Database::query("insert into t_users (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender)
+            Database::query("insert into t_user (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender)
                 values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),'$objectId',$profileImage,'$gender')");
-            $result = Database::queryAsObject("select last_insert_id() as id from t_users");
+            $result = Database::queryAsObject("select last_insert_id() as id from t_user");
             $id = $result->id;
             // create site user
             Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
@@ -351,7 +351,7 @@ class UsersModel {
             $registerDateSql = "";
             if ($registerDate != null)
                 $registerDateSql = ", registerdate = STR_TO_DATE('".mysql_real_escape_string($registerDate)."','%d/%m/%Y')";
-            Database::query("update t_users set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y')', gender = '$gender' $registerDateSql where id = '$id'");
+            Database::query("update t_user set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y')', gender = '$gender' $registerDateSql where id = '$id'");
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
         return $id;
@@ -360,7 +360,7 @@ class UsersModel {
     static function setUserObjectId ($id, $objectId) {
         $id = mysql_real_escape_string($id);
         $objectId = mysql_real_escape_string($objectId);
-        Database::query("update t_users set objectid = '$objectId' where id = '$id'");
+        Database::query("update t_user set objectid = '$objectId' where id = '$id'");
     }
 
     static function setPassword ($userId,$password,$oldPassword = null) {
@@ -369,14 +369,14 @@ class UsersModel {
         if ($oldPassword != null) {
             $oldPassword = md5($oldPassword);
         }
-        Database::query("update t_users set password = '$password' where id = '$userId'".($oldPassword != null ? " password='$oldPassword'" : ""));
+        Database::query("update t_user set password = '$password' where id = '$userId'".($oldPassword != null ? " password='$oldPassword'" : ""));
     }
 
     static function deleteUser ($userId) {
         RolesModel::deleteRoles($userId);
         $userId = mysql_real_escape_string($userId);
         Database::query("delete from t_site_users where userid = '$userId'");
-        Database::query("delete from t_users where id = '$userId'");
+        Database::query("delete from t_user where id = '$userId'");
     }
 
 }

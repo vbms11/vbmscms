@@ -1,4 +1,5 @@
 
-.viewUserMessagePanel .formTable td:first-child {
+.viewUserMessagePanel .formTable td:first-child,
+.createUserMessagePanel .formTable td:first-child{
     font-weight: bold;
 }

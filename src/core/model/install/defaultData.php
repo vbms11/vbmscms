@@ -1,5 +1,14 @@
 ﻿<?php /* ;
 
+CREATE TABLE IF NOT EXISTS `t_user_friend` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `srcuserid` int(11) NOT NULL,
+  `dstuserid` int(11) NOT NULL,
+  `confirmed` tinyint(1) NOT NULL,
+  `createdate` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
 CREATE TABLE IF NOT EXISTS `ajax_chat_bans` (
   `userID` int(11) NOT NULL,
   `userName` varchar(64) COLLATE utf8_bin NOT NULL,
@@ -1670,10 +1679,10 @@ CREATE TABLE IF NOT EXISTS `t_track` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `t_users`
+-- Tabellenstruktur für Tabelle `t_user`
 --
 
-CREATE TABLE IF NOT EXISTS `t_users` (
+CREATE TABLE IF NOT EXISTS `t_user` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
@@ -1693,10 +1702,10 @@ CREATE TABLE IF NOT EXISTS `t_users` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
--- Daten für Tabelle `t_users`
+-- Daten für Tabelle `t_user`
 --
 
-INSERT INTO `t_users` (`id`, `username`, `password`, `authkey`, `email`, `firstname`, `lastname`, `gender`, `objectid`, `registerdate`, `birthdate`, `active`, `image`, `facebook_uid`, `twitter_uid`) VALUES
+INSERT INTO `t_user` (`id`, `username`, `password`, `authkey`, `email`, `firstname`, `lastname`, `gender`, `objectid`, `registerdate`, `birthdate`, `active`, `image`, `facebook_uid`, `twitter_uid`) VALUES
 (1, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@hotmail.de', 'sil', 'muh', 1, 11, '2014-05-12', '1986-02-13', 1, NULL, '100000193785072', NULL),
 (4, 'test1', '', NULL, 'silkyfx@googlemail.com', 'Sil', 'Muh', 1, 14, '2014-05-14', '1985-05-01', 1, NULL, NULL, NULL),
 (3, 'test2', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 'test2@test.com', 'test', '2', 1, 13, '2014-05-13', '1985-05-15', 1, NULL, NULL, NULL);
@@ -1908,7 +1917,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_table` (
 
 INSERT INTO `t_vdb_table` (`physical`, `system`, `id`, `name`) VALUES
 (0, 1, 2, 'userAttribs'),
-(1, 1, 3, 't_users'),
+(1, 1, 3, 't_user'),
 (0, 0, 4, 'orderAttribs'),
 (0, 0, 9, 'Kontakt'),
 (0, 0, 10, 'orderDetails'),

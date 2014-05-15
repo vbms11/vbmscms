@@ -9,7 +9,7 @@ class CmsCustomerModel {
     
     static function getCmsCustomerUser ($cmsCustomerId) {
         $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
-        return Database::queryAsObject("select u.* from t_cms_customer cc join t_users u on u.id = cc.userid where cc.id = '$cmsCustomerId'");
+        return Database::queryAsObject("select u.* from t_cms_customer cc join t_user u on u.id = cc.userid where cc.id = '$cmsCustomerId'");
     }
     
     static function createCmsCustomer ($userId) {

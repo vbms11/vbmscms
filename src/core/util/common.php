@@ -288,10 +288,12 @@ class InputFeilds {
             $value = date("Y-m-d");
         }
         $dateInfo = date_parse_from_format("Y-m-d", $value);
+        $currentDateInfo = date_parse_from_format("Y-m-d", date("Y-m-d"));
         ?>
 	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="jquiDate" type="text" />
         <script>
-        $("#<?php echo $name; ?>").datepicker( "setDate", new Date(<?php echo $dateInfo["year"]; ?>,<?php echo $dateInfo["month"]; ?>,<?php echo $dateInfo["day"]; ?>) );
+        $("#<?php echo $name; ?>").datepicker({ yearRange: "1900:<?php echo $currentDateInfo["year"]; ?>" });
+        $("#<?php echo $name; ?>").datepicker("setDate", new Date(<?php echo $dateInfo["year"]; ?>,<?php echo $dateInfo["month"]; ?>,<?php echo $dateInfo["day"]; ?>) );
         </script>
 	<?php
     }

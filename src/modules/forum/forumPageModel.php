@@ -25,31 +25,31 @@ class ForumPageModel {
 
     static function getThread ($threadId) {
         $threadId = mysql_real_escape_string($threadId);
-        $result = Database::query("select t.*, u.username as username from t_forum_thread t left join t_users u on u.id = t.userid where t.id = '$threadId'");
+        $result = Database::query("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where t.id = '$threadId'");
         return mysql_fetch_object($result);
     }
 
     static function getTopic ($topicId) {
         $topicId = mysql_real_escape_string($topicId);
-        $result = Database::query("select t.*, u.username as username from t_forum_topic t left join t_users u on u.id = t.userid where t.id = '$topicId'");
+        $result = Database::query("select t.*, u.username as username from t_forum_topic t left join t_user u on u.id = t.userid where t.id = '$topicId'");
         return mysql_fetch_object($result);
     }
 
     static function getPost ($postId) {
         $postId = mysql_real_escape_string($postId);
-        $result = Database::query("select t.*, u.username as username from t_forum_post t left join t_users u on u.id = t.userid where t.id = '$postId'");
+        $result = Database::query("select t.*, u.username as username from t_forum_post t left join t_user u on u.id = t.userid where t.id = '$postId'");
         return mysql_fetch_object($result);
     }
     
     static function getPm ($pmId) {
         $pmId = mysql_real_escape_string($pmId);
-        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_users as srcu on srcu.id = m.srcuser left join t_users as dstu on dstu.id = m.dstuser where m.id = '$pmId'");
+        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.id = '$pmId'");
         return mysql_fetch_object($result);
     }
 
     static function getThreads ($parentTopic) {
         $parentTopic = mysql_real_escape_string($parentTopic);
-        $result = Database::query("select t.*, u.username as username from t_forum_thread t left join t_users u on u.id = t.userid where parent = '$parentTopic'");
+        $result = Database::query("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where parent = '$parentTopic'");
         $threads = array();
         $obj;
         while (($obj = mysql_fetch_object($result))) {
@@ -60,7 +60,7 @@ class ForumPageModel {
 
     static function getTopics ($parentTopic) {
         $parentTopic = mysql_real_escape_string($parentTopic);
-        $result = Database::query("select t.*, u.username as username from t_forum_topic t left join t_users u on t.userid = u.id where parent = '$parentTopic'");
+        $result = Database::query("select t.*, u.username as username from t_forum_topic t left join t_user u on t.userid = u.id where parent = '$parentTopic'");
         $topics = array(); $obj;
         while (($obj = mysql_fetch_object($result)))
             $topics[] = $obj;
@@ -69,7 +69,7 @@ class ForumPageModel {
 
     static function getPosts ($threadId) {
         $threadId = mysql_real_escape_string($threadId);
-        $result = Database::query("select p.*, u.username as username from t_forum_post p left join t_users u on u.id = p.userid where threadid = '$threadId'");
+        $result = Database::query("select p.*, u.username as username from t_forum_post p left join t_user u on u.id = p.userid where threadid = '$threadId'");
         $posts = array(); $obj;
         while (($obj = mysql_fetch_object($result)))
             $posts[] = $obj;
@@ -78,7 +78,7 @@ class ForumPageModel {
     
     static function getPms ($userId) {
         $userId = mysql_real_escape_string($userId);
-        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_users as srcu on srcu.id = m.srcuser left join t_users as dstu on dstu.id = m.dstuser where m.dstuser = '$userId'");
+        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.dstuser = '$userId'");
         $pms = array();
         while ($obj = mysql_fetch_object($result))
             $pms[] = $obj;

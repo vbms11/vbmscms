@@ -14,7 +14,7 @@ class SessionModel {
     }
     
     static function getUsersOnline () {
-        return Database::queryAsArray("select s.sessionid, s.ip, u.id, u.username, s.name from t_session s left join t_users u on s.userid = u.id");
+        return Database::queryAsArray("select s.sessionid, s.ip, u.id, u.username, s.name from t_session s left join t_user u on s.userid = u.id");
     }
     
     static function pollSession ($sessionId,$sessionKey) {
@@ -53,7 +53,7 @@ class SessionModel {
             $nameStr = "'$name'";
         } else {
             $userIdStr = "'".mysql_real_escape_string($userId)."'";
-            $nameStr = "(select username from t_users where id = $userIdStr)";
+            $nameStr = "(select username from t_user where id = $userIdStr)";
         }
         Database::query("update t_session set userid = $userIdStr, name = $nameStr, logintime = now() where sessionid = '$sessionId'");
     }
