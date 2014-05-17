@@ -44,6 +44,31 @@ class UsersModel {
             order by distance asc");
     }
     
+    static function listNewUsers () {
+        return Database::queryAsArray("select 
+            u.*, 
+            year(now()) - year(u.birthdate) as age, 
+            a.country as country, a.city as city 
+            from t_user u 
+            join t_user_address a on u.id = a.userid 
+            order by registerdate desc limit 200");
+    }
+    
+    static function listRecentActiveUsers () {
+        return Database::queryAsArray("select 
+            u.*, 
+            year(now()) - year(u.birthdate) as age, 
+            a.country as country, a.city as city 
+            from t_user u 
+            join t_user_address a on u.id = a.userid 
+            order by logindate desc limit 200");
+    }
+    
+    static function updateLoginDate ($userId) {
+        $userId = mysql_real_escape_string($userId);
+        Database::query("update t_user set logindate = now() where id = '$userId'");
+    }
+    
     static function login ($username, $password, $siteId = null) {
         $username = mysql_real_escape_string($username);
         $password = md5($password);
@@ -59,6 +84,7 @@ class UsersModel {
         if ($userObj != null) {
             Context::setUser($userObj);
             Context::reloadRoles();
+            self::updateLoginDate($userObj->id);
             return true;
         }
         return false;
@@ -78,6 +104,7 @@ class UsersModel {
         if ($userObj != null) {
             Context::setUser($userObj);
             Context::reloadRoles();
+            self::updateLoginDate($userObj->id);
             return true;
         }
         return false;
@@ -97,6 +124,7 @@ class UsersModel {
         if ($userObj != null) {
             Context::setUser($userObj);
             Context::reloadRoles();
+            self::updateLoginDate($userObj->id);
             return true;
         }
         return false;
@@ -111,19 +139,11 @@ class UsersModel {
     static function loginWithKey ($key) {
         $key = mysql_real_escape_string($key);
         $userObj = Database::queryAsObject("select * from t_user where authkey = '$key' and active = '1'") or die (mysql_error());
-        
         // validate login
         if ($userObj != null) {
-            
             Context::setUser($userObj);
-            
-            // add all module roles the uesr has
-            $userRoles = RolesModel::getRoles($userObj->id);
-            foreach ($userRoles as $userRole) {
-                Context::addRoleGroup($userRole->customrole, $userRole->rolegroup);
-                Context::addRole($userRole->customrole,$userRole->modulerole);
-            }
-            
+            Context::reloadRoles();
+            self::updateLoginDate($userObj->id);
             return true;
         }
         return false;

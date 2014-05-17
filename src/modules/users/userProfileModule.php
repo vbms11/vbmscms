@@ -91,12 +91,9 @@ class UserProfileModule extends XModule {
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
-                    <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
                 </div>
             </form>
-            <script>
-            $(".usersProfilePanel button").button();
-            </script>
         </div>
         <?php
     }
@@ -145,18 +142,18 @@ class UserProfileModule extends XModule {
                         </a>
                     </div>
                     <?php
-                    if ($userId !== Context::getUserId()) {
+                    if (Context::isLoggedIn() == false) {
                         ?>
                         <div>
-                            <a href="<?php echo parent::staticLink("userMessage",array("action"=>"new","userId"=>$userId)); ?>">
+                            <a href="<?php echo parent::staticLink("login"); ?>">
                                 <?php echo parent::getTranslation("userProfile.message"); ?>
                             </a>
                         </div>
                         <?php
-                    } else if (Context::getUserId() == null) {
+                    } else if ($userId !== Context::getUserId()) {
                         ?>
                         <div>
-                            <a href="<?php echo parent::staticLink("login"); ?>">
+                            <a href="<?php echo parent::staticLink("userMessage",array("action"=>"new","userId"=>$userId)); ?>">
                                 <?php echo parent::getTranslation("userProfile.message"); ?>
                             </a>
                         </div>
@@ -179,7 +176,7 @@ class UserProfileModule extends XModule {
                     <?php
                     if ($userId !== Context::getUserId()) {
                         $userFriend = UserFriendModel::getUserFriendRequest(Context::getUserId(),$userId);
-                        if (Context::getUserId() == null) {
+                        if (Context::isLoggedIn() == false) {
                             ?>
                             <div>
                                 <a href="<?php echo parent::staticLink("login"); ?>">

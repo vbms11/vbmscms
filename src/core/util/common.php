@@ -292,7 +292,6 @@ class InputFeilds {
         ?>
 	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="jquiDate" type="text" />
         <script>
-        $("#<?php echo $name; ?>").datepicker({ yearRange: "1900:<?php echo $currentDateInfo["year"]; ?>" });
         $("#<?php echo $name; ?>").datepicker("setDate", new Date(<?php echo $dateInfo["year"]; ?>,<?php echo $dateInfo["month"]; ?>,<?php echo $dateInfo["day"]; ?>) );
         </script>
 	<?php

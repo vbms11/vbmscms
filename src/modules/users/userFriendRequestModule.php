@@ -97,7 +97,7 @@ class UserFriendRequestModule extends XModule {
             }
             if (!empty($userId)) {
                 
-                $friends = UserFriendModel::getUserFriends($userId);
+                $friends = UserFriendModel::getUserFriendRequests($userId);
                 
                 ?>
                 <h1><?php echo parent::getTranslation("userFriendRequest.title"); ?></h1>
@@ -110,31 +110,34 @@ class UserFriendRequestModule extends XModule {
                     ?>
                     <p><?php echo parent::getTranslation("userFriendRequest.description"); ?></p>
                     <div class="friendRequestList">
-                    <?php
-                    foreach ($friends as $friend) {
-
-                        $user = UsersModel::getUser($friend->friendid);
-                        $userProfileImage = UsersModel::getUserImageUrl($user->id);
-                        $username = htmlentities($user->username);
-
-                        ?>
-                        <div class="usersFriendRequestDiv shadow">
-                            <div class="usersFriendRequestImage">
-                                <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
-                                    <img class="imageLink" width="170" height="170" src="<?php echo $userProfileImage; ?>" alt="<?php echo $username; ?>"/>
-                                </a>
-                            </div>
-                            <div class="usersFriendRequestDetails">
-                                <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
-                                    <?php echo $user->username; ?>
-                                    <?php echo ' ('.$user->age.')'; ?>
-                                </a>
-                                <button><?php echo parent::getTranslation("userFriendRequest.button.confirm"); ?></button>
-                                <button><?php echo parent::getTranslation("userFriendRequest.button.decline"); ?></button>
-                            </div>
-                        </div>
                         <?php
-                    }
+                        foreach ($friends as $friend) {
+
+                            $user = UsersModel::getUser($friend->friendid);
+                            $userProfileImage = UsersModel::getUserImageUrl($user->id);
+                            $username = htmlentities($user->username);
+
+                            ?>
+                            <div class="usersFriendRequestDiv shadow">
+                                <div class="usersFriendRequestImage">
+                                    <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
+                                        <img class="imageLink" width="170" height="170" src="<?php echo $userProfileImage; ?>" alt="<?php echo $username; ?>"/>
+                                    </a>
+                                </div>
+                                <div class="usersFriendRequestDetails">
+                                    <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
+                                        <?php echo $user->username; ?>
+                                        <?php echo ' ('.$user->age.')'; ?>
+                                    </a>
+                                    <button><?php echo parent::getTranslation("userFriendRequest.button.confirm"); ?></button>
+                                    <button><?php echo parent::getTranslation("userFriendRequest.button.decline"); ?></button>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                    <?php
                 }
             }
             ?>

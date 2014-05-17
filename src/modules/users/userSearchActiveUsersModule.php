@@ -3,7 +3,7 @@
 require_once('core/plugin.php');
 require_once('modules/users/userSearchBaseModule.php');
 
-class UserSearchResultModule extends UserSearchBaseModule {
+class UserSearchActiveUsersModule extends UserSearchBaseModule {
     
     function onProcess () {
         
@@ -60,21 +60,20 @@ class UserSearchResultModule extends UserSearchBaseModule {
     
     function printSearchResultsView () {
         
-        $users = UsersModel::search(parent::get("agemin"), parent::get("agemax"), parent::get("country"), parent::get("place"), parent::get("distance"));
-        $linkParams = array("agemin"=>parent::get("agemin"), "agemax"=>parent::get("agemax"), "country"=>parent::get("country"), "place"=>parent::get("place"), "distance"=>parent::get("distance"));
+        $users = UsersModel::listRecentActiveUsers();
         $usersPerPage = parent::getUsersPerPage();
         
         ?>
-        <h1><?php echo parent::getTranslation("user.search.result.title"); ?></h1>
+        <h1><?php echo parent::getTranslation("user.search.active.title"); ?></h1>
         <?php
         if (count($users) > 0) {
             ?>
-            <p><?php echo parent::getTranslation("user.search.result.description",array("%total%"=>count($users),"%amount%"=>$usersPerPage < count($users) ? $usersPerPage : count($users))); ?></p>
+            <p><?php echo parent::getTranslation("user.search.active.description",array("%total%"=>count($users),"%amount%"=>$usersPerPage < count($users) ? $usersPerPage : count($users))); ?></p>
             <?php
-            parent::listUsers($users,$linkParams);
+            parent::listUsers($users);
         } else {
             ?>
-            <p><?php echo parent::getTranslation("user.search.result.none"); ?></p>
+            <p><?php echo parent::getTranslation("user.search.active.none"); ?></p>
             <?php
         }
     }
