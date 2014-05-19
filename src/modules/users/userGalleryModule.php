@@ -100,17 +100,17 @@ class UserGalleryModule extends XModule {
             case "viewImage":
                 parent::focus();
                 break;
-            
-            
             case "comment":
                 if (parent::post("submitButton")) {
                     $userId = $this->getModeUserId();
-                    $validationMessages = UserWallModel::validateWallPost($userId, Context::getUserId(), parent::post("comment"));
-                    if (count($validationMessages) > 0) {
-                        parent::setMessages($validationMessages);
-                    } else {
-                        UserWallModel::createUserImagePostPost(parent::get("imageId"), Context::getUserId(), parent::post("comment"));
-                        parent::redirect();
+                    if (UserWallModel::canUserPost($userId)) {
+                        $validationMessages = UserWallModel::validateWallPost($userId, Context::getUserId(), parent::post("comment"));
+                        if (count($validationMessages) > 0) {
+                            parent::setMessages($validationMessages);
+                        } else {
+                            UserWallModel::createUserImagePost(parent::get("imageId"), Context::getUserId(), parent::post("comment"));
+                            parent::redirect(array("action"=>"viewImage","id"=>parent::get("imageId"),"category"=>parent::get("category")));
+                        }
                     }
                 }
                 break;
@@ -125,13 +125,15 @@ class UserGalleryModule extends XModule {
             case "editComment":
                 if (parent::post("submitButton")) {
                     $post = UserWallModel::getUserPost(parent::get("id"));
-                    $validationMessages = UserWallModel::validateWallPost($post->userid, Context::getUserId(), parent::post("comment"));
-                    if (count($validationMessages) > 0) {
-                        parent::setMessages($validationMessages);
-                    } else {
-                        if ($post->srcuserid == Context::getUserId()) {
-                            UserWallModel::updateUserPost(parent::get("id"), parent::post("comment"));
-                            parent::redirect();
+                    if (UserWallModel::canUserPost($post->userid)) {
+                        $validationMessages = UserWallModel::validateWallPost($post->userid, Context::getUserId(), parent::post("comment"));
+                        if (count($validationMessages) > 0) {
+                            parent::setMessages($validationMessages);
+                        } else {
+                            if ($post->srcuserid == Context::getUserId()) {
+                                UserWallModel::updateUserPost(parent::get("id"), parent::post("comment"));
+                                parent::redirect();
+                            }
                         }
                     }
                 }
@@ -172,6 +174,7 @@ class UserGalleryModule extends XModule {
                     $this->printUploadImage();
                 }
                 break;
+            case "comment":
             case "viewImage":
                 $this->printViewImage(parent::get("id"),parent::get("category"));
                 break;
@@ -209,7 +212,7 @@ class UserGalleryModule extends XModule {
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
-                    <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
                 </div>
             </form>
         </div>
@@ -223,6 +226,7 @@ class UserGalleryModule extends XModule {
                 if (Context::getUserId() == Context::getSelectedUserId() && Context::hasRole("gallery.owner")) {
                     $allowUserEdit = true;
                 }
+                break;
             case self::modeCurrentUserGallery:
             default:
                 if (Context::hasRole("gallery.owner")) {
@@ -409,8 +413,6 @@ class UserGalleryModule extends XModule {
             $imagePosts = UserWallModel::getUserImagePosts($imageId);
         }
 
-        $userProfileImage = "modules/users/img/User.png";
-
         
         ?>
         <div class="panel galleryPanel viewImage">
@@ -431,29 +433,6 @@ class UserGalleryModule extends XModule {
                 
                 <?php
 
-                if (!empty($userId)) {
-                    ?>
-                    <div class="userWallPostCommentBox">
-                        <div class="userWallPostImage">
-                            <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
-                        </div>
-                        <div class="userWallPostBody">
-                            <form method="post" action="<?php echo parent::link(array("action"=>"comment","imageId"=>$imageId)); ?>">
-                                <div class="userWallPostTextarea">
-                                    <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
-                                </div>
-                                <hr/>
-                                <div class="alignRight">
-                                    <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
-                                        <?php echo parent::getTranslation("userWall.button.comment"); ?>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <?php
-                }
-
                 if (!empty($imagePosts)) {
                     foreach ($imagePosts as $wallPost) {
 
@@ -463,6 +442,8 @@ class UserGalleryModule extends XModule {
 
                         $srcUser = UsersModel::getUser($wallPost->srcuserid);
                         $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
+                        $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
+                        
                         ?>
                         <div class="userWallPostThread">
                             <div class="userWallPost">
@@ -517,10 +498,36 @@ class UserGalleryModule extends XModule {
                                         <?php echo htmlentities($wallPost->comment); ?>
                                     </div>
                                 </div>
+                                <div class="clear"></div>
                             </div>
                         </div>
                         <?php
                     }
+                }
+                
+                if (UserWallModel::canUserPost($userId)) {
+                    $userProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
+                    ?>
+                    <div class="userWallPostCommentBox">
+                        <div class="userWallPostImage">
+                            <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+                        </div>
+                        <div class="userWallPostBody">
+                            <form method="post" action="<?php echo parent::link(array("action"=>"comment","imageId"=>$imageId,"category"=>$categoryId)); ?>">
+                                <div class="userWallPostTextarea">
+                                    <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
+                                </div>
+                                <hr/>
+                                <div class="alignRight">
+                                    <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
+                                        <?php echo parent::getTranslation("userWall.button.comment"); ?>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <?php
                 }
                 ?>
                 

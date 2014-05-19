@@ -11,7 +11,7 @@ class AdminSitesModule extends XModule {
         if (Context::hasRole("site.edit")) {
             switch (parent::getAction()) {
                 case "createSite":
-                    $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
+                    $customer = CmsCustomerModel::getCurrentCmsCustomer(Context::getUserId());
                     SiteModel::createSite(parent::post("siteName"), $customer->id, parent::post("siteDescription"), null, parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
                     parent::redirect();
                     break;
@@ -218,7 +218,7 @@ class AdminSitesModule extends XModule {
         <h3><?php echo parent::getTranslation("admin.sites.title"); ?></h3>
 
         <?php
-        $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
+        $customer = CmsCustomerModel::getCurrentCmsCustomer();
         $sites = SiteModel::byCmscustomerid($customer->id);
 
         if (!empty($sites)) {

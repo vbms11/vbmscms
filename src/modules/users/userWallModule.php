@@ -76,7 +76,13 @@ class UserWallModule extends XModule {
                 }
                 break;
             default:
-                parent::clearMessages();
+                if (parent::param("mode") == self::modeSelectedUser && parent::get("userId")) {
+                    Context::setSelectedUser(parent::get("userId"));
+                } else if (parent::param("mode") == self::modeCurrentUser) {
+                    Context::setSelectedUser(Context::getUserId());
+                }parent::clearMessages();
+                
+                parent::blur();
         }
     }
 
@@ -293,10 +299,11 @@ class UserWallModule extends XModule {
                             if ($wallPost->id == $wallPostReply->parent) {
                                 $replyUser = UsersModel::getUser($wallPostReply->srcuserid);
                                 $replyUserName = $replyUser->firstname." ".$replyUser->lastname;
+                                $replyUserImage = UsersModel::getUserImageUrl($replyUser->id);
                                 ?>
                                 <div class="userWallPostReply">
                                     <div class="userWallPostImage">
-                                        <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+                                        <img src="<?php echo $replyUserImage; ?>" alt="" title="" />
                                     </div>
                                     <div class="userWallPostBody">
                                         <div class="userWallPostTitle">
@@ -350,6 +357,7 @@ class UserWallModule extends XModule {
                             }
                         }
                         if (UserWallModel::canUserPost($userId)) {
+                            $userProfileImage = UsersModel::getUserImageUrl($userId);
                             ?>
                             <div class="userWallPostReplyBox">
                                 <div class="userWallPostImage">

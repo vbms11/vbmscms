@@ -8,5 +8,17 @@
     float: left;
 }
 .usersFriendRequestDetails {
-    margin-left: 80px;
+    margin-left: 180px;
+}
+.userFriendRequestNameDiv {
+    padding-top: 10px;
+}
+.userFriendRequestPlaceDiv {
+    padding-top: 10px;
+}
+.userFriendRequestDescriptionDiv {
+    padding-top: 10px;
+}
+.userFriendRequestOptionsDiv {
+    text-align: right;
 }

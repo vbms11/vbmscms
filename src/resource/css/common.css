@@ -267,9 +267,9 @@ a img {
 /* style */
 
 .shadow {
-    -moz-box-shadow:    3px 3px 5px 3px #bbb;
-    -webkit-box-shadow: 3px 3px 5px 3px #bbb;
-    box-shadow:         3px 3px 5px 3px #bbb;
+    -moz-box-shadow:    0 0 3px 1px #bbb;
+    -webkit-box-shadow: 0 0 3px 1px #bbb;
+    box-shadow:         0 0 3px 1px #bbb;
 }
 
 .validateTips {

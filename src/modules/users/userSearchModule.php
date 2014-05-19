@@ -9,9 +9,6 @@ class UserSearchModule extends UserSearchBaseModule {
         
         switch (parent::getAction()) {
             case "save":
-                parent::param("","");
-                parent::param("","");
-                parent::param("","");
                 parent::blur();
                 parent::redirect();
                 break;
@@ -106,7 +103,7 @@ class UserSearchModule extends UserSearchBaseModule {
                     $countryId = parent::get('country');
                     echo "<select name='country'>";
                     if (empty($countryId)) {
-                        echo "<option style='display:none;' selected='true'>(Please Select)</option>";
+                        echo "<option style='display:none;' selected='true' value=''>(Please Select)</option>";
                     }
                     foreach ($countryOptions as $key => $valueNames) {
                         if (!empty($countryId) && $key == $countryId) {

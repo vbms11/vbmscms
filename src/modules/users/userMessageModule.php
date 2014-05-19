@@ -18,6 +18,8 @@ class UserMessageModule extends XModule {
             case "save":
                 if (Context::hasRole("message.edit")) {
                     parent::param("mode",parent::post("mode"));
+                    parent::blur();
+                    parent::redirect();
                 }
                 break;
             case "edit":
@@ -72,6 +74,7 @@ class UserMessageModule extends XModule {
                 if (Context::hasRole("message.edit")) {
                     $this->printEditView();
                 }
+                break;
             case "new":
                 if (Context::hasRole(array("message.inbox"))) {
                     $this->printCreateMessageView();
@@ -106,7 +109,7 @@ class UserMessageModule extends XModule {
     function printEditView () {
         ?>
         <div class="panel userMessageEditPanel">
-            <form method="post" action="<?php echo parent::link(array("action"=>"edit")); ?>">
+            <form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
                 <table class="formTable"><tr><td>
                     <?php echo parent::getTranslation("userMessage.edit.mode"); ?>
                 </td><td>

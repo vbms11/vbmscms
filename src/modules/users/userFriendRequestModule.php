@@ -14,7 +14,6 @@ class UserFriendRequestModule extends XModule {
         switch (parent::getAction()) {
             case "save":
                 if (Context::hasRole("user.friendRequest.edit")) {
-                    parent::param("mode",$_POST["mode"]);
                 }
                 parent::blur();
                 parent::redirect();
@@ -67,11 +66,6 @@ class UserFriendRequestModule extends XModule {
         ?>
         <div class="panel usersFriendRequestsEditPanel">
             <form action="<?php echo parent::link(array("action"=>"save")); ?>" method="post">
-                <table class="formTable"><tr><td>
-                    <?php echo parent::getTranslation("users.friend.edit.mode"); ?>
-                </td><td>
-                    <?php InputFeilds::printSelect("mode", parent::param("mode"), array(self::modeCurrentUser => parent::getTranslation("common.user.current"), self::modeSelectedUser => parent::getTranslation("common.user.selected"))); ?>
-                </td></tr></table>
                 <hr/>
                 <div class="alignRight">
                     <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
@@ -85,16 +79,8 @@ class UserFriendRequestModule extends XModule {
         ?>
         <div class="panel usersFriendRequestsPanel">
             <?php
-            $userId = null;
-            switch (parent::param("mode")) {
-                case self::modeSelectedUser:
-                    $userId = Context::getSelectedUserId();
-                    break;
-                case self::modeCurrentUser:
-                default:
-                    $userId = Context::getUserId();
-                    break;
-            }
+            $userId = Context::getUserId();
+            
             if (!empty($userId)) {
                 
                 $friends = UserFriendModel::getUserFriendRequests($userId);
@@ -114,9 +100,10 @@ class UserFriendRequestModule extends XModule {
                         foreach ($friends as $friend) {
 
                             $user = UsersModel::getUser($friend->friendid);
+                            $userAddress = UserAddressModel::getUserAddressByUserId($user->id);
                             $userProfileImage = UsersModel::getUserImageUrl($user->id);
                             $username = htmlentities($user->username);
-
+                            
                             ?>
                             <div class="usersFriendRequestDiv shadow">
                                 <div class="usersFriendRequestImage">
@@ -125,13 +112,27 @@ class UserFriendRequestModule extends XModule {
                                     </a>
                                 </div>
                                 <div class="usersFriendRequestDetails">
-                                    <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
-                                        <?php echo $user->username; ?>
-                                        <?php echo ' ('.$user->age.')'; ?>
-                                    </a>
-                                    <button><?php echo parent::getTranslation("userFriendRequest.button.confirm"); ?></button>
-                                    <button><?php echo parent::getTranslation("userFriendRequest.button.decline"); ?></button>
+                                    <div class="userFriendRequestNameDiv">
+                                        <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
+                                            <?php echo $user->username; ?>
+                                            <?php echo ' ('.$user->age.')'; ?>
+                                        </a>
+                                    </div>
+                                    <div class="userFriendRequestPlaceDiv">
+                                        <?php
+                                        if (!empty($userAddress)) {
+                                            echo $userAddress->country." ".$userAddress->city;
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="userFriendRequestDescriptionDiv">
+                                    </div>
+                                    <div class="userFriendRequestOptionsDiv">
+                                        <button class="jquiButton"><?php echo parent::getTranslation("userFriendRequest.button.confirm"); ?></button>
+                                        <button class="jquiButton"><?php echo parent::getTranslation("userFriendRequest.button.decline"); ?></button>
+                                    </div>
                                 </div>
+                                <div class="clear"></div>
                             </div>
                             <?php
                         }

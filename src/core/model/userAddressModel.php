@@ -104,6 +104,11 @@ class UserAddressModel {
         return Database::queryAsObject("select * from t_user_address where id = '$addressId'");
     }
     
+    static function getUserAddressByUserId ($userId) {
+        $userId = mysql_real_escape_string($userId);
+        return Database::queryAsObject("select * from t_user_address where userid = '$userId'");
+    }
+    
     static function createUserAddress ($userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode) {
         $userId = mysql_real_escape_string($userId);
         $continent = mysql_real_escape_string($continent);

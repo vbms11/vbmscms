@@ -103,33 +103,47 @@ class UserFriendModule extends XModule {
                 
                 ?>
                 <h1><?php echo parent::getTranslation("userFriend.friend.title"); ?></h1>
-                <div class="friendList">
-                    <?php
-                    foreach ($friends as $friend) {
-
-                        $user = UsersModel::getUser($friend->friendid);
-                        $userProfileImage = UsersModel::getUserImageUrl($user->id);
-                        $username = htmlentities($user->username);
-
+                <?php
+                if (empty($friends)) {
+                    if ($userId == Context::getUserId()) {
                         ?>
-                        <div class="usersFriendUserDiv shadow">
-                            <div class="usersFriendUserImage">
-                                <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
-                                    <img class="imageLink" width="170" height="170" src="<?php echo $userProfileImage; ?>" alt="<?php echo $username; ?>"/>
-                                </a>
-                            </div>
-                            <div class="usersFriendUserDetails">
-                                <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
-                                    <?php echo $user->username; ?>
-                                    <?php echo ' ('.$user->age.')'; ?>
-                                </a>
-                            </div>
-                        </div>
+                        <p><?php echo parent::getTranslation("userFriend.friend.owner.none"); ?></p>
+                        <?php
+                    } else {
+                        ?>
+                        <p><?php echo parent::getTranslation("userFriend.friend.user.none"); ?></p>
                         <?php
                     }
+                } else {
                     ?>
-                </div>
-                <?php
+                    <div class="friendList">
+                        <?php
+                        foreach ($friends as $friend) {
+
+                            $user = UsersModel::getUser($friend->friendid);
+                            $userProfileImage = UsersModel::getUserImageUrl($user->id);
+                            $username = htmlentities($user->username);
+
+                            ?>
+                            <div class="usersFriendUserDiv shadow">
+                                <div class="usersFriendUserImage">
+                                    <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
+                                        <img class="imageLink" width="170" height="170" src="<?php echo $userProfileImage; ?>" alt="<?php echo $username; ?>"/>
+                                    </a>
+                                </div>
+                                <div class="usersFriendUserDetails">
+                                    <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
+                                        <?php echo $user->username; ?>
+                                        <?php echo ' ('.$user->age.')'; ?>
+                                    </a>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                    <?php
+                }
             }
             ?>
         </div>

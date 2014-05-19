@@ -22,7 +22,7 @@ class StatisticsModule extends XModule {
     
     function renderMainView() {
         $statisticsUrl = "modules/statistics/piwik/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&date=today";
-        $customer = CmsCustomerModel::getCmsCustomer(Context::getUserId());
+        $customer = CmsCustomerModel::getCurrentCmsCustomer();
         $piwikUserName = PiwikModel::getCmsCustomerUserName($customer->id);
         $piwikAuthToken = PiwikModel::getAdminAuthToken($piwikUserName,md5(Common::hash($piwikUserName)));
         $site = SiteModel::getSite(Context::getSiteId());

@@ -2,7 +2,17 @@
 
 class CmsCustomerModel {
     
-    static function getCmsCustomer ($userId) {
+    static function getCurrentCmsCustomer () {
+        $site = DomainsModel::getCurrentSite();
+        return self::getCmsCustomer($site->cmscustomerid);
+    }
+    
+    static function getCmsCustomer ($id) {
+        $id = mysql_real_escape_string($id);
+        return Database::queryAsObject("select * from t_cms_customer where id = '$id'");
+    }
+    
+    static function getCmsCustomerByUser ($userId) {
         $userId = mysql_real_escape_string($userId);
         return Database::queryAsObject("select * from t_cms_customer where userid = '$userId'");
     }
