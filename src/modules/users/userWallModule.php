@@ -7,7 +7,7 @@ class UserWallModule extends XModule {
     
     const modeCurrentUser = 1;
     const modeSelectedUser = 2;
-
+    
     /**
      * called when page is viewed before output stream is filled
      */
@@ -224,6 +224,7 @@ class UserWallModule extends XModule {
                             </div>
                         </form>
                     </div>
+                    <div class="clear"></div>
                 </div>
                 <?php
             }

@@ -229,40 +229,58 @@ class GalleryModel {
     
     
     static function cropImage ($imageFile,$width,$height,$outputFile) {
-		
-        $img = imagecreatetruecolor($width,$height);
-        $org_img = imagecreatefromjpeg($imageFile);
-        $ims = getimagesize($imageFile);
+	
+        $pathInfo = pathinfo($imageFile);
+        $ext = strtolower($pathInfo['extension']);
+        
+        $originalImage = null;
+        $originalImageSize = null;
+        
+        switch ($ext) {
+            case "jpeg":
+            case "jpg":
+                $originalImage = imagecreatefromjpeg($imageFile);
+                $originalImageSize = getimagesize($imageFile);
+                break;
+            case "png":
+                $originalImage = imagecreatefrompng($imageFile);
+                $originalImageSize = getimagesize($imageFile);
+                break;
+            case "gif":
+                $originalImage = imagecreatefromgif($imageFile);
+                $originalImageSize = getimagesize($imageFile);
+                break;
+        }
+        
+        $image = imagecreatetruecolor($width,$height);
 
-        if ($ims[0] > $img[1]) {
-            $ratio = $ims[0] / $ims[1];
-            $srcw = $ims[0] / $ratio;
-            $srch = $ims[1];
-            $srcx = ($ims[0] - $srcw) / 2;
+        if ($originalImageSize[0] > $originalImageSize[1]) {
+            $ratio = $originalImageSize[0] / $originalImageSize[1];
+            $srcw = $originalImageSize[0] / $ratio;
+            $srch = $originalImageSize[1];
+            $srcx = ($originalImageSize[0] - $srcw) / 2;
             $srcy = 0;
         } else {
-            $ratio = $ims[1] / $ims[0];
-            $srcw = $ims[0];
-            $srch = $ims[1] / $ratio;
+            $ratio = $originalImageSize[1] / $originalImageSize[0];
+            $srcw = $originalImageSize[0];
+            $srch = $originalImageSize[1] / $ratio;
             $srcx = 0;
-            $srcy = ($ims[1] - $srch) / 2;
+            $srcy = ($originalImageSize[1] - $srch) / 2;
         }
 
-        imagecopyresampled($img,$org_img, 0, 0, $srcx, $srcy, $width, $height, $srcw, $srch);
-        imagejpeg($img,$outputFile,90);
-        imagedestroy($img);
+        imagecopyresampled($image,$originalImage, 0, 0, $srcx, $srcy, $width, $height, $srcw, $srch);
+        imagejpeg($image,$outputFile,90);
+        imagedestroy($image);
     }
     
     static function uploadImage ($inputName,$category) {
         
-        // list of valid extensions, ex. array("jpeg", "xml", "bmp")
         $allowedExtensions = array("jpeg", "jpg", "png", "gif");
-        // max file size in bytes
         $sizeLimit = 5 * 1024 * 1024;
 
         $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
         $result = $uploader->handleUpload(ResourcesModel::getResourcePath("gallery/new"));
-        
+        /*
         // create preview image
         $handle = opendir(ResourcesModel::getResourcePath("gallery/new"));
         while (false !== ($file = readdir($handle))) {
@@ -277,6 +295,23 @@ class GalleryModel {
             unlink(ResourcesModel::getResourcePath("gallery/new",$filename));
             GalleryModel::addImage($category,$filename,"","");
         }
+        */
+        
+        if ($result['success']) {
+            
+            $filename = $result['filename'];
+            $newFilename = self::getNextFilename();
+            $filePathFull = ResourcesModel::getResourcePath("gallery/new",$filename);
+            
+            self::cropImage($filePathFull,1000,1000,ResourcesModel::getResourcePath("gallery",$newFilename));
+            self::cropImage($filePathFull,170,170,ResourcesModel::getResourcePath("gallery/small",$newFilename));
+            self::cropImage($filePathFull,50,50,ResourcesModel::getResourcePath("gallery/tiny",$newFilename));
+            
+            self::addImage($category,$newFilename,"","");
+            
+            unlink($filePathFull);
+            unset($result['filename']);
+        }
         
         // to pass data through iframe you will need to encode all html tags
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
@@ -284,71 +319,16 @@ class GalleryModel {
         
     }
     
-    function getUploadedImages () {
-        return $_SESSION["gallery.upload.files"];
+    function getNextFilename ($ext = "jpg") {
+        $filename = null;
+        do {
+            $filename = Common::randHash().$ext;
+            $filename = mysql_real_escape_string($filename);
+            $result = Database::queryAsObject("select 1 as exists from t_gallery_image where image = '$filename'");
+        } while (!empty($result) && $result->exists == "1");
+        return $filename;
     }
     
-    function clearUploadedImages () {
-        $_SESSION["gallery.upload.files"] = array();
-    }
-	
-    function createManyImages () {
-
-        $MAXIMUM_FILESIZE = 25 * 1024 * 1024;
-
-        // move uploaded file if safe
-        $zipFile;
-        $isFile = is_uploaded_file($_FILES['zipfile']['tmp_name']);
-        if ($isFile) {
-            $safe_filename = preg_replace(array("/\s+/", "/[^-\.\w]+/"), array("_", ""), trim($_FILES['zipfile']['name']));
-            if ($_FILES['zipfile']['size'] <= $MAXIMUM_FILESIZE) {
-                $zipFile = '/kunden/217182_81247/rp-hosting/5/5/www/images/gallery/'.$safe_filename;
-                $isMove = move_uploaded_file($_FILES['zipfile']['tmp_name'],$zipFile);
-            } else {
-                echo "file larger than maximum file size ($MAXIMUM_FILESIZE MB)<br/>";
-            }
-        } else {
-            echo "Error uploading file sorry<br/>";
-        }
-        // read each file in the zip
-        $root = $_SERVER['DOCUMENT_ROOT'];
-        $zip = zip_open($root."images/gallery/");
-        while($zip_icerik = zip_read($zip)) {
-
-            // extract it
-            $zip_dosya = zip_entry_name($zip_icerik);
-            if(strpos($zip_dosya, '.')) {
-
-                // validate before writing the file
-                $MAXIMUM_FILESIZE = 5 * 1024 * 1024;
-                $rEFileTypes = "/^\.(jpg|jpeg|gif|png){1}$/i";
-                if (preg_match($rEFileTypes, strrchr($imageName, '.'))) {
-                    // write the file
-                    $hedef_yol = $root.'images/gallery/'.$zip_dosya;
-                    touch($hedef_yol);
-                    $yeni_dosya = fopen($hedef_yol, 'w+');
-                    fwrite($yeni_dosya, zip_entry_read($zip_icerik));
-                    fclose($yeni_dosya);
-                    // add it to the database
-                    $position = GalleryModel::getNextImageOrderKey();
-                    $imageName = $position."_".$zip_dosya;
-                    $imageName = mysql_escape_string($imageName);
-                    $DB = new MySQLDB();
-                    $query = "insert into gallery(contentid,position,filename) values('$this->contentId','$position','$imageName')";
-                    Database::query($query, $DB->handle);
-                    $DB->Close();
-
-                    // create preview image
-                    $this->cropImage('/kunden/217182_81247/rp-hosting/5/5/www/images/gallery/'.$imageName,170,170,'/kunden/217182_81247/rp-hosting/5/5/www/images/gallery/small/'.$imageName);
-
-                } else {
-                    echo "invalid filetype allowed filetypes are jpg jpeg gif png<br/>";
-                }
-            } else {
-                @mkdir($root.'images/gallery/'.$zip_dosya);
-            }
-        }
-    }
 }
 
 ?>

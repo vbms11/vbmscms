@@ -197,6 +197,262 @@ CREATE TABLE IF NOT EXISTS `t_country` (
   `name` varchar(100) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Daten für Tabelle `t_country`
+--
+
+INSERT INTO `t_country` (`geonameid`, `name`) VALUES
+('2589581', 'Algeria'),
+('3351879', 'Angola'),
+('2395170', 'Benin'),
+('933860', 'Botswana'),
+('2361809', 'Burkina Faso'),
+('433561', 'Burundi'),
+('2233387', 'Cameroon'),
+('3374766', 'Cape Verde'),
+('239880', 'Central African Republic'),
+('2434508', 'Chad'),
+('921929', 'Comoros'),
+('203312', 'Congo'),
+('223816', 'Djibouti'),
+('357994', 'Egypt'),
+('2309096', 'Equatorial Guinea'),
+('338010', 'Eritrea'),
+('337996', 'Ethiopia'),
+('2400553', 'Gabon'),
+('2413451', 'Gambia'),
+('2300660', 'Ghana'),
+('2420477', 'Guinea'),
+('2372248', 'Guinea-Bissau'),
+('2287781', 'Ivory Coast'),
+('192950', 'Kenya'),
+('932692', 'Lesotho'),
+('2275384', 'Liberia'),
+('2215636', 'Libya'),
+('1062947', 'Madagascar'),
+('927384', 'Malawi'),
+('2453866', 'Mali'),
+('2378080', 'Mauritania'),
+('934292', 'Mauritius'),
+('1024031', 'Mayotte'),
+('2542007', 'Morocco'),
+('1036973', 'Mozambique'),
+('3355338', 'Namibia'),
+('2440476', 'Niger'),
+('2328926', 'Nigeria'),
+('2260494', 'Republic of the Congo'),
+('49518', 'Rwanda'),
+('935317', 'RÃ©union'),
+('3370751', 'Saint Helena'),
+('2245662', 'Senegal'),
+('241170', 'Seychelles'),
+('2403846', 'Sierra Leone'),
+('51537', 'Somalia'),
+('953987', 'South Africa'),
+('7909807', 'South Sudan'),
+('366755', 'Sudan'),
+('934841', 'Swaziland'),
+('2410758', 'SÃ£o TomÃ© and PrÃ­ncipe'),
+('149590', 'Tanzania'),
+('2363686', 'Togo'),
+('2464461', 'Tunisia'),
+('226074', 'Uganda'),
+('2461445', 'Western Sahara'),
+('895949', 'Zambia'),
+('878675', 'Zimbabwe'),
+('6697173', 'Antarctica'),
+('3371123', 'Bouvet Island'),
+('1546748', 'French Southern Territories'),
+('1547314', 'Heard Island and McDonald Islands'),
+('3474415', 'South Georgia and the South Sandwich Islands'),
+('1149361', 'Afghanistan'),
+('174982', 'Armenia'),
+('587116', 'Azerbaijan'),
+('290291', 'Bahrain'),
+('1210997', 'Bangladesh'),
+('1252634', 'Bhutan'),
+('1282588', 'British Indian Ocean Territory'),
+('1820814', 'Brunei'),
+('1831722', 'Cambodia'),
+('1814991', 'China'),
+('2078138', 'Christmas Island'),
+('1547376', 'Cocos [Keeling] Islands'),
+('614540', 'Georgia'),
+('1819730', 'Hong Kong'),
+('1269750', 'India'),
+('1643084', 'Indonesia'),
+('130758', 'Iran'),
+('99237', 'Iraq'),
+('294640', 'Israel'),
+('1861060', 'Japan'),
+('248816', 'Jordan'),
+('1522867', 'Kazakhstan'),
+('285570', 'Kuwait'),
+('1527747', 'Kyrgyzstan'),
+('1655842', 'Laos'),
+('272103', 'Lebanon'),
+('1821275', 'Macao'),
+('1733045', 'Malaysia'),
+('1282028', 'Maldives'),
+('2029969', 'Mongolia'),
+('1327865', 'Myanmar [Burma]'),
+('1282988', 'Nepal'),
+('1873107', 'North Korea'),
+('286963', 'Oman'),
+('1168579', 'Pakistan'),
+('6254930', 'Palestine'),
+('1694008', 'Philippines'),
+('289688', 'Qatar'),
+('102358', 'Saudi Arabia'),
+('1880251', 'Singapore'),
+('1835841', 'South Korea'),
+('1227603', 'Sri Lanka'),
+('163843', 'Syria'),
+('1668284', 'Taiwan'),
+('1220409', 'Tajikistan'),
+('1605651', 'Thailand'),
+('298795', 'Turkey'),
+('1218197', 'Turkmenistan'),
+('290557', 'United Arab Emirates'),
+('1512440', 'Uzbekistan'),
+('1562822', 'Vietnam'),
+('69543', 'Yemen'),
+('783754', 'Albania'),
+('3041565', 'Andorra'),
+('2782113', 'Austria'),
+('630336', 'Belarus'),
+('2802361', 'Belgium'),
+('3277605', 'Bosnia and Herzegovina'),
+('732800', 'Bulgaria'),
+('3202326', 'Croatia'),
+('146669', 'Cyprus'),
+('3077311', 'Czech Republic'),
+('2623032', 'Denmark'),
+('453733', 'Estonia'),
+('2622320', 'Faroe Islands'),
+('660013', 'Finland'),
+('3017382', 'France'),
+('2921044', 'Germany'),
+('2411586', 'Gibraltar'),
+('390903', 'Greece'),
+('719819', 'Hungary'),
+('2629691', 'Iceland'),
+('2963597', 'Ireland'),
+('3175395', 'Italy'),
+('831053', 'Kosovo'),
+('458258', 'Latvia'),
+('3042058', 'Liechtenstein'),
+('597427', 'Lithuania'),
+('2960313', 'Luxembourg'),
+('718075', 'Macedonia'),
+('2562770', 'Malta'),
+('617790', 'Moldova'),
+('2993457', 'Monaco'),
+('3194884', 'Montenegro'),
+('2750405', 'Netherlands'),
+('3144096', 'Norway'),
+('798544', 'Poland'),
+('2264397', 'Portugal'),
+('798549', 'Romania'),
+('2017370', 'Russia'),
+('3168068', 'San Marino'),
+('6290252', 'Serbia'),
+('3057568', 'Slovakia'),
+('3190538', 'Slovenia'),
+('2510769', 'Spain'),
+('607072', 'Svalbard and Jan Mayen'),
+('2661886', 'Sweden'),
+('2658434', 'Switzerland'),
+('690791', 'Ukraine'),
+('2635167', 'United Kingdom'),
+('3164670', 'Vatican City'),
+('661882', 'Ã…land'),
+('3573511', 'Anguilla'),
+('3576396', 'Antigua and Barbuda'),
+('3577279', 'Aruba'),
+('3572887', 'Bahamas'),
+('3374084', 'Barbados'),
+('3582678', 'Belize'),
+('3573345', 'Bermuda'),
+('7626844', 'Bonaire'),
+('3577718', 'British Virgin Islands'),
+('6251999', 'Canada'),
+('3580718', 'Cayman Islands'),
+('3624060', 'Costa Rica'),
+('3562981', 'Cuba'),
+('7626836', 'CuraÃ§ao'),
+('3575830', 'Dominica'),
+('3508796', 'Dominican Republic'),
+('3585968', 'El Salvador'),
+('3425505', 'Greenland'),
+('3580239', 'Grenada'),
+('3579143', 'Guadeloupe'),
+('3595528', 'Guatemala'),
+('3723988', 'Haiti'),
+('3608932', 'Honduras'),
+('3489940', 'Jamaica'),
+('3570311', 'Martinique'),
+('3996063', 'Mexico'),
+('3578097', 'Montserrat'),
+('3617476', 'Nicaragua'),
+('3703430', 'Panama'),
+('4566966', 'Puerto Rico'),
+('3578476', 'Saint BarthÃ©lemy'),
+('3575174', 'Saint Kitts and Nevis'),
+('3576468', 'Saint Lucia'),
+('3578421', 'Saint Martin'),
+('3424932', 'Saint Pierre and Miquelon'),
+('3577815', 'Saint Vincent and the Grenadines'),
+('7609695', 'Sint Maarten'),
+('3573591', 'Trinidad and Tobago'),
+('3576916', 'Turks and Caicos Islands'),
+('4796775', 'U.S. Virgin Islands'),
+('6252001', 'United States'),
+('5880801', 'American Samoa'),
+('2077456', 'Australia'),
+('1899402', 'Cook Islands'),
+('2170371', 'Coral Sea Islands Territory'),
+('1966436', 'East Timor'),
+('2205218', 'Fiji'),
+('4030656', 'French Polynesia'),
+('4043988', 'Guam'),
+('8335033', 'Jervis Bay Territory'),
+('4030945', 'Kiribati'),
+('2080185', 'Marshall Islands'),
+('2081918', 'Micronesia'),
+('2110425', 'Nauru'),
+('2139685', 'New Caledonia'),
+('2186224', 'New Zealand'),
+('4036232', 'Niue'),
+('2155115', 'Norfolk Island'),
+('4041468', 'Northern Mariana Islands'),
+('1559582', 'Palau'),
+('2088628', 'Papua New Guinea'),
+('4030699', 'Pitcairn Islands'),
+('4034894', 'Samoa'),
+('2103350', 'Solomon Islands'),
+('2077507', 'Territory of Ashmore and Cartier Islands'),
+('4031074', 'Tokelau'),
+('4032283', 'Tonga'),
+('2110297', 'Tuvalu'),
+('5854968', 'U.S. Minor Outlying Islands'),
+('2134431', 'Vanuatu'),
+('4034749', 'Wallis and Futuna'),
+('3865483', 'Argentina'),
+('3923057', 'Bolivia'),
+('3469034', 'Brazil'),
+('3895114', 'Chile'),
+('3686110', 'Colombia'),
+('3658394', 'Ecuador'),
+('3474414', 'Falkland Islands'),
+('3381670', 'French Guiana'),
+('3378535', 'Guyana'),
+('3437598', 'Paraguay'),
+('3932488', 'Peru'),
+('3382998', 'Suriname'),
+('3439705', 'Uruguay'),
+('3625428', 'Venezuela');
+
 -- --------------------------------------------------------
 
 --
@@ -209,7 +465,14 @@ CREATE TABLE IF NOT EXISTS `t_domain` (
   `siteid` int(10) NOT NULL,
   `domaintrackerscript` blob,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `t_domain`
+--
+
+INSERT INTO `t_domain` (`id`, `url`, `siteid`, `domaintrackerscript`) VALUES
+(1, 'localhost', 1, '');
 
 -- --------------------------------------------------------
 
@@ -476,7 +739,7 @@ CREATE TABLE IF NOT EXISTS `t_module` (
   `position` int(10) NOT NULL,
   `static` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=96 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=97 ;
 
 --
 -- Daten für Tabelle `t_module`
@@ -554,7 +817,8 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (91, 'User Search Results', 'userSearchResult', 'modules/users/userSearchResultModule.php', 0x30, 'UserSearchResultModule', 1, 0, 0, 1),
 (93, 'User Friend Requests', 'userFriendRequest', 'modules/users/UserFriendRequestModule.php', NULL, 'UserFriendRequestModule', 1, 0, 0, 1),
 (94, 'User Search New Users', 'userSearchNew', 'modules/users/userSearchNewUsersModule.php', NULL, 'UserSearchNewUsersModule', 1, 0, 0, 1),
-(95, 'User Search Recent Active', 'userSearchActive', 'modules/users/userSearchActiveUsersModule.php', NULL, 'UserSearchActiveUsersModule', 1, 0, 0, 1);
+(95, 'User Search Recent Active', 'userSearchActive', 'modules/users/userSearchActiveUsersModule.php', NULL, 'UserSearchActiveUsersModule', 1, 0, 0, 1),
+(96, 'User Profile Image', 'userProfileImage', 'modules/user/userProfileImageModule.php', NULL, 'UserProfileImageModule', 1, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -579,7 +843,7 @@ CREATE TABLE IF NOT EXISTS `t_module_instance` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `moduleid` int(10) NOT NULL,
   PRIMARY KEY (`id`,`moduleid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=54 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=56 ;
 
 --
 -- Daten für Tabelle `t_module_instance`
@@ -637,7 +901,9 @@ INSERT INTO `t_module_instance` (`id`, `moduleid`) VALUES
 (50, 87),
 (51, 94),
 (52, 87),
-(53, 95);
+(53, 95),
+(54, 85),
+(55, 85);
 
 -- --------------------------------------------------------
 
@@ -717,7 +983,12 @@ INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value
 (39, NULL, 'reset', 0x623a313b),
 (44, NULL, 'mode', 0x733a313a2232223b),
 (45, NULL, 'mode', 0x733a313a2231223b),
-(46, NULL, 'mode', 0x733a313a2231223b);
+(46, NULL, 'mode', 0x733a313a2231223b),
+(28, NULL, 'mode', 0x733a313a2232223b),
+(30, NULL, 'mode', 0x733a313a2231223b),
+(42, NULL, 'mode', 0x733a313a2232223b),
+(54, NULL, 'mode', 0x733a313a2232223b),
+(55, NULL, 'mode', 0x733a313a2231223b);
 
 -- --------------------------------------------------------
 
@@ -966,44 +1237,44 @@ CREATE TABLE IF NOT EXISTS `t_page` (
 --
 
 INSERT INTO `t_page` (`id`, `type`, `namecode`, `welcome`, `title`, `keywords`, `description`, `template`, `siteid`, `code`, `codeid`, `pagetrackerscript`, `modifydate`) VALUES
-(1, 0, 1, 0, 'login', 0x6c6f67696e, 0x6c6f67696e, 5, 1, 'login', 1, NULL, '2014-05-12 17:22:52'),
-(2, 0, 2, 0, 'adminPages', 0x61646d696e5061676573, 0x61646d696e5061676573, 5, 1, 'adminPages', 5, NULL, '2014-05-12 17:23:20'),
-(3, 0, 3, 0, 'startup', 0x73746172747570, 0x73746172747570, 5, 1, 'startup', 7, NULL, '2014-05-12 17:23:21'),
-(4, 0, 4, 0, 'adminSites', 0x61646d696e5369746573, 0x61646d696e5369746573, 5, 1, 'adminSites', 8, NULL, '2014-05-12 17:23:26'),
-(5, 0, 5, 0, 'adminDomains', 0x61646d696e446f6d61696e73, 0x61646d696e446f6d61696e73, 5, 1, 'adminDomains', 9, NULL, '2014-05-12 17:23:29'),
-(6, 0, 6, 0, 'adminPackage', 0x61646d696e5061636b616765, 0x61646d696e5061636b616765, 5, 1, 'adminPackage', 10, NULL, '2014-05-12 17:24:56'),
-(7, 0, 7, 0, 'pageConfig', 0x70616765436f6e666967, 0x70616765436f6e666967, 5, 1, 'pageConfig', 11, NULL, '2014-05-13 10:49:09'),
-(8, 0, 8, 1, 'Online Dating', 0x4f6e6c696e6520446174696e67, 0x4f6e6c696e6520446174696e67, 4, 1, '', NULL, NULL, '2014-05-13 16:21:59'),
-(9, 0, 9, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 10:49:34'),
-(10, 0, 10, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 10:49:57'),
-(11, 0, 11, 0, 'insertModule', 0x696e736572744d6f64756c65, 0x696e736572744d6f64756c65, 5, 1, 'insertModule', 12, NULL, '2014-05-13 10:50:02'),
-(12, 0, 12, 0, 'userSearchResult', 0x75736572536561726368526573756c74, 0x75736572536561726368526573756c74, 3, 1, 'userSearchResult', 14, NULL, '2014-05-13 11:57:22'),
-(13, 0, 13, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 11:59:23'),
-(14, 0, 14, 0, 'register', 0x7265676973746572, 0x7265676973746572, 5, 1, 'register', 16, NULL, '2014-05-13 12:00:20'),
-(15, 0, 15, 0, 'userProfile', 0x7573657250726f66696c65, 0x7573657250726f66696c65, 3, 1, 'userProfile', 17, NULL, '2014-05-13 12:01:21'),
-(16, 0, 16, 0, 'userDetails', 0x7573657244657461696c73, 0x7573657244657461696c73, 3, 1, 'userDetails', 18, NULL, '2014-05-13 12:07:53'),
-(17, 0, 17, 0, 'profile', 0x70726f66696c65, 0x70726f66696c65, 5, 1, 'profile', 19, NULL, '2014-05-13 12:08:30'),
-(18, 0, 18, 0, 'adminTranslations', 0x61646d696e5472616e736c6174696f6e73, 0x61646d696e5472616e736c6174696f6e73, 5, 1, 'adminTranslations', 23, NULL, '2014-05-13 14:57:16'),
-(19, 0, 19, 0, 'userWall', 0x7573657257616c6c, 0x7573657257616c6c, 3, 1, 'userWall', 24, NULL, '2014-05-13 15:15:40'),
-(20, 0, 20, 0, 'userGallery', 0x7573657247616c6c657279, 0x7573657247616c6c657279, 3, 1, 'userGallery', 27, NULL, '2014-05-13 15:36:59'),
-(21, 0, 21, 0, 'userMessage', 0x757365724d657373616765, 0x757365724d657373616765, 3, 1, 'userMessage', 30, NULL, '2014-05-13 15:38:32'),
-(22, 0, 22, 0, 'userFriends', 0x75736572467269656e6473, 0x75736572467269656e6473, 5, 1, 'userFriends', 32, NULL, '2014-05-13 15:39:48'),
-(23, 0, 23, 0, 'userAddFriends', 0x75736572416464467269656e6473, 0x75736572416464467269656e6473, 5, 1, 'userAddFriends', 33, NULL, '2014-05-13 15:42:02'),
-(24, 0, 24, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 16:07:33'),
-(25, 0, 25, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 16:08:22'),
-(26, 0, 26, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 16:09:53'),
-(27, 0, 27, 0, 'adminTemplates', 0x61646d696e54656d706c61746573, 0x61646d696e54656d706c61746573, 5, 1, 'adminTemplates', 35, NULL, '2014-05-13 16:14:19'),
-(28, 0, 28, 0, 'Messages', 0x4d65737361676573, 0x4d65737361676573, 3, 1, '', NULL, NULL, '2014-05-14 10:00:13'),
-(29, 0, 29, 0, 'Friends', 0x467269656e6473, 0x467269656e6473, 3, 1, '', NULL, NULL, '2014-05-14 10:01:26'),
-(30, 0, 30, 0, 'Login', 0x4c6f67696e, 0x4c6f67696e, 5, 1, '', NULL, NULL, '2014-05-14 10:07:56'),
-(31, 0, 31, 0, 'Logout', 0x4c6f676f7574, 0x4c6f676f7574, 5, 1, '', NULL, NULL, '2014-05-14 10:08:52'),
-(32, 0, 32, 0, 'adminRoles', 0x61646d696e526f6c6573, 0x61646d696e526f6c6573, 5, 1, 'adminRoles', 40, NULL, '2014-05-14 10:15:34'),
-(33, 0, 33, 0, 'unregistered', 0x756e72656769737465726564, 0x756e72656769737465726564, 0, 1, 'unregistered', 41, NULL, '2014-05-14 18:01:40'),
-(34, 0, 34, 0, 'userFriend', 0x75736572467269656e64, 0x75736572467269656e64, 3, 1, 'userFriend', 42, NULL, '2014-05-15 11:01:51'),
-(35, 0, 35, 0, 'Friend Requests', 0x467269656e64205265717565737473, 0x467269656e64205265717565737473, 3, 1, '', NULL, NULL, '2014-05-15 11:36:54'),
-(36, 0, 36, 0, 'Search Users', 0x536561726368205573657273, 0x536561726368205573657273, 3, 1, '', NULL, NULL, '2014-05-17 11:38:35'),
-(37, 0, 37, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 11:38:51'),
-(38, 0, 38, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 11:39:56');
+(1, 0, 1, 0, 'login', 0x6c6f67696e, 0x6c6f67696e, 5, 1, 'login', 1, NULL, '2014-05-12 15:22:52'),
+(2, 0, 2, 0, 'adminPages', 0x61646d696e5061676573, 0x61646d696e5061676573, 5, 1, 'adminPages', 5, NULL, '2014-05-12 15:23:20'),
+(3, 0, 3, 0, 'startup', 0x73746172747570, 0x73746172747570, 5, 1, 'startup', 7, NULL, '2014-05-12 15:23:21'),
+(4, 0, 4, 0, 'adminSites', 0x61646d696e5369746573, 0x61646d696e5369746573, 5, 1, 'adminSites', 8, NULL, '2014-05-12 15:23:26'),
+(5, 0, 5, 0, 'adminDomains', 0x61646d696e446f6d61696e73, 0x61646d696e446f6d61696e73, 5, 1, 'adminDomains', 9, NULL, '2014-05-12 15:23:29'),
+(6, 0, 6, 0, 'adminPackage', 0x61646d696e5061636b616765, 0x61646d696e5061636b616765, 5, 1, 'adminPackage', 10, NULL, '2014-05-12 15:24:56'),
+(7, 0, 7, 0, 'pageConfig', 0x70616765436f6e666967, 0x70616765436f6e666967, 5, 1, 'pageConfig', 11, NULL, '2014-05-13 08:49:09'),
+(8, 0, 8, 1, 'Online Dating', 0x4f6e6c696e6520446174696e67, 0x4f6e6c696e6520446174696e67, 4, 1, '', NULL, NULL, '2014-05-13 14:21:59'),
+(9, 0, 9, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 08:49:34'),
+(10, 0, 10, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 08:49:57'),
+(11, 0, 11, 0, 'insertModule', 0x696e736572744d6f64756c65, 0x696e736572744d6f64756c65, 5, 1, 'insertModule', 12, NULL, '2014-05-13 08:50:02'),
+(12, 0, 12, 0, 'userSearchResult', 0x75736572536561726368526573756c74, 0x75736572536561726368526573756c74, 3, 1, 'userSearchResult', 14, NULL, '2014-05-13 09:57:22'),
+(13, 0, 13, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 09:59:23'),
+(14, 0, 14, 0, 'register', 0x7265676973746572, 0x7265676973746572, 5, 1, 'register', 16, NULL, '2014-05-13 10:00:20'),
+(15, 0, 15, 0, 'userProfile', 0x7573657250726f66696c65, 0x7573657250726f66696c65, 3, 1, 'userProfile', 17, NULL, '2014-05-13 10:01:21'),
+(16, 0, 16, 0, 'userDetails', 0x7573657244657461696c73, 0x7573657244657461696c73, 3, 1, 'userDetails', 18, NULL, '2014-05-13 10:07:53'),
+(17, 0, 17, 0, 'profile', 0x70726f66696c65, 0x70726f66696c65, 5, 1, 'profile', 19, NULL, '2014-05-13 10:08:30'),
+(18, 0, 18, 0, 'adminTranslations', 0x61646d696e5472616e736c6174696f6e73, 0x61646d696e5472616e736c6174696f6e73, 5, 1, 'adminTranslations', 23, NULL, '2014-05-13 12:57:16'),
+(19, 0, 19, 0, 'userWall', 0x7573657257616c6c, 0x7573657257616c6c, 3, 1, 'userWall', 24, NULL, '2014-05-13 13:15:40'),
+(20, 0, 20, 0, 'userGallery', 0x7573657247616c6c657279, 0x7573657247616c6c657279, 3, 1, 'userGallery', 27, NULL, '2014-05-18 13:32:08'),
+(21, 0, 21, 0, 'userMessage', 0x757365724d657373616765, 0x757365724d657373616765, 3, 1, 'userMessage', 30, NULL, '2014-05-13 13:38:32'),
+(22, 0, 22, 0, 'userFriends', 0x75736572467269656e6473, 0x75736572467269656e6473, 5, 1, 'userFriends', 32, NULL, '2014-05-13 13:39:48'),
+(23, 0, 23, 0, 'userAddFriends', 0x75736572416464467269656e6473, 0x75736572416464467269656e6473, 5, 1, 'userAddFriends', 33, NULL, '2014-05-13 13:42:02'),
+(24, 0, 24, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 14:07:33'),
+(25, 0, 25, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 14:08:22'),
+(26, 0, 26, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 14:09:53'),
+(27, 0, 27, 0, 'adminTemplates', 0x61646d696e54656d706c61746573, 0x61646d696e54656d706c61746573, 5, 1, 'adminTemplates', 35, NULL, '2014-05-13 14:14:19'),
+(28, 0, 28, 0, 'Messages', 0x4d65737361676573, 0x4d65737361676573, 3, 1, '', NULL, NULL, '2014-05-14 08:00:13'),
+(29, 0, 29, 0, 'Friends', 0x467269656e6473, 0x467269656e6473, 3, 1, '', NULL, NULL, '2014-05-14 08:01:26'),
+(30, 0, 30, 0, 'Login', 0x4c6f67696e, 0x4c6f67696e, 5, 1, '', NULL, NULL, '2014-05-14 08:07:56'),
+(31, 0, 31, 0, 'Logout', 0x4c6f676f7574, 0x4c6f676f7574, 5, 1, '', NULL, NULL, '2014-05-14 08:08:52'),
+(32, 0, 32, 0, 'adminRoles', 0x61646d696e526f6c6573, 0x61646d696e526f6c6573, 5, 1, 'adminRoles', 40, NULL, '2014-05-14 08:15:34'),
+(33, 0, 33, 0, 'unregistered', 0x756e72656769737465726564, 0x756e72656769737465726564, 0, 1, 'unregistered', 41, NULL, '2014-05-14 16:01:40'),
+(34, 0, 34, 0, 'userFriend', 0x75736572467269656e64, 0x75736572467269656e64, 3, 1, 'userFriend', 42, NULL, '2014-05-15 09:01:51'),
+(35, 0, 35, 0, 'Friend Requests', 0x467269656e64205265717565737473, 0x467269656e64205265717565737473, 3, 1, '', NULL, NULL, '2014-05-15 09:36:54'),
+(36, 0, 36, 0, 'Search Users', 0x536561726368205573657273, 0x536561726368205573657273, 3, 1, '', NULL, NULL, '2014-05-17 09:38:35'),
+(37, 0, 37, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 09:38:51'),
+(38, 0, 38, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 09:39:56');
 
 -- --------------------------------------------------------
 
@@ -1263,7 +1534,7 @@ CREATE TABLE IF NOT EXISTS `t_roles` (
   `userid` int(10) NOT NULL,
   `roleid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 --
 -- Daten für Tabelle `t_roles`
@@ -1281,7 +1552,13 @@ INSERT INTO `t_roles` (`id`, `name`, `userid`, `roleid`) VALUES
 (9, '8', 5, 8),
 (10, '9', 5, 9),
 (11, '10', 5, 10),
-(12, '13', 5, 13);
+(12, '13', 5, 13),
+(13, '7', 6, 7),
+(14, '8', 6, 8),
+(15, '9', 6, 9),
+(16, '10', 6, 10),
+(17, '13', 6, 13),
+(18, NULL, 7, 8);
 
 -- --------------------------------------------------------
 
@@ -1394,7 +1671,25 @@ INSERT INTO `t_site_users` (`siteid`, `userid`) VALUES
 (1, 2),
 (1, 3),
 (1, 4),
-(0, 5);
+(0, 5),
+(0, 6),
+(1, 7);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `t_social_notifications`
+--
+
+CREATE TABLE IF NOT EXISTS `t_social_notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `siteid` int(11) NOT NULL,
+  `friend_request` blob NOT NULL,
+  `friend_confirmed` blob NOT NULL,
+  `wall_post` blob NOT NULL,
+  `message_received` blob NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1438,7 +1733,7 @@ CREATE TABLE IF NOT EXISTS `t_templatearea` (
   `pageid` int(10) NOT NULL,
   `position` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=54 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 --
 -- Daten für Tabelle `t_templatearea`
@@ -1496,7 +1791,9 @@ INSERT INTO `t_templatearea` (`id`, `instanceid`, `name`, `pageid`, `position`) 
 (50, 50, 'left', 37, 0),
 (51, 51, 'center', 37, 0),
 (52, 52, 'left', 38, 0),
-(53, 53, 'center', 38, 0);
+(53, 53, 'center', 38, 0),
+(54, 54, 'center', 15, 0),
+(55, 55, 'center', 9, 0);
 
 -- --------------------------------------------------------
 
@@ -1533,17 +1830,17 @@ CREATE TABLE IF NOT EXISTS `t_user` (
   `facebook_uid` varchar(100) DEFAULT NULL,
   `twitter_uid` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Daten für Tabelle `t_user`
 --
 
 INSERT INTO `t_user` (`id`, `username`, `password`, `authkey`, `email`, `firstname`, `lastname`, `gender`, `objectid`, `registerdate`, `logindate`, `birthdate`, `active`, `image`, `facebook_uid`, `twitter_uid`) VALUES
-(1, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@hotmail.de', 'sil', 'muh', 1, 11, '2014-05-12 00:00:00', '2014-05-17 13:36:47', '1986-02-13', 1, NULL, '100000193785072', NULL),
-(4, 'test1', '', NULL, 'silkyfx@googlemail.com', 'Sil', 'Muh', 1, 14, '2014-05-14 00:00:00', '2014-05-17 13:46:00', '1985-05-01', 1, NULL, NULL, NULL),
+(1, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@hotmail.de', 'sil', 'muh', 1, 11, '2014-05-12 00:00:00', '2014-05-31 11:15:27', '1986-02-13', 1, NULL, '100000193785072', NULL),
+(4, 'test1', '', NULL, 'silkyfx@googlemail.com', 'Sil', 'Muh', 1, 14, '2014-05-14 00:00:00', '2014-05-21 16:14:36', '1985-05-01', 1, NULL, NULL, NULL),
 (3, 'test2', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 'test2@test.com', 'test', '2', 1, 13, '2014-05-13 00:00:00', '0000-00-00 00:00:00', '1985-05-15', 1, NULL, NULL, NULL),
-(5, 'vbms', 'fbbe3be04d98a0e73c18b25d38ac6cf1', NULL, 'silkyfx@test.de', 'sil', 'Mühlhaus', 1, 15, '2014-05-15 00:00:00', '0000-00-00 00:00:00', '1986-02-13', 1, NULL, NULL, NULL);
+(7, 'test3', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 'test3@test.com', 'test', '2', 0, 17, '2014-05-19 15:17:13', '2014-05-19 15:17:14', '1984-05-01', 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1572,7 +1869,7 @@ CREATE TABLE IF NOT EXISTS `t_user_address` (
   `vectorz` double DEFAULT NULL,
   `userid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `t_user_address`
@@ -1580,7 +1877,8 @@ CREATE TABLE IF NOT EXISTS `t_user_address` (
 
 INSERT INTO `t_user_address` (`id`, `address`, `postcode`, `continent`, `continentid`, `country`, `countryid`, `state`, `stateid`, `region`, `regionid`, `city`, `cityid`, `longditude`, `latitude`, `vectorx`, `vectory`, `vectorz`, `userid`) VALUES
 (1, 0x6b616e74737472203136, '80807', 'Europe', 6255148, 'Germany', 2921044, 'Bavaria', 2951839, 'Upper Bavaria', 2861322, 'Munich', 3220838, 11.5676218, 48.1782846, -2999.2305059335, -1702.9435537379, -5356.7005353165, 2),
-(3, 0x6c656f706f6c6420737472203130, '80807', 'Europe', 6255148, 'Germany', 2921044, 'Bavaria', 2951839, 'Upper Bavaria', 2861322, 'Munich', 3220838, 11.5838, 48.15316, -3029.3751169131, -1822.1873632473, -5300.2038276136, 4);
+(3, 0x6c656f706f6c6420737472203130, '80807', 'Europe', 6255148, 'Germany', 2921044, 'Bavaria', 2951839, 'Upper Bavaria', 2861322, 'Munich', 3220838, 11.5838, 48.15316, -3029.3751169131, -1822.1873632473, -5300.2038276136, 4),
+(4, 0x6b616e74737472203136, '80807', 'Europe', 6255148, 'Germany', 2921044, 'Bavaria', 2951839, 'Upper Bavaria', 2861322, 'Munich', 3220838, 11.5676218, 48.1782846, -2999.2305059335, -1702.9435537379, -5356.7005353165, 7);
 
 -- --------------------------------------------------------
 
@@ -1595,7 +1893,15 @@ CREATE TABLE IF NOT EXISTS `t_user_friend` (
   `confirmed` tinyint(1) NOT NULL,
   `createdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+
+--
+-- Daten für Tabelle `t_user_friend`
+--
+
+INSERT INTO `t_user_friend` (`id`, `srcuserid`, `dstuserid`, `confirmed`, `createdate`) VALUES
+(1, 1, 4, 0, '2014-05-18 14:26:10'),
+(2, 7, 4, 0, '2014-05-19 15:17:25');
 
 -- --------------------------------------------------------
 
@@ -1629,7 +1935,7 @@ CREATE TABLE IF NOT EXISTS `t_user_wall_post` (
   `comment` blob NOT NULL,
   `parent` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
 
 --
 -- Daten für Tabelle `t_user_wall_post`
@@ -1641,7 +1947,9 @@ INSERT INTO `t_user_wall_post` (`id`, `type`, `typeid`, `srcuserid`, `date`, `co
 (3, 1, 4, 4, '2014-05-15 14:02:47', 0x686579203a29206e6f74206d7563682c206a7573742074657374696e672074686520636d732032, 2),
 (4, 1, 4, 4, '2014-05-15 14:03:21', 0x74686973206973206d79206f776e20706f7374, NULL),
 (5, 1, 4, 4, '2014-05-17 13:47:22', 0x7468616e6b20796f7520666f722074657374696e67203b29, 2),
-(6, 1, 4, 4, '2014-05-17 13:47:39', 0x616e642074686973206973206d696e65, 4);
+(6, 1, 4, 4, '2014-05-17 13:47:39', 0x616e642074686973206973206d696e65, 4),
+(7, 2, 1, 1, '2014-05-18 15:34:40', 0x7a727473656172657372207365722061736572, NULL),
+(8, 1, 4, 4, '2014-05-19 16:11:34', 0x6f6b, 2);
 
 -- --------------------------------------------------------
 
@@ -1721,7 +2029,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
   `tableid` int(10) NOT NULL,
   `viewed` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=16 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=18 ;
 
 --
 -- Daten für Tabelle `t_vdb_object`
@@ -1742,7 +2050,9 @@ INSERT INTO `t_vdb_object` (`id`, `tableid`, `viewed`) VALUES
 (12, 2, 0),
 (13, 2, 0),
 (14, 2, 0),
-(15, 2, 0);
+(15, 2, 0),
+(16, 2, 0),
+(17, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -1784,6 +2094,34 @@ CREATE TABLE IF NOT EXISTS `t_vdb_value` (
   KEY `objectid` (`objectid`),
   KEY `columnid` (`columnid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `t_vdb_value`
+--
+
+INSERT INTO `t_vdb_value` (`objectid`, `columnid`, `value`) VALUES
+(16, 1, ''),
+(16, 2, ''),
+(16, 3, ''),
+(16, 4, ''),
+(16, 5, ''),
+(16, 6, ''),
+(16, 7, ''),
+(16, 8, ''),
+(16, 55, ''),
+(16, 24, ''),
+(16, 49, ''),
+(17, 1, ''),
+(17, 2, ''),
+(17, 3, ''),
+(17, 4, ''),
+(17, 5, ''),
+(17, 6, ''),
+(17, 7, ''),
+(17, 8, ''),
+(17, 55, ''),
+(17, 24, ''),
+(17, 49, '');
 
 -- --------------------------------------------------------
 
