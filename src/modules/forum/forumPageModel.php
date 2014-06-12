@@ -139,6 +139,8 @@ class ForumPageModel {
         $message = mysql_real_escape_string($message);
         $title = mysql_real_escape_string($title);
         Database::query("insert into t_user_message (srcuser,dstuser,subject,message,senddate) values ('$srcUserId','$dstUserId','$title','$message',now())");
+        $result = Database::queryAsObject("select last_insert_id() as newid from t_user_message");
+        return $result->newid;
     }
 
     static function deleteTopic ($topicId) {

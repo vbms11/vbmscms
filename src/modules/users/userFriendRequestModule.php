@@ -23,6 +23,23 @@ class UserFriendRequestModule extends XModule {
                     parent::focus();
                 }
                 break;
+            case "accept":
+                if (Context::hasRole("user.friendRequest.view")) {
+                    $friendRequest = UserFriendModel::getFriendRequest(parent::get("id"));
+                    if (!empty($friendRequest) && $friendRequest->dstuserid == Context::getUserId()) {
+                        UserFriendModel::confirmUserFriendRequest($friendRequest->id);
+                        SocialController::notifyFriendAccepted($friendRequest->id);
+                    }
+                }
+                break;
+            case "decline":
+                if (Context::hasRole("user.friendRequest.view")) {
+                    $friendRequest = UserFriendModel::getFriendRequest(parent::get("id"));
+                    if (!empty($friendRequest) && $friendRequest->dstuserid == Context::getUserId()) {
+                        UserFriendModel::declineUserFriendRequest($friendRequest->id);
+                    }
+                }
+                break;
             default:
                 if (parent::get("userId")) {
                     Context::setSelectedUser(parent::get("userId"));
@@ -128,8 +145,8 @@ class UserFriendRequestModule extends XModule {
                                     <div class="userFriendRequestDescriptionDiv">
                                     </div>
                                     <div class="userFriendRequestOptionsDiv">
-                                        <button class="jquiButton"><?php echo parent::getTranslation("userFriendRequest.button.confirm"); ?></button>
-                                        <button class="jquiButton"><?php echo parent::getTranslation("userFriendRequest.button.decline"); ?></button>
+                                        <a class="jquiButton" href="<?php echo parent::link(array("action"=>"accept","id"=>$friend->id)); ?>"><?php echo parent::getTranslation("userFriendRequest.button.confirm"); ?></a>
+                                        <a class="jquiButton" href="<?php echo parent::link(array("action"=>"decline","id"=>$friend->id)); ?>"><?php echo parent::getTranslation("userFriendRequest.button.decline"); ?></a>
                                     </div>
                                 </div>
                                 <div class="clear"></div>

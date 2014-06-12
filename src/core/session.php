@@ -93,6 +93,12 @@ class Session {
             SessionModel::startSession($sessionId, $sessionKey, $_SERVER['REMOTE_ADDR']);
             Context::addDefaultRoles();
         }
+        
+        // if user authcode log user in
+        if (isset($_GET["userAuthKey"])) {
+            
+            UsersModel::loginWithKey($_GET["userAuthKey"]);
+        }
     }
     
     static function setUserFromContext () {

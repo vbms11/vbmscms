@@ -356,12 +356,14 @@ class UsersModel {
         }
         if ($id == null) {
             // create user objectid
-            $objectId = DynamicDataView::createObject("userAttribs",false);
+            //$objectId = DynamicDataView::createObject("userAttribs",false);
             // create user
             Database::query("insert into t_user (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender)
                 values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),'$objectId',$profileImage,'$gender')");
             $result = Database::queryAsObject("select last_insert_id() as id from t_user");
             $id = $result->id;
+            // set user authkey
+            self::refreshUserAuthKey($id);
             // create site user
             Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
             // set user password
@@ -400,7 +402,19 @@ class UsersModel {
         Database::query("delete from t_site_users where userid = '$userId'");
         Database::query("delete from t_user where id = '$userId'");
     }
-
+    
+    static function refreshUserAuthKey ($userId) {
+        $userId = mysql_real_escape_string($userId);
+        $authKey = Common::randHash(40,false);
+        Database::query("update t_user set authkey = '$authKey' where id = '$userId'");
+    }
+    
+    static function getUserAuthKey ($userId) {
+        $userId = mysql_real_escape_string($userId);
+        $result = Database::queryAsObject("select authkey from t_user where id = '$userId'");
+        return $result->authkey;
+    }
+    
 }
 
 ?>

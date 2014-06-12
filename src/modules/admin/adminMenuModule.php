@@ -385,6 +385,12 @@ class AdminMenuModule extends XModule {
                 <li id="adminTranslations"><a href=""><?php echo parent::getTranslation("admin.menu.account.translations"); ?></a></li>
                 <li id="adminUsers"><a href=""><?php echo parent::getTranslation("admin.menu.account.users"); ?></a></li>
                 <li id="adminRoles"><a href=""><?php echo parent::getTranslation("admin.menu.account.roles"); ?></a></li>
+                <li id="adminSocial">
+                    <a href=""><?php echo parent::getTranslation("admin.menu.account.social"); ?></a>
+                    <ul>
+                        <li id="adminSocialNotifications"><a href=""><?php echo parent::getTranslation("admin.menu.account.social.notifications"); ?></a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <script>
@@ -419,6 +425,9 @@ class AdminMenuModule extends XModule {
                         break;
                     case "adminRoles":
                         callUrl("<?php echo parent::staticLink("adminRoles", array("setAdminMode"=>"adminRoles")); ?>");
+                        break;
+                    case "adminSocialNotifications":
+                        callUrl("<?php echo parent::staticLink("adminSocialNotifications", array("setAdminMode"=>"adminSocialNotifications")); ?>");
                         break;
                 }
             });

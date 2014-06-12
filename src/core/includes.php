@@ -23,6 +23,7 @@ include_once 'core/template/editableTemplatePreview.php';
 
 include_once 'core/util/common.php';
 
+require_once 'core/model/socialNotificationsModel.php';
 require_once 'core/model/countriesModel.php';
 require_once 'core/model/rolesModel.php';
 include_once 'core/model/piwikModel.php';
@@ -48,6 +49,7 @@ include_once 'core/model/eventsModel.php';
 include_once 'core/model/languagesModel.php';
 
 include_once 'core/controller/installerController.php';
+include_once 'core/controller/socialController.php';
 include_once 'core/controller/navigationController.php';
 include_once 'core/controller/moduleController.php';
 

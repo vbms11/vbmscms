@@ -64,10 +64,6 @@ class NavigationModel {
         return "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['SCRIPT_NAME']);
     }
     
-    static function getFileUrl () {
-        return "http://".$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'];
-    }
-
     //TODO put in lang select module / find better way
     static function createLangSelectLink ($lang, $params = array(), $xhtml = true) {
         foreach ($_GET as $key => $value) {
@@ -199,9 +195,9 @@ class NavigationModel {
         return NavigationModel::$secureLink ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
     
-    static function createStaticPageLink ($name,$params=null,$xhtml=true) {
+    static function createStaticPageLink ($name,$params=null,$xhtml=true,$secure=true) {
         $link = "?static=$name".NavigationModel::buildParams($params,$xhtml).(!NavigationModel::$secureLink ? NavigationModel::addSessionKeys($xhtml) : "");
-        return NavigationModel::$secureLink ? NavigationModel::registerSecureLink($link,$xhtml):$link;
+        return NavigationModel::$secureLink && $secure ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
     
     static function addSessionKeys ($xhtml=true,$onUrl=false) {
@@ -219,7 +215,7 @@ class NavigationModel {
     
     static function buildParams ($params=null,$xhtml=true,$first=false) {
         $link = "";
-        if ($params != null) {
+        if (!empty($params)) {
             foreach ($params as $key => $param) {
                 if (!$first) {
                     $seperator = $xhtml ? "&amp;" : "&";

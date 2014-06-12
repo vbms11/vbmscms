@@ -30,6 +30,11 @@ class UserFriendModel {
         return Database::queryAsArray("select uf.*, u.id as friendid, u.username as username from t_user_friend uf join t_user u on (uf.srcuserid = '$userId' and uf.dstuserid = u.id) or (uf.dstuserid = '$userId' and uf.srcuserid = u.id) where (uf.srcuserid = '$userId' or uf.dstuserid = '$userId') and uf.confirmed = '1' order by u.username");
     }
     
+    static function getFriendRequest ($friendRequestId) {
+        $friendRequestId = mysql_real_escape_string($friendRequestId);
+        return Database::queryAsArray("select uf.* from t_user_friend uf where uf.confirmed = '0'");
+    }
+    
     static function getUserFriendRequests ($userId) {
         $userId = mysql_real_escape_string($userId);
         return Database::queryAsArray("select uf.*, u.id as friendid, u.username as username from t_user_friend uf join t_user u on (uf.dstuserid = '$userId' and uf.srcuserid = u.id) where uf.dstuserid = '$userId' and uf.confirmed = '0' order by u.username");
@@ -49,6 +54,11 @@ class UserFriendModel {
     static function confirmUserFriendRequest ($userFriendId) {
         $userFriendId = mysql_real_escape_string($userFriendId);
         Database::query("update t_user_friend set confirmed = '1' where id = '$userFriendId'");
+    }
+    
+    static function declineUserFriendRequest ($userFriendId) {
+        $userFriendId = mysql_real_escape_string($userFriendId);
+        Database::query("delete t_user_friend where id = '$userFriendId'");
     }
     
     static function createUserFriendRequest ($srcUserId, $dstUserId) {

@@ -36,14 +36,16 @@ class UserMessageModule extends XModule {
                 break;
             case "send":
                 if (Context::hasRole(array("message.inbox"))) {
-                    ForumPageModel::savePm(Context::getUserId(), Context::getSelectedUserId(), parent::post('subject'), parent::post('message'));
+                    $messageId = ForumPageModel::savePm(Context::getUserId(), Context::getSelectedUserId(), parent::post('subject'), parent::post('message'));
+                    SocialController::notifyMessageSent($messageId);
                     parent::blur();
                     parent::redirect(array("action"=>"sent"));
                 }
                 break;
             case "doReply":
                 if (Context::hasRole(array("message.inbox"))) {
-                    ForumPageModel::savePm(Context::getUserId(), parent::get("dstUserId"), parent::post('subject'), parent::post('message'));
+                    $messageId = ForumPageModel::savePm(Context::getUserId(), parent::get("dstUserId"), parent::post('subject'), parent::post('message'));
+                    SocialController::notifyMessageSent($messageId);
                     parent::blur();
                     parent::redirect(array("action"=>"sent"));
                 }

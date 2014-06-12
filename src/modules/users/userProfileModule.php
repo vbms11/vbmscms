@@ -31,7 +31,8 @@ class UserProfileModule extends XModule {
                 break;
             case "addFriend":
                 if (Context::hasRole("user.profile.owner")) {
-                    UserFriendModel::createUserFriendRequest(Context::getUserId(), parent::get("id"));
+                    $friendRequestId = UserFriendModel::createUserFriendRequest(Context::getUserId(), parent::get("id"));
+                    SocialController::notifyFriendRequest($friendRequestId);
                     parent::redirect();
                 }
                 break;
