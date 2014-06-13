@@ -5,6 +5,13 @@ class GalleryModel {
     const type_user = 1;
     const type_module = 2;
     
+    const tinyWidth = 50;
+    const tinyHeight = 50;
+    const smallWidth = 170;
+    const smallHeight = 170;
+    const bigWidth = 1000;
+    const bigHeight = 1000;
+    
     // ordering
     
     static function getNextImageOrderKey () {
@@ -205,6 +212,10 @@ class GalleryModel {
     
     static function deleteImage ($id) {
         $id = mysql_escape_string($id);
+        $image = self::getImage($id);
+        unlink(ResourcesModel::getResourcePath("gallery",$image->image));
+        unlink(ResourcesModel::getResourcePath("gallery/small",$image->image));
+        unlink(ResourcesModel::getResourcePath("gallery/tiny",$image->image));
         Database::query("delete from t_gallery_image where id = '$id'");
     }
     
@@ -228,7 +239,7 @@ class GalleryModel {
     
     
     
-    static function cropImage ($imageFile,$width,$height,$outputFile) {
+    static function cropImage ($imageFile,$width,$height,$outputFile,$x=null,$y=null,$w=null,$h=null) {
 	
         $pathInfo = pathinfo($imageFile);
         $ext = strtolower($pathInfo['extension']);
@@ -253,22 +264,25 @@ class GalleryModel {
         }
         
         $image = imagecreatetruecolor($width,$height);
-
-        if ($originalImageSize[0] > $originalImageSize[1]) {
-            $ratio = $originalImageSize[0] / $originalImageSize[1];
-            $srcw = $originalImageSize[0] / $ratio;
-            $srch = $originalImageSize[1];
-            $srcx = ($originalImageSize[0] - $srcw) / 2;
-            $srcy = 0;
-        } else {
-            $ratio = $originalImageSize[1] / $originalImageSize[0];
-            $srcw = $originalImageSize[0];
-            $srch = $originalImageSize[1] / $ratio;
-            $srcx = 0;
-            $srcy = ($originalImageSize[1] - $srch) / 2;
+        
+        if ($x == null && $y == null && $w == null && $h == null) {
+            
+            if ($originalImageSize[0] > $originalImageSize[1]) {
+                $ratio = $originalImageSize[0] / $originalImageSize[1];
+                $w = $originalImageSize[0] / $ratio;
+                $h = $originalImageSize[1];
+                $x = ($originalImageSize[0] - $w) / 2;
+                $y = 0;
+            } else {
+                $ratio = $originalImageSize[1] / $originalImageSize[0];
+                $w = $originalImageSize[0];
+                $h = $originalImageSize[1] / $ratio;
+                $x = 0;
+                $y = ($originalImageSize[1] - $h) / 2;
+            }
         }
-
-        imagecopyresampled($image,$originalImage, 0, 0, $srcx, $srcy, $width, $height, $srcw, $srch);
+        
+        imagecopyresampled($image,$originalImage, 0, 0, $x, $y, $width, $height, $w, $h);
         imagejpeg($image,$outputFile,90);
         imagedestroy($image);
     }
@@ -303,9 +317,9 @@ class GalleryModel {
             $newFilename = self::getNextFilename();
             $filePathFull = ResourcesModel::getResourcePath("gallery/new",$filename);
             
-            self::cropImage($filePathFull,1000,1000,ResourcesModel::getResourcePath("gallery",$newFilename));
-            self::cropImage($filePathFull,170,170,ResourcesModel::getResourcePath("gallery/small",$newFilename));
-            self::cropImage($filePathFull,50,50,ResourcesModel::getResourcePath("gallery/tiny",$newFilename));
+            self::cropImage($filePathFull,self::bigWidth,self::bigHeight,ResourcesModel::getResourcePath("gallery",$newFilename));
+            self::cropImage($filePathFull,self::smallWidth,self::smallHeight,ResourcesModel::getResourcePath("gallery/small",$newFilename));
+            self::cropImage($filePathFull,self::tinyWidth,self::tinyHeight,ResourcesModel::getResourcePath("gallery/tiny",$newFilename));
             
             self::addImage($category,$newFilename,"","");
             
@@ -322,11 +336,37 @@ class GalleryModel {
     function getNextFilename ($ext = "jpg") {
         $filename = null;
         do {
-            $filename = Common::randHash().$ext;
+            $filename = Common::randHash(32, false).".".$ext;
             $filename = mysql_real_escape_string($filename);
             $result = Database::queryAsObject("select 1 as exists from t_gallery_image where image = '$filename'");
         } while (!empty($result) && $result->exists == "1");
         return $filename;
+    }
+    
+    function renderImage ($imageId,$width,$height,$x=null,$y=null,$w=null,$h=null) {
+        
+        $image = self::getImage($imageId);
+        
+        if (!empty($image)) {
+            
+            $image = $image->image;
+            
+            $filename = "$width_$height_$x_$y_$w_$h_$image";
+            $filePath = ResourcesModel::getResourcePath("gallery/crop",$filename);
+            
+            if (!is_file($filePath)) {
+                
+                $originalImage = ResourcesModel::createResourceLink("gallery",$image->image);
+                self::cropImage($originalImage,$width,$height,$filePath,$x,$y,$w,$h);
+            }
+            
+            header("Content-Type: image/jpg");
+            $originalImage = imagecreatefromjpeg($filePath);
+            imagejpeg($originalImage);
+            imagedestroy($originalImage);
+            Context::setReturnValue("");
+        }
+        
     }
     
 }

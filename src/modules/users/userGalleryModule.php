@@ -1,7 +1,6 @@
 <?php
 
 require_once('core/plugin.php');
-require_once('modules/gallery/galleryModel.php');
 require_once('modules/users/userWallModel.php');
 
 class UserGalleryModule extends XModule {
@@ -50,7 +49,7 @@ class UserGalleryModule extends XModule {
             case "deleteImage":
                 if ($this->getAllowUserEdit()) {
                     if (parent::get("id")) {
-                        GalleryModel::deleteImage(parent::get("image"));
+                        GalleryModel::deleteImage(parent::get("id"));
                         PagesModel::updateModifyDate();
                     }
                     parent::redirect(array("category"=>parent::get("category")));

@@ -8,11 +8,22 @@
     border: 1px solid silver;
     margin: 0 0 3px;
     text-align: center;
-    font-size: 0;
+}
+
+.userProfileImageEdit {
+    position: absolute;
+    width: 172px;
+    z-index: 20;
+}
+
+.userProfileImageEdit a {
+    float: right;
 }
 
 .userProfileImage img {
     max-width: 176px;
+    display: block;
+    z-index: 10;
 }
 
 .userProfileName {

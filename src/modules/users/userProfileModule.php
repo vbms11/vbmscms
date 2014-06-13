@@ -121,6 +121,11 @@ class UserProfileModule extends XModule {
                 $userProfileImage = UsersModel::getUserImageUrl($user->id);
                 ?>
                 <div class="userProfileImage">
+                    <div class="userProfileImageEdit">
+                        <a href="<?php echo parent::staticLink("userProfileImage",array("userId"=>$user->id)) ?>">
+                            <?php echo parent::getTranslation("userProfile.editImage"); ?>
+                        </a>
+                    </div>
                     <img src="<?php echo $userProfileImage; ?>" title="<?php echo $username; ?>" alt="<?php echo $username; ?>" />
                 </div>
                 <div class="userProfileName">

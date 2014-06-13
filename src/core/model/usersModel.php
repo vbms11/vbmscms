@@ -253,7 +253,27 @@ class UsersModel {
     static function setUserImage ($userId, $imageId) {
         $userId = mysql_real_escape_string($userId);
         $imageId = mysql_real_escape_string($imageId);
-        Database::query("update t_user set image = '$imageId' where id = '$userId'");
+        Database::query("update t_user set 
+            image = '$imageId', 
+            imagex = null,
+            imagey = null,
+            imagew = null,
+            imageh = null
+            where id = '$userId'");
+    }
+    
+    static function setUserImageCrop ($userId, $x, $y, $w, $h) {
+        $userId = mysql_real_escape_string($userId);
+        $x = mysql_real_escape_string($x);
+        $y = mysql_real_escape_string($y);
+        $w = mysql_real_escape_string($w);
+        $h = mysql_real_escape_string($h);
+        Database::query("update t_user set 
+            imagex = '$x',
+            imagey = '$y',
+            imagew = '$w',
+            imageh = '$h'
+            where id = '$userId'");
     }
     
     static function getUserImageUrl ($userId) {
@@ -261,7 +281,19 @@ class UsersModel {
         $imageUrl = null;
         if (!empty($user->image)) {
             $image = GalleryModel::getImage($user->image);
-            $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
+            if (!empty($user->imagex) && !empty($user->imagey) && !empty($user->imagew) && !empty($user->imageh)) {
+                $imageUrl = NavigationModel::createServiceLink("images",array(
+                    "action"    => "gallery",
+                    "width"     => GalleryModel::smallWidth,
+                    "height"    => GalleryModel::smallHeight,
+                    "x"         => $user->imagex,
+                    "y"         => $user->imagey,
+                    "w"         => $user->imagew,
+                    "h"         => $user->imageh
+                ));
+            } else {
+                $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
+            }
         } else if (!empty($user->facebook_uid)) {
             $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture?type=large";
         } else if (!empty($user->twitter_uid)) {
@@ -277,7 +309,19 @@ class UsersModel {
         $imageUrl = "";
         if (!empty($user->image)) {
             $image = GalleryModel::getImage($user->image);
-            $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
+            if (!empty($user->imagex) && !empty($user->imagey) && !empty($user->imagew) && !empty($user->imageh)) {
+                $imageUrl = NavigationModel::createServiceLink("images",array(
+                    "action"    => "gallery",
+                    "width"     => GalleryModel::tinyWidth,
+                    "height"    => GalleryModel::tinyHeight,
+                    "x"         => $user->imagex,
+                    "y"         => $user->imagey,
+                    "w"         => $user->imagew,
+                    "h"         => $user->imageh
+                ));
+            } else {
+                $imageUrl = ResourcesModel::createResourceLink("gallery/tiny",$image->image);
+            }
         } else if (!empty($user->facebook_uid)) {
             $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture";
         } else if (!empty($user->twitter_uid)) {

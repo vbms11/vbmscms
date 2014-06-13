@@ -22,7 +22,9 @@ include_once 'core/template/editableTemplate.php';
 include_once 'core/template/editableTemplatePreview.php';
 
 include_once 'core/util/common.php';
+include_once 'resource/js/valums-file-uploader/server/php.php';
 
+require_once 'core/model/galleryModel.php';
 require_once 'core/model/socialNotificationsModel.php';
 require_once 'core/model/countriesModel.php';
 require_once 'core/model/rolesModel.php';
@@ -61,6 +63,5 @@ include_once 'core/ddm/dmObject.php';
 include_once 'core/ddm/dmSerializer.php';
 include_once 'core/ddm/dataModel.php';
 include_once 'core/ddm/dataView.php';
-include_once 'resource/js/valums-file-uploader/server/php.php';
 
 ?>

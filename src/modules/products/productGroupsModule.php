@@ -2,7 +2,6 @@
 
 require_once 'core/plugin.php';
 require_once 'modules/products/productsPageModel.php';
-require_once 'modules/gallery/galleryModel.php';
 
 class ProductGroupsModule extends XModule {
 

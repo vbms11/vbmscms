@@ -1,7 +1,6 @@
 <?php
 
 require_once('core/plugin.php');
-require_once('modules/gallery/galleryModel.php');
 
 class GalleryView extends XModule {
     

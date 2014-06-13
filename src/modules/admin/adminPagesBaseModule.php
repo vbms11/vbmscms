@@ -295,7 +295,7 @@ class AdminPagesBaseModule extends XModule {
             }, stop: function() {
                 var index = $(".templateBoxContainer .templatesToggelBox").index(
                         $(".templateBoxContainer .ui-selected"));
-                ajaxRequest("<?php echo parent::ajaxLink(array("action"=>"selectTemplate","id"=>$page->id)) ?>", null, {"index":index});
+                ajaxRequest("<?php echo parent::ajaxLink(array("action"=>"selectTemplate","id"=>$page->id)); ?>", null, {"index":index});
             }
         });
         $(".templateToggelBoxDiv").click(function(){

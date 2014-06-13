@@ -48,14 +48,14 @@ class Captcha {
         $fakeColor_r = 225;
         $fakeColor_g = 225;
         $fakeColor_b = 225;
-        $img = imagecreate ($width,$height);
-        $background = ImageColorAllocate ($img, 230, 230, 240);
+        $img = imagecreate($width,$height);
+        $background = imagecolorallocate($img, 230, 230, 240);
         $fakecoloroffset = 60;
         $colors = array(
-            ImageColorAllocate ($img, 0, 0, 0),
-            ImageColorAllocate ($img, 120, 0, 0),
-            ImageColorAllocate ($img, 0, 0, 120),
-            ImageColorAllocate ($img, 0, 120, 0)
+            imagecolorallocate($img, 0, 0, 0),
+            imagecolorallocate($img, 120, 0, 0),
+            imagecolorallocate($img, 0, 0, 120),
+            imagecolorallocate($img, 0, 120, 0)
 	);
         
         $countColors = count($colors);
@@ -66,8 +66,6 @@ class Captcha {
         $posx = 10;
         $posy = 14;
         $font = 20;
-        
-        
         
         // create lines on image
         $lines = 30;
@@ -93,8 +91,8 @@ class Captcha {
         for ($i=0; $i<200; $i++) {
             
             $char = Common::randHash(1);
-            $fakeColor = ImageColorAllocate ($img, $fakeColor_r-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset), $fakeColor_g-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset), $fakeColor_b-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset));
-            ImageString($img, $font, Common::rand()%$width-3, Common::rand()%$height-5, strtoupper("$char"), $fakeColor);
+            $fakeColor = imagecolorallocate ($img, $fakeColor_r-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset), $fakeColor_g-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset), $fakeColor_b-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset));
+            imagestring($img, $font, Common::rand()%$width-3, Common::rand()%$height-5, strtoupper("$char"), $fakeColor);
             
         }
 
@@ -111,8 +109,8 @@ class Captcha {
 	
         // render and send the image
         header("Content-Type: image/gif");
-        ImageGif ($img);
-        ImageDestroy ($img);
+        imagegif($img);
+        imagedestroy($img);
         Context::setReturnValue("");
     }
     

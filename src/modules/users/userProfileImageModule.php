@@ -16,8 +16,7 @@ class UserProfileImageModule extends XModule {
         switch (parent::getAction()) {
             case "save":
                 if (Context::hasRole("user.image.edit")) {
-                    parent::param("mode",$_POST["mode"]);
-                    parent::param("linkProfile",parent::post("linkProfile") == "1" ? true : false);
+                    parent::param("mode",parent::post("mode"));
                 }
                 parent::blur();
                 parent::redirect();
@@ -28,9 +27,32 @@ class UserProfileImageModule extends XModule {
                 }
                 break;
             case "uploadImage":
-                // uploads the image and create preview image
-                GalleryModel::uploadImage("fileData",$user->gallery);
-                Context::setReturnValue("");
+                if (Context::hasRole("user.image.view")) {
+                    $user = $this->getUserBySelectedMode();
+                    $gallery = GalleryModel::getUserGallery($user->id);
+                    GalleryModel::uploadImage("fileData",$gallery->rootcategory);
+                    Context::setReturnValue("");
+                }
+                break;
+            case "cropImage":
+                if (Context::hasRole("user.image.view")) {
+                    $user = $this->getUserBySelectedMode();
+                    UsersModel::setUserImageCrop($user->id, parent::post("imagex"), parent::post("imagey"), parent::post("imagew"), parent::post("imageh"));
+                }
+                break;
+            case "selectImage":
+                if (Context::hasRole("user.image.view")) {
+                    $user = $this->getUserBySelectedMode();
+                    UsersModel::setUserImage($user->id, parent::get("id"));
+                }
+                break;
+            default:
+                if (parent::param("mode") == self::modeSelectedUser && parent::get("userId")) {
+                    Context::setSelectedUser(parent::get("userId"));
+                } else if (parent::param("mode") == self::modeCurrentUser) {
+                    Context::setSelectedUser(Context::getUserId());
+                }
+                parent::blur();
                 break;
         }
     }
@@ -46,13 +68,19 @@ class UserProfileImageModule extends XModule {
                     $this->printEditView();
                 }
                 break;
-            case "configure":
-                $this->printConfigureView();
+            case "crop":
+                if (Context::hasRole("user.image.view")) {
+                    $this->printCropImageView();
+                }
+                break;
+            case "upload":
+                if (Context::hasRole("user.image.view")) {
+                    $this->printUploadImage();
+                }
                 break;
             default:
-                echo "asdf";
                 if (Context::hasRole("user.image.view")) {
-                    $this->printMainView();
+                    $this->printSelectImageView();
                 }
                 break;
         }
@@ -62,44 +90,15 @@ class UserProfileImageModule extends XModule {
      * returns the roles defined by this module
      */
     function getRoles () {
-        return array("user.image.edit","user.image.view","user.image.own");
+        return array("user.image.edit","user.image.view");
     }
     
     function getScripts() {
         return array("js/usersProfileImage.css");
     }
     
-    static function getTranslations() {
-        return array(
-            "en"=>array(
-                "users.image.edit.mode" => "Display Mode:"
-            ),
-            "de"=>array(
-                "users.image.edit.mode" => "Anzige Modus:"
-            ));
-    }
-    
-    function printEditView () {
-        ?>
-        <div class="panel usersImagePanel">
-            <form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
-                <table><tr><td>
-                    <?php echo parent::getTranslation("users.image.edit.mode"); ?>
-                </td><td>
-                    <?php InputFeilds::printSelect("mode", parent::param("mode"), array(parent::getTranslation("common.user.current") => self::modeCurrentUser, parent::getTranslation("common.user.selected") => self::modeSelectedUser)); ?>
-                </td></tr><tr><td>
-                    <?php echo parent::getTranslation("users.image.edit.linkProfile"); ?>
-                </td><td>
-                    <?php InputFeilds::printCheckbox("linkProfile", parent::param("linkProfile")); ?>
-                </td></tr></table>
-                <hr/>
-                <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
-            </form>
-        </div>
-        <?php
-    }
-    
     function getUserBySelectedMode () {
+        /*
         $userId = null;
         switch (parent::param("mode")) {
             case self::modeSelectedUser:
@@ -112,94 +111,158 @@ class UserProfileImageModule extends XModule {
                 }
                 break;
         }
+         * 
+         */
+        $userId = Context::getUserId();
         $user = null;
-        if (empty($userId)) {
+        if (!empty($userId)) {
             $user = UsersModel::getUser($userId);
         }
         return $user;
     }
     
-    function printConfigureView () {
-        $user = $this->getUserBySelectedMode();
-        $categoryId = Common::isEmpty(parent::get("category")) ? parent::get("category") : $user->gallery;
-        $category = GalleryModel::getCategory($categoryId);
-        $images = GalleryModel::getImages($categoryId);
-        $categorys = GalleryModel::getCategorys($categoryId);
+    function printEditView () {
         ?>
-        <div class="panel userImageConfigPanel">
-            <table><tr>
-            <td><?php echo parent::getTranslation("user.profile.image"); ?></td>
-            <td><?php InputFeilds::printMultiFileUpload("profileImage", parent::link(array("action"=>"uploadImage"))); ?></td>
-            </tr></table>
-            <div class="galleryContainer">
-                <?php
-                if ($category->parent != null) {
-                    ?>
-                    <div class="galleryButtons">
-                        <a href="<?php echo parent::link(); ?>">Back</a> 
-                    </div>
-                    <?php
-                }
-                ?>
-                <div align="center">
-                    <?php
-                    foreach ($categorys as $category) {
-                        ?>
-                        <div align="center" class="galleryGrid">
-                            <div class="galleryGridImage shadow">
-                                <a href="<?php echo parent::link(array("action"=>"configure","category"=>$category->id)); ?>">
-                                    <img class="imageLink" width="170" height="170" src="<?php echo Common::isEmpty($category->filename) ? "resource/img/icons/Clipboard.png" : ResourcesModel::createResourceLink("gallery/small",$category->filename); ?>" alt=""/>
-                                </a>
-                            </div>
-                            <div class="galleryGridTitle">
-                                <?php echo $category->title; ?>
-                            </div>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                    <?php
-                    foreach ($images as $image) {
-                        ?>
-                        <div align="center" class="galleryGrid">
-                            <div class="galleryGridImage galleryImages shadow">
-                                <img onclick="callUrl('<?php echo parent::link(array("action"=>"setImage","id"=>$image->id)); ?>');" class="imageLink" width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
-                            </div>
-                            <a onclick="return confirm('<?php echo parent::getTranslation("user.profile.image.delete"); ?>')" href="<?php echo parent::link(array("action"=>"delete","image"=>$image->id,"category"=>$categoryId)); ?>">
-                                <img src="resource/img/delete.png" class="imageLink" alt=""/>
-                            </a>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </div>
-            </div>
+        <div class="panel usersImagePanel">
+            <form method="post" action="<?php echo parent::link(array("action"=>"save")); ?>">
+                <table><tr><td>
+                    <?php echo parent::getTranslation("userProfileImage.edit.mode"); ?>
+                </td><td>
+                    <?php InputFeilds::printSelect("mode", parent::param("mode"), array(self::modeCurrentUser => parent::getTranslation("common.user.current"), self::modeSelectedUser => parent::getTranslation("common.user.selected"))); ?>
+                </td></tr></table>
+                <hr/>
+                <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
+            </form>
         </div>
         <?php
     }
     
-    function printMainView () {
+    function printSelectImageView () {
+        
+        $user = $this->getUserBySelectedMode();
+        $gallery = GalleryModel::getUserGallery($user->id);
+        $categorys = GalleryModel::getCategorys($gallery->rootcategory);
+        
         ?>
-        <div class="panel usersImagePanel">
+        <div class="panel userImageSelectPanel">
+            <h1><?php echo parent::getTranslation("userProfileImage.title"); ?></h1>
+            <p><?php echo parent::getTranslation("userProfileImage.description"); ?></p>
             <?php
-            if (Context::hasRole("user.image.view")) {
-                $user = $this->getUserBySelectedMode();
-                if (empty($user)) {
-                    echo '<a href="'.parent::staticLink("register").'"><img src="resouce/img/icons/User.png" alt="" /></a>';
-                } else {
-                    if (parent::param("linkProfile")) {
-                        echo '<a href="'.Context::getUserHome($user->id).'">';
-                    }
-                    echo '<img src="'.ResourcesModel::createResourceLink("gallery/small", $user->image).'" alt="" />';
-                    if (parent::param("linkProfile")) {
-                        echo '</a>';
-                    }
-                    if (Context::hasRole("user.image.edit")) {
-                        echo '<div class="userImageConfigure">'.parent::getTranslation("user.image.configure").'</div>';
-                    }
-                }
+            $hasImages = false;
+            foreach ($categorys as $category) {
+                $images = GalleryModel::getImages($category->id);
+                foreach ($images as $image) {
+                    $hasImages = true;
+                    ?>
+                    <div class="userImageSelectImage" id="profileImage_<?php echo $image->id; ?>">
+                        <img width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
+                    </div>
+                    <?php
+                }   
+            }
+            if (!$hasImages) {
+                ?>
+                <p><?php echo parent::getTranslation("userProfileImage.noImages"); ?></p>
+                <?php
             }
             ?>
+            <div class="clear"></div>
+            <hr/>
+            <div class="alignRight">
+                <a class="jquiButton upload" href="<?php echo parent::link(array("action"=>"upload")); ?>"><?php echo parent::getTranslation("userProfileImage.upload"); ?></a>
+                <a class="jquiButton crop" href="<?php echo parent::link(array("action"=>"crop")); ?>"><?php echo parent::getTranslation("userProfileImage.crop"); ?></a>
+                <a class="jquiButton finish" href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>"><?php echo parent::getTranslation("userProfileImage.finnish"); ?></a>
+            </div>
+        </div>
+        <script>
+        $(".userImageSelectPanel crop").button("option", "disabled", true);
+        $(".userImageSelectPanel").selectable({ 
+            filter: ".userImageSelectImage",
+            start: function () {
+                $(this).each(function (index, object) {
+                    $(object).removeClass("ui-selected");
+                });
+            }, stop: function() {
+                var index = $(".userImageSelectPanel .ui-selected").attr("id").substring(13);
+                ajaxRequest("<?php echo parent::ajaxLink(array("action"=>"selectImage")); ?>", function () {
+                    $(".userImageSelectPanel crop").button("option", "disabled", false);
+                }, {"index":index});
+            }
+        });
+        </script>
+        <?php
+    }
+    
+    function printCropImageView () {
+        
+        Context::addRequiredScript("resource/js/jcrop/jquery.Jcrop.min.js");
+        Context::addRequiredStyle("resource/js/jcrop/jquery.Jcrop.min.css");
+        
+        $user = $this->getUserBySelectedMode();
+        $image = GalleryModel::getImage($user->image);
+        $imageUrl = ResourcesModel::createResourceLink("gallery",$image->image);
+        
+        ?>
+        <div class="panel profileImageCropPanel">
+            <form method="post" action="<?php echo parent::link(array("action"=>"cropImage")); ?>">
+                <input type="hidden" name="imagex" value="" />
+                <input type="hidden" name="imagey" value="" />
+                <input type="hidden" name="imagew" value="" />
+                <input type="hidden" name="imageh" value="" />
+                <style>
+                #preview-pane .preview-container {
+                    width: 200px;
+                    height: 200px;
+                    overflow: hidden;
+                }
+                </style>
+                <img src="<?php echo $imageUrl; ?>" id="cropSrcImage" alt="" />
+                <div class="alignRight">
+                    <button class="jquiButton save"><?php echo parent::getTranslation("common.save"); ?></button>
+                    <button class="jquiButton selectImage"><?php echo parent::getTranslation("userProfileImage.button.selectImage"); ?></button>
+                </div>
+            </form>
+        </div>
+        <script>
+        $('#cropSrcImage').Jcrop({
+            onChange: updatePreview,
+            onSelect: updatePreview,
+            aspectRatio: 1
+        });
+        function updatePreview(c) {
+            if (parseInt(c.w) > 0) {
+                $(".profileImageCropPanel")
+                    .find("input[name=imagex]").val(c.x).end()
+                    .find("input[name=imagey]").val(c.y).end()
+                    .find("input[name=imagew]").val(c.w).end()
+                    .find("input[name=imageh]").val(c.h);
+            }
+        }
+        $(".profileImageCropPanel .selectImage").click(function(){
+            callUrl("<?php echo parent::link(); ?>");
+        })
+        $(".profileImageCropPanel .save").click(function(){
+            callUrl("<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>");
+        })
+        </script>
+        <?php
+    }
+    	
+    function printUploadImage () {
+        
+        ?>
+        <div class="panel userImageSelectPanel">
+            <h1><?php echo parent::getTranslation("userProfileImage.upload.title"); ?></h1>
+            <p><?php echo parent::getTranslation("userProfileImage.upload.description"); ?></p>
+            <?php 
+            InputFeilds::printMultiFileUpload("images", parent::ajaxLink(array("action"=>"uploadImage")));
+            ?>
+            <hr/>
+            <div class="alignRight">
+                <a href="<?php echo parent::link(); ?>" class="jquiButton">
+                    <?php echo parent::getTranslation("userProfileImage.upload.finnish"); ?>
+                </a>
+            </div>
         </div>
         <?php
     }
