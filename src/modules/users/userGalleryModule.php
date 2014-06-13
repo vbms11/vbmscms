@@ -119,19 +119,19 @@ class UserGalleryModule extends XModule {
                 if ($userId == Context::getUserId() || $comment->srcuserid == Context::getUserId()) {
                     UserWallmodel::deleteUserPost(parent::get("id"));
                 }
-                parent::redirect();
+                parent::redirect(array("action"=>"viewImage","id"=>parent::get("image"),"category"=>parent::get("category")));
                 break;
-            case "editComment":
+            case "saveComment":
                 if (parent::post("submitButton")) {
                     $post = UserWallModel::getUserPost(parent::get("id"));
-                    if (UserWallModel::canUserPost($post->userid)) {
+                    if (UserWallModel::canUserPost($post->srcuserid)) {
                         $validationMessages = UserWallModel::validateWallPost($post->userid, Context::getUserId(), parent::post("comment"));
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
                             if ($post->srcuserid == Context::getUserId()) {
                                 UserWallModel::updateUserPost(parent::get("id"), parent::post("comment"));
-                                parent::redirect();
+                                parent::redirect(array("action"=>"viewImage","id"=>parent::get("image"),"category"=>parent::get("category")));
                             }
                         }
                     }
@@ -172,6 +172,9 @@ class UserGalleryModule extends XModule {
                 if ($this->getAllowUserEdit()) {
                     $this->printUploadImage();
                 }
+                break;
+            case "editComment":
+                $this->printEditComment(parent::get("id"),parent::get("image"),parent::get("category"));
                 break;
             case "comment":
             case "viewImage":
@@ -433,7 +436,7 @@ class UserGalleryModule extends XModule {
                 <?php
 
                 if (!empty($imagePosts)) {
-                    foreach ($imagePosts as $wallPost) {
+                    foreach (array_reverse($imagePosts) as $wallPost) {
 
                         if (!empty($wallPost->parent)) {
                             continue;
@@ -470,12 +473,12 @@ class UserGalleryModule extends XModule {
                                         }
                                         if ($allowDelete) {
                                             ?>
-                                            <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPost->id),false); ?>');" />
+                                            <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPost->id,"image"=>$imageId,"category"=>$categoryId),false); ?>');" />
                                             <?php
                                         }
                                         if ($allowEdit) {
                                             ?>
-                                            <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPost->id)); ?>">
+                                            <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPost->id,"image"=>$imageId,"category"=>$categoryId)); ?>">
                                                 <img src="resource/img/preferences.png" alt="" />
                                             </a>
                                             <?php
@@ -609,7 +612,32 @@ class UserGalleryModule extends XModule {
         <?php
     }
     
-    
+    function printEditComment ($commentId, $imageId, $categoryId) {
+        
+        $comment = UserWallModel::getUserPost($commentId);
+        $userProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
+        ?>
+        <div class="userWallPostCommentBox">
+            <div class="userWallPostImage">
+                <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+            </div>
+            <div class="userWallPostBody">
+                <form method="post" action="<?php echo parent::link(array("action"=>"saveComment","id"=>$commentId,"image"=>$imageId,"category"=>$categoryId)); ?>">
+                    <div class="userWallPostTextarea">
+                        <textarea name="<?php echo parent::alias("comment") ?>"><?php echo htmlentities($comment->comment); ?></textarea>
+                    </div>
+                    <hr/>
+                    <div class="alignRight">
+                        <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
+                            <?php echo parent::getTranslation("userWall.button.comment"); ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php
+    }
 }
 
 ?>

@@ -311,7 +311,7 @@ class GalleryModel {
         }
         */
         
-        if ($result['success']) {
+        if (isset($result['success']) && $result['success']) {
             
             $filename = $result['filename'];
             $newFilename = self::getNextFilename();
@@ -338,8 +338,8 @@ class GalleryModel {
         do {
             $filename = Common::randHash(32, false).".".$ext;
             $filename = mysql_real_escape_string($filename);
-            $result = Database::queryAsObject("select 1 as exists from t_gallery_image where image = '$filename'");
-        } while (!empty($result) && $result->exists == "1");
+            $result = Database::queryAsObject("select 1 as taken from t_gallery_image where image = '$filename'");
+        } while (!empty($result) && $result->taken == "1");
         return $filename;
     }
     
