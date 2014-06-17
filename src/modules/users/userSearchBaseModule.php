@@ -40,12 +40,12 @@ class UserSearchBaseModule extends XModule {
                 ?>
                 <div class="userListUserDiv shadow">
                     <div class="userListUserImage">
-                        <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>" title="<?php echo $user->username; ?>">
+                        <a href="<?php echo NavigationModel::createStaticPageLink('userProfile', array('userId' => $user->id), true, false); ?>" title="<?php echo $user->username; ?>">
                             <img width="170" height="170" src="<?php echo UsersModel::getUserImageUrl($user->id); ?>" alt="<?php echo $user->username; ?>"/>
                         </a>
                     </div>
                     <div class="userListUserDetails">
-                        <a href="<?php echo parent::staticLink('userProfile',array('userId' => $user->id)); ?>">
+                        <a href="<?php echo NavigationModel::createStaticPageLink('userProfile', array('userId' => $user->id), true, false); ?>">
                             <?php echo $user->username; ?>
                             <?php echo ' ('.$user->age.')'; ?>
                         </a>

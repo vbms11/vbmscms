@@ -283,6 +283,7 @@ class UsersModel {
             $image = GalleryModel::getImage($user->image);
             if (!empty($user->imagex) && !empty($user->imagey) && !empty($user->imagew) && !empty($user->imageh)) {
                 $imageUrl = NavigationModel::createServiceLink("images",array(
+                    "image"     => $user->image, 
                     "action"    => "gallery",
                     "width"     => GalleryModel::smallWidth,
                     "height"    => GalleryModel::smallHeight,
@@ -290,7 +291,7 @@ class UsersModel {
                     "y"         => $user->imagey,
                     "w"         => $user->imagew,
                     "h"         => $user->imageh
-                ));
+                ),false,false);
             } else {
                 $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
             }
@@ -311,6 +312,7 @@ class UsersModel {
             $image = GalleryModel::getImage($user->image);
             if (!empty($user->imagex) && !empty($user->imagey) && !empty($user->imagew) && !empty($user->imageh)) {
                 $imageUrl = NavigationModel::createServiceLink("images",array(
+                    "image"     => $user->image, 
                     "action"    => "gallery",
                     "width"     => GalleryModel::tinyWidth,
                     "height"    => GalleryModel::tinyHeight,

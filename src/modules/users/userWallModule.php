@@ -306,7 +306,7 @@ class UserWallModule extends XModule {
                             if ($wallPost->id == $wallPostReply->parent) {
                                 $replyUser = UsersModel::getUser($wallPostReply->srcuserid);
                                 $replyUserName = $replyUser->firstname." ".$replyUser->lastname;
-                                $replyUserImage = UsersModel::getUserImageUrl($replyUser->id);
+                                $replyUserImage = UsersModel::getUserImageSmallUrl($replyUser->id);
                                 ?>
                                 <div class="userWallPostReply">
                                     <div class="userWallPostImage">

@@ -351,19 +351,26 @@ class GalleryModel {
             
             $image = $image->image;
             
-            $filename = "$width_$height_$x_$y_$w_$h_$image";
+            $filename = $width.'_'.$height.'_'.$x.'_'.$y.'_'.$w.'_'.$h.'_'.$imageId.'.jpg';
             $filePath = ResourcesModel::getResourcePath("gallery/crop",$filename);
             
             if (!is_file($filePath)) {
                 
-                $originalImage = ResourcesModel::createResourceLink("gallery",$image->image);
+                $originalImage = ResourcesModel::getResourcePath("gallery",$image);
                 self::cropImage($originalImage,$width,$height,$filePath,$x,$y,$w,$h);
             }
             
+            // header('Content-Description: File Transfer');
+            // header('Content-Type: application/octet-stream');
             header("Content-Type: image/jpg");
-            $originalImage = imagecreatefromjpeg($filePath);
-            imagejpeg($originalImage);
-            imagedestroy($originalImage);
+            header('Content-Disposition: inline; filename="'.$filename.'"');
+            //header('Content-Transfer-Encoding: binary');
+            header('Connection: Keep-Alive');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            //header('Pragma: public');
+            header('Content-Length: '.filesize($filePath));
+            readfile($filePath);
             Context::setReturnValue("");
         }
         

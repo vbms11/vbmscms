@@ -17,7 +17,7 @@ class AdminTemplatesModule extends XModule {
                     $site = DomainsModel::getCurrentSite();
                     // echo $_GET["id"]." - ".$_POST['name']." - ".$_POST['include']." - ".$_POST['interface']." - ".$_POST['html']." - ".$_POST['js']." - ".$_POST['css'];
                     TemplateModel::saveTemplate($_GET['id'], $_POST['name'], $_POST['include'], $_POST['interface'], $_POST['html'], $_POST['js'], $_POST['css']);
-                    parent::redirect();
+                    parent::redirect(array("action"=>"editTemplate","id"=>$_GET['id']));
                     break;
                 case "create":
                     $templateId = TemplateModel::createTemplate($_POST['name'], $_POST['include'], $_POST['interface']);
