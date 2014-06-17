@@ -275,6 +275,12 @@ class SocialController {
             $userInfo["userCity"]       = htmlentities($userAddress->city,ENT_QUOTES);
             $userInfo["userAddress"]    = htmlentities($userAddress->address,ENT_QUOTES);
             $userInfo["userPostCode"]   = htmlentities($userAddress->postcode,ENT_QUOTES);
+        } else {
+            $userInfo["userCountry"]    = null;
+            $userInfo["userRegion"]     = null;
+            $userInfo["userCity"]       = null;
+            $userInfo["userAddress"]    = null;
+            $userInfo["userPostCode"]   = null;
         }
         
         return $userInfo;

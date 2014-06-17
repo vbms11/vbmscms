@@ -10,9 +10,9 @@ charset = "utf8"
 
 [superuser]
 login = "root"
-password = "cfb867cf79386982fa321608d46ec2aa"
+password = "50e116b555e6490dab121716c7413f6f"
 email = "silkyfx@hotmail.de"
-salt = "0fb16efee64db61338ec4bdd518932d0"
+salt = "6d8a595b43264f8c6da31d4175d04095"
 
 [PluginsInstalled]
 PluginsInstalled[] = "Login"

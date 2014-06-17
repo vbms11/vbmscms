@@ -32,7 +32,7 @@ class UserFriendModel {
     
     static function getFriendRequest ($friendRequestId) {
         $friendRequestId = mysql_real_escape_string($friendRequestId);
-        return Database::queryAsArray("select uf.* from t_user_friend uf where uf.confirmed = '0'");
+        return Database::queryAsObject("select uf.* from t_user_friend uf where uf.id = '$friendRequestId'");
     }
     
     static function getUserFriendRequests ($userId) {
@@ -58,7 +58,7 @@ class UserFriendModel {
     
     static function declineUserFriendRequest ($userFriendId) {
         $userFriendId = mysql_real_escape_string($userFriendId);
-        Database::query("delete t_user_friend where id = '$userFriendId'");
+        Database::query("delete from t_user_friend where id = '$userFriendId'");
     }
     
     static function createUserFriendRequest ($srcUserId, $dstUserId) {

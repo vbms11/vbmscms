@@ -363,15 +363,15 @@ class UserWallModule extends XModule {
                                 <?php
                             }
                         }
-                        if (UserWallModel::canUserPost($userId)) {
-                            $userProfileImage = UsersModel::getUserImageUrl($userId);
+                        if (UserWallModel::canUserPost(Context::getUserId())) {
+                            $userProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
                             ?>
                             <div class="userWallPostReplyBox">
                                 <div class="userWallPostImage">
                                     <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
                                 </div>
                                 <div class="userWallPostBody">
-                                    <form method="post" action="<?php echo parent::link(array("action"=>"reply","parent"=>$wallPost->id,"userId"=>$userId)); ?>">
+                                    <form method="post" action="<?php echo parent::link(array("action"=>"reply","parent"=>$wallPost->id,"userId"=>Context::getUserId())); ?>">
                                         <div class="userWallPostTextarea">
                                             <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
                                         </div>

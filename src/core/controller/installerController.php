@@ -25,7 +25,7 @@ class InstallerController {
         $config .= '$GLOBALS[\'cmsUiDateFormat\'] = \'\';'.PHP_EOL;
 
         // session config
-        $config .= '$GLOBALS[\'cmsSessionExpireTime\'] = 20;'.PHP_EOL;
+        $config .= '$GLOBALS[\'cmsSessionExpireTime\'] = 60;'.PHP_EOL;
 
         // resource config
         $config .= '$GLOBALS[\'resourcePath\'] = \'files/\';'.PHP_EOL;

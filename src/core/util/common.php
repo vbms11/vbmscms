@@ -332,7 +332,7 @@ class EmailUtil {
             $header .= "Reply-To: $from\r\n";
             $header .= "X-Mailer: PHP ". phpversion();
             Log::info("sending email: to = '$to' subject = '$subject'");
-            mail($to,$subject,$content,$header) or die("error sending mail");
+            mail($to,$subject,$content,$header) or Log::error("error sending mail");
         }
     }
 
@@ -348,7 +348,7 @@ class EmailUtil {
             $header .= "Reply-To: $from\r\n";
             $header .= "X-Mailer: PHP ". phpversion();
             Log::info("sending email: to = '$to' subject = '$subject'");
-            mail($to,$subject,$content,$header) or die("error sending mail");
+            mail($to,$subject,$content,$header) or Log::error("error sending mail");
         }
         
     }

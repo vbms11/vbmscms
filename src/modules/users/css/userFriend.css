@@ -4,12 +4,15 @@
 .usersFriendUserDiv {
     float: left;
     margin: 0 10px 10px 0;
+    width: 170px;
 }
 .usersFriendUserImage {
     
 }
 .usersFriendUserDetails {
-    
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 
