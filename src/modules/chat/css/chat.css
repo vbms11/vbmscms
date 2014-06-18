@@ -1,23 +1,6 @@
 
-.chatPage {
-    border: 1px solid silver;
-}
-
-.chatMessages {
-    height: 200px;
-    border-bottom: 1px solid silver;
-    overflow: auto;
-}
-
-.chatMessage {
-    padding-left:20px;
-}
-
-.chatUser {
-    color: navy;
-    font-weight: bold;
-}
-
-.chatInputDiv {
-    
+#chatIframe {
+    border: 0 none;
+    height: 700px;
+    width: 100%;
 }

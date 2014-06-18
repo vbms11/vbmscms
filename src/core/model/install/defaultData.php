@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `t_code` (
   `code` int(10) unsigned NOT NULL,
   `value` blob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
 -- Daten für Tabelle `t_code`
@@ -154,7 +154,8 @@ INSERT INTO `t_code` (`id`, `lang`, `code`, `value`) VALUES
 (37, 'en', 37, 0x4e6577205573657273),
 (38, 'en', 38, 0x526563656e746c7920416374697665205573657273),
 (39, 'en', 39, 0x61646d696e536f6369616c4e6f74696669636174696f6e73),
-(40, 'en', 40, 0x7573657250726f66696c65496d616765);
+(40, 'en', 40, 0x7573657250726f66696c65496d616765),
+(41, 'en', 41, 0x43686174);
 
 -- --------------------------------------------------------
 
@@ -199,262 +200,6 @@ CREATE TABLE IF NOT EXISTS `t_country` (
   `name` varchar(100) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
---
--- Daten für Tabelle `t_country`
---
-
-INSERT INTO `t_country` (`geonameid`, `name`) VALUES
-('2589581', 'Algeria'),
-('3351879', 'Angola'),
-('2395170', 'Benin'),
-('933860', 'Botswana'),
-('2361809', 'Burkina Faso'),
-('433561', 'Burundi'),
-('2233387', 'Cameroon'),
-('3374766', 'Cape Verde'),
-('239880', 'Central African Republic'),
-('2434508', 'Chad'),
-('921929', 'Comoros'),
-('203312', 'Congo'),
-('223816', 'Djibouti'),
-('357994', 'Egypt'),
-('2309096', 'Equatorial Guinea'),
-('338010', 'Eritrea'),
-('337996', 'Ethiopia'),
-('2400553', 'Gabon'),
-('2413451', 'Gambia'),
-('2300660', 'Ghana'),
-('2420477', 'Guinea'),
-('2372248', 'Guinea-Bissau'),
-('2287781', 'Ivory Coast'),
-('192950', 'Kenya'),
-('932692', 'Lesotho'),
-('2275384', 'Liberia'),
-('2215636', 'Libya'),
-('1062947', 'Madagascar'),
-('927384', 'Malawi'),
-('2453866', 'Mali'),
-('2378080', 'Mauritania'),
-('934292', 'Mauritius'),
-('1024031', 'Mayotte'),
-('2542007', 'Morocco'),
-('1036973', 'Mozambique'),
-('3355338', 'Namibia'),
-('2440476', 'Niger'),
-('2328926', 'Nigeria'),
-('2260494', 'Republic of the Congo'),
-('49518', 'Rwanda'),
-('935317', 'RÃƒÂ©union'),
-('3370751', 'Saint Helena'),
-('2245662', 'Senegal'),
-('241170', 'Seychelles'),
-('2403846', 'Sierra Leone'),
-('51537', 'Somalia'),
-('953987', 'South Africa'),
-('7909807', 'South Sudan'),
-('366755', 'Sudan'),
-('934841', 'Swaziland'),
-('2410758', 'SÃƒÂ£o TomÃƒÂ© and PrÃƒÂ­ncipe'),
-('149590', 'Tanzania'),
-('2363686', 'Togo'),
-('2464461', 'Tunisia'),
-('226074', 'Uganda'),
-('2461445', 'Western Sahara'),
-('895949', 'Zambia'),
-('878675', 'Zimbabwe'),
-('6697173', 'Antarctica'),
-('3371123', 'Bouvet Island'),
-('1546748', 'French Southern Territories'),
-('1547314', 'Heard Island and McDonald Islands'),
-('3474415', 'South Georgia and the South Sandwich Islands'),
-('1149361', 'Afghanistan'),
-('174982', 'Armenia'),
-('587116', 'Azerbaijan'),
-('290291', 'Bahrain'),
-('1210997', 'Bangladesh'),
-('1252634', 'Bhutan'),
-('1282588', 'British Indian Ocean Territory'),
-('1820814', 'Brunei'),
-('1831722', 'Cambodia'),
-('1814991', 'China'),
-('2078138', 'Christmas Island'),
-('1547376', 'Cocos [Keeling] Islands'),
-('614540', 'Georgia'),
-('1819730', 'Hong Kong'),
-('1269750', 'India'),
-('1643084', 'Indonesia'),
-('130758', 'Iran'),
-('99237', 'Iraq'),
-('294640', 'Israel'),
-('1861060', 'Japan'),
-('248816', 'Jordan'),
-('1522867', 'Kazakhstan'),
-('285570', 'Kuwait'),
-('1527747', 'Kyrgyzstan'),
-('1655842', 'Laos'),
-('272103', 'Lebanon'),
-('1821275', 'Macao'),
-('1733045', 'Malaysia'),
-('1282028', 'Maldives'),
-('2029969', 'Mongolia'),
-('1327865', 'Myanmar [Burma]'),
-('1282988', 'Nepal'),
-('1873107', 'North Korea'),
-('286963', 'Oman'),
-('1168579', 'Pakistan'),
-('6254930', 'Palestine'),
-('1694008', 'Philippines'),
-('289688', 'Qatar'),
-('102358', 'Saudi Arabia'),
-('1880251', 'Singapore'),
-('1835841', 'South Korea'),
-('1227603', 'Sri Lanka'),
-('163843', 'Syria'),
-('1668284', 'Taiwan'),
-('1220409', 'Tajikistan'),
-('1605651', 'Thailand'),
-('298795', 'Turkey'),
-('1218197', 'Turkmenistan'),
-('290557', 'United Arab Emirates'),
-('1512440', 'Uzbekistan'),
-('1562822', 'Vietnam'),
-('69543', 'Yemen'),
-('783754', 'Albania'),
-('3041565', 'Andorra'),
-('2782113', 'Austria'),
-('630336', 'Belarus'),
-('2802361', 'Belgium'),
-('3277605', 'Bosnia and Herzegovina'),
-('732800', 'Bulgaria'),
-('3202326', 'Croatia'),
-('146669', 'Cyprus'),
-('3077311', 'Czech Republic'),
-('2623032', 'Denmark'),
-('453733', 'Estonia'),
-('2622320', 'Faroe Islands'),
-('660013', 'Finland'),
-('3017382', 'France'),
-('2921044', 'Germany'),
-('2411586', 'Gibraltar'),
-('390903', 'Greece'),
-('719819', 'Hungary'),
-('2629691', 'Iceland'),
-('2963597', 'Ireland'),
-('3175395', 'Italy'),
-('831053', 'Kosovo'),
-('458258', 'Latvia'),
-('3042058', 'Liechtenstein'),
-('597427', 'Lithuania'),
-('2960313', 'Luxembourg'),
-('718075', 'Macedonia'),
-('2562770', 'Malta'),
-('617790', 'Moldova'),
-('2993457', 'Monaco'),
-('3194884', 'Montenegro'),
-('2750405', 'Netherlands'),
-('3144096', 'Norway'),
-('798544', 'Poland'),
-('2264397', 'Portugal'),
-('798549', 'Romania'),
-('2017370', 'Russia'),
-('3168068', 'San Marino'),
-('6290252', 'Serbia'),
-('3057568', 'Slovakia'),
-('3190538', 'Slovenia'),
-('2510769', 'Spain'),
-('607072', 'Svalbard and Jan Mayen'),
-('2661886', 'Sweden'),
-('2658434', 'Switzerland'),
-('690791', 'Ukraine'),
-('2635167', 'United Kingdom'),
-('3164670', 'Vatican City'),
-('661882', 'Ãƒâ€¦land'),
-('3573511', 'Anguilla'),
-('3576396', 'Antigua and Barbuda'),
-('3577279', 'Aruba'),
-('3572887', 'Bahamas'),
-('3374084', 'Barbados'),
-('3582678', 'Belize'),
-('3573345', 'Bermuda'),
-('7626844', 'Bonaire'),
-('3577718', 'British Virgin Islands'),
-('6251999', 'Canada'),
-('3580718', 'Cayman Islands'),
-('3624060', 'Costa Rica'),
-('3562981', 'Cuba'),
-('7626836', 'CuraÃƒÂ§ao'),
-('3575830', 'Dominica'),
-('3508796', 'Dominican Republic'),
-('3585968', 'El Salvador'),
-('3425505', 'Greenland'),
-('3580239', 'Grenada'),
-('3579143', 'Guadeloupe'),
-('3595528', 'Guatemala'),
-('3723988', 'Haiti'),
-('3608932', 'Honduras'),
-('3489940', 'Jamaica'),
-('3570311', 'Martinique'),
-('3996063', 'Mexico'),
-('3578097', 'Montserrat'),
-('3617476', 'Nicaragua'),
-('3703430', 'Panama'),
-('4566966', 'Puerto Rico'),
-('3578476', 'Saint BarthÃƒÂ©lemy'),
-('3575174', 'Saint Kitts and Nevis'),
-('3576468', 'Saint Lucia'),
-('3578421', 'Saint Martin'),
-('3424932', 'Saint Pierre and Miquelon'),
-('3577815', 'Saint Vincent and the Grenadines'),
-('7609695', 'Sint Maarten'),
-('3573591', 'Trinidad and Tobago'),
-('3576916', 'Turks and Caicos Islands'),
-('4796775', 'U.S. Virgin Islands'),
-('6252001', 'United States'),
-('5880801', 'American Samoa'),
-('2077456', 'Australia'),
-('1899402', 'Cook Islands'),
-('2170371', 'Coral Sea Islands Territory'),
-('1966436', 'East Timor'),
-('2205218', 'Fiji'),
-('4030656', 'French Polynesia'),
-('4043988', 'Guam'),
-('8335033', 'Jervis Bay Territory'),
-('4030945', 'Kiribati'),
-('2080185', 'Marshall Islands'),
-('2081918', 'Micronesia'),
-('2110425', 'Nauru'),
-('2139685', 'New Caledonia'),
-('2186224', 'New Zealand'),
-('4036232', 'Niue'),
-('2155115', 'Norfolk Island'),
-('4041468', 'Northern Mariana Islands'),
-('1559582', 'Palau'),
-('2088628', 'Papua New Guinea'),
-('4030699', 'Pitcairn Islands'),
-('4034894', 'Samoa'),
-('2103350', 'Solomon Islands'),
-('2077507', 'Territory of Ashmore and Cartier Islands'),
-('4031074', 'Tokelau'),
-('4032283', 'Tonga'),
-('2110297', 'Tuvalu'),
-('5854968', 'U.S. Minor Outlying Islands'),
-('2134431', 'Vanuatu'),
-('4034749', 'Wallis and Futuna'),
-('3865483', 'Argentina'),
-('3923057', 'Bolivia'),
-('3469034', 'Brazil'),
-('3895114', 'Chile'),
-('3686110', 'Colombia'),
-('3658394', 'Ecuador'),
-('3474414', 'Falkland Islands'),
-('3381670', 'French Guiana'),
-('3378535', 'Guyana'),
-('3437598', 'Paraguay'),
-('3932488', 'Peru'),
-('3382998', 'Suriname'),
-('3439705', 'Uruguay'),
-('3625428', 'Venezuela');
-
 -- --------------------------------------------------------
 
 --
@@ -467,15 +212,7 @@ CREATE TABLE IF NOT EXISTS `t_domain` (
   `siteid` int(10) NOT NULL,
   `domaintrackerscript` blob,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Daten für Tabelle `t_domain`
---
-
-INSERT INTO `t_domain` (`id`, `url`, `siteid`, `domaintrackerscript`) VALUES
-(1, 'localhost', 1, ''),
-(2, 'localhost', 1, '');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -647,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `t_menu` (
   `lang` varchar(5) NOT NULL DEFAULT 'en',
   `position` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
 -- Daten für Tabelle `t_menu`
@@ -676,7 +413,8 @@ INSERT INTO `t_menu` (`id`, `page`, `type`, `parent`, `active`, `lang`, `positio
 (20, 36, 1, 10, 1, 'en', 20),
 (21, 37, 1, 10, 1, 'en', 21),
 (22, 38, 1, 10, 1, 'en', 22),
-(23, 40, 0, NULL, 0, 'en', 23);
+(23, 40, 0, NULL, 0, 'en', 23),
+(24, 41, 1, NULL, 1, 'en', 24);
 
 -- --------------------------------------------------------
 
@@ -760,7 +498,7 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (22, 'Suche', 'search', 'modules/search/searchPageView.php', '', 'SearchPageView', 1, 4, 0, 1),
 (45, 'Insert Module', 'insertModule', 'modules/admin/insertModuleView.php', '', 'InsertModuleView', 0, 4, 0, 1),
 (25, 'Forum', '', 'modules/forum/forumPageView.php', '', 'ForumPageView', 1, 2, 0, 0),
-(26, 'Chat', '', 'modules/chat/chatPageView.php', '', 'ChatPageView', 1, 2, 0, 0),
+(26, 'Chat', 'chat', 'modules/chat/chatModule.php', '', 'ChatModule', 1, 2, 0, 1),
 (27, 'Comments', '', 'modules/comments/commentsView.php', '', 'CommentsView', 1, 2, 0, 0),
 (37, 'Database backup', '', 'modules/admin/backupView.php', '', 'BackupView', 1, 4, 0, 0),
 (29, 'Register', 'register', 'modules/users/registerModule.php', '', 'RegisterModule', 1, 4, 0, 1),
@@ -848,7 +586,7 @@ CREATE TABLE IF NOT EXISTS `t_module_instance` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `moduleid` int(10) NOT NULL,
   PRIMARY KEY (`id`,`moduleid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=59 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=60 ;
 
 --
 -- Daten für Tabelle `t_module_instance`
@@ -911,7 +649,8 @@ INSERT INTO `t_module_instance` (`id`, `moduleid`) VALUES
 (55, 85),
 (56, 97),
 (57, 96),
-(58, 82);
+(58, 82),
+(59, 26);
 
 -- --------------------------------------------------------
 
@@ -931,6 +670,74 @@ CREATE TABLE IF NOT EXISTS `t_module_instance_params` (
 --
 
 INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value`) VALUES
+(2, NULL, 'selectedStyle', 0x733a313a2231223b),
+(3, NULL, 'selectedStyle', 0x733a313a2231223b),
+(4, NULL, 'selectedStyle', 0x733a313a2231223b),
+(1, NULL, 'networks', 0x623a313b),
+(1, NULL, 'register', 0x623a313b),
+(1, NULL, 'reset', 0x623a313b),
+(3, NULL, 'selectedMenu', 0x733a313a2231223b),
+(4, NULL, 'selectedMenu', 0x733a313a2233223b),
+(15, NULL, 'networks', 0x623a313b),
+(15, NULL, 'register', 0x623a313b),
+(15, NULL, 'reset', 0x623a313b),
+(16, NULL, 'userRoles', 0x613a313a7b693a303b733a313a2238223b7d),
+(16, NULL, 'requireConfirmEmail', 0x733a313a2230223b),
+(22, NULL, 'mode', 0x733a313a2231223b),
+(17, NULL, 'mode', 0x733a313a2232223b),
+(25, NULL, 'mode', 0x733a313a2232223b),
+(29, NULL, 'mode', 0x733a313a2232223b),
+(31, NULL, 'mode', 0x733a313a2232223b),
+(27, NULL, 'mode', 0x733a313a2233223b),
+(24, NULL, 'mode', 0x733a313a2232223b),
+(2, NULL, 'selectedMenu', 0x733a313a2233223b),
+(34, NULL, 'networks', 0x623a313b),
+(34, NULL, 'register', 0x623a313b),
+(34, NULL, 'reset', 0x623a313b),
+(36, NULL, 'mode', 0x733a313a2231223b),
+(38, NULL, 'mode', 0x733a313a2231223b),
+(39, NULL, 'networks', 0x623a313b),
+(39, NULL, 'register', 0x623a313b),
+(39, NULL, 'reset', 0x623a313b),
+(2, NULL, 'selectedStyle', 0x733a313a2231223b),
+(3, NULL, 'selectedStyle', 0x733a313a2231223b),
+(4, NULL, 'selectedStyle', 0x733a313a2231223b),
+(1, NULL, 'networks', 0x623a313b),
+(1, NULL, 'register', 0x623a313b),
+(1, NULL, 'reset', 0x623a313b),
+(3, NULL, 'selectedMenu', 0x733a313a2231223b),
+(4, NULL, 'selectedMenu', 0x733a313a2233223b),
+(15, NULL, 'networks', 0x623a313b),
+(15, NULL, 'register', 0x623a313b),
+(15, NULL, 'reset', 0x623a313b),
+(16, NULL, 'userRoles', 0x613a313a7b693a303b733a313a2238223b7d),
+(16, NULL, 'requireConfirmEmail', 0x733a313a2230223b),
+(22, NULL, 'mode', 0x733a313a2231223b),
+(17, NULL, 'mode', 0x733a313a2232223b),
+(25, NULL, 'mode', 0x733a313a2232223b),
+(29, NULL, 'mode', 0x733a313a2232223b),
+(31, NULL, 'mode', 0x733a313a2232223b),
+(27, NULL, 'mode', 0x733a313a2233223b),
+(24, NULL, 'mode', 0x733a313a2232223b),
+(2, NULL, 'selectedMenu', 0x733a313a2233223b),
+(34, NULL, 'networks', 0x623a313b),
+(34, NULL, 'register', 0x623a313b),
+(34, NULL, 'reset', 0x623a313b),
+(36, NULL, 'mode', 0x733a313a2231223b),
+(38, NULL, 'mode', 0x733a313a2231223b),
+(39, NULL, 'networks', 0x623a313b),
+(39, NULL, 'register', 0x623a313b),
+(39, NULL, 'reset', 0x623a313b),
+(44, NULL, 'mode', 0x733a313a2232223b),
+(45, NULL, 'mode', 0x733a313a2231223b),
+(46, NULL, 'mode', 0x733a313a2231223b),
+(28, NULL, 'mode', 0x733a313a2232223b),
+(30, NULL, 'mode', 0x733a313a2231223b),
+(42, NULL, 'mode', 0x733a313a2232223b),
+(54, NULL, 'mode', 0x733a313a2232223b),
+(55, NULL, 'mode', 0x733a313a2231223b),
+(57, NULL, 'mode', 0x733a313a2232223b),
+(58, NULL, 'mode', 0x733a313a2232223b),
 (2, NULL, 'selectedStyle', 0x733a313a2231223b),
 (3, NULL, 'selectedStyle', 0x733a313a2231223b),
 (4, NULL, 'selectedStyle', 0x733a313a2231223b),
@@ -1247,7 +1054,7 @@ CREATE TABLE IF NOT EXISTS `t_page` (
   `pagetrackerscript` blob,
   `modifydate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
 -- Daten für Tabelle `t_page`
@@ -1293,7 +1100,8 @@ INSERT INTO `t_page` (`id`, `type`, `namecode`, `welcome`, `title`, `keywords`, 
 (37, 0, 37, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 07:38:51'),
 (38, 0, 38, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 07:39:56'),
 (39, 0, 39, 0, 'adminSocialNotifications', 0x61646d696e536f6369616c4e6f74696669636174696f6e73, 0x61646d696e536f6369616c4e6f74696669636174696f6e73, 5, 1, 'adminSocialNotifications', 56, NULL, '2014-06-11 12:26:46'),
-(40, 0, 40, 0, 'userProfileImage', 0x7573657250726f66696c65496d616765, 0x7573657250726f66696c65496d616765, 3, 1, 'userProfileImage', 57, NULL, '2014-06-13 17:28:23');
+(40, 0, 40, 0, 'userProfileImage', 0x7573657250726f66696c65496d616765, 0x7573657250726f66696c65496d616765, 3, 1, 'userProfileImage', 57, NULL, '2014-06-13 17:28:23'),
+(41, 0, 41, 0, 'Chat', 0x43686174, 0x43686174, 5, 1, '', NULL, NULL, '2014-06-18 12:12:47');
 
 -- --------------------------------------------------------
 
@@ -1306,7 +1114,7 @@ CREATE TABLE IF NOT EXISTS `t_page_roles` (
   `roleid` int(10) NOT NULL,
   `pageid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=259 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=263 ;
 
 --
 -- Daten für Tabelle `t_page_roles`
@@ -1502,7 +1310,11 @@ INSERT INTO `t_page_roles` (`id`, `roleid`, `pageid`) VALUES
 (257, 10, 40),
 (256, 9, 40),
 (255, 8, 40),
-(254, 7, 40);
+(254, 7, 40),
+(259, 8, 41),
+(260, 9, 41),
+(261, 10, 41),
+(262, 13, 41);
 
 -- --------------------------------------------------------
 
@@ -1563,7 +1375,18 @@ CREATE TABLE IF NOT EXISTS `t_roles` (
   `userid` int(10) NOT NULL,
   `roleid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+--
+-- Daten für Tabelle `t_roles`
+--
+
+INSERT INTO `t_roles` (`id`, `name`, `userid`, `roleid`) VALUES
+(1, '7', 1, 7),
+(2, '8', 1, 8),
+(3, '9', 1, 9),
+(4, '10', 1, 10),
+(5, '13', 1, 13);
 
 -- --------------------------------------------------------
 
@@ -1735,7 +1558,7 @@ CREATE TABLE IF NOT EXISTS `t_templatearea` (
   `pageid` int(10) NOT NULL,
   `position` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=59 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=60 ;
 
 --
 -- Daten für Tabelle `t_templatearea`
@@ -1798,7 +1621,8 @@ INSERT INTO `t_templatearea` (`id`, `instanceid`, `name`, `pageid`, `position`) 
 (55, 55, 'center', 9, 0),
 (56, 56, 'center', 39, 0),
 (57, 57, 'center', 40, 0),
-(58, 58, 'left', 40, 0);
+(58, 58, 'left', 40, 0),
+(59, 59, 'center', 41, 0);
 
 -- --------------------------------------------------------
 
@@ -2060,6 +1884,10 @@ CREATE TABLE IF NOT EXISTS `t_wysiwygpage` (
 --
 
 INSERT INTO `t_wysiwygpage` (`id`, `moduleid`, `lang`, `content`, `title`, `area`) VALUES
+(NULL, 20, 'en', 0x3c68313e4f6e6c696e6520446174696e673c2f68313e0d0a3c703e57656c636f6d6520746f206d79206f6e6c696e6520646174696e672e204f6e65206f66207468652066657720746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e3c2f703e0d0a3c68333e4d79204f6e6c696e6520446174696e673c2f68333e0d0a3c703e4d79206f6e6c696e6520646174696e67206973206f6e65206f6620746865206f6e6c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e205265676973746572206e6f7720616e6420656e6a6f792066726565206f6e6c696e6520646174696e672e205768656e2069207761732073696e676c65206920736561726368656420666f72206f6e6c696e6520646174696e672077656220736974657320616e64206576656e20706179656420746f20757365206f6e652e204920736f6f6e206e6f746963656420636f6d6d65726369616c206f6e6c696e6520646174696e672077656220736974657320617265206f667465726e207363616d7320776974682066616b652075736572732e20546865792077657265206a757374206166746572206d79206d6f6e65792e20536f2069206465636964656420746f206d616b65206d79206f776e2066726565206f6e6c696e6520646174696e672077656220736974652e20536f20686572652069742069732e20506c65617365207265676973746572206e6f7720736f207468617420776520676574206173206d616e7920757365727320617320706f737369626c652e3c2f703e, NULL, 0),
+(NULL, 21, 'en', 0x3c696d6720616c743d22746f6e67756522207469746c653d22746f6e67756522207372633d22687474703a2f2f6c6f63616c686f73742f76626d73636d732f7265736f757263652f6a732f656c7274652f696d616765732f736d696c6579732f746f6e6775652e706e6722202f3e, NULL, 0),
+(NULL, 20, 'en', 0x3c68313e4f6e6c696e6520446174696e673c2f68313e0d0a3c703e57656c636f6d6520746f206d79206f6e6c696e6520646174696e672e204f6e65206f66207468652066657720746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e3c2f703e0d0a3c68333e4d79204f6e6c696e6520446174696e673c2f68333e0d0a3c703e4d79206f6e6c696e6520646174696e67206973206f6e65206f6620746865206f6e6c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e205265676973746572206e6f7720616e6420656e6a6f792066726565206f6e6c696e6520646174696e672e205768656e2069207761732073696e676c65206920736561726368656420666f72206f6e6c696e6520646174696e672077656220736974657320616e64206576656e20706179656420746f20757365206f6e652e204920736f6f6e206e6f746963656420636f6d6d65726369616c206f6e6c696e6520646174696e672077656220736974657320617265206f667465726e207363616d7320776974682066616b652075736572732e20546865792077657265206a757374206166746572206d79206d6f6e65792e20536f2069206465636964656420746f206d616b65206d79206f776e2066726565206f6e6c696e6520646174696e672077656220736974652e20536f20686572652069742069732e20506c65617365207265676973746572206e6f7720736f207468617420776520676574206173206d616e7920757365727320617320706f737369626c652e3c2f703e, NULL, 0),
+(NULL, 21, 'en', 0x3c696d6720616c743d22746f6e67756522207469746c653d22746f6e67756522207372633d22687474703a2f2f6c6f63616c686f73742f76626d73636d732f7265736f757263652f6a732f656c7274652f696d616765732f736d696c6579732f746f6e6775652e706e6722202f3e, NULL, 0),
 (NULL, 20, 'en', 0x3c68313e4f6e6c696e6520446174696e673c2f68313e0d0a3c703e57656c636f6d6520746f206d79206f6e6c696e6520646174696e672e204f6e65206f66207468652066657720746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e3c2f703e0d0a3c68333e4d79204f6e6c696e6520446174696e673c2f68333e0d0a3c703e4d79206f6e6c696e6520646174696e67206973206f6e65206f6620746865206f6e6c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e205265676973746572206e6f7720616e6420656e6a6f792066726565206f6e6c696e6520646174696e672e205768656e2069207761732073696e676c65206920736561726368656420666f72206f6e6c696e6520646174696e672077656220736974657320616e64206576656e20706179656420746f20757365206f6e652e204920736f6f6e206e6f746963656420636f6d6d65726369616c206f6e6c696e6520646174696e672077656220736974657320617265206f667465726e207363616d7320776974682066616b652075736572732e20546865792077657265206a757374206166746572206d79206d6f6e65792e20536f2069206465636964656420746f206d616b65206d79206f776e2066726565206f6e6c696e6520646174696e672077656220736974652e20536f20686572652069742069732e20506c65617365207265676973746572206e6f7720736f207468617420776520676574206173206d616e7920757365727320617320706f737369626c652e3c2f703e, NULL, 0),
 (NULL, 21, 'en', 0x3c696d6720616c743d22746f6e67756522207469746c653d22746f6e67756522207372633d22687474703a2f2f6c6f63616c686f73742f76626d73636d732f7265736f757263652f6a732f656c7274652f696d616765732f736d696c6579732f746f6e6775652e706e6722202f3e, NULL, 0),
 (NULL, 20, 'en', 0x3c68313e4f6e6c696e6520446174696e673c2f68313e0d0a3c703e57656c636f6d6520746f206d79206f6e6c696e6520646174696e672e204f6e65206f66207468652066657720746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e3c2f703e0d0a3c68333e4d79204f6e6c696e6520446174696e673c2f68333e0d0a3c703e4d79206f6e6c696e6520646174696e67206973206f6e65206f6620746865206f6e6c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e205265676973746572206e6f7720616e6420656e6a6f792066726565206f6e6c696e6520646174696e672e205768656e2069207761732073696e676c65206920736561726368656420666f72206f6e6c696e6520646174696e672077656220736974657320616e64206576656e20706179656420746f20757365206f6e652e204920736f6f6e206e6f746963656420636f6d6d65726369616c206f6e6c696e6520646174696e672077656220736974657320617265206f667465726e207363616d7320776974682066616b652075736572732e20546865792077657265206a757374206166746572206d79206d6f6e65792e20536f2069206465636964656420746f206d616b65206d79206f776e2066726565206f6e6c696e6520646174696e672077656220736974652e20536f20686572652069742069732e20506c65617365207265676973746572206e6f7720736f207468617420776520676574206173206d616e7920757365727320617320706f737369626c652e3c2f703e, NULL, 0),

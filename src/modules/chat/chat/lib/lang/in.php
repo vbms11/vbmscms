@@ -8,7 +8,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Nama';
 $lang['password'] = 'Password';
 $lang['login'] = 'Masuk';
@@ -114,7 +114,7 @@ $lang['errorUserInUse'] = 'Nama sudah ada yang pakai.';
 $lang['errorBanned'] = 'Pengguna atau IP diblok.';
 $lang['errorMaxUsersLoggedIn'] = 'Saluran Chat telah mencapai jumlah maksimum pengguna.';
 $lang['errorChatClosed'] = 'Saluran Chat ditutup sementara.';
-$lang['logsTitle'] = 'AJAX Chat - Logs';
+$lang['logsTitle'] = 'Online 4 Dating Chat - Logs';
 $lang['logsDate'] = 'Tanggal';
 $lang['logsTime'] = 'Waktu';
 $lang['logsSearch'] = 'Cari';

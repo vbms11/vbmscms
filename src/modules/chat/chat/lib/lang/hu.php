@@ -8,7 +8,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Felhasználónév';
 $lang['password'] = 'Jelszó';
 $lang['login'] = 'Belépés';
@@ -114,7 +114,7 @@ $lang['errorUserInUse'] = 'A nick már használatban van.';
 $lang['errorBanned'] = 'Ez a felhasználó vagy IP ki van tiltva.';
 $lang['errorMaxUsersLoggedIn'] = 'A chatelők száma elérte a megengedett maximumot.';
 $lang['errorChatClosed'] = 'A chat jelenleg nem üzemel.';
-$lang['logsTitle'] = 'AJAX Chat - Logok';
+$lang['logsTitle'] = 'Online 4 Dating Chat - Logok';
 $lang['logsDate'] = 'Dátum';
 $lang['logsTime'] = 'Idő';
 $lang['logsSearch'] = 'Keresés';

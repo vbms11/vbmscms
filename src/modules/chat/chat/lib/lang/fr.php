@@ -10,7 +10,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Nom d’utilisateur';
 $lang['password'] = 'Mot de passe';
 $lang['login'] = 'Connexion';

@@ -9,7 +9,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Име';
 $lang['password'] = 'Лозинка';
 $lang['login'] = 'Влези';
@@ -115,7 +115,7 @@ $lang['errorUserInUse'] = 'Корисничкото име е во употре�
 $lang['errorBanned'] = 'Корисникот или IP адресата е блокирана.';
 $lang['errorMaxUsersLoggedIn'] = 'Четот го достигна максималниот број на корисници.';
 $lang['errorChatClosed'] = 'Во моментов четот е затворен.';
-$lang['logsTitle'] = 'AJAX Chat — Лого';
+$lang['logsTitle'] = 'Online 4 Dating Chat — Лого';
 $lang['logsDate'] = 'Дата';
 $lang['logsTime'] = 'Време';
 $lang['logsSearch'] = 'Пребарување';

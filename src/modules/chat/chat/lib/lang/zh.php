@@ -9,7 +9,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = '用户名';
 $lang['password'] = '密码';
 $lang['login'] = '登录';
@@ -115,7 +115,7 @@ $lang['errorUserInUse'] = '用户名已被使用。';
 $lang['errorBanned'] = '用户名或 IP 被禁止。';
 $lang['errorMaxUsersLoggedIn'] = '聊天室达到最大用户数。';
 $lang['errorChatClosed'] = '当前聊天室暂停服务。';
-$lang['logsTitle'] = 'AJAX Chat - 日志';
+$lang['logsTitle'] = 'Online 4 Dating Chat - 日志';
 $lang['logsDate'] = '日期';
 $lang['logsTime'] = '时间';
 $lang['logsSearch'] = '搜索';

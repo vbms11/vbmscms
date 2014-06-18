@@ -10,7 +10,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Käyttäjätunnus';
 $lang['password'] = 'Salasana';
 $lang['login'] = 'Kirjaudu sisään';
@@ -116,7 +116,7 @@ $lang['errorUserInUse'] = 'Käyttäjänimi on käytössä, ole hyvä ja valitse 
 $lang['errorBanned'] = 'Tällä IP:llä on porttikielto';
 $lang['errorMaxUsersLoggedIn'] = 'Chatissa on jo maksimimäärä käyttäjiä.';
 $lang['errorChatClosed'] = 'Chat on poistettu käytöstä toistaiseksi.';
-$lang['logsTitle'] = 'AJAX Chat-Lokitiedot';
+$lang['logsTitle'] = 'Online 4 Dating Chat-Lokitiedot';
 $lang['logsDate'] = 'Päivä';
 $lang['logsTime'] = 'Aika';
 $lang['logsSearch'] = 'Etsi';

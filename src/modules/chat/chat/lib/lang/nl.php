@@ -9,7 +9,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Gebruikersnaam';
 $lang['password'] = 'Wachtwoord';
 $lang['login'] = 'Inloggen';
@@ -115,7 +115,7 @@ $lang['errorUserInUse'] = 'Gebruikersnaam is in gebruik, kies een andere.';
 $lang['errorBanned'] = 'Gebruiker of gebruikers-IP is verbannen.';
 $lang['errorMaxUsersLoggedIn'] = 'Deze chatkamer heeft het maximum aantal toegelaten gebruikers bereikt.';
 $lang['errorChatClosed'] = 'Deze chatkamer is momenteel gesloten.';
-$lang['logsTitle'] = 'AJAX Chat - Logs';
+$lang['logsTitle'] = 'Online 4 Dating Chat - Logs';
 $lang['logsDate'] = 'Datum';
 $lang['logsTime'] = 'Tijd';
 $lang['logsSearch'] = 'Zoek';

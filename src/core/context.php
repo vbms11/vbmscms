@@ -442,7 +442,23 @@ class Config {
         }
         return $GLOBALS['noDatabase'];
     }
-
+    
+    static function getDBHost () {
+        return $GLOBALS['dbHost'];
+    }
+    
+    static function getDBUser () {
+        return $GLOBALS['dbUser'];
+    }
+    
+    static function getDBPassword () {
+        return $GLOBALS['dbPass'];
+    }
+    
+    static function getDBName () {
+        return $GLOBALS['dbName'];
+    }
+    
     static function getShippingMode () {
         return $GLOBALS['shippingMode'];
     }

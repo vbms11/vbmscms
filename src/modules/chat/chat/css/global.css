@@ -1,3 +1,7 @@
+
+#logoutChannelContainer > input {
+    display: none;
+}
 /*
  * @package AJAX_Chat
  * @author Sebastian Tschan

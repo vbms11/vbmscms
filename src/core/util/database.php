@@ -176,8 +176,8 @@ class MysqlDataSource implements IDataSource {
     }
     
     function connect () {
-        if (false !== mysql_connect($GLOBALS['dbHost'],$GLOBALS['dbUser'],$GLOBALS['dbPass']) 
-                && true === mysql_select_db($GLOBALS['dbName'])) {
+        if (false !== mysql_connect(Config::getDBHost(),Config::getDBUser(),Config::getDBPassword()) 
+                && true === mysql_select_db(Config::getDBName())) {
             $this->connected = true;
         } else {
             $this->connected = false;

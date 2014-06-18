@@ -9,7 +9,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'نام عبور';
 $lang['password'] = 'کلمه عبور';
 $lang['login'] = 'ورود';
@@ -115,7 +115,7 @@ $lang['errorUserInUse'] = 'نام کاربری در حال استفاده است
 $lang['errorBanned'] = 'نام کاربری یا آیپی اخراج شده اند.';
 $lang['errorMaxUsersLoggedIn'] = 'متاسفانه تالار گفتگو به حداکثر ظرفیت خود برای کاربران حاضر رسیده است.';
 $lang['errorChatClosed'] = 'تالار گفتوگو هم اکنون بسته می باشد.';
-$lang['logsTitle'] = 'AJAX Chat - Logs';
+$lang['logsTitle'] = 'Online 4 Dating Chat - Logs';
 $lang['logsDate'] = 'تاریخ';
 $lang['logsTime'] = 'زمان';
 $lang['logsSearch'] = 'جست و جو';

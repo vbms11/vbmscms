@@ -9,7 +9,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Korisničko ime';
 $lang['password'] = 'Lozinka';
 $lang['login'] = 'Prijava';
@@ -115,7 +115,7 @@ $lang['errorUserInUse'] = 'Korisnik je već prijavljen.';
 $lang['errorBanned'] = 'Korisnik ili IP je zabranjen.';
 $lang['errorMaxUsersLoggedIn'] = 'Na chatu je prijavljen maksimalni broj korisnika.';
 $lang['errorChatClosed'] = 'Chat je trenutno nedostupan.';
-$lang['logsTitle'] = 'AJAX Chat - Beleške';
+$lang['logsTitle'] = 'Online 4 Dating Chat - Beleške';
 $lang['logsDate'] = 'Datum';
 $lang['logsTime'] = 'Vreme';
 $lang['logsSearch'] = 'Pretraga';

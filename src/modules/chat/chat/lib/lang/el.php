@@ -9,7 +9,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'AJAX Chat';
+$lang['title'] = 'Online 4 Dating Chat';
 $lang['userName'] = 'Όνομα χρήστη';
 $lang['password'] = 'Κωδικός';
 $lang['login'] = 'Σύνδεση';
@@ -115,7 +115,7 @@ $lang['errorUserInUse'] = 'Το όνομα υπάρχει ήδη.';
 $lang['errorBanned'] = 'Το όνομα χρήστη ή IP είναι αποκλεισμένα.';
 $lang['errorMaxUsersLoggedIn'] = 'Το chat έχει φτάσει το μέγιστο αριθμό χρηστών.';
 $lang['errorChatClosed'] = 'Το chat είναι κλειστό προς το παρόν.';
-$lang['logsTitle'] = 'AJAX Chat - Καταγραφές';
+$lang['logsTitle'] = 'Online 4 Dating Chat - Καταγραφές';
 $lang['logsDate'] = 'Ημερομηνία';
 $lang['logsTime'] = 'Ώρα';
 $lang['logsSearch'] = 'Αναζήτηση';
