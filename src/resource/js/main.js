@@ -13,10 +13,11 @@ $.each([
 $(function(){
     $(".jquiButton").button();
     $( ".jquiDate" ).each(function(index,object){
+        var date = $(this).val();
         $(this).datepicker({changeMonth: true, changeYear: true, yearRange: "1900:2020"});
         $(this).datepicker("option", "showAnim", "blind");
         $(this).datepicker("option", "dateFormat", "dd/mm/yy");
-        
+        $(this).datepicker("setDate", date);
     });
 });
 

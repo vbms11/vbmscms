@@ -41,7 +41,7 @@ class UsersModel {
             sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) <= '$distance' and 
             year(now()) - year(u.birthdate) >= '$ageMin' and 
             year(now()) - year(u.birthdate) <= '$ageMax' 
-            order by distance asc");
+            order by distance asc limit 1000");
     }
     
     static function listNewUsers () {
@@ -51,7 +51,7 @@ class UsersModel {
             a.country as country, a.city as city 
             from t_user u 
             join t_user_address a on u.id = a.userid 
-            order by registerdate desc limit 200");
+            order by registerdate desc limit 1000");
     }
     
     static function listRecentActiveUsers () {
@@ -61,7 +61,7 @@ class UsersModel {
             a.country as country, a.city as city 
             from t_user u 
             join t_user_address a on u.id = a.userid 
-            order by logindate desc limit 200");
+            order by logindate desc limit 1000");
     }
     
     static function updateLoginDate ($userId) {

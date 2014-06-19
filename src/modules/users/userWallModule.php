@@ -17,7 +17,6 @@ class UserWallModule extends XModule {
             case "save":
                 if (Context::hasRole("user.profile.edit")) {
                     parent::param("mode",parent::post("mode"));
-                    parent::param("emailTemplate",parent::post("emailTemplate"));
                 }
                 parent::blur();
                 parent::redirect();
@@ -70,7 +69,7 @@ class UserWallModule extends XModule {
             case "editComment":
                 if (parent::post("submitButton")) {
                     $post = UserWallModel::getUserPost(parent::get("id"));
-                    $validationMessages = UserWallModel::validateWallPost($post->userid, Context::getUserId(), parent::post("comment"));
+                    $validationMessages = UserWallModel::validateWallPost($post->srcuserid, Context::getUserId(), parent::post("comment"));
                     if (count($validationMessages) > 0) {
                         parent::setMessages($validationMessages);
                     } else {
@@ -86,8 +85,8 @@ class UserWallModule extends XModule {
                     Context::setSelectedUser(parent::get("userId"));
                 } else if (parent::param("mode") == self::modeCurrentUser) {
                     Context::setSelectedUser(Context::getUserId());
-                }parent::clearMessages();
-                
+                }
+                parent::clearMessages();
                 parent::blur();
         }
     }
@@ -166,6 +165,12 @@ class UserWallModule extends XModule {
         
         $post = UserWallModel::getUserPost($postId);
         $userProfileImage = UsersModel::getUserImageSmallUrl($post->srcuserid);
+        
+        $comment = $post->comment;
+        if (parent::post("comment")) {
+            $comment = parent::post("comment");
+        }
+        
         ?>
         <div class="panel usersWallPanel">
             <?php
@@ -179,7 +184,13 @@ class UserWallModule extends XModule {
                     <div class="userWallPostBody">
                         <form method="post" action="<?php echo parent::link(array("action"=>"editComment","id"=>$post->id)); ?>">
                             <div class="userWallPostTextarea">
-                                <textarea name="<?php echo parent::alias("comment") ?>"><?php echo htmlentities($post->comment); ?></textarea>
+                                <textarea name="<?php echo parent::alias("comment"); ?>"><?php echo htmlentities($comment); ?></textarea>
+                                <?php
+                                $message = parent::getMessage("comment");
+                                if (!empty($message)) {
+                                    echo '<span class="validateTips">'.$message.'</span>';
+                                }
+                                ?>
                             </div>
                             <hr/>
                             <div class="alignRight">
@@ -207,6 +218,11 @@ class UserWallModule extends XModule {
         }
         $currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
         
+        $comment = "";
+        if (parent::getAction() == "comment" || parent::getAction() == "reply") {
+            $comment = parent::post("comment");
+        }
+        
         ?>
         <div class="panel usersWallPanel">
             <?php
@@ -220,7 +236,15 @@ class UserWallModule extends XModule {
                     <div class="userWallPostBody">
                         <form method="post" action="<?php echo parent::link(array("action"=>"comment","userId"=>$userId)); ?>">
                             <div class="userWallPostTextarea">
-                                <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
+                                <textarea name="<?php echo parent::alias("comment") ?>"><?php echo parent::getAction() == "comment" ? htmlentities($comment) : ""; ?></textarea>
+                                <?php
+                                if (parent::getAction() == "comment") {
+                                    $message = parent::getMessage("comment");
+                                    if (!empty($message)) {
+                                        echo '<span class="validateTips">'.$message.'</span>';
+                                    }
+                                }
+                                ?>
                             </div>
                             <hr/>
                             <div class="alignRight">
@@ -373,7 +397,15 @@ class UserWallModule extends XModule {
                                 <div class="userWallPostBody">
                                     <form method="post" action="<?php echo parent::link(array("action"=>"reply","parent"=>$wallPost->id,"userId"=>Context::getUserId())); ?>">
                                         <div class="userWallPostTextarea">
-                                            <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
+                                            <textarea name="<?php echo parent::alias("reply") ?>"><?php parent::getAction() == "reply" ? htmlentities($comment) : ""; ?></textarea>
+                                            <?php
+                                            if (parent::getAction() == "reply") {
+                                                $message = parent::getMessage("comment");
+                                                if (!empty($message)) {
+                                                    echo '<span class="validateTips">'.$message.'</span>';
+                                                }
+                                            }
+                                            ?>
                                         </div>
                                         <hr/>
                                         <div class="alignRight">

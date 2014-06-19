@@ -27,6 +27,9 @@ class UserWallModel {
     
     static function validateWallPost ($userId, $srcUserId, $comment, $parent = null) {
         $errors = array();
+        if (strlen($comment) == 0) {
+            $errors["comment"] = "This feild cannot be empty!";
+        }
         if (strlen($comment) > 5000) {
             $errors["comment"] = "Maximum 5000 characters allowed!";
         }

@@ -162,5 +162,28 @@ class ForumPageModel {
         $pmId = mysql_real_escape_string($pmId);
         Database::query("delete from t_user_message where id = '$pmId'");
     }
+    
+    static function validatePm ($subject, $message) {
+        
+        $errors = array();
+        
+        $subject = mysql_real_escape_string($subject);
+        if (strlen($subject) == 0) {
+            $errors["subject"] = "This feild cannot be empty!";
+        }
+        if (strlen($subject) > 100) {
+            $errors["subject"] = "Maximum 100 characters!";
+        }
+        
+        $message = mysql_real_escape_string($message);
+        if (strlen($message) == 0) {
+            $errors["message"] = "This feild cannot be empty!";
+        }
+        if (strlen($message) > 5000) {
+            $errors["message"] = "Maximum 5000 characters!";
+        }
+        
+        return $errors;
+    }
 }
 ?>

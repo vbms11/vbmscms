@@ -32,6 +32,16 @@ class RegisterModule extends XModule {
                     $email = parent::post('email');
                     $birthDate = parent::post('birthDate');
                     $gender = parent::post('gender');
+                    $over18 = parent::post('over18');
+                    $agbs = parent::post('agbs');
+                    
+                    $lawValidation = array();
+                    if ($over18 != "1") {
+                        $lawValidation["over18"] = "You must be at least 18 years of age!";
+                    }
+                    if ($agbs != "1") {
+                        $lawValidation["agbs"] = "You must accept the terms and conditions!";
+                    }
                     
                     if (isset($_SESSION['register.user'])) {
                         $registerUser = $_SESSION['register.user'];
@@ -59,7 +69,7 @@ class RegisterModule extends XModule {
                     $userValidationMessages = UsersModel::validate(null, $username, $firstName, $lastName, $password, $email, $birthDate, $gender);
                     $addressValidationMessages = UserAddressModel::validate(parent::post('continent'), parent::post('continentId'), parent::post('country'), parent::post('countryId'), parent::post('state'), parent::post('stateId'), parent::post('region'), parent::post('regionId'), parent::post('city'), parent::post('cityId'), parent::post('address'), parent::post('postcode'));
                             
-                    if (count($userValidationMessages) == 0 && count($addressValidationMessages) == 0) {
+                    if (count($lawValidation) == 0 && count($userValidationMessages) == 0 && count($addressValidationMessages) == 0) {
                         
                         $userId = UsersModel::saveUser(null, $username, $firstName, $lastName, $password, $email, $birthDate, null, $gender);
                         $userRoles = parent::param("userRoles");
@@ -106,6 +116,7 @@ class RegisterModule extends XModule {
                     } else {
                         parent::setMessages($userValidationMessages);
                         parent::addMessages($addressValidationMessages);
+                        parent::addMessages($lawValidation);
                     }
                     
                     parent::focus();
@@ -286,7 +297,7 @@ class RegisterModule extends XModule {
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.dob"); ?></td>
                     <td><?php
-                    InputFeilds::printDataPicker("birthDate", parent::post("birthDate"));
+                    InputFeilds::printDataPicker("birthDate",Common::toSqlDate(parent::post("birthDate")));
                     $message = parent::getMessage("dob");
                     if (!empty($message)) {
                         echo '<span class="validateTips">'.$message.'</span>';
@@ -366,6 +377,32 @@ class RegisterModule extends XModule {
                     if (!empty($message)) {
                         echo '<span class="validateTips">'.$message.'</span>';
                     }
+                    ?></td>
+                </tr><tr>
+                    <td></td>
+                    <td>
+                        <div>
+                            <input name="over18" type="checkbox" value="1" />
+                            <?php echo parent::getTranslation("register.over18"); ?>
+                        </div>
+                        <?php
+                        $message = parent::getMessage("over18");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                    ?></td>
+                </tr><tr>
+                    <td></td>
+                    <td>
+                        <div>
+                            <input name="agbs" type="checkbox" value="1" />
+                            <?php echo parent::getTranslation("register.agbs",null,false); ?>
+                        </div>
+                        <?php
+                        $message = parent::getMessage("agbs");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
                     ?></td>
                 </tr></table>
                 <hr/>

@@ -125,7 +125,7 @@ class UserGalleryModule extends XModule {
                 if (parent::post("submitButton")) {
                     $post = UserWallModel::getUserPost(parent::get("id"));
                     if (UserWallModel::canUserPost($post->srcuserid)) {
-                        $validationMessages = UserWallModel::validateWallPost($post->userid, Context::getUserId(), parent::post("comment"));
+                        $validationMessages = UserWallModel::validateWallPost($post->srcuserid, Context::getUserId(), parent::post("comment"));
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
@@ -137,13 +137,13 @@ class UserGalleryModule extends XModule {
                     }
                 }
                 break;
-            
             default:
                 if (parent::param("mode") == self::modeSelectedUserGallery && parent::get("userId")) {
                     Context::setSelectedUser(parent::get("userId"));
                 } else if (parent::param("mode") == self::modeCurrentUserGallery) {
                     Context::setSelectedUser(Context::getUserId());
                 }
+                parent::clearMessages();
                 parent::blur();
         }
     }
@@ -174,6 +174,7 @@ class UserGalleryModule extends XModule {
                 }
                 break;
             case "editComment":
+            case "saveComment":
                 $this->printEditComment(parent::get("id"),parent::get("image"),parent::get("category"));
                 break;
             case "comment":
@@ -517,7 +518,13 @@ class UserGalleryModule extends XModule {
                         <div class="userWallPostBody">
                             <form method="post" action="<?php echo parent::link(array("action"=>"comment","imageId"=>$imageId,"category"=>$categoryId)); ?>">
                                 <div class="userWallPostTextarea">
-                                    <textarea name="<?php echo parent::alias("comment") ?>"></textarea>
+                                    <textarea name="<?php echo parent::alias("comment") ?>"><?php echo htmlentities(parent::post("comment")); ?></textarea>
+                                    <?php
+                                    $message = parent::getMessage("comment");
+                                    if (!empty($message)) {
+                                        echo '<span class="validateTips">'.$message.'</span>';
+                                    }
+                                    ?>
                                 </div>
                                 <hr/>
                                 <div class="alignRight">
@@ -625,6 +632,12 @@ class UserGalleryModule extends XModule {
                 <form method="post" action="<?php echo parent::link(array("action"=>"saveComment","id"=>$commentId,"image"=>$imageId,"category"=>$categoryId)); ?>">
                     <div class="userWallPostTextarea">
                         <textarea name="<?php echo parent::alias("comment") ?>"><?php echo htmlentities($comment->comment); ?></textarea>
+                        <?php
+                        $message = parent::getMessage("comment");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
                     </div>
                     <hr/>
                     <div class="alignRight">

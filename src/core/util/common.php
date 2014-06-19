@@ -101,7 +101,9 @@ class Common {
     }
     
     static function toSqlDate ($uiDate) {
-        
+        $dateInfo = date_parse_from_format("d/m/Y", $uiDate);
+        $sqlDate = $dateInfo['year']."-".$dateInfo['month'].'-'.$dateInfo['day'];
+        return $sqlDate;
     }
     
     static function toUiDate ($dbDate) {
@@ -288,13 +290,9 @@ class InputFeilds {
             $value = date("Y-m-d");
         }
         $dateInfo = date_parse_from_format("Y-m-d", $value);
-        $currentDateInfo = date_parse_from_format("Y-m-d", date("Y-m-d"));
         ?>
-	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="jquiDate" type="text" />
-        <script>
-        $("#<?php echo $name; ?>").datepicker("setDate", new Date(<?php echo $dateInfo["year"]; ?>,<?php echo $dateInfo["month"]; ?>,<?php echo $dateInfo["day"]; ?>) );
-        </script>
-	<?php
+	<input id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $dateInfo["day"].'/'.$dateInfo["month"].'/'.$dateInfo["year"]; ?>" class="jquiDate" type="text" />
+        <?php
     }
     
     static function printSpinner ($name, $value = null) {

@@ -29,25 +29,37 @@ class UserMessageModule extends XModule {
                 break;
             case "deleteMessage":
                 if (Context::hasRole(array("message.inbox"))) {
-                    ForumPageModel::deletePm(parent::get("id"));
+                    $pm = ForumPageModel::getPm(parent::get("id"));
+                    if (!empty($pm) && $pm->dstuser == Context::getUserId()) {
+                        ForumPageModel::deletePm(parent::get("id"));
+                    }
                     parent::blur();
                     parent::redirect();
                 }
                 break;
             case "send":
                 if (Context::hasRole(array("message.inbox"))) {
-                    $messageId = ForumPageModel::savePm(Context::getUserId(), Context::getSelectedUserId(), parent::post('subject'), parent::post('message'));
-                    SocialController::notifyMessageSent($messageId);
-                    parent::blur();
-                    parent::redirect(array("action"=>"sent"));
+                    $validationMessages = ForumPageModel::validatePm(parent::post('subject'), parent::post('message'));
+                    if (count($validationMessages) == 0) {$messageId = ForumPageModel::savePm(Context::getUserId(), Context::getSelectedUserId(), parent::post('subject'), parent::post('message'));
+                        SocialController::notifyMessageSent($messageId);
+                        parent::blur();
+                        parent::redirect(array("action"=>"sent"));
+                    } else {
+                        parent::setMessages($validationMessages);
+                    }
                 }
                 break;
             case "doReply":
                 if (Context::hasRole(array("message.inbox"))) {
-                    $messageId = ForumPageModel::savePm(Context::getUserId(), parent::get("dstUserId"), parent::post('subject'), parent::post('message'));
-                    SocialController::notifyMessageSent($messageId);
-                    parent::blur();
-                    parent::redirect(array("action"=>"sent"));
+                    $validationMessages = ForumPageModel::validatePm(parent::post('subject'), parent::post('message'));
+                    if (count($validationMessages) == 0) {
+                        $messageId = ForumPageModel::savePm(Context::getUserId(), parent::get("dstUserId"), parent::post('subject'), parent::post('message'));
+                        SocialController::notifyMessageSent($messageId);
+                        parent::blur();
+                        parent::redirect(array("action"=>"sent"));
+                    } else {
+                        parent::setMessages($validationMessages);
+                    }
                 }
                 break;
             case "view":
@@ -63,6 +75,7 @@ class UserMessageModule extends XModule {
                 } else if (parent::param("mode") == self::modeCurrentUser) {
                     Context::setSelectedUser(Context::getUserId());
                 }
+                parent::clearMessages();
         }
     }
 
@@ -78,6 +91,7 @@ class UserMessageModule extends XModule {
                 }
                 break;
             case "new":
+            case "send":
                 if (Context::hasRole(array("message.inbox"))) {
                     $this->printCreateMessageView();
                 }
@@ -89,6 +103,7 @@ class UserMessageModule extends XModule {
                 $this->printViewView();
                 break;
             case "reply":
+            case "doReply":
                 $this->printReplyView();
                 break;
             default:
@@ -203,11 +218,23 @@ class UserMessageModule extends XModule {
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("userMessage.create.subject"); ?>
                 </td><td>
-                    <input type="textbox" name="subject" value="" />
+                    <input type="textbox" name="subject" value="<?php echo htmlentities(parent::post("subject"), ENT_QUOTES); ?>" />
+                    <?php
+                    $message = parent::getMessage("subject");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
+                    ?>
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("userMessage.create.message"); ?>
                 </td><td>
-                    <textarea name="message" cols="4" rows="4"></textarea>
+                    <textarea name="message" cols="4" rows="4"><?php echo htmlentities(parent::post("message")); ?></textarea>
+                    <?php
+                    $message = parent::getMessage("message");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
+                    ?>
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
@@ -274,7 +301,16 @@ class UserMessageModule extends XModule {
     }
     
     function printReplyView () {
+        
         $message = ForumPageModel::getPm(parent::get("id"));
+        
+        $subject = $message->subject;
+        if (parent::post("subject")) {
+            $subject = parent::post("subject");
+        } else if (strpos($subject, "RE: ") !== 0) {
+            $subject = "RE: ".$subject;
+        }
+        
         ?>
         <div class="panel replyUserMessagePanel">
             <h1><?php echo parent::getTranslation("userMessage.reply.title"); ?></h1>
@@ -287,11 +323,23 @@ class UserMessageModule extends XModule {
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("userMessage.reply.subject"); ?>
                 </td><td>
-                    <input type="textbox" name="subject" value="<?php echo "RE: ".htmlentities($message->subject, ENT_QUOTES); ?>" />
+                    <input type="textbox" name="subject" value="<?php echo htmlentities($subject, ENT_QUOTES); ?>" />
+                    <?php
+                    $message = parent::getMessage("subject");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
+                    ?>
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("userMessage.reply.message"); ?>
                 </td><td>
-                    <textarea name="message" cols="4" rows="4"></textarea>
+                    <textarea name="message" cols="4" rows="4"><?php echo htmlentities(parent::post("message")); ?></textarea>
+                    <?php
+                    $message = parent::getMessage("message");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
+                    ?>
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
