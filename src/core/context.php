@@ -203,6 +203,10 @@ class Context {
         if (empty($_SESSION["req.site"])) {
             return null;
         }
+        if (DomainsModel::getDomainName() != $_SESSION["req.site"]->url) {
+            unset($_SESSION["req.site"]);
+            return self::getSite();
+        }
         return $_SESSION["req.site"];
     }
     
@@ -261,8 +265,11 @@ class Context {
             
             // notify about cookies
             if (!isset($_COOKIE["cookiesAllowed"])) {
-                setcookie("cookiesAllowed","1", 0, "/");
-                Context::addAlertNotification(TranslationsModel::getTranslation("session.cookies"));
+                $lawNotification = new stdClass();
+                $lawNotification->id = "cookiesAllowed";
+                $lawNotification->type = "confirmOnce";
+                $lawNotification->message = TranslationsModel::getTranslation("session.cookies");
+                Context::addAlertNotification($lawNotification);
             }
             
             // set the siteid

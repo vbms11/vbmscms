@@ -297,9 +297,22 @@ class TemplateRenderer extends BaseRenderer {
             <div class="notificationsBox">
                 <?php
                 foreach ($alertNotifications as $alertNotification) {
+                    $typeClass = null;
+                    $notificationId = null;
+                    $notificationMessage = null;
+                    if (isset($alertNotification->message)) {
+                        $notificationMessage = $alertNotification->message;
+                        if ($alertNotification->type == "confirmOnce") {
+                            $typeClass = $alertNotification->type;
+                            $notificationId = $alertNotification->id;
+                        }
+                    } else {
+                        $notificationMessage = $alertNotification;
+                    }
+                    
                     ?>
-                    <div class="notification alertNotification">
-                        <?php echo $alertNotification; ?>
+                    <div class="notification alertNotification <?php if (!empty($typeClass)) { echo $typeClass; } ?>" <?php if (!empty($notificationId)) { echo 'id="'.$notificationId.'"'; } ?>>
+                        <?php echo $notificationMessage; ?>
                         <button><?php echo TranslationsModel::getTranslation("common.ok"); ?></button>
                     </div>
                     <?php
@@ -308,6 +321,11 @@ class TemplateRenderer extends BaseRenderer {
                 <script>
                 $(".alertNotification").each(function(index,object){
                     $(object).click(function(){
+                        if ($(this).hasClass("confirmOnce")) {
+                            $.cookie($(this).attr("id"), "1", {
+                                path : "/"
+                            });
+                        }
                         $(this).remove();
                     });
                 });
