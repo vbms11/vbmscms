@@ -33,10 +33,11 @@ class UserWallModule extends XModule {
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
-                            $wallPostId = UserWallModel::createUserWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
+                            $wallPostId = UserWallModel::createUserWallEventPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
                             if (parent::get("userId") !== Context::getUserId()) {
                                 SocialController::notifyWallPost($wallPostId);
                             }
+                            parent::clearMessages();
                             parent::redirect();
                         }
                     }
@@ -45,30 +46,46 @@ class UserWallModule extends XModule {
             case "reply":
                 if (Context::hasRole("user.profile.owner")) {
                     if (parent::post("submitButton") && UserWallModel::canUserPost(parent::get("userId"))) {
-                        $validationMessages = UserWallModel::validateWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("parent"));
+                        $validationMessages = UserWallModel::validateWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("eventId"));
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
-                            $wallPostId = UserWallModel::createUserWallPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("parent"));
+                            $wallPostId = UserWallModel::createUserWallEventPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("eventId"));
                             if (parent::get("userId") !== Context::getUserId()) {
                                 SocialController::notifyWallReply($wallPostId);
                             }
+                            parent::clearMessages();
                             parent::redirect();
                         }
                     }
                 }
                 break;
-            case "deleteComment":
+            case "deleteEvent":
                 $userId = $this->getModeUserId();
-                $comment = UserWallModel::getUserPost(parent::get("id"));
-                if ($userId == Context::getUserId() || $comment->srcuserid == Context::getUserId()) {
-                    UserWallmodel::deleteUserPost(parent::get("id"));
+                $comment = UserWallModel::getUserWallEventById(parent::get("id"));
+                if ($userId == Context::getUserId() || $comment->userid == Context::getUserId()) {
+                    UserWallmodel::deleteWallEventById(parent::get("id"));
+                }
+                if (Context::isAjaxRequest()) {
+                    Context::setReturnValue("");
                 }
                 parent::redirect();
                 break;
+            case "deleteComment":
+                $userId = $this->getModeUserId();
+                $comment = UserWallModel::getUserWallPostById(parent::get("id"));
+                if ($userId == Context::getUserId() || $comment->srcuserid == Context::getUserId()) {
+                    UserWallmodel::deleteUserPostById(parent::get("id"));
+                }
+                if (Context::isAjaxRequest()) {
+                    Context::setReturnValue("");
+                } else {
+                    parent::redirect();
+                }
+                break;
             case "editComment":
                 if (parent::post("submitButton")) {
-                    $post = UserWallModel::getUserPost(parent::get("id"));
+                    $post = UserWallModel::getUserWallPostById(parent::get("id"));
                     $validationMessages = UserWallModel::validateWallPost($post->srcuserid, Context::getUserId(), parent::post("comment"));
                     if (count($validationMessages) > 0) {
                         parent::setMessages($validationMessages);
@@ -163,7 +180,7 @@ class UserWallModule extends XModule {
     
     function printEditPostView ($postId) {
         
-        $post = UserWallModel::getUserPost($postId);
+        $post = UserWallModel::getUserWallPostById($postId);
         $userProfileImage = UsersModel::getUserImageSmallUrl($post->srcuserid);
         
         $comment = $post->comment;
@@ -212,10 +229,11 @@ class UserWallModule extends XModule {
         
         $userId = $this->getModeUserId();
         
-        $wallPosts = array();
+        $wallEvents = array();
         if (!empty($userId)) {
-            $wallPosts = UserWallModel::getUserWallPosts($userId);
+            $wallEvents = UserWallModel::getUserWallEventsByUserId($userId);
         }
+        
         $currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
         
         $comment = "";
@@ -238,11 +256,9 @@ class UserWallModule extends XModule {
                             <div class="userWallPostTextarea">
                                 <textarea name="<?php echo parent::alias("comment") ?>"><?php echo parent::getAction() == "comment" ? htmlentities($comment) : ""; ?></textarea>
                                 <?php
-                                if (parent::getAction() == "comment") {
-                                    $message = parent::getMessage("comment");
-                                    if (!empty($message)) {
-                                        echo '<span class="validateTips">'.$message.'</span>';
-                                    }
+                                $message = parent::getMessage("comment");
+                                if (!empty($message)) {
+                                    echo '<span class="validateTips">'.$message.'</span>';
                                 }
                                 ?>
                             </div>
@@ -259,166 +275,49 @@ class UserWallModule extends XModule {
                 <?php
             }
             
-            if (!empty($wallPosts)) {
-                foreach ($wallPosts as $wallPost) {
+            if (!empty($wallEvents)) {
+                $wallEventsCount = count($wallEvents);
+                for ($i=0; $i<$wallEventsCount; $i++) {
                     
-                    if (!empty($wallPost->parent)) {
-                        continue;
+                    $originalEvent = $wallEvents[$i];
+                    $sameTypeEvents = array($originalEvent);
+                    
+                    while ($i+1 < $wallEventsCount && $wallEvents[$i+1]->type === $originalEvent->type) {
+                        
+                        if ($wallEvents[$i+1]->type !== UserWallModel::type_friend && $wallEvents[$i+1]->type === UserWallModel::type_image) {
+                            break;
+                        }
+                        
+                        $sameTypeEvents[] = $wallEvents[$i+1];
+                        $i++;
                     }
                     
-                    $srcUser = UsersModel::getUser($wallPost->srcuserid);
-                    $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
-                    $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
                     ?>
-                    <div class="userWallPostThread">
-                        <div class="userWallPost">
-                            <div class="userWallPostImage">
-                                <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)) ?>">
-                                    <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
-                                </a>
-                            </div>
-                            <div class="userWallPostBody">
-                                <div class="userWallPostTitle">
-                                    <?php
-                                    $allowDelete = false;
-                                    $allowEdit = false;
-                                    if (Context::getUserId() == $wallPost->srcuserid) {
-                                        $allowDelete = true;
-                                        $allowEdit = true;
-                                    }
-                                    if ($userId == Context::getUserId()) {
-                                        $allowDelete = true;
-                                    }
-                                    if ($allowDelete || $allowEdit) {
-                                        ?>
-                                        <div class="userWallPostTitleTools">
-                                        <?php
-                                    }
-                                    if ($allowDelete) {
-                                        ?>
-                                        <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPost->id),false); ?>');" />
-                                        <?php
-                                    }
-                                    if ($allowEdit) {
-                                        ?>
-                                        <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPost->id)); ?>">
-                                            <img src="resource/img/preferences.png" alt="" />
-                                        </a>
-                                        <?php
-                                    }
-                                    if ($allowDelete || $allowEdit) {
-                                        ?>
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                    <div class="userWallPostTitleDate">
-                                        <?php echo $wallPost->date; ?>
-                                    </div>
-                                    <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)) ?>">
-                                        <?php echo $srcUserName; ?>
-                                    </a>
-                                </div>
-                                <div class="userWallPostComment">
-                                    <?php echo htmlentities($wallPost->comment); ?>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
+                    <div class="userWallPostThread">    
                         <?php
-                        foreach (array_reverse($wallPosts) as $wallPostReply) {
-                            if ($wallPost->id == $wallPostReply->parent) {
-                                $replyUser = UsersModel::getUser($wallPostReply->srcuserid);
-                                $replyUserName = $replyUser->firstname." ".$replyUser->lastname;
-                                $replyUserImage = UsersModel::getUserImageSmallUrl($replyUser->id);
-                                ?>
-                                <div class="userWallPostReply">
-                                    <div class="userWallPostImage">
-                                        <img src="<?php echo $replyUserImage; ?>" alt="" title="" />
-                                    </div>
-                                    <div class="userWallPostBody">
-                                        <div class="userWallPostTitle">
-                                            <?php
-                                            $allowDelete = false;
-                                            $allowEdit = false;
-                                            if (Context::getUserId() == $wallPostReply->srcuserid) {
-                                                $allowDelete = true;
-                                                $allowEdit = true;
-                                            }
-                                            if ($userId == Context::getUserId()) {
-                                                $allowDelete = true;
-                                            }
-                                            if ($allowDelete || $allowEdit) {
-                                                ?>
-                                                <div class="userWallPostTitleTools">
-                                                <?php
-                                            }
-                                            if ($allowDelete) {
-                                                ?>
-                                                <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPostReply->id),false); ?>');" />
-                                                <?php
-                                            }
-                                            if ($allowEdit) {
-                                                ?>
-                                                <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPostReply->id)); ?>">
-                                                    <img src="resource/img/preferences.png" alt="" />
-                                                </a>
-                                                <?php
-                                            }
-                                            if ($allowDelete || $allowEdit) {
-                                                ?>
-                                                </div>
-                                                <?php
-                                            }
-                                            ?>
-                                            <div class="userWallPostTitleDate">
-                                                <?php echo $wallPostReply->date; ?>
-                                            </div>
-                                            <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)) ?>">
-                                                <?php echo $replyUserName; ?>
-                                            </a>
-                                        </div>
-                                        <div class="userWallPostComment">
-                                            <?php echo htmlentities($wallPostReply->comment); ?>
-                                        </div>
-                                    </div>
-                                    <div class="clear"></div>
-                                </div>
-                                <?php
-                            }
+
+                        switch ($wallEvent->type) {
+
+                            case UserWallModel::type_wall:
+                                $this->printEventTypeWall($originalEvent);
+                                break;
+                            case UserWallModel::type_birthday:
+                                $this->printEventTypeBirthday($originalEvent);
+                                break;
+                            case UserWallModel::type_register:
+                                $this->printEventTypeRegister($originalEvent);
+                                break;
+                            case UserWallModel::type_friend:
+                                $this->printEventTypeFriend($sameTypeEvents);
+                                break;
+                            case UserWallModel::type_image:
+                                $this->printEventTypeImage($sameTypeEvents);
+                                break;
+                            //case UserWallModel::type_share:
+                            //    $this->printEventTypeShare($originalEvent);
+                            //    break;
                         }
-                        if (UserWallModel::canUserPost(Context::getUserId())) {
-                            $userProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
-                            ?>
-                            <div class="userWallPostReplyBox">
-                                <div class="userWallPostImage">
-                                    <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
-                                </div>
-                                <div class="userWallPostBody">
-                                    <form method="post" action="<?php echo parent::link(array("action"=>"reply","parent"=>$wallPost->id,"userId"=>Context::getUserId())); ?>">
-                                        <div class="userWallPostTextarea">
-                                            <textarea name="<?php echo parent::alias("reply") ?>"><?php parent::getAction() == "reply" ? htmlentities($comment) : ""; ?></textarea>
-                                            <?php
-                                            if (parent::getAction() == "reply") {
-                                                $message = parent::getMessage("comment");
-                                                if (!empty($message)) {
-                                                    echo '<span class="validateTips">'.$message.'</span>';
-                                                }
-                                            }
-                                            ?>
-                                        </div>
-                                        <hr/>
-                                        <div class="alignRight">
-                                            <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
-                                                <?php echo parent::getTranslation("userWall.button.reply"); ?>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                            <?php
-                        }
+                        
                         ?>
                     </div>
                     <?php
@@ -428,6 +327,279 @@ class UserWallModule extends XModule {
         </div>
         <?php
     }
+    
+    function printWallEventPosts ($wallEventPosts) {
+        
+        foreach ($wallEventPosts as $wallPostReply) {
+
+            $replyUser = UsersModel::getUser($wallPostReply->srcuserid);
+            $replyUserName = $replyUser->firstname." ".$replyUser->lastname;
+            $replyUserImage = UsersModel::getUserImageSmallUrl($replyUser->id);
+            ?>
+            <div class="userWallPostReply">
+                <div class="userWallPostImage">
+                    <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$replyUser->id)) ?>">
+                        <img src="<?php echo $replyUserImage; ?>" alt="" title="" />
+                    </a>
+                </div>
+                <div class="userWallPostBody">
+                    <div class="userWallPostTitle">
+                        <?php
+                        $allowDelete = false;
+                        $allowEdit = false;
+                        if (Context::getUserId() == $wallPostReply->srcuserid) {
+                            $allowDelete = true;
+                            $allowEdit = true;
+                        }
+                        if ($this->getModeUserId() == Context::getUserId()) {
+                            $allowDelete = true;
+                        }
+                        if ($allowDelete || $allowEdit) {
+                            ?>
+                            <div class="userWallPostTitleTools">
+                                <?php
+                                if ($allowDelete) {
+                                    ?>
+                                    <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteComment","id"=>$wallPostReply->id),false); ?>');" />
+                                    <?php
+                                }
+                                if ($allowEdit) {
+                                    ?>
+                                    <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$wallPostReply->id)); ?>">
+                                        <img src="resource/img/preferences.png" alt="" />
+                                    </a>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                        <div class="userWallPostTitleDate">
+                            <?php echo $wallPostReply->date; ?>
+                        </div>
+                        <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$replyUser->id)) ?>">
+                            <?php echo $replyUserName; ?>
+                        </a>
+                    </div>
+                    <div class="userWallPostComment">
+                        <?php echo htmlentities($wallPostReply->comment); ?>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <?php
+        }
+        if (UserWallModel::canUserPost(Context::getUserId())) {
+            
+            
+            
+            ?>
+            <div class="userWallPostReplyBox">
+                <div class="userWallPostImage">
+                    <img src="<?php echo $currentUserProfileImage; ?>" alt="" title="" />
+                </div>
+                <div class="userWallPostBody">
+                    <form method="post" action="<?php echo parent::link(array("action"=>"reply","eventId"=>$wallEvent->id,"userId"=>Context::getUserId())); ?>">
+                        <div class="userWallPostTextarea">
+                            <textarea name="<?php echo parent::alias("reply") ?>"><?php parent::getAction() == "reply" ? htmlentities($comment) : ""; ?></textarea>
+                            <?php
+                            $message = parent::getMessage("comment");
+                            if (!empty($message)) {
+                                echo '<span class="validateTips">'.$message.'</span>';
+                            }
+                            ?>
+                        </div>
+                        <hr/>
+                        <div class="alignRight">
+                            <button class="jquiButton" type="submit" name="<?php echo parent::alias("submitButton"); ?>" value="1">
+                                <?php echo parent::getTranslation("userWall.button.reply"); ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <?php
+        }
+    }
+    
+    function printEventPost ($wallEventPosts) {
+        
+        $currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
+        
+        $srcUser = UsersModel::getUser($wallEvent->userid);
+        $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
+        $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
+
+        $wallEventPosts = UserWallModel::getUserWallPostsByEventId($wallEvent->id);
+        $originalPost = next($wallEventPosts);
+        
+        ?>
+        <div class="userWallPost">
+            <div class="userWallPostImage">
+                <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)) ?>">
+                    <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+                </a>
+            </div>
+            <div class="userWallPostBody">
+                <div class="userWallPostTitle">
+                    <?php
+                    $allowDelete = false;
+                    $allowEdit = false;
+                    if (Context::getUserId() == $originalPost->srcuserid) {
+                        $allowDelete = true;
+                        $allowEdit = true;
+                    }
+                    if ($userId == Context::getUserId()) {
+                        $allowDelete = true;
+                    }
+                    if ($allowDelete || $allowEdit) {
+                        ?>
+                        <div class="userWallPostTitleTools">
+                            <?php
+                            if ($allowDelete) {
+                                ?>
+                                <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteEvent","id"=>$wallEvent->id),false); ?>');" />
+                                <?php
+                            }
+                            if ($allowEdit) {
+                                ?>
+                                <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$originalPost->id)); ?>">
+                                    <img src="resource/img/preferences.png" alt="" />
+                                </a>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    <div class="userWallPostTitleDate">
+                        <?php echo $originalPost->date; ?>
+                    </div>
+                    <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)); ?>">
+                        <?php echo $srcUserName; ?>
+                    </a>
+                </div>
+                <div class="userWallPostComment">
+                    <?php echo htmlentities($originalPost->comment); ?>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php
+        $this->printWallEventPosts($wallEventPosts);
+    }
+    
+    function printEventTypeBirthday ($originalEvent) {
+        
+        ?>
+        <div class="userWallBirthday">
+            <div class="userWallPostImage">
+                <img src="modules/users/img/birthday.png" alt="" title="" />
+            </div>
+            <div class="userWallPostBody">
+                <?php
+                echo parent::getTranslation("userWall.birthday.message");
+                ?>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php
+        $wallEventPosts = UserWallModel::getUserWallPostsByEventId($originalEvent->id);
+        $this->printWallEventPosts($wallEventPosts);
+    }
+    
+    function printEventTypeRegister($originalEvent) {
+        
+        ?>
+        <div class="userWallRegister">
+            <div class="userWallPostImage">
+                <img src="modules/users/img/register.png" alt="" title="" />
+            </div>
+            <div class="userWallPostBody">
+                <?php
+                echo parent::getTranslation("userWall.register.message");
+                ?>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php
+        $wallEventPosts = UserWallModel::getUserWallPostsByEventId($originalEvent->id);
+        $this->printWallEventPosts($wallEventPosts);
+    }
+    
+    function printEventTypeFriend($sameTypeEvents) {
+        
+        $newFriends = array();
+        foreach ($sameTypeEvents as $sameTypeEvent) {
+            
+            $user = UsersModel::getUser($sameTypeEvent->typeid);
+            $username = $user->firstname." ".$user->lastname;
+            $newFriends []= '<a href="'.parent::staticLink("userProfile",array("userId"=>$user->id)).'">'.$username.'</a>';
+        }
+        
+        $newFriendsString = implode(", ", $newFriends);
+        
+        ?>
+        <div class="userWallFriend">
+            <div class="userWallPostImage">
+                <img src="modules/users/img/friend.png" alt="" title="" />
+            </div>
+            <div class="userWallPostBody">
+                <?php
+                echo parent::getTranslation("userWall.friend.message", array("friends",$newFriendsString));
+                ?>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php
+        $eventIds = array();
+        foreach ($sameTypeEvents as $sameTypeEvent) {
+            $eventIds []= $sameTypeEvent;
+        }
+        $wallEventPosts = UserWallModel::getUserWallPostsByEventIds($eventIds);
+        $this->printWallEventPosts($wallEventPosts);
+    }
+    
+    function printEventTypeImage ($sameTypeEvents) {
+        
+        Context::addRequiredScript("resource/js/lightbox/js/jquery.lightbox-0.5-pack.js");
+        Context::addRequiredStyle("resource/js/lightbox/css/jqzery.lightbox-0.5.css");
+        
+        ?>
+        <div class="userWallImage">
+            <div class="userWallPostImage">
+                <img src="modules/users/img/image.png" alt="" title="" />
+            </div>
+            <div class="userWallPostBody">
+                <?php
+                foreach ($sameTypeEvents as $sameTypeEvent) {
+                    $image = GalleryModel::getImage($sameTypeEvent->typeid);
+                    ?>
+                    <a href="<?php echo ResourcesModel::createResourceLink("gallery",$image->image); ?>">    
+                        <img src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
+                    </a>
+                    <?php
+                }
+                ?>
+                <script type="text/javascript">
+                $('.userWallImage a').lightBox();
+                </script>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php
+        $endEvent = end($sameTypeEvents);
+        $this->printWallEventPosts($endEvent);
+    }
+    
+    /*
+    function printEventTypeShare($originalEvent) {
+    }
+    */
+    
 }
 
 ?>

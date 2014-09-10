@@ -145,7 +145,7 @@ class SocialController {
                 
         $applicationInfo = self::getApplicationInfo();
         
-        $wp = UserWallModel::getUserPost($wallPostId);
+        $wp = UserWallModel::getUserWallPostById($wallPostId);
         $wpMessage = htmlentities($wp->comment,ENT_QUOTES);
         $wpSendDate = htmlentities(Common::toUiDate($wp->date),ENT_QUOTES);
         $viewMessageLink = NavigationModel::createStaticPageLink('userWall',null, true, false);
@@ -198,7 +198,7 @@ class SocialController {
                 
         $applicationInfo = self::getApplicationInfo();
         
-        $wp = UserWallModel::getUserPost($wallPostId);
+        $wp = UserWallModel::getUserWallPostById($wallPostId);
         $wpMessage = htmlentities($wp->comment,ENT_QUOTES);
         $wpSendDate = htmlentities(Common::toUiDate($wp->date),ENT_QUOTES);
         $viewMessageLink = NavigationModel::createStaticPageLink('userWall',null, true, false);

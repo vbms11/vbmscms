@@ -107,7 +107,9 @@ class UserGalleryModule extends XModule {
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
-                            UserWallModel::createUserImagePost(parent::get("imageId"), Context::getUserId(), parent::post("comment"));
+                            $eventId = UserWallModel::getUserWallImageEventByImageId(parent::get("imageId"));
+                            UserWallModel::createUserWallEventImageComment(Context::getUserId(), parent::post("comment"), $eventId);
+                            parent::clearMessages();
                             parent::redirect(array("action"=>"viewImage","id"=>parent::get("imageId"),"category"=>parent::get("category")));
                         }
                     }
@@ -115,24 +117,27 @@ class UserGalleryModule extends XModule {
                 break;
             case "deleteComment":
                 $userId = $this->getModeUserId();
-                $comment = UserWallModel::getUserPost(parent::get("id"));
+                $comment = UserWallModel::getUserWallPostById(parent::get("id"));
                 if ($userId == Context::getUserId() || $comment->srcuserid == Context::getUserId()) {
-                    UserWallmodel::deleteUserPost(parent::get("id"));
+                    UserWallmodel::deleteUserPostById(parent::get("id"));
                 }
-                parent::redirect(array("action"=>"viewImage","id"=>parent::get("image"),"category"=>parent::get("category")));
+                if (Context::isAjaxRequest()) {
+                    Context::setReturnValue("");
+                } else {
+                    parent::redirect(array("action"=>"viewImage","id"=>parent::get("image"),"category"=>parent::get("category")));
+                }
                 break;
             case "saveComment":
                 if (parent::post("submitButton")) {
-                    $post = UserWallModel::getUserPost(parent::get("id"));
-                    if (UserWallModel::canUserPost($post->srcuserid)) {
+                    $post = UserWallModel::getUserWallPostById(parent::get("id"));
+                    if (UserWallModel::canUserPost($post->srcuserid) && $post->srcuserid == Context::getUserId()) {
                         $validationMessages = UserWallModel::validateWallPost($post->srcuserid, Context::getUserId(), parent::post("comment"));
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
-                            if ($post->srcuserid == Context::getUserId()) {
-                                UserWallModel::updateUserPost(parent::get("id"), parent::post("comment"));
-                                parent::redirect(array("action"=>"viewImage","id"=>parent::get("image"),"category"=>parent::get("category")));
-                            }
+                            UserWallModel::updateUserPost(parent::get("id"), parent::post("comment"));
+                            parent::clearMessages();
+                            parent::redirect(array("action"=>"viewImage","id"=>parent::get("image"),"category"=>parent::get("category")));
                         }
                     }
                 }
@@ -407,15 +412,10 @@ class UserGalleryModule extends XModule {
         
         $image = GalleryModel::getImage($imageId);
         $category = GalleryModel::getCategory($categoryId);
-        
+        $event = UserWallModel::getUserWallImageEventByImageId($imageId);
         
         $userId = $this->getModeUserId();
-
-        $imagePosts = array();
-        if (!empty($userId)) {
-            $imagePosts = UserWallModel::getUserImagePosts($imageId);
-        }
-
+        $imagePosts = UserWallModel::getUserWallPostsByEventId($event->id);
         
         ?>
         <div class="panel galleryPanel viewImage">
@@ -437,12 +437,8 @@ class UserGalleryModule extends XModule {
                 <?php
 
                 if (!empty($imagePosts)) {
-                    foreach (array_reverse($imagePosts) as $wallPost) {
-
-                        if (!empty($wallPost->parent)) {
-                            continue;
-                        }
-
+                    foreach ($imagePosts as $wallPost) {
+                        
                         $srcUser = UsersModel::getUser($wallPost->srcuserid);
                         $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
                         $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
@@ -594,7 +590,7 @@ class UserGalleryModule extends XModule {
             </td></tr><tr><td>
                 <?php echo parent::getTranslation("gallery.category.description"); ?>
             </td><td>
-                <?php InputFeilds::printTextArea("description",$title); ?>
+                <?php InputFeilds::printTextArea("description",$description); ?>
             </td></tr><?php
             if ($categoryId != null) {
                 ?>
@@ -621,7 +617,7 @@ class UserGalleryModule extends XModule {
     
     function printEditComment ($commentId, $imageId, $categoryId) {
         
-        $comment = UserWallModel::getUserPost($commentId);
+        $comment = UserWallModel::getUserWallPostById($commentId);
         $userProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
         ?>
         <div class="userWallPostCommentBox">

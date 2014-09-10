@@ -59,7 +59,6 @@ class LoginModule extends XModule {
                     } catch (FacebookApiException $e) {
                         error_log($e);
                         $userLogin = null;
-                        parent::focus();
                         parent::redirect(array("action"=>"bad"));
                     }
                 } else {

@@ -14,6 +14,77 @@ class UserWallModel {
     
     const type_wall = 1;
     const type_image = 2;
+    const type_birthday = 3;
+    const type_register = 4;
+    const type_friend = 5;
+    const type_share = 6;
+    
+    static function getUserWallEventsByUserId ($userId) {
+        
+        $userId = mysql_real_escape_string($userId);
+        return Database::queryAsArray("select * from t_user_wall_event where userid = '$userId'");
+    }
+    
+    static function getUserWallEventById ($eventId) {
+        
+        $eventId = mysql_real_escape_string($eventId);
+        return Database::queryAsObject("select * from t_user_wall_event where id = '$eventId'");
+    }
+    
+    static function createUserWallEvent ($userId, $type, $typeId = null) {
+        
+        $userId = mysql_real_escape_string($userId);
+        $type = mysql_real_escape_string($type);
+        if ($typeId == null) {
+            $typeId = "null";
+        } else {
+            $typeId = "'".mysql_real_escape_string($typeId)."'";
+        }
+        Database::query("insert into t_user_wall_event (userid,type,typeid) values('$userId','$type',$typeId);");
+        $result = Database::query("select last_insert_id() as newid from t_user_wall_event");
+        return $result->newid;
+    }
+    
+    static function createUserWallEventPost ($userId, $srcUserId, $comment, $eventId = null) {
+        
+        if ($eventId == null) {
+            $eventId = self::createUserWallEvent($userId, self::type_wall);
+        }
+        self::createUserWallPost($srcUserId, $comment, $eventId);
+        
+        return $eventId;
+    }
+    
+    static function createUserWallEventImageUpload ($userId, $imageId) {
+        
+        return self::createUserWallEvent($userId, self::type_image, $imageId);
+    }
+    
+    static function createUserWallEventImageComment ($srcUserId, $comment, $imageUploadEventId) {
+        
+        self::createUserWallPost($srcUserId, $comment, $imageUploadEventId);
+        return $imageUploadEventId;
+    }
+    
+    static function createUserWallEventFriend ($userId, $friendId) {
+        
+        return self::createUserWallEvent($userId, self::type_friend, $friendId);
+    }
+    
+    static function createUserWallEventBirthday ($userId) {
+        
+        return self::createUserWallEvent($userId, self::type_birthday);
+    }
+    
+    static function createUserWallEventRegister ($userId) {
+        
+        return self::createUserWallEvent($userId, self::type_register);
+    }
+    
+    static function createUserWallEventShare ($userId, $eventId) {
+        
+        return self::createUserWallEvent($userId, self::type_share, $eventId);
+    }
     
     static function canUserPost ($friendId, $userId = null) {
         if ($userId == null) {
@@ -25,7 +96,7 @@ class UserWallModel {
         return UserFriendModel::isFriend($userId, $friendId);
     }
     
-    static function validateWallPost ($userId, $srcUserId, $comment, $parent = null) {
+    static function validateWallPost ($userId, $srcUserId, $comment, $eventId = null) {
         $errors = array();
         if (strlen($comment) == 0) {
             $errors["comment"] = "This feild cannot be empty!";
@@ -37,61 +108,50 @@ class UserWallModel {
             // check if users are friends
         }
         // check if parent exists
-        if ($parent != null) {
-            $parentPost = self::getUserPost($parent);
+        if ($eventId != null) {
+            $parentPost = self::getUserWallEventById($eventId);
             if (empty($parentPost)) {
-                $error["parent"] = "Post dose not exist";
+                $errors["eventId"] = "Post dose not exist";
             }
         }
         return $errors;
     }
     
-    static function getUserPost ($wallPostId) {
+    static function getUserWallPostById ($wallPostId) {
         
-        $wallPostId = mysql_real_escape_string($wallPostId);
-        return Database::queryAsObject("select * from t_user_wall_post where id = '$wallPostId'");
+        return self::getUserWallPostsByEventIds(array($wallPostId));
     }
     
-    static function getUserImagePosts ($imageId) {
+    static function getUserWallPostsByEventIds ($eventIds) {
         
-        return self::getUserPosts(self::type_image, $imageId);
+        $ids = array();
+        foreach ($eventIds as $eventId) {
+            $ids = "id = ".mysql_real_escape_string($eventId);
+        }
+        $idsSql = implode(" or ", $ids);
+        return Database::queryAsObject("select * from t_user_wall_post where $idsSql order by date asc");
     }
     
-    static function getUserWallPosts ($userId) {
+    static function getUserWallPostsByEventId ($eventId) {
         
-        return self::getUserPosts(self::type_wall, $userId);
+        $eventId = mysql_real_escape_string($eventId);
+        return Database::queryAsArray("select * from t_user_wall_post where eventid = '$eventId' order by date asc");
     }
     
-    static function getUserPosts ($type, $typeId) {
+    static function getUserWallImageEventByImageId ($imageId) {
         
-        $type = mysql_real_escape_string($type);
-        $typeId = mysql_real_escape_string($typeId);
-        return Database::queryAsArray("select * from t_user_wall_post where typeid = '$typeId' and type = '$type' order by date desc");
+        $imageId = mysql_real_escape_string($imageId);
+        return Database::queryAsObject("select * from t_user_wall_event where type = '".self::type_image."' and typeid = '$imageId'");
     }
     
-    static function createUserImagePost ($imageId, $srcUserId, $comment, $parent = null) {
+    static function createUserWallPost ($srcUserId, $comment, $eventId) {
         
-        return self::createUserPost(self::type_image, $imageId, $srcUserId, $comment, $parent);
-    }
-
-    static function createUserWallPost ($userId, $srcUserId, $comment, $parent = null) {
-        
-        return self::createUserPost(self::type_wall, $userId, $srcUserId, $comment, $parent);
-    }
-    
-    static function createUserPost ($type, $typeId, $srcUserId, $comment, $parent = null) {
-
-        $typeId = mysql_real_escape_string($typeId);
         $srcUserId = mysql_real_escape_string($srcUserId);
         $comment = mysql_real_escape_string($comment);
-        if ($parent == null) {
-            $parentSql = "null";
-        } else {
-            $parentSql = "'".mysql_real_escape_string($parent)."'";
-        }
-        Database::query("insert into t_user_wall_post (typeid,type,srcuserid,comment,date,parent)
-            values ('$typeId','$type','$srcUserId','$comment',now(),$parentSql)");
-        $newId = Database::query("select last_insert_id() as id from t_user_wall_post");
+        $eventIdSql = mysql_real_escape_string($eventId);
+        Database::query("insert into t_user_wall_post (srcuserid,comment,date,eventid)
+            values ('$srcUserId','$comment',now(),'$eventIdSql')");
+        $newId = Database::queryAsObject("select last_insert_id() as id from t_user_wall_post");
         return $newId->id;
     }
     
@@ -99,13 +159,32 @@ class UserWallModel {
         
         $postId = mysql_real_escape_string($postId);
         $comment = mysql_real_escape_string($comment);
-        Database::query("update t_user_wall_post set comment = '$comment' where id='$postId'");
+        Database::query("update t_user_wall_post set comment = '$comment' where id = '$postId'");
     }
     
-    static function deleteUserPost ($postId) {
+    static function deleteWallEventById ($eventId) {
+        
+        $eventId = mysql_real_escape_string($eventId);
+        Database::query("delete from t_user_wall_event where id = '$eventId'");
+        Database::query("delete from t_user_wall_post where eventid = '$eventId'");
+    }
+    
+    static function deleteUserPostById ($postId) {
+        
+        $post = self::getUserWallPostById($postId);
         
         $postId = mysql_real_escape_string($postId);
-        Database::query("delete from t_user_wall_post where id = '$postId' or parent = '$postId'");
+        Database::query("delete from t_user_wall_post where id = '$postId'");
+        
+        $event = self::getUserWallEventById($post->eventid);
+        switch ($event->type) {
+            case self::type_wall:
+                $otherPosts = self::getUserWallPostsByEventId($post->eventid);
+                if (empty($otherPosts)) {
+                    self::deleteWallEventById($post->eventid);
+                }
+                break;
+        }
     }
 }
 
