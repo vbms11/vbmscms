@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 require_once('core/plugin.php');
 require_once('core/model/usersModel.php');
 require_once('core/lib/facebook/facebook.php');

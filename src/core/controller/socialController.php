@@ -142,19 +142,16 @@ class SocialController {
     }
     
     static function notifyWallPost ($wallPostId) {
-                
+        
         $applicationInfo = self::getApplicationInfo();
         
-        $wp = UserWallModel::getUserWallPostById($wallPostId);
+        $wp = last(UserWallModel::getUserWallPostsByEventId($wallPostId));
         $wpMessage = htmlentities($wp->comment,ENT_QUOTES);
         $wpSendDate = htmlentities(Common::toUiDate($wp->date),ENT_QUOTES);
         $viewMessageLink = NavigationModel::createStaticPageLink('userWall',null, true, false);
         
-        switch ($wp->type) {
-            case UserWallModel::type_wall:
-                $dstUserId = $wp->typeid;
-                break;
-        }
+        $we = UserWallModel::getUserWallEventById($wallPostId);
+        $dstUserId = $we->srcuserid;
         
         $dstUserInfo = self::getUserInfo($dstUserId);
         $srcUserInfo = self::getUserInfo($wp->srcuserid);
@@ -194,20 +191,17 @@ class SocialController {
         EmailUtil::sendHtmlEmail($dstUserInfo["email"], $messageTitle, $messageBody, $socialConfig->sender_email);
     }
     
-    static function notifyWallReply ($wallPostId) {
+    static function notifyWallReply ($wallEventPostId) {
                 
         $applicationInfo = self::getApplicationInfo();
         
-        $wp = UserWallModel::getUserWallPostById($wallPostId);
+        $wp = end(UserWallModel::getUserWallPostsByEventId($wallEventPostId));
         $wpMessage = htmlentities($wp->comment,ENT_QUOTES);
         $wpSendDate = htmlentities(Common::toUiDate($wp->date),ENT_QUOTES);
         $viewMessageLink = NavigationModel::createStaticPageLink('userWall',null, true, false);
         
-        switch ($wp->type) {
-            case UserWallModel::type_wall:
-                $dstUserId = $wp->typeid;
-                break;
-        }
+        $we = UserWallModel::getUserWallEventById($wallEventPostId);
+        $dstUserId = $we->userid;
         
         $dstUserInfo = self::getUserInfo($dstUserId);
         $srcUserInfo = self::getUserInfo($wp->srcuserid);

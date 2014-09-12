@@ -24,7 +24,8 @@ class UserGalleryModule extends XModule {
                 break;
             case "uploadImage":
                 if ($this->getAllowUserEdit()) {
-                    GalleryModel::uploadImage("fileData",parent::get("category"));
+                    $imageId = GalleryModel::uploadImage("fileData",parent::get("category"));
+                    UserWallModel::createUserWallEventImageUpload(Context::getUserId(), $imageId);
                     PagesModel::updateModifyDate();
                     Context::setReturnValue("");
                 }
@@ -50,6 +51,7 @@ class UserGalleryModule extends XModule {
                 if ($this->getAllowUserEdit()) {
                     if (parent::get("id")) {
                         GalleryModel::deleteImage(parent::get("id"));
+                        UserWallModel::deleteWallEventImageUploadByImageId(parent::get("id"));
                         PagesModel::updateModifyDate();
                     }
                     parent::redirect(array("category"=>parent::get("category")));

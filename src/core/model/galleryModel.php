@@ -233,8 +233,9 @@ class GalleryModel {
         $title = mysql_escape_string($title);
         $description = mysql_escape_string($description);
         $orderKey = GalleryModel::getNextImageOrderKey();
-        $query = "insert into t_gallery_image (image,categoryid,orderkey,title,description) values('$imageName','$categoryId','$orderKey','$title','$description')";
-        Database::query($query);
+        Database::query("insert into t_gallery_image (image,categoryid,orderkey,title,description) values('$imageName','$categoryId','$orderKey','$title','$description')");
+        $newObj = Database::queryAsObject("select last_insert_id() as newid from t_gallery_image");
+        return $newObj->newid;
     }
     
     
@@ -289,27 +290,12 @@ class GalleryModel {
     
     static function uploadImage ($inputName,$category) {
         
+        $imageId = null;
         $allowedExtensions = array("jpeg", "jpg", "png", "gif");
         $sizeLimit = 5 * 1024 * 1024;
-
+        
         $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
         $result = $uploader->handleUpload(ResourcesModel::getResourcePath("gallery/new"));
-        /*
-        // create preview image
-        $handle = opendir(ResourcesModel::getResourcePath("gallery/new"));
-        while (false !== ($file = readdir($handle))) {
-            if ($file == "." || $file == "..") {
-                continue;
-            }
-            $filename = substr($file, strrpos($file, "/"));
-            copy(ResourcesModel::getResourcePath("gallery/new",$filename), ResourcesModel::getResourcePath("gallery",$filename));
-            GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$filename),170,170,ResourcesModel::getResourcePath("gallery/small",$filename));
-            GalleryModel::cropImage(ResourcesModel::getResourcePath("gallery",$filename),50,50,ResourcesModel::getResourcePath("gallery/tiny",$filename));
-            
-            unlink(ResourcesModel::getResourcePath("gallery/new",$filename));
-            GalleryModel::addImage($category,$filename,"","");
-        }
-        */
         
         if (isset($result['success']) && $result['success']) {
             
@@ -321,7 +307,7 @@ class GalleryModel {
             self::cropImage($filePathFull,self::smallWidth,self::smallHeight,ResourcesModel::getResourcePath("gallery/small",$newFilename));
             self::cropImage($filePathFull,self::tinyWidth,self::tinyHeight,ResourcesModel::getResourcePath("gallery/tiny",$newFilename));
             
-            self::addImage($category,$newFilename,"","");
+            $imageId = self::addImage($category,$newFilename,"","");
             
             unlink($filePathFull);
             unset($result['filename']);
@@ -329,8 +315,7 @@ class GalleryModel {
         
         // to pass data through iframe you will need to encode all html tags
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
-
-        
+        return $imageId;
     }
     
     function getNextFilename ($ext = "jpg") {

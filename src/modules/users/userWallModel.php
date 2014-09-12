@@ -31,6 +31,13 @@ class UserWallModel {
         return Database::queryAsObject("select * from t_user_wall_event where id = '$eventId'");
     }
     
+    static function deleteWallEventImageUploadByImageId ($imageId) {
+        
+        $imageId = mysql_real_escape_string($imageId);
+        $eventObj = Database::queryAsObject("select * from t_user_wall_event where typeid = '$imageId' and type = '".self::type_image."'");
+        self::deleteWallEventById($eventObj->id);
+    }
+    
     static function createUserWallEvent ($userId, $type, $typeId = null) {
         
         $userId = mysql_real_escape_string($userId);

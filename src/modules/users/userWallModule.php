@@ -33,9 +33,9 @@ class UserWallModule extends XModule {
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
-                            $wallPostId = UserWallModel::createUserWallEventPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
+                            $wallEventPostId = UserWallModel::createUserWallEventPost(parent::get("userId"), Context::getUserId(), parent::post("comment"));
                             if (parent::get("userId") !== Context::getUserId()) {
-                                SocialController::notifyWallPost($wallPostId);
+                                SocialController::notifyWallPost($wallEventPostId);
                             }
                             parent::clearMessages();
                             parent::redirect();
@@ -50,9 +50,9 @@ class UserWallModule extends XModule {
                         if (count($validationMessages) > 0) {
                             parent::setMessages($validationMessages);
                         } else {
-                            $wallPostId = UserWallModel::createUserWallEventPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("eventId"));
+                            $wallEventPostId = UserWallModel::createUserWallEventPost(parent::get("userId"), Context::getUserId(), parent::post("comment"), parent::get("eventId"));
                             if (parent::get("userId") !== Context::getUserId()) {
-                                SocialController::notifyWallReply($wallPostId);
+                                SocialController::notifyWallReply($wallEventPostId);
                             }
                             parent::clearMessages();
                             parent::redirect();
