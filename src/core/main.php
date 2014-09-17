@@ -2,6 +2,12 @@
 
 require_once 'core/includes.php';
 
+function facebookLoader ($class) {
+    $file = "core/lib/" . str_replace("\\", "/", $class) . ".php";
+    require $file;
+}
+spl_autoload_register("facebookLoader");
+
 // start the request context
 Context::startRequest();
 
