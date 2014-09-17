@@ -64,7 +64,7 @@ class TemplateRenderer extends BaseRenderer {
         
         $focusedModuleId = Context::getFocusedArea();
         if (!empty($focusedModuleId)) {
-            echo "<div id='vcms_area_$teplateArea' >";
+            echo "<div id='vcms_area_$teplateArea'>";
             Context::setIsFocusedArea(true);
             ModuleController::renderModuleObject($this->getModule($focusedModuleId));
             Context::setIsFocusedArea(false);
@@ -83,7 +83,7 @@ class TemplateRenderer extends BaseRenderer {
     function renderMenu ($menuName) {
         
         // render the menu
-        echo "<div id='vcms_area_$menuName' >";
+        echo "<div id='vcms_area_$menuName'>";
         ModuleController::renderModuleObject(current($this->getModules($menuName)),true,false);
         echo "</div>";
     }
