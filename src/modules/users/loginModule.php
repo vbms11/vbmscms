@@ -2,10 +2,8 @@
 
 require_once('core/plugin.php');
 require_once('core/model/usersModel.php');
+require_once('core/lib/facebook/facebook.php');
 require_once('core/lib/openid/openid.php');
-
-use Facebook\FacebookSession;
-use Facebook\FacebookRedirectLoginHelper;
 
 class LoginModule extends XModule {
 
@@ -26,19 +24,13 @@ class LoginModule extends XModule {
                 break;
             case "facebookLogin":
                 $site = Context::getSite();
-                FacebookSession::setDefaultApplication($site->facebookappid, $site->facebooksecret);
-                $redirectUrl = parent::link(array("action"=>"facebookLogin"), false, true);
-                echo "test1";
-                $facebook = new FacebookRedirectLoginHelper(
-                    $redirectUrl
-                );
-                echo "test2";
-                //$userLogin = $facebook->getUser();
-                $fbSession = $facebook->getSessionFromRedirect();
-                if ($fbSession) {
+                $facebook = new Facebook(array(
+                    'appId'  => $site->facebookappid,
+                    'secret' => $site->facebooksecret,
+                ));
+                $userLogin = $facebook->getUser();
+                if ($userLogin) {
                     try {
-                        print_r($fbSession);
-                        
                         $user_profile = $facebook->api('/me');
                         $userByEmail = UsersModel::getUserByEmail($user_profile['email']);
                         if (!empty($userByEmail) && empty($userByEmail->facebook_uid)) {
