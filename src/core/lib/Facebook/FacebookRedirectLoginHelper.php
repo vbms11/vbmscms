@@ -72,8 +72,11 @@ class FacebookRedirectLoginHelper
    */
   public function __construct($redirectUrl, $appId = null, $appSecret = null)
   {
+      echo "here1";
     $this->appId = FacebookSession::_getTargetAppId($appId);
+      echo "here2";
     $this->appSecret = FacebookSession::_getTargetAppSecret($appSecret);
+      echo "here3";
     $this->redirectUrl = $redirectUrl;
   }
 

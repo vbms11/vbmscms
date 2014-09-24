@@ -27,9 +27,12 @@ class LoginModule extends XModule {
             case "facebookLogin":
                 $site = Context::getSite();
                 FacebookSession::setDefaultApplication($site->facebookappid, $site->facebooksecret);
+                $redirectUrl = parent::link(array("action"=>"facebookLogin"), false, true);
+                echo "test1";
                 $facebook = new FacebookRedirectLoginHelper(
-                    parent::link(array("action"=>"facebookLogin"), false, true)
+                    $redirectUrl
                 );
+                echo "test2";
                 //$userLogin = $facebook->getUser();
                 $fbSession = $facebook->getSessionFromRedirect();
                 if ($fbSession) {
