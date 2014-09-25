@@ -196,6 +196,10 @@ class Context {
         return isset($_SESSION["req.lang"]) ? $_SESSION["req.lang"] : null;
     }
     
+    static function setSite ($site) {
+        $_SESSION["req.site"] = $site;
+    }
+    
     static function getSite () {
         if (!isset($_SESSION["req.site"])) {
             $_SESSION["req.site"] = DomainsModel::getCurrentSite();
@@ -347,12 +351,18 @@ class Context {
     
     static function addError ($message) {
         $backtrace = Common::getBacktrace(3);
-        echo $message.$backtrace;
         Log::error($message.$backtrace);
         if (!isset($_REQUEST['context.errors'])) {
             $_REQUEST['context.errors'] = array();
         }
         $_REQUEST['context.errors'][] = $message;
+    }
+    
+    static function getErrors () {
+        if (isset($_REQUEST['context.errors'])) {
+            return array();
+        }
+        return $_REQUEST['context.errors'];
     }
     
     static function addMessage ($message) {

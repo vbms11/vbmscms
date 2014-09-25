@@ -58,7 +58,7 @@ class LoginModule extends XModule {
                     }
                 } else {
                     parent::focus();
-                    NavigationModel::redirect($facebook->getLoginUrl(),false);
+                    NavigationModel::redirect($facebook->getLoginUrl(array('scope'=>'email')),false);
                 }
                 break;
             case "googleLogin":

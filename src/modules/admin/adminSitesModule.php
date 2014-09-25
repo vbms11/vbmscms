@@ -17,6 +17,7 @@ class AdminSitesModule extends XModule {
                     break;
                 case "updateSite":
                     SiteModel::updateSite(parent::get("id"), parent::post("siteName"), parent::post("siteDescription"), parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
+                    Context::setSite(null);
                     parent::redirect();
                     break;
                 case "deleteSite":

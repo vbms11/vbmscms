@@ -421,7 +421,7 @@ class UsersModel {
             $registerDateSql = "";
             if ($registerDate != null)
                 $registerDateSql = ", registerdate = STR_TO_DATE('".mysql_real_escape_string($registerDate)."','%d/%m/%Y')";
-            Database::query("update t_user set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y')', gender = '$gender' $registerDateSql where id = '$id'");
+            Database::query("update t_user set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y'), gender = '$gender' $registerDateSql where id = '$id'");
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
         return $id;

@@ -349,8 +349,17 @@ class TemplateRenderer extends BaseRenderer {
         $this->renderHtmlHeader();
         echo '</head>'.PHP_EOL.'<body>'.PHP_EOL;
         echo '<div id="fb-root"></div>'.PHP_EOL;
-        echo $bodyHtml;
-        $this->renderNotifications();
+        
+        $errors = Context::getErrors();
+        if (empty($errors)) {
+            echo $bodyHtml;
+            $this->renderNotifications();
+        } else {
+            foreach ($errors as $error) {
+                echo $error."<br/>";
+            }
+        }
+        
         echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
         
     }

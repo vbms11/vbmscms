@@ -164,9 +164,9 @@ class MysqlDataSource implements IDataSource {
         if ($this->error == null && empty($error)) {
             $error = null;
         } else {
-            if (empty($error)) {
-                $error = $this->error;
-            }
+            //if (empty($error)) {
+            //    $error = $this->error;
+            //}
         }
         return $error;
     }
