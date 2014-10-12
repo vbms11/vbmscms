@@ -22,7 +22,7 @@ class UserWallModel {
     static function getUserWallEventsByUserId ($userId) {
         
         $userId = mysql_real_escape_string($userId);
-        return Database::queryAsArray("select * from t_user_wall_event where userid = '$userId'");
+        return Database::queryAsArray("select * from t_user_wall_event where userid = '$userId' order by date desc");
     }
     
     static function getUserWallEventById ($eventId) {
@@ -48,7 +48,7 @@ class UserWallModel {
             $typeId = "'".mysql_real_escape_string($typeId)."'";
         }
         Database::query("insert into t_user_wall_event (userid,type,typeid) values('$userId','$type',$typeId);");
-        $result = Database::query("select last_insert_id() as newid from t_user_wall_event");
+        $result = Database::queryAsObject("select last_insert_id() as newid from t_user_wall_event");
         return $result->newid;
     }
     

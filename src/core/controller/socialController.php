@@ -30,13 +30,13 @@ class SocialController {
         ));
             
         $messageBody = self::replaceMessageTokens($socialConfig->message_received,array(
-            "applicationLink"       => $applicationInfo["applicationPath"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "applicationLink"       => $applicationInfo["applicationPath"]."?userAuthKey=".$dstUserInfo["authKey"],
             "messageName"           => $pmName,
             "messageMessage"        => $pmMessage,
             "messageDate"           => $pmSendDate,
-            "messageLink"           => $viewMessageLink."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "messageLink"           => $applicationInfo["applicationPath"].$viewMessageLink."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUsername"           => $srcUserInfo["username"],
-            "srcUserProfileLink"    => $srcUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "srcUserProfileLink"    => $applicationInfo["applicationPath"].$srcUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUserAge"            => $srcUserInfo["userAge"],
             "srcUserCountry"        => $srcUserInfo["userCountry"],
             "srcUserRegion"         => $srcUserInfo["userRegion"],
@@ -44,7 +44,7 @@ class SocialController {
             "srcUserAddress"        => $srcUserInfo["userAddress"],
             "srcUserPostCode"       => $srcUserInfo["userPostCode"],
             "dstUsername"           => $dstUserInfo["username"],
-            "dstUserProfileLink"    => $dstUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "dstUserProfileLink"    => $applicationInfo["applicationPath"].$dstUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "dstUserAge"            => $dstUserInfo["userAge"],
             "dstUserCountry"        => $dstUserInfo["userCountry"],
             "dstUserRegion"         => $dstUserInfo["userRegion"],
@@ -77,11 +77,11 @@ class SocialController {
         ));
         
         $messageBody = self::replaceMessageTokens($socialConfig->friend_request,array(
-            "applicationLink"       => $applicationInfo["applicationPath"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "applicationLink"       => $applicationInfo["applicationPath"]."?userAuthKey=".$dstUserInfo["authKey"],
             "requestDate"           => $requestDate,
-            "confirmLink"           => $confirmLink."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "confirmLink"           => $applicationInfo["applicationPath"].$confirmLink."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUsername"           => $srcUserInfo["username"],
-            "srcUserProfileLink"    => $srcUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "srcUserProfileLink"    => $applicationInfo["applicationPath"].$srcUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUserAge"            => $srcUserInfo["userAge"],
             "srcUserCountry"        => $srcUserInfo["userCountry"],
             "srcUserRegion"         => $srcUserInfo["userRegion"],
@@ -89,7 +89,7 @@ class SocialController {
             "srcUserAddress"        => $srcUserInfo["userAddress"],
             "srcUserPostCode"       => $srcUserInfo["userPostCode"],
             "dstUsername"           => $dstUserInfo["username"],
-            "dstUserProfileLink"    => $dstUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "dstUserProfileLink"    => $applicationInfo["applicationPath"].$dstUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "dstUserAge"            => $dstUserInfo["userAge"],
             "dstUserCountry"        => $dstUserInfo["userCountry"],
             "dstUserRegion"         => $dstUserInfo["userRegion"],
@@ -119,9 +119,9 @@ class SocialController {
         ));
         
         $messageBody = self::replaceMessageTokens($socialConfig->friend_confirmed,array(
-            "applicationLink"       => $applicationInfo["applicationPath"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "applicationLink"       => $applicationInfo["applicationPath"]."?userAuthKey=".$dstUserInfo["authKey"],
             "srcUsername"           => $srcUserInfo["username"],
-            "srcUserProfileLink"    => $srcUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "srcUserProfileLink"    => $applicationInfo["applicationPath"].$srcUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUserAge"            => $srcUserInfo["userAge"],
             "srcUserCountry"        => $srcUserInfo["userCountry"],
             "srcUserRegion"         => $srcUserInfo["userRegion"],
@@ -129,7 +129,7 @@ class SocialController {
             "srcUserAddress"        => $srcUserInfo["userAddress"],
             "srcUserPostCode"       => $srcUserInfo["userPostCode"],
             "dstUsername"           => $dstUserInfo["username"],
-            "dstUserProfileLink"    => $dstUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "dstUserProfileLink"    => $applicationInfo["applicationPath"].$dstUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "dstUserAge"            => $dstUserInfo["userAge"],
             "dstUserCountry"        => $dstUserInfo["userCountry"],
             "dstUserRegion"         => $dstUserInfo["userRegion"],
@@ -166,12 +166,12 @@ class SocialController {
         ));
         
         $messageBody = self::replaceMessageTokens($socialConfig->wall_post,array(
-            "applicationLink"       => $applicationInfo["applicationPath"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "applicationLink"       => $applicationInfo["applicationPath"]."?userAuthKey=".$dstUserInfo["authKey"],
             "messageMessage"        => $wpMessage,
             "messageDate"           => $wpSendDate,
-            "messageLink"           => $viewMessageLink."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "messageLink"           => $applicationInfo["applicationPath"].$viewMessageLink."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUsername"           => $srcUserInfo["username"],
-            "srcUserProfileLink"    => $srcUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "srcUserProfileLink"    => $applicationInfo["applicationPath"].$srcUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUserAge"            => $srcUserInfo["userAge"],
             "srcUserCountry"        => $srcUserInfo["userCountry"],
             "srcUserRegion"         => $srcUserInfo["userRegion"],
@@ -179,7 +179,7 @@ class SocialController {
             "srcUserAddress"        => $srcUserInfo["userAddress"],
             "srcUserPostCode"       => $srcUserInfo["userPostCode"],
             "dstUsername"           => $dstUserInfo["username"],
-            "dstUserProfileLink"    => $dstUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "dstUserProfileLink"    => $applicationInfo["applicationPath"].$dstUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "dstUserAge"            => $dstUserInfo["userAge"],
             "dstUserCountry"        => $dstUserInfo["userCountry"],
             "dstUserRegion"         => $dstUserInfo["userRegion"],
@@ -216,12 +216,12 @@ class SocialController {
         ));
         
         $messageBody = self::replaceMessageTokens($socialConfig->wall_post,array(
-            "applicationLink"       => $applicationInfo["applicationPath"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "applicationLink"       => $applicationInfo["applicationPath"]."?userAuthKey=".$dstUserInfo["authKey"],
             "messageMessage"        => $wpMessage,
             "messageDate"           => $wpSendDate,
-            "messageLink"           => $viewMessageLink."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "messageLink"           => $applicationInfo["applicationPath"].$viewMessageLink."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUsername"           => $srcUserInfo["username"],
-            "srcUserProfileLink"    => $srcUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "srcUserProfileLink"    => $applicationInfo["applicationPath"].$srcUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "srcUserAge"            => $srcUserInfo["userAge"],
             "srcUserCountry"        => $srcUserInfo["userCountry"],
             "srcUserRegion"         => $srcUserInfo["userRegion"],
@@ -229,7 +229,7 @@ class SocialController {
             "srcUserAddress"        => $srcUserInfo["userAddress"],
             "srcUserPostCode"       => $srcUserInfo["userPostCode"],
             "dstUsername"           => $dstUserInfo["username"],
-            "dstUserProfileLink"    => $dstUserInfo["userProfileLink"]."&ampuserAuthKey".$dstUserInfo["authKey"],
+            "dstUserProfileLink"    => $applicationInfo["applicationPath"].$dstUserInfo["userProfileLink"]."&userAuthKey=".$dstUserInfo["authKey"],
             "dstUserAge"            => $dstUserInfo["userAge"],
             "dstUserCountry"        => $dstUserInfo["userCountry"],
             "dstUserRegion"         => $dstUserInfo["userRegion"],

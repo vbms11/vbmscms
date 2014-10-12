@@ -295,9 +295,7 @@ class UserWallModule extends XModule {
                     ?>
                     <div class="userWallPostThread">    
                         <?php
-
-                        switch ($wallEvent->type) {
-
+                        switch ($originalEvent->type) {
                             case UserWallModel::type_wall:
                                 $this->printEventTypeWall($originalEvent);
                                 break;
@@ -391,9 +389,6 @@ class UserWallModule extends XModule {
             <?php
         }
         if (UserWallModel::canUserPost(Context::getUserId())) {
-            
-            
-            
             ?>
             <div class="userWallPostReplyBox">
                 <div class="userWallPostImage">
@@ -402,7 +397,7 @@ class UserWallModule extends XModule {
                 <div class="userWallPostBody">
                     <form method="post" action="<?php echo parent::link(array("action"=>"reply","eventId"=>$wallEvent->id,"userId"=>Context::getUserId())); ?>">
                         <div class="userWallPostTextarea">
-                            <textarea name="<?php echo parent::alias("reply") ?>"><?php parent::getAction() == "reply" ? htmlentities($comment) : ""; ?></textarea>
+                            <textarea name="<?php echo parent::alias("comment") ?>"><?php parent::getAction() == "reply" ? htmlentities(parent::post("comment")) : ""; ?></textarea>
                             <?php
                             $message = parent::getMessage("comment");
                             if (!empty($message)) {
@@ -424,16 +419,16 @@ class UserWallModule extends XModule {
         }
     }
     
-    function printEventPost ($wallEventPosts) {
-        
-        $currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
+    function printEventTypeWall ($wallEvent) {
+	
+	$currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
         
         $srcUser = UsersModel::getUser($wallEvent->userid);
         $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
         $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
 
         $wallEventPosts = UserWallModel::getUserWallPostsByEventId($wallEvent->id);
-        $originalPost = next($wallEventPosts);
+        $originalPost = current($wallEventPosts);
         
         ?>
         <div class="userWallPost">
@@ -489,7 +484,7 @@ class UserWallModule extends XModule {
             <div class="clear"></div>
         </div>
         <?php
-        $this->printWallEventPosts($wallEventPosts);
+        $this->printWallEventPosts(array_slice($wallEventPosts,1));
     }
     
     function printEventTypeBirthday ($originalEvent) {
