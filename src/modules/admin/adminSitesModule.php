@@ -12,11 +12,11 @@ class AdminSitesModule extends XModule {
             switch (parent::getAction()) {
                 case "createSite":
                     $customer = CmsCustomerModel::getCurrentCmsCustomer(Context::getUserId());
-                    SiteModel::createSite(parent::post("siteName"), $customer->id, parent::post("siteDescription"), null, parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
+                    SiteModel::createSite(parent::post("siteName"), $customer->id, parent::post("siteDescription"), null, parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("googleClientId"), parent::post("googleClientSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
                     parent::redirect();
                     break;
                 case "updateSite":
-                    SiteModel::updateSite(parent::get("id"), parent::post("siteName"), parent::post("siteDescription"), parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
+                    SiteModel::updateSite(parent::get("id"), parent::post("siteName"), parent::post("siteDescription"), parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("googleClientId"), parent::post("googleClientSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
                     Context::setSite(null);
                     parent::redirect();
                     break;
@@ -30,7 +30,6 @@ class AdminSitesModule extends XModule {
     }
     
     function onView () {
-        
         
         switch (parent::getAction()) {
             
@@ -151,6 +150,14 @@ class AdminSitesModule extends XModule {
             </td><td>
                 <?php InputFeilds::printTextFeild("facebookSecret", $site->facebooksecret); ?>
             </td></tr><tr><td>
+                <label for="googleClientId"><?php echo parent::getTranslation("admin.sites.label.googleClientId"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("googleClientId", $site->googleclientid); ?>
+            </td></tr><tr><td>
+                <label for="googleClientSecret"><?php echo parent::getTranslation("admin.sites.label.googleClientSecret"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("googleClientSecret", $site->googleclientsecret); ?>
+            </td></tr><tr><td>
                 <label for="twitterKey"><?php echo parent::getTranslation("admin.sites.label.twitterKey"); ?></label>
             </td><td>
                 <?php InputFeilds::printTextFeild("twitterKey", $site->twitterkey); ?>
@@ -195,6 +202,14 @@ class AdminSitesModule extends XModule {
             </td><td>
                 <?php InputFeilds::printTextFeild("facebookSecret"); ?>
             </td></tr><tr><td>
+                <label for="googleClientId"><?php echo parent::getTranslation("admin.sites.label.googleClientId"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("googleClientId", $site->googleclientid); ?>
+            </td></tr><tr><td>
+                <label for="googleClientSecret"><?php echo parent::getTranslation("admin.sites.label.googleClientSecret"); ?></label>
+            </td><td>
+                <?php InputFeilds::printTextFeild("googleClientSecret", $site->googleclientsecret); ?>
+            </td></tr><tr><td>
                 <label for="twitterKey"><?php echo parent::getTranslation("admin.sites.label.twitterKey"); ?></label>
             </td><td>
                 <?php InputFeilds::printTextFeild("twitterKey"); ?>
@@ -217,11 +232,9 @@ class AdminSitesModule extends XModule {
     function renderMainView() {
         ?>
         <h3><?php echo parent::getTranslation("admin.sites.title"); ?></h3>
-
         <?php
-        $customer = CmsCustomerModel::getCurrentCmsCustomer();
+	$customer = CmsCustomerModel::getCurrentCmsCustomer();
         $sites = SiteModel::byCmscustomerid($customer->id);
-
         if (!empty($sites)) {
 
             ?>
@@ -264,6 +277,7 @@ class AdminSitesModule extends XModule {
         });
         </script>
         <?php
+
     }
     
 }

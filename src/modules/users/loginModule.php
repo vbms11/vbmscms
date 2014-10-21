@@ -3,7 +3,8 @@
 require_once('core/plugin.php');
 require_once('core/model/usersModel.php');
 require_once('core/lib/facebook/facebook.php');
-require_once('core/lib/openid/openid.php');
+// require_once('core/lib/openid/openid.php');
+require_once("core/lib/Google/src/Google/Client.php");
 
 class LoginModule extends XModule {
 
@@ -63,42 +64,39 @@ class LoginModule extends XModule {
                 break;
             case "googleLogin":
                 try {
-                    $site = Context::getSite();
-                    $openid = new LightOpenID($site->url);
-                    if(!$openid->mode) {
-                        $openid->identity = 'https://www.google.com/accounts/o8/id';
-                        $openid->required = array(
-                            'contact/email' , 
-                            'namePerson/first' , 
-                            'namePerson/last' , 
-                            'pref/language' , 
-                            'contact/country/home'
-                        );
-                        NavigationModel::redirect($openid->authUrl(),false);
-                    } elseif($openid->mode == 'cancel') {
-                        parent::redirect();
-                    } else {
-                        if ($openid->validate()) {
-                            $openIdAttributes = $openid->getAttributes();
-                            $userLogin = UsersModel::loginWithEmail($openIdAttributes['contact/email']);
+			
+			$site = Context::getSite();
+			$redirect = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."?static=login";
+
+			$client = new Google_Client();
+			$client->setClientId($site->googleclientid);
+			$client->setClientSecret($site->googleclientsecret);
+			$client->setRedirectUri($redirect);
+			$client->addScope(array("https://www.googleapis.com/auth/userinfo.email"));
+
+			if (isset($_GET['code'])) {
+                            $client->authenticate($_GET['code']);
+                            $_SESSION['access_token'] = $client->getAccessToken();
+                            
+                            $client->setAccessToken($_SESSION['access_token']);
+                            $userInfo = $client->verifyIdToken()->getAttributes();
+                            
+                            $userLogin = UsersModel::loginWithEmail($userInfo['email']);
+
                             if ($userLogin) {
-                                $user = Context::getUser();
-                                if ($user->firstname != $openIdAttributes['namePerson/first'] || 
-                                    $user->lastname != $openIdAttributes['namePerson/last']) {
-                                    UsersModel::saveUser($user->id, $user->username, $openIdAttributes['namePerson/first'], $openIdAttributes['namePerson/last'], null, $user->email, Common::toUiDate($user->birthdate), null, $user->gender);
-                                }
                                 NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
                             } else {
-                                $_SESSION['register.user'] = $openIdAttributes;
+                                $_SESSION['register.user'] = $userInfo;
                                 NavigationModel::redirectStaticModule("register",array("type"=>"google"));
                             }
                         } else {
-                            parent::redirect();
+                            NavigationModel::redirect($client->createAuthUrl(),false);
                         }
-                    }
+
                 } catch(ErrorException $e) {
                     echo $e->getMessage();
                 }
+
                 break;
             case "twitterLogin":
                 break;
@@ -127,7 +125,7 @@ class LoginModule extends XModule {
      * called when page is viewed and html created
      */
     function onView () {
-
+	
         switch (parent::getAction()) {
             case "edit":
                 $this->printEditView();

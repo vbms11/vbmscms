@@ -60,7 +60,7 @@ class RegisterModule extends XModule {
                             case "google":
                                 $firstName = $registerUser['namePerson/first'];
                                 $lastName = $registerUser['namePerson/last'];
-                                $email = $registerUser['contact/email'];
+                                $email = $registerUser['email'];
                                 $password = null;
                                 break;
                         }
@@ -87,7 +87,7 @@ class RegisterModule extends XModule {
                             $emailText = str_replace("%lastName%", $lastName, $emailText);
                             $emailText = str_replace("%email%", $email, $emailText);
                             $emailText = str_replace("%birthDate%", $birthDate, $emailText);
-                            ConfirmModel::sendConfirmation(parent::post('email'), parent::param("subject"), $emailText, parent::param("from"), parent::getId(), array("action"=>"confirm","userid"=>$userId), parent::param("expiredays"));
+                            ConfirmModel::sendConfirmation($email, parent::param("subject"), $emailText, parent::param("from"), parent::getId(), array("action"=>"confirm","userid"=>$userId), parent::param("expiredays"));
                             parent::redirect(array("action"=>"confirmRegister"));
                         } else {
                             // activate user and login
@@ -235,9 +235,9 @@ class RegisterModule extends XModule {
                     }
                     break;
                 case 'google':
-                    $firstName = utf8_decode($registerUser['namePerson/first']);
-                    $lastName = utf8_decode($registerUser['namePerson/last']);
-                    $email = utf8_decode($registerUser['contact/email']);
+                    // $firstName = utf8_decode($registerUser['namePerson/first']);
+                    // $lastName = utf8_decode($registerUser['namePerson/last']);
+                    $email = utf8_decode($registerUser['email']);
                     break;
             }
         }

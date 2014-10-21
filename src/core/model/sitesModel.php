@@ -1,7 +1,6 @@
 <?php
 
 class SiteModel {
-
     
     static function getSite ($siteId) {
         $siteId = mysql_real_escape_string($siteId);
@@ -36,7 +35,7 @@ class SiteModel {
         
     }
     
-    static function createSite ($name, $cmsCustomerId, $description, $domain = null, $trackerScript = '', $facebookAppId = '', $facebookSecret = '', $twitterKey = '', $twitterSecret = '') {
+    static function createSite ($name, $cmsCustomerId, $description, $domain = null, $trackerScript = '', $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = '') {
 	$name = mysql_real_escape_string($name);
         $description = mysql_real_escape_string($description);
         $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
@@ -45,6 +44,8 @@ class SiteModel {
         $facebookSecret = mysql_real_escape_string($facebookSecret);
         $twitterKey = mysql_real_escape_string($twitterKey);
         $twitterSecret = mysql_real_escape_string($twitterSecret);
+	$googleClientId = mysql_real_escape_string($googleClientId);
+	$googleClientSecret = mysql_real_escape_string($googleClientSecret);
         // 
         if (empty($domain)) {
             $defaultDomain = DomainsModel::getSubDomainUrl($name);
@@ -56,7 +57,7 @@ class SiteModel {
         $userSites = PiwikModel::getUserSites($piwikUser);
         PiwikModel::setUserSites($piwikUser, $userSites);
         
-        Database::query("insert into t_site (name,cmscustomerid,description,piwikid,sitetrackerscript,facebookappid,facebooksecret,twitterkey,twittersecret) values ('$name','$cmsCustomerId','$description','$piwikSiteId','$trackerScript','$facebookAppId','$facebookSecret','$twitterKey','$twitterSecret')");
+        Database::query("insert into t_site (name,cmscustomerid,description,piwikid,sitetrackerscript,facebookappid,facebooksecret,twitterkey,twittersecret,googleclientid,googleclientsecret) values ('$name','$cmsCustomerId','$description','$piwikSiteId','$trackerScript','$facebookAppId','$facebookSecret','$twitterKey','$twitterSecret','$googleClientId','$googleClientSecret')");
 	$result = Database::queryAsObject("select last_insert_id() as newid from t_site");
         
         DomainsModel::createDomain($defaultDomain, $result->newid);
@@ -64,23 +65,27 @@ class SiteModel {
         return $result->newid;
     }
     
-    static function updateSite ($siteId, $name, $description, $trackerScript, $facebookAppId = '', $facebookSecret = '', $twitterKey = '', $twitterSecret = '') {
+    static function updateSite ($siteId, $name, $description, $trackerScript, $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = '') {
         $siteId = mysql_real_escape_string($siteId);
         $name = mysql_real_escape_string($name);
         $description = mysql_real_escape_string($description);
         $trackerScript = mysql_real_escape_string($trackerScript);
         $facebookAppId = mysql_real_escape_string($facebookAppId);
         $facebookSecret = mysql_real_escape_string($facebookSecret);
+        $googleClientId = mysql_real_escape_string($googleClientId);
+        $googleClientSecret = mysql_real_escape_string($googleClientSecret);
         $twitterKey = mysql_real_escape_string($twitterKey);
         $twitterSecret = mysql_real_escape_string($twitterSecret);
         Database::query("update t_site set 
-            name = '$name',
-            description = '$description',
-            sitetrackerscript = '$trackerScript',
-            facebookappid = '$facebookAppId',
-            facebooksecret = '$facebookSecret',
-            twitterkey = '$twitterKey',
-            twittersecret = '$twitterSecret' 
+            name = '$name', 
+            description = '$description', 
+            sitetrackerscript = '$trackerScript', 
+            facebookappid = '$facebookAppId', 
+            facebooksecret = '$facebookSecret', 
+            twitterkey = '$twitterKey', 
+            twittersecret = '$twitterSecret', 
+            googleclientid = '$googleClientId', 
+            googleclientsecret = '$googleClientSecret' 
             where id = '$siteId'");
     }
     

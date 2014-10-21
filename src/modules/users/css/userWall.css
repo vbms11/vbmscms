@@ -2,7 +2,8 @@
 .userWallPostCommentBox, 
 .userWallPostThread, 
 .userWallPostReply, 
-.userWallPostReplyBox {
+.userWallPostReplyBox,
+.userWallPostShowReplyBox {
     clear: left;
 }
 
@@ -54,6 +55,14 @@
 }
 
 .userWallPostComment {
+    margin-bottom: 10px;
+}
+
+.userWallPostShowReplyBox {
+}
+
+.userWallPostReplyBox {
+    display: none;
 }
 
 .userWallPost {

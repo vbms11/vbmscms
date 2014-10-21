@@ -284,7 +284,7 @@ class UserWallModule extends XModule {
                     
                     while ($i+1 < $wallEventsCount && $wallEvents[$i+1]->type === $originalEvent->type) {
                         
-                        if ($wallEvents[$i+1]->type !== UserWallModel::type_friend && $wallEvents[$i+1]->type === UserWallModel::type_image) {
+                        if ($wallEvents[$i+1]->type !== UserWallModel::type_friend && $wallEvents[$i+1]->type !== UserWallModel::type_image) {
                             break;
                         }
                         
@@ -326,7 +326,7 @@ class UserWallModule extends XModule {
         <?php
     }
     
-    function printWallEventPosts ($wallEventPosts) {
+    function printWallEventPosts ($wallEventId, $wallEventPosts) {
         
         foreach ($wallEventPosts as $wallPostReply) {
 
@@ -390,12 +390,20 @@ class UserWallModule extends XModule {
         }
         if (UserWallModel::canUserPost(Context::getUserId())) {
             ?>
+            <div class="userWallPostShowReplyBox">
+                <div class="userWallPostImage"></div>
+                <div class="userWallPostBody">
+                    <a href="" onclick="$(this).parent().parent().slideUp().parent().find('.userWallPostReplyBox').slideDown(); return false;">
+                        <?php echo parent::getTranslation("userWall.button.showReply"); ?>
+                    </a>
+                </div>
+            </div>
             <div class="userWallPostReplyBox">
                 <div class="userWallPostImage">
                     <img src="<?php echo $currentUserProfileImage; ?>" alt="" title="" />
                 </div>
                 <div class="userWallPostBody">
-                    <form method="post" action="<?php echo parent::link(array("action"=>"reply","eventId"=>$wallEvent->id,"userId"=>Context::getUserId())); ?>">
+                    <form method="post" action="<?php echo parent::link(array("action"=>"reply","eventId"=>$wallEventId,"userId"=>Context::getUserId())); ?>">
                         <div class="userWallPostTextarea">
                             <textarea name="<?php echo parent::alias("comment") ?>"><?php parent::getAction() == "reply" ? htmlentities(parent::post("comment")) : ""; ?></textarea>
                             <?php
@@ -484,7 +492,8 @@ class UserWallModule extends XModule {
             <div class="clear"></div>
         </div>
         <?php
-        $this->printWallEventPosts(array_slice($wallEventPosts,1));
+	unset($wallEventPosts[0]);
+        $this->printWallEventPosts($wallEvent->id, $wallEventPosts);
     }
     
     function printEventTypeBirthday ($originalEvent) {
@@ -503,7 +512,7 @@ class UserWallModule extends XModule {
         </div>
         <?php
         $wallEventPosts = UserWallModel::getUserWallPostsByEventId($originalEvent->id);
-        $this->printWallEventPosts($wallEventPosts);
+        $this->printWallEventPosts($originalEvent->id, $wallEventPosts);
     }
     
     function printEventTypeRegister($originalEvent) {
@@ -522,7 +531,7 @@ class UserWallModule extends XModule {
         </div>
         <?php
         $wallEventPosts = UserWallModel::getUserWallPostsByEventId($originalEvent->id);
-        $this->printWallEventPosts($wallEventPosts);
+        $this->printWallEventPosts($originalEvent->id, $wallEventPosts);
     }
     
     function printEventTypeFriend($sameTypeEvents) {
@@ -555,7 +564,7 @@ class UserWallModule extends XModule {
             $eventIds []= $sameTypeEvent;
         }
         $wallEventPosts = UserWallModel::getUserWallPostsByEventIds($eventIds);
-        $this->printWallEventPosts($wallEventPosts);
+        $this->printWallEventPosts(current($eventIds), $wallEventPosts);
     }
     
     function printEventTypeImage ($sameTypeEvents) {
@@ -586,8 +595,12 @@ class UserWallModule extends XModule {
             <div class="clear"></div>
         </div>
         <?php
-        $endEvent = end($sameTypeEvents);
-        $this->printWallEventPosts($endEvent);
+	$eventIds = array();
+        foreach ($sameTypeEvents as $sameTypeEvent) {
+            $eventIds []= $sameTypeEvent;
+        }
+        $wallEventPosts = UserWallModel::getUserWallPostsByEventIds($eventIds);
+        $this->printWallEventPosts(current($eventIds), $wallEventPosts);
     }
     
     /*
