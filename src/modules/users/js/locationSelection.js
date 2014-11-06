@@ -1,4 +1,33 @@
 
+function updateCoordinatesByPlace (elX, elY, place, onComplete) {
+	var serviceUrl = "http://maps.google.com/maps/api/geocode/json?sensor=false&address=";
+	place = encodeURIComponent(place);
+	$.getJSON(serviceUrl+place, function(data){
+		if (data["status"] == "OK" && data["results"][0] != undefined) {
+			var location = data["results"][0]["geometry"]["location"];
+			elX.val(location["lat"]);
+			elY.val(location["lng"]);
+			if (onComplete != undefined) {
+				onComplete();
+			}
+		}
+	});
+}
+
+function updateCoordinatesByAddress (elX, elY, countryName, cityName, postcode, street, enableButtonOnComplete) {
+	updateCoordinatesByPlace(elX, elY, countryName+" "+cityName+" "+postcode+" "+street, enableButtonOnComplete);
+}
+
+function setupSearchFeilds (parent) {
+	parent.find("button.userSearchSearchButton").click(function(e){
+		var place = parent.find("select[name=country]").val()+" "+parent.find("input[name=place]").val()
+		updateCoordinatesByPlace(parent.find("input[name=x]"), parent.find("input[name=y]"), place, function(){
+			parent.submit();
+		});
+		return false;
+	});
+}
+
 function getPlaces (selectObj, gionameId, selectedId) {
     var serviceUrl = "http://www.geonames.org/childrenJSON?geonameId="+gionameId;
     selectObj.empty();
@@ -18,7 +47,7 @@ function getPlaces (selectObj, gionameId, selectedId) {
     });
 }
 
-function setupPlaceFeilds(parent,continentId,countryId,stateId,regionId,cityId) {
+function setupPlaceFeilds(parent,continentId,countryId,stateId,regionId,cityId,submitButton) {
     
     // add change listener
     parent.find("select[name=continentId]").change(function(){
@@ -42,6 +71,13 @@ function setupPlaceFeilds(parent,continentId,countryId,stateId,regionId,cityId) 
         parent.find("input[name=city]").val($(this).find("option:selected").html());
     });
     
+	// trigger update location when address changes
+	parent.find("input[name=address]").blur(function(e){
+		updateCoordinatesByAddress(parent.find("input[name=x]"), parent.find("input[name=y]"), parent.find("input[name=country]").val(), parent.find("input[name=city]").val(), parent.find("input[name=postcode]").val(), parent.find("input[name=address]").val(), function(){
+			submitButton.button("enable");
+		});
+	});
+
     // set default values
     if (continentId === "") {
         getPlaces(parent.find("select[name=continentId]"),6295630);
@@ -61,4 +97,5 @@ function setupPlaceFeilds(parent,continentId,countryId,stateId,regionId,cityId) 
         return;
     }
     getPlaces(parent.find("select[name=cityId]"),regionId,cityId);
+	
 }

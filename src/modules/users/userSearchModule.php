@@ -22,7 +22,7 @@ class UserSearchModule extends UserSearchBaseModule {
     }
     
     function onView () {
-        
+	
         switch ($this->getAction()) {
             case "edit":
                 if (Context::hasRole("user.search.edit")) {
@@ -38,7 +38,7 @@ class UserSearchModule extends UserSearchBaseModule {
     }
     
     function getScripts () {
-        return array("js/userSearch.js");
+        return array("js/userSearch.js","js/locationSelection.js");
     }
     
     function getStyles () {
@@ -73,19 +73,26 @@ class UserSearchModule extends UserSearchBaseModule {
         
         ?>
         <div class="usersSearchPanel">
-            <form method="get" action="">
-                <input type="hidden" name="static" value="userSearchResult" />
-                <table><tr>
+            <form method="get" action="" name="userSearchForm">
+		<fieldset class="hiddenFieldset">
+		        <input type="hidden" name="static" value="userSearchResult" />
+			<input type="hidden" name="x" value="" />
+			<input type="hidden" name="y" value="" />		
+		</fieldset>
+		<table><tr>
                     <td><?php echo parent::getTranslation('users.search.gender'); ?></td>
                 </tr><tr>
-                    <td><?php 
-                        $selectedValue = "0";
-                        $user = Context::getUser();
-                        if (!empty($user)) {
-                            if ($user->gender == "0") {
-                                $selectedValue = "1";
-                            }
-                        }
+                    <td><?php
+			$selectedValue = parent::get('gender');
+			if ($selectedValue == null) {
+				$selectedValue = "0";
+                        	$user = Context::getUser();
+                        	if (!empty($user)) {
+                            		if ($user->gender == "0") {
+                                		$selectedValue = "1";
+                            		}
+                        	}
+			}
                         InputFeilds::printSelect("gender", $selectedValue, array("0" => parent::getTranslation("common.female"), "1" => parent::getTranslation("common.male")));
                     ?></td>
                 </tr><tr>
@@ -103,11 +110,11 @@ class UserSearchModule extends UserSearchBaseModule {
                     $countryId = parent::get('country');
                     echo "<select name='country'>";
                     if (empty($countryId)) {
-                        echo "<option style='display:none;' selected='true' value=''>(Please Select)</option>";
+                        echo "<option style='display:none;' selected='selected' value=''>(Please Select)</option>";
                     }
                     foreach ($countryOptions as $key => $valueNames) {
                         if (!empty($countryId) && $key == $countryId) {
-                            echo "<option value='".Common::htmlEscape($key)."' selected='true'>".Common::htmlEscape($valueNames)."</option>";
+                            echo "<option value='".Common::htmlEscape($key)."' selected='selected'>".Common::htmlEscape($valueNames)."</option>";
                         } else {
                             echo "<option value='".Common::htmlEscape($key)."'>".Common::htmlEscape($valueNames)."</option>";
                         }
@@ -126,10 +133,13 @@ class UserSearchModule extends UserSearchBaseModule {
                 </tr></table>
                 <hr/>
                 <div class="alignRight">
-                    <button class="userSearchSearchButton jquiButton" value="simpleSearchButton" type="submit">
+                    <button class="jquiButton userSearchSearchButton" value="simpleSearchButton" type="submit">
                         <?php echo parent::getTranslation('users.search.button.search'); ?>
                     </button>
                 </div>
+		<script type="text/javascript">
+		setupSearchFeilds($("form[name=userSearchForm]"));
+		</script>
             </form>
         </div>
         <?php    

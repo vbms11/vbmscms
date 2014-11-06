@@ -58,8 +58,8 @@ class RegisterModule extends XModule {
                                 $password = null;
                                 break;
                             case "google":
-                                $firstName = $registerUser['namePerson/first'];
-                                $lastName = $registerUser['namePerson/last'];
+                                // $firstName = $registerUser['namePerson/first'];
+                                // $lastName = $registerUser['namePerson/last'];
                                 $email = $registerUser['email'];
                                 $password = null;
                                 break;
@@ -70,15 +70,17 @@ class RegisterModule extends XModule {
                     $addressValidationMessages = UserAddressModel::validate(parent::post('continent'), parent::post('continentId'), parent::post('country'), parent::post('countryId'), parent::post('state'), parent::post('stateId'), parent::post('region'), parent::post('regionId'), parent::post('city'), parent::post('cityId'), parent::post('address'), parent::post('postcode'));
                             
                     if (count($lawValidation) == 0 && count($userValidationMessages) == 0 && count($addressValidationMessages) == 0) {
-                        
+
                         $userId = UsersModel::saveUser(null, $username, $firstName, $lastName, $password, $email, $birthDate, null, $gender);
-                        $userRoles = parent::param("userRoles");
+
+			$userRoles = parent::param("userRoles");
                         if (!empty($userRoles)) {
                             foreach (parent::param("userRoles") as $roleId) {
                                 RolesModel::addCustomRoleToUser($roleId,$userId);
                             }
                         }
-                        $userAddressId = UserAddressModel::createUserAddress($userId, parent::post('continent'), parent::post('continentId'), parent::post('country'), parent::post('countryId'), parent::post('state'), parent::post('stateId'), parent::post('region'), parent::post('regionId'), parent::post('city'), parent::post('cityId'), parent::post('address'), parent::post('postcode'));
+
+                        $userAddressId = UserAddressModel::createUserAddress($userId, parent::post('continent'), parent::post('continentId'), parent::post('country'), parent::post('countryId'), parent::post('state'), parent::post('stateId'), parent::post('region'), parent::post('regionId'), parent::post('city'), parent::post('cityId'), parent::post('address'), parent::post('postcode'), parent::post('x'), parent::post('y'));
                         if (parent::param("requireConfirmEmail")) {
                             // send the confirm email
                             $emailText = parent::param("confirmEmail");
@@ -92,7 +94,7 @@ class RegisterModule extends XModule {
                         } else {
                             // activate user and login
                             UsersModel::setUserActiveFlag($userId,"1");
-                            
+
                             if (isset($_SESSION['register.user'])) {
                                 $registerUser = $_SESSION['register.user'];
                                 switch (parent::get("type")) {
@@ -221,6 +223,7 @@ class RegisterModule extends XModule {
         $lastName = parent::post("lastName");
         $email = parent::post("email");
         $gender = "0";
+	
         if (isset($_SESSION['register.user'])) {
             $registerUser = $_SESSION['register.user'];
             switch (parent::get("type")) {
@@ -250,7 +253,9 @@ class RegisterModule extends XModule {
             }
             ?>
             <form method="post" id="<?php echo parent::alias("registerUserForm"); ?>" action="<?php echo parent::link(array("action"=>"register","type"=>parent::get("type"))); ?>">
-                <table width="100%" class="formTable"><tr>
+                <input type="hidden" name="x" value="<?php echo parent::post("x") ?>" />
+		<input type="hidden" name="y" value="<?php echo parent::post("y") ?>" />
+		<table width="100%" class="formTable"><tr>
                     <td><?php echo parent::getTranslation("register.username"); ?></td>
                     <td><input name="userName" type="text" value="<?php echo parent::post("userName"); ?>" /><?php
                     $message = parent::getMessage("username");
@@ -260,7 +265,7 @@ class RegisterModule extends XModule {
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.firstname"); ?></td>
-                    <td><input name="firstName" type="text" <?php if (isset($_SESSION['register.user'])) { echo 'disabled="true"'; } ?> value="<?php echo $firstName; ?>" /><?php
+                    <td><input name="firstName" type="text" <?php if (isset($_SESSION['register.user']) && parent::get("type") == "facebook") { echo 'disabled="true"'; } ?> value="<?php echo $firstName; ?>" /><?php
                     $message = parent::getMessage("firstname");
                     if (!empty($message)) {
                         echo '<span class="validateTips">'.$message.'</span>';
@@ -268,7 +273,7 @@ class RegisterModule extends XModule {
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.lastname"); ?></td>
-                    <td><input name="lastName" type="text" <?php if (isset($_SESSION['register.user'])) { echo 'disabled="true"'; } ?> value="<?php echo $lastName ?>" /><?php
+                    <td><input name="lastName" type="text" <?php if (isset($_SESSION['register.user']) && parent::get("type") == "facebook") { echo 'disabled="true"'; } ?> value="<?php echo $lastName ?>" /><?php
                     $message = parent::getMessage("lastname");
                     if (!empty($message)) {
                         echo '<span class="validateTips">'.$message.'</span>';
@@ -319,7 +324,7 @@ class RegisterModule extends XModule {
                 ?>
                 <tr>
                     <td><?php echo parent::getTranslation("register.continent"); ?></td>
-                    <td><select name="continentId" type="text" />
+                    <td><select name="continentId" type="text"></select>
                         <input name="continent" type="hidden" value="<?php echo parent::post("continent"); ?>" /><?php
                     $message = parent::getMessage("continent");
                     if (!empty($message)) {
@@ -328,7 +333,7 @@ class RegisterModule extends XModule {
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.country"); ?></td>
-                    <td><select name="countryId" type="text" />
+                    <td><select name="countryId" type="text"></select>
                         <input name="country" type="hidden" value="<?php echo parent::post("country"); ?>" /><?php
                     $message = parent::getMessage("country");
                     if (!empty($message)) {
@@ -337,7 +342,7 @@ class RegisterModule extends XModule {
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.state"); ?></td>
-                    <td><select name="stateId" type="text" />
+                    <td><select name="stateId" type="text"></select>
                         <input name="state" type="hidden" value="<?php echo parent::post("state"); ?>" /><?php
                     $message = parent::getMessage("state");
                     if (!empty($message)) {
@@ -346,7 +351,7 @@ class RegisterModule extends XModule {
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.region"); ?></td>
-                    <td><select name="regionId" type="text" />
+                    <td><select name="regionId" type="text"></select>
                         <input name="region" type="hidden" value="<?php echo parent::post("region"); ?>" /><?php
                     $message = parent::getMessage("region");
                     if (!empty($message)) {
@@ -355,7 +360,7 @@ class RegisterModule extends XModule {
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.city"); ?></td>
-                    <td><select name="cityId" type="text" />
+                    <td><select name="cityId" type="text"></select>
                         <input name="city" type="hidden" value="<?php echo parent::post("city"); ?>" /><?php
                     $message = parent::getMessage("city");
                     if (!empty($message)) {
@@ -411,19 +416,26 @@ class RegisterModule extends XModule {
                 ?>
                 <hr/>
                 <div class="alignRight">
-                    <button class="jquiButton" type="submit">
+                    <button type="submit">
                         <?php echo parent::getTranslation("register.register"); ?>
                     </button>
                 </div>
             </form>
             <script type="text/javascript">
-            $("#<?php echo parent::alias("registerUserForm"); ?>").find("button[type=submit]").click(function (e) {
+            var submitButton = $("#<?php echo parent::alias("registerUserForm"); ?>").find("button[type=submit]");
+		if ($("#<?php echo parent::alias("registerUserForm"); ?>").find("input[name=x]").val().length === 0
+			&& $("#<?php echo parent::alias("registerUserForm"); ?>").find("input[name=y]").val().length === 0) {
+			submitButton.button({ disabled: true });
+		} else {
+			submitButton.button();
+		}
+	submitButton.click(function (e) {
                 if ($(".registerPanel input[name=password1]").val() !== $(".registerPanel input[name=password2]").val()) {
                     alert("<?php echo parent::getTranslation("register.missmatch"); ?>");
                     e.preventDefault();
                 }
             });
-            setupPlaceFeilds($("#<?php echo parent::alias("registerUserForm"); ?>"),"<?php echo parent::post("continentId"); ?>","<?php echo parent::post("countryId"); ?>","<?php echo parent::post("stateId"); ?>","<?php echo parent::post("regionId"); ?>","<?php echo parent::post("cityId"); ?>");
+            setupPlaceFeilds($("#<?php echo parent::alias("registerUserForm"); ?>"),"<?php echo parent::post("continentId"); ?>","<?php echo parent::post("countryId"); ?>","<?php echo parent::post("stateId"); ?>","<?php echo parent::post("regionId"); ?>","<?php echo parent::post("cityId"); ?>", submitButton);
             </script>
         </div>
         <?php

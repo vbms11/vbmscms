@@ -59,11 +59,10 @@ class UserSearchResultModule extends UserSearchBaseModule {
     }
     
     function printSearchResultsView () {
-        
-        $users = UsersModel::search(parent::get("agemin"), parent::get("agemax"), parent::get("country"), parent::get("place"), parent::get("distance"));
-        $linkParams = array("agemin"=>parent::get("agemin"), "agemax"=>parent::get("agemax"), "country"=>parent::get("country"), "place"=>parent::get("place"), "distance"=>parent::get("distance"));
+        $users = UsersModel::search(parent::get("agemin"), parent::get("agemax"), parent::get("country"), parent::get("place"), parent::get("distance"), parent::get("gender"), parent::get("x"), parent::get("y"));
+        $linkParams = array("agemin"=>parent::get("agemin"), "agemax"=>parent::get("agemax"), "country"=>parent::get("country"), "place"=>parent::get("place"), "distance"=>parent::get("distance"), "x"=>parent::get("x"), "y"=>parent::get("y"));
         $usersPerPage = parent::getUsersPerPage();
-        
+      	  
         ?>
         <h1><?php echo parent::getTranslation("user.search.result.title"); ?></h1>
         <?php

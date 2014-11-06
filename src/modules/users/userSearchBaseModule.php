@@ -15,7 +15,7 @@ class UserSearchBaseModule extends XModule {
         }
         return $usersPerPage;
     }
-    
+       
     function listUsers ($users, $linkParams = array()) {
         
         $usersCount = count($users);
@@ -37,6 +37,7 @@ class UserSearchBaseModule extends XModule {
             <?php
             for ($i=$iStart; $i<$iEnd; $i++) {
                 $user = $users[$i];
+
                 ?>
                 <div class="userListUserDiv shadow">
                     <div class="userListUserImage">
@@ -46,7 +47,7 @@ class UserSearchBaseModule extends XModule {
                     </div>
                     <div class="userListUserDetails">
                         <a href="<?php echo NavigationModel::createStaticPageLink('userProfile', array('userId' => $user->id), true, false); ?>">
-                            <?php echo $user->username; ?>
+                            <?php echo $user->distance."km - ".$user->username; ?>
                             <?php echo ' ('.$user->age.')'; ?>
                         </a>
                     </div>
@@ -56,7 +57,7 @@ class UserSearchBaseModule extends XModule {
             ?>
             <div class="clear"></div>
         </div>
-        <?php
+	<?php  
         if ($pagerPages > 1) {
             ?>
             <div class="userListPager">
@@ -74,9 +75,10 @@ class UserSearchBaseModule extends XModule {
             </div>
             <div class="clear"></div>
             <?php
-        }
+        } 
+
     }
-    
+
 }
 
 ?>

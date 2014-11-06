@@ -23,6 +23,10 @@ class LoginModule extends XModule {
                 parent::param("reset", parent::post("reset") == "1" ? true : false);
                 parent::blur();
                 break;
+	case "register":
+		unset($_SESSION['register.user']);
+		NavigationModel::redirectStaticModule("register");	
+		break;
             case "facebookLogin":
                 $site = Context::getSite();
                 $facebook = new Facebook(array(
@@ -66,14 +70,14 @@ class LoginModule extends XModule {
                 try {
 			
 			$site = Context::getSite();
-			$redirect = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."?static=login";
+			$redirect = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."?static=login&action=googleLogin";
 
 			$client = new Google_Client();
 			$client->setClientId($site->googleclientid);
 			$client->setClientSecret($site->googleclientsecret);
 			$client->setRedirectUri($redirect);
 			$client->addScope(array("https://www.googleapis.com/auth/userinfo.email"));
-
+			
 			if (isset($_GET['code'])) {
                             $client->authenticate($_GET['code']);
                             $_SESSION['access_token'] = $client->getAccessToken();
@@ -81,12 +85,12 @@ class LoginModule extends XModule {
                             $client->setAccessToken($_SESSION['access_token']);
                             $userInfo = $client->verifyIdToken()->getAttributes();
                             
-                            $userLogin = UsersModel::loginWithEmail($userInfo['email']);
+                            $userLogin = UsersModel::loginWithEmail($userInfo['payload']['email']);
 
                             if ($userLogin) {
                                 NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
                             } else {
-                                $_SESSION['register.user'] = $userInfo;
+                                $_SESSION['register.user'] = $userInfo['payload'];
                                 NavigationModel::redirectStaticModule("register",array("type"=>"google"));
                             }
                         } else {
@@ -290,7 +294,7 @@ class LoginModule extends XModule {
                     <?php
                     if (parent::param("register")) {
                         ?>
-                        <button type="button" class="jquiButton" id="register" onclick="callUrl('<?php echo parent::staticLink("register"); ?>');"><?php echo parent::getTranslation("login.register"); ?></button>
+                        <button type="button" class="jquiButton" id="register" onclick="callUrl('<?php echo parent::link(array("action"=>"register")); ?>');"><?php echo parent::getTranslation("login.register"); ?></button>
                         <?php
                     }
                     if (parent::param("reset")) {
