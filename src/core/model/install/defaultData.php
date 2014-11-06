@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `ajax_chat_bans` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ajax_chat_invitations`
+-- Tabellenstruktur für Tabelle `ajax_chat_invitations`
 --
 
 CREATE TABLE IF NOT EXISTS `ajax_chat_invitations` (
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `ajax_chat_invitations` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ajax_chat_messages`
+-- Tabellenstruktur für Tabelle `ajax_chat_messages`
 --
 
 CREATE TABLE IF NOT EXISTS `ajax_chat_messages` (
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `ajax_chat_messages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ajax_chat_online`
+-- Tabellenstruktur für Tabelle `ajax_chat_online`
 --
 
 CREATE TABLE IF NOT EXISTS `ajax_chat_online` (
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `ajax_chat_online` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_backup`
+-- Tabellenstruktur für Tabelle `t_backup`
 --
 
 CREATE TABLE IF NOT EXISTS `t_backup` (
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `t_backup` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_cms_customer`
+-- Tabellenstruktur für Tabelle `t_cms_customer`
 --
 
 CREATE TABLE IF NOT EXISTS `t_cms_customer` (
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `t_cms_customer` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_cms_version`
+-- Tabellenstruktur für Tabelle `t_cms_version`
 --
 
 CREATE TABLE IF NOT EXISTS `t_cms_version` (
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `t_cms_version` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_code`
+-- Tabellenstruktur für Tabelle `t_code`
 --
 
 CREATE TABLE IF NOT EXISTS `t_code` (
@@ -108,10 +108,10 @@ CREATE TABLE IF NOT EXISTS `t_code` (
   `code` int(10) unsigned NOT NULL,
   `value` blob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
--- Dumping data for table `t_code`
+-- Daten für Tabelle `t_code`
 --
 
 INSERT INTO `t_code` (`id`, `lang`, `code`, `value`) VALUES
@@ -155,13 +155,12 @@ INSERT INTO `t_code` (`id`, `lang`, `code`, `value`) VALUES
 (38, 'en', 38, 0x526563656e746c7920416374697665205573657273),
 (39, 'en', 39, 0x61646d696e536f6369616c4e6f74696669636174696f6e73),
 (40, 'en', 40, 0x7573657250726f66696c65496d616765),
-(41, 'en', 41, 0x43686174),
-(42, 'en', 42, 0x61646d696e4e6577736c6574746572);
+(41, 'en', 41, 0x43686174);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_comment`
+-- Tabellenstruktur für Tabelle `t_comment`
 --
 
 CREATE TABLE IF NOT EXISTS `t_comment` (
@@ -178,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `t_comment` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_confirm`
+-- Tabellenstruktur für Tabelle `t_confirm`
 --
 
 CREATE TABLE IF NOT EXISTS `t_confirm` (
@@ -193,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `t_confirm` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_country`
+-- Tabellenstruktur für Tabelle `t_country`
 --
 
 CREATE TABLE IF NOT EXISTS `t_country` (
@@ -202,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `t_country` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Dumping data for table `t_country`
+-- Daten für Tabelle `t_country`
 --
 
 INSERT INTO `t_country` (`geonameid`, `name`) VALUES
@@ -246,7 +245,7 @@ INSERT INTO `t_country` (`geonameid`, `name`) VALUES
 ('2328926', 'Nigeria'),
 ('2260494', 'Republic of the Congo'),
 ('49518', 'Rwanda'),
-('935317', 'RÃƒÂ©union'),
+('935317', 'RÃ©union'),
 ('3370751', 'Saint Helena'),
 ('2245662', 'Senegal'),
 ('241170', 'Seychelles'),
@@ -256,7 +255,7 @@ INSERT INTO `t_country` (`geonameid`, `name`) VALUES
 ('7909807', 'South Sudan'),
 ('366755', 'Sudan'),
 ('934841', 'Swaziland'),
-('2410758', 'SÃƒÂ£o TomÃƒÂ© and PrÃƒÂ­ncipe'),
+('2410758', 'SÃ£o TomÃ© and PrÃ­ncipe'),
 ('149590', 'Tanzania'),
 ('2363686', 'Togo'),
 ('2464461', 'Tunisia'),
@@ -370,7 +369,7 @@ INSERT INTO `t_country` (`geonameid`, `name`) VALUES
 ('690791', 'Ukraine'),
 ('2635167', 'United Kingdom'),
 ('3164670', 'Vatican City'),
-('661882', 'Ãƒâ€¦land'),
+('661882', 'Ã…land'),
 ('3573511', 'Anguilla'),
 ('3576396', 'Antigua and Barbuda'),
 ('3577279', 'Aruba'),
@@ -384,7 +383,7 @@ INSERT INTO `t_country` (`geonameid`, `name`) VALUES
 ('3580718', 'Cayman Islands'),
 ('3624060', 'Costa Rica'),
 ('3562981', 'Cuba'),
-('7626836', 'CuraÃƒÂ§ao'),
+('7626836', 'CuraÃ§ao'),
 ('3575830', 'Dominica'),
 ('3508796', 'Dominican Republic'),
 ('3585968', 'El Salvador'),
@@ -401,7 +400,7 @@ INSERT INTO `t_country` (`geonameid`, `name`) VALUES
 ('3617476', 'Nicaragua'),
 ('3703430', 'Panama'),
 ('4566966', 'Puerto Rico'),
-('3578476', 'Saint BarthÃƒÂ©lemy'),
+('3578476', 'Saint BarthÃ©lemy'),
 ('3575174', 'Saint Kitts and Nevis'),
 ('3576468', 'Saint Lucia'),
 ('3578421', 'Saint Martin'),
@@ -460,7 +459,7 @@ INSERT INTO `t_country` (`geonameid`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_domain`
+-- Tabellenstruktur für Tabelle `t_domain`
 --
 
 CREATE TABLE IF NOT EXISTS `t_domain` (
@@ -474,7 +473,7 @@ CREATE TABLE IF NOT EXISTS `t_domain` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_email`
+-- Tabellenstruktur für Tabelle `t_email`
 --
 
 CREATE TABLE IF NOT EXISTS `t_email` (
@@ -487,7 +486,7 @@ CREATE TABLE IF NOT EXISTS `t_email` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_event`
+-- Tabellenstruktur für Tabelle `t_event`
 --
 
 CREATE TABLE IF NOT EXISTS `t_event` (
@@ -507,7 +506,7 @@ CREATE TABLE IF NOT EXISTS `t_event` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_forum_post`
+-- Tabellenstruktur für Tabelle `t_forum_post`
 --
 
 CREATE TABLE IF NOT EXISTS `t_forum_post` (
@@ -522,7 +521,7 @@ CREATE TABLE IF NOT EXISTS `t_forum_post` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_forum_thread`
+-- Tabellenstruktur für Tabelle `t_forum_thread`
 --
 
 CREATE TABLE IF NOT EXISTS `t_forum_thread` (
@@ -540,7 +539,7 @@ CREATE TABLE IF NOT EXISTS `t_forum_thread` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_forum_topic`
+-- Tabellenstruktur für Tabelle `t_forum_topic`
 --
 
 CREATE TABLE IF NOT EXISTS `t_forum_topic` (
@@ -557,7 +556,7 @@ CREATE TABLE IF NOT EXISTS `t_forum_topic` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_gallery_category`
+-- Tabellenstruktur für Tabelle `t_gallery_category`
 --
 
 CREATE TABLE IF NOT EXISTS `t_gallery_category` (
@@ -573,7 +572,7 @@ CREATE TABLE IF NOT EXISTS `t_gallery_category` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_gallery_image`
+-- Tabellenstruktur für Tabelle `t_gallery_image`
 --
 
 CREATE TABLE IF NOT EXISTS `t_gallery_image` (
@@ -589,7 +588,7 @@ CREATE TABLE IF NOT EXISTS `t_gallery_image` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_gallery_page`
+-- Tabellenstruktur für Tabelle `t_gallery_page`
 --
 
 CREATE TABLE IF NOT EXISTS `t_gallery_page` (
@@ -603,7 +602,7 @@ CREATE TABLE IF NOT EXISTS `t_gallery_page` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_language`
+-- Tabellenstruktur für Tabelle `t_language`
 --
 
 CREATE TABLE IF NOT EXISTS `t_language` (
@@ -618,7 +617,7 @@ CREATE TABLE IF NOT EXISTS `t_language` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `t_language`
+-- Daten für Tabelle `t_language`
 --
 
 INSERT INTO `t_language` (`id`, `code`, `name`, `local`, `flag`, `active`, `isdefault`) VALUES
@@ -629,7 +628,7 @@ INSERT INTO `t_language` (`id`, `code`, `name`, `local`, `flag`, `active`, `isde
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_menu`
+-- Tabellenstruktur für Tabelle `t_menu`
 --
 
 CREATE TABLE IF NOT EXISTS `t_menu` (
@@ -644,7 +643,7 @@ CREATE TABLE IF NOT EXISTS `t_menu` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
--- Dumping data for table `t_menu`
+-- Daten für Tabelle `t_menu`
 --
 
 INSERT INTO `t_menu` (`id`, `page`, `type`, `parent`, `active`, `lang`, `position`) VALUES
@@ -676,7 +675,7 @@ INSERT INTO `t_menu` (`id`, `page`, `type`, `parent`, `active`, `lang`, `positio
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_menu_instance`
+-- Tabellenstruktur für Tabelle `t_menu_instance`
 --
 
 CREATE TABLE IF NOT EXISTS `t_menu_instance` (
@@ -687,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `t_menu_instance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `t_menu_instance`
+-- Daten für Tabelle `t_menu_instance`
 --
 
 INSERT INTO `t_menu_instance` (`id`, `name`, `siteid`) VALUES
@@ -698,7 +697,7 @@ INSERT INTO `t_menu_instance` (`id`, `name`, `siteid`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_menu_style`
+-- Tabellenstruktur für Tabelle `t_menu_style`
 --
 
 CREATE TABLE IF NOT EXISTS `t_menu_style` (
@@ -710,7 +709,7 @@ CREATE TABLE IF NOT EXISTS `t_menu_style` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
--- Dumping data for table `t_menu_style`
+-- Daten für Tabelle `t_menu_style`
 --
 
 INSERT INTO `t_menu_style` (`id`, `cssclass`, `cssstyle`, `name`) VALUES
@@ -723,7 +722,7 @@ INSERT INTO `t_menu_style` (`id`, `cssclass`, `cssstyle`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_module`
+-- Tabellenstruktur für Tabelle `t_module`
 --
 
 CREATE TABLE IF NOT EXISTS `t_module` (
@@ -741,7 +740,7 @@ CREATE TABLE IF NOT EXISTS `t_module` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=98 ;
 
 --
--- Dumping data for table `t_module`
+-- Daten für Tabelle `t_module`
 --
 
 INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `interface`, `inmenu`, `category`, `position`, `static`) VALUES
@@ -814,7 +813,7 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 (89, 'Facebook Like Button', 'facebookLikeButton', 'modules/social/facebookLikeButtonModule.php', NULL, 'FacebookLikeButtonModule', 1, 0, 0, 0),
 (92, 'User Friend List', 'userFriend', 'modules/users/userFriendModule.php', NULL, 'UserFriendModule', 1, 0, 0, 1),
 (91, 'User Search Results', 'userSearchResult', 'modules/users/userSearchResultModule.php', 0x30, 'UserSearchResultModule', 1, 0, 0, 1),
-(93, 'User Friend Requests', 'userFriendRequest', 'modules/users/userFriendRequestModule.php', NULL, 'UserFriendRequestModule', 1, 0, 0, 1),
+(93, 'User Friend Requests', 'userFriendRequest', 'modules/users/UserFriendRequestModule.php', NULL, 'UserFriendRequestModule', 1, 0, 0, 1),
 (94, 'User Search New Users', 'userSearchNew', 'modules/users/userSearchNewUsersModule.php', NULL, 'UserSearchNewUsersModule', 1, 0, 0, 1),
 (95, 'User Search Recent Active', 'userSearchActive', 'modules/users/userSearchActiveUsersModule.php', NULL, 'UserSearchActiveUsersModule', 1, 0, 0, 1),
 (96, 'User Profile Image', 'userProfileImage', 'modules/users/userProfileImageModule.php', NULL, 'UserProfileImageModule', 1, 0, 0, 1),
@@ -823,7 +822,7 @@ INSERT INTO `t_module` (`id`, `name`, `sysname`, `include`, `description`, `inte
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_module_category`
+-- Tabellenstruktur für Tabelle `t_module_category`
 --
 
 CREATE TABLE IF NOT EXISTS `t_module_category` (
@@ -836,17 +835,17 @@ CREATE TABLE IF NOT EXISTS `t_module_category` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_module_instance`
+-- Tabellenstruktur für Tabelle `t_module_instance`
 --
 
 CREATE TABLE IF NOT EXISTS `t_module_instance` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `moduleid` int(10) NOT NULL,
   PRIMARY KEY (`id`,`moduleid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=65 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci AUTO_INCREMENT=63 ;
 
 --
--- Dumping data for table `t_module_instance`
+-- Daten für Tabelle `t_module_instance`
 --
 
 INSERT INTO `t_module_instance` (`id`, `moduleid`) VALUES
@@ -910,14 +909,12 @@ INSERT INTO `t_module_instance` (`id`, `moduleid`) VALUES
 (59, 26),
 (60, 50),
 (61, 2),
-(62, 2),
-(63, 95),
-(64, 16);
+(62, 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_module_instance_params`
+-- Tabellenstruktur für Tabelle `t_module_instance_params`
 --
 
 CREATE TABLE IF NOT EXISTS `t_module_instance_params` (
@@ -928,7 +925,7 @@ CREATE TABLE IF NOT EXISTS `t_module_instance_params` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci;
 
 --
--- Dumping data for table `t_module_instance_params`
+-- Daten für Tabelle `t_module_instance_params`
 --
 
 INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value`) VALUES
@@ -949,7 +946,7 @@ INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value
 (17, NULL, 'mode', 0x733a313a2232223b),
 (25, NULL, 'mode', 0x733a313a2232223b),
 (29, NULL, 'mode', 0x733a313a2232223b),
-(31, NULL, 'mode', 0x733a313a2231223b),
+(31, NULL, 'mode', 0x733a313a2232223b),
 (27, NULL, 'mode', 0x733a313a2233223b),
 (24, NULL, 'mode', 0x733a313a2232223b),
 (2, NULL, 'selectedMenu', 0x733a313a2233223b),
@@ -978,7 +975,7 @@ INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value
 (17, NULL, 'mode', 0x733a313a2232223b),
 (25, NULL, 'mode', 0x733a313a2232223b),
 (29, NULL, 'mode', 0x733a313a2232223b),
-(31, NULL, 'mode', 0x733a313a2231223b),
+(31, NULL, 'mode', 0x733a313a2232223b),
 (27, NULL, 'mode', 0x733a313a2233223b),
 (24, NULL, 'mode', 0x733a313a2232223b),
 (2, NULL, 'selectedMenu', 0x733a313a2233223b),
@@ -1017,7 +1014,7 @@ INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value
 (17, NULL, 'mode', 0x733a313a2232223b),
 (25, NULL, 'mode', 0x733a313a2232223b),
 (29, NULL, 'mode', 0x733a313a2232223b),
-(31, NULL, 'mode', 0x733a313a2231223b),
+(31, NULL, 'mode', 0x733a313a2232223b),
 (27, NULL, 'mode', 0x733a313a2233223b),
 (24, NULL, 'mode', 0x733a313a2232223b),
 (2, NULL, 'selectedMenu', 0x733a313a2233223b),
@@ -1046,7 +1043,7 @@ INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value
 (17, NULL, 'mode', 0x733a313a2232223b),
 (25, NULL, 'mode', 0x733a313a2232223b),
 (29, NULL, 'mode', 0x733a313a2232223b),
-(31, NULL, 'mode', 0x733a313a2231223b),
+(31, NULL, 'mode', 0x733a313a2232223b),
 (27, NULL, 'mode', 0x733a313a2233223b),
 (24, NULL, 'mode', 0x733a313a2232223b),
 (2, NULL, 'selectedMenu', 0x733a313a2233223b),
@@ -1077,7 +1074,7 @@ INSERT INTO `t_module_instance_params` (`instanceid`, `moduleid`, `name`, `value
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_module_roles`
+-- Tabellenstruktur für Tabelle `t_module_roles`
 --
 
 CREATE TABLE IF NOT EXISTS `t_module_roles` (
@@ -1088,7 +1085,7 @@ CREATE TABLE IF NOT EXISTS `t_module_roles` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1996 ;
 
 --
--- Dumping data for table `t_module_roles`
+-- Daten für Tabelle `t_module_roles`
 --
 
 INSERT INTO `t_module_roles` (`id`, `customrole`, `modulerole`) VALUES
@@ -1208,7 +1205,7 @@ INSERT INTO `t_module_roles` (`id`, `customrole`, `modulerole`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_newsletter`
+-- Tabellenstruktur für Tabelle `t_newsletter`
 --
 
 CREATE TABLE IF NOT EXISTS `t_newsletter` (
@@ -1219,7 +1216,7 @@ CREATE TABLE IF NOT EXISTS `t_newsletter` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `t_newsletter`
+-- Daten für Tabelle `t_newsletter`
 --
 
 INSERT INTO `t_newsletter` (`id`, `name`, `text`) VALUES
@@ -1228,7 +1225,7 @@ INSERT INTO `t_newsletter` (`id`, `name`, `text`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_newsletter_email`
+-- Tabellenstruktur für Tabelle `t_newsletter_email`
 --
 
 CREATE TABLE IF NOT EXISTS `t_newsletter_email` (
@@ -1242,7 +1239,7 @@ CREATE TABLE IF NOT EXISTS `t_newsletter_email` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_newsletter_emailgroup`
+-- Tabellenstruktur für Tabelle `t_newsletter_emailgroup`
 --
 
 CREATE TABLE IF NOT EXISTS `t_newsletter_emailgroup` (
@@ -1254,7 +1251,7 @@ CREATE TABLE IF NOT EXISTS `t_newsletter_emailgroup` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_order`
+-- Tabellenstruktur für Tabelle `t_order`
 --
 
 CREATE TABLE IF NOT EXISTS `t_order` (
@@ -1274,7 +1271,7 @@ CREATE TABLE IF NOT EXISTS `t_order` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_order_attribute`
+-- Tabellenstruktur für Tabelle `t_order_attribute`
 --
 
 CREATE TABLE IF NOT EXISTS `t_order_attribute` (
@@ -1288,7 +1285,7 @@ CREATE TABLE IF NOT EXISTS `t_order_attribute` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_order_product`
+-- Tabellenstruktur für Tabelle `t_order_product`
 --
 
 CREATE TABLE IF NOT EXISTS `t_order_product` (
@@ -1303,7 +1300,7 @@ CREATE TABLE IF NOT EXISTS `t_order_product` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_page`
+-- Tabellenstruktur für Tabelle `t_page`
 --
 
 CREATE TABLE IF NOT EXISTS `t_page` (
@@ -1321,60 +1318,59 @@ CREATE TABLE IF NOT EXISTS `t_page` (
   `pagetrackerscript` blob,
   `modifydate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
--- Dumping data for table `t_page`
+-- Daten für Tabelle `t_page`
 --
 
 INSERT INTO `t_page` (`id`, `type`, `namecode`, `welcome`, `title`, `keywords`, `description`, `template`, `siteid`, `code`, `codeid`, `pagetrackerscript`, `modifydate`) VALUES
-(1, 0, 1, 0, 'login', 0x6c6f67696e, 0x6c6f67696e, 5, 1, 'login', 1, NULL, '2014-05-12 07:22:52'),
-(2, 0, 2, 0, 'adminPages', 0x61646d696e5061676573, 0x61646d696e5061676573, 5, 1, 'adminPages', 5, NULL, '2014-05-12 07:23:20'),
-(3, 0, 3, 0, 'startup', 0x73746172747570, 0x73746172747570, 5, 1, 'startup', 7, NULL, '2014-05-12 07:23:21'),
-(4, 0, 4, 0, 'adminSites', 0x61646d696e5369746573, 0x61646d696e5369746573, 5, 1, 'adminSites', 8, NULL, '2014-05-12 07:23:26'),
-(5, 0, 5, 0, 'adminDomains', 0x61646d696e446f6d61696e73, 0x61646d696e446f6d61696e73, 5, 1, 'adminDomains', 9, NULL, '2014-05-12 07:23:29'),
-(6, 0, 6, 0, 'adminPackage', 0x61646d696e5061636b616765, 0x61646d696e5061636b616765, 5, 1, 'adminPackage', 10, NULL, '2014-05-12 07:24:56'),
-(7, 0, 7, 0, 'pageConfig', 0x70616765436f6e666967, 0x70616765436f6e666967, 5, 1, 'pageConfig', 11, NULL, '2014-05-13 00:49:09'),
-(8, 0, 8, 1, 'Online Dating', 0x4f6e6c696e6520446174696e67, 0x4f6e6c696e6520446174696e67, 4, 1, '', NULL, NULL, '2014-05-13 06:21:59'),
-(9, 0, 9, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 00:49:34'),
-(10, 0, 10, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 00:49:57'),
-(11, 0, 11, 0, 'insertModule', 0x696e736572744d6f64756c65, 0x696e736572744d6f64756c65, 5, 1, 'insertModule', 12, NULL, '2014-05-13 00:50:02'),
-(12, 0, 12, 0, 'userSearchResult', 0x75736572536561726368526573756c74, 0x75736572536561726368526573756c74, 3, 1, 'userSearchResult', 14, NULL, '2014-05-13 01:57:22'),
-(13, 0, 13, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 01:59:23'),
-(14, 0, 14, 0, 'register', 0x7265676973746572, 0x7265676973746572, 5, 1, 'register', 16, NULL, '2014-05-13 02:00:20'),
-(15, 0, 15, 0, 'userProfile', 0x7573657250726f66696c65, 0x7573657250726f66696c65, 3, 1, 'userProfile', 17, NULL, '2014-05-13 02:01:21'),
-(16, 0, 16, 0, 'userDetails', 0x7573657244657461696c73, 0x7573657244657461696c73, 3, 1, 'userDetails', 18, NULL, '2014-05-13 02:07:53'),
-(17, 0, 17, 0, 'profile', 0x70726f66696c65, 0x70726f66696c65, 5, 1, 'profile', 19, NULL, '2014-05-13 02:08:30'),
-(18, 0, 18, 0, 'adminTranslations', 0x61646d696e5472616e736c6174696f6e73, 0x61646d696e5472616e736c6174696f6e73, 5, 1, 'adminTranslations', 23, NULL, '2014-05-13 04:57:16'),
-(19, 0, 19, 0, 'userWall', 0x7573657257616c6c, 0x7573657257616c6c, 3, 1, 'userWall', 24, NULL, '2014-05-13 05:15:40'),
-(20, 0, 20, 0, 'userGallery', 0x7573657247616c6c657279, 0x7573657247616c6c657279, 3, 1, 'userGallery', 27, NULL, '2014-06-13 13:26:49'),
-(21, 0, 21, 0, 'userMessage', 0x757365724d657373616765, 0x757365724d657373616765, 3, 1, 'userMessage', 30, NULL, '2014-05-13 05:38:32'),
-(22, 0, 22, 0, 'userFriends', 0x75736572467269656e6473, 0x75736572467269656e6473, 5, 1, 'userFriends', 32, NULL, '2014-05-13 05:39:48'),
-(23, 0, 23, 0, 'userAddFriends', 0x75736572416464467269656e6473, 0x75736572416464467269656e6473, 5, 1, 'userAddFriends', 33, NULL, '2014-05-13 05:42:02'),
-(24, 0, 24, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 06:07:33'),
-(25, 0, 25, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-06-19 13:05:57'),
-(26, 0, 26, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-06-19 14:11:57'),
-(27, 0, 27, 0, 'adminTemplates', 0x61646d696e54656d706c61746573, 0x61646d696e54656d706c61746573, 5, 1, 'adminTemplates', 35, NULL, '2014-05-13 06:14:19'),
-(28, 0, 28, 0, 'Messages', 0x4d65737361676573, 0x4d65737361676573, 3, 1, '', NULL, NULL, '2014-05-14 00:00:13'),
-(29, 0, 29, 0, 'Friends', 0x467269656e6473, 0x467269656e6473, 3, 1, '', NULL, NULL, '2014-05-14 00:01:26'),
-(30, 0, 30, 0, 'Login', 0x4c6f67696e, 0x4c6f67696e, 5, 1, '', NULL, NULL, '2014-05-14 00:07:56'),
-(31, 0, 31, 0, 'Logout', 0x4c6f676f7574, 0x4c6f676f7574, 5, 1, '', NULL, NULL, '2014-05-14 00:08:52'),
-(32, 0, 32, 0, 'adminRoles', 0x61646d696e526f6c6573, 0x61646d696e526f6c6573, 5, 1, 'adminRoles', 40, NULL, '2014-05-14 00:15:34'),
-(33, 0, 33, 0, 'unregistered', 0x756e72656769737465726564, 0x756e72656769737465726564, 0, 1, 'unregistered', 41, NULL, '2014-05-14 08:01:40'),
-(34, 0, 34, 0, 'userFriend', 0x75736572467269656e64, 0x75736572467269656e64, 3, 1, 'userFriend', 42, NULL, '2014-05-15 01:01:51'),
-(35, 0, 35, 0, 'Friend Requests', 0x467269656e64205265717565737473, 0x467269656e64205265717565737473, 3, 1, '', NULL, NULL, '2014-05-15 01:36:54'),
-(36, 0, 36, 0, 'Search Users', 0x536561726368205573657273, 0x536561726368205573657273, 3, 1, '', NULL, NULL, '2014-05-17 01:38:35'),
-(37, 0, 37, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 01:38:51'),
-(38, 0, 38, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 01:39:56'),
-(39, 0, 39, 0, 'adminSocialNotifications', 0x61646d696e536f6369616c4e6f74696669636174696f6e73, 0x61646d696e536f6369616c4e6f74696669636174696f6e73, 5, 1, 'adminSocialNotifications', 56, NULL, '2014-06-11 06:26:46'),
-(40, 0, 40, 0, 'userProfileImage', 0x7573657250726f66696c65496d616765, 0x7573657250726f66696c65496d616765, 3, 1, 'userProfileImage', 57, NULL, '2014-06-13 11:28:23'),
-(41, 0, 41, 0, 'Chat', 0x43686174, 0x43686174, 5, 1, '', NULL, NULL, '2014-06-18 06:12:47'),
-(42, 0, 42, 0, 'adminNewsletter', 0x61646d696e4e6577736c6574746572, 0x61646d696e4e6577736c6574746572, 5, 1, 'adminNewsletter', 64, NULL, '2014-10-09 06:20:03');
+(1, 0, 1, 0, 'login', 0x6c6f67696e, 0x6c6f67696e, 5, 1, 'login', 1, NULL, '2014-05-12 11:22:52'),
+(2, 0, 2, 0, 'adminPages', 0x61646d696e5061676573, 0x61646d696e5061676573, 5, 1, 'adminPages', 5, NULL, '2014-05-12 11:23:20'),
+(3, 0, 3, 0, 'startup', 0x73746172747570, 0x73746172747570, 5, 1, 'startup', 7, NULL, '2014-05-12 11:23:21'),
+(4, 0, 4, 0, 'adminSites', 0x61646d696e5369746573, 0x61646d696e5369746573, 5, 1, 'adminSites', 8, NULL, '2014-05-12 11:23:26'),
+(5, 0, 5, 0, 'adminDomains', 0x61646d696e446f6d61696e73, 0x61646d696e446f6d61696e73, 5, 1, 'adminDomains', 9, NULL, '2014-05-12 11:23:29'),
+(6, 0, 6, 0, 'adminPackage', 0x61646d696e5061636b616765, 0x61646d696e5061636b616765, 5, 1, 'adminPackage', 10, NULL, '2014-05-12 11:24:56'),
+(7, 0, 7, 0, 'pageConfig', 0x70616765436f6e666967, 0x70616765436f6e666967, 5, 1, 'pageConfig', 11, NULL, '2014-05-13 04:49:09'),
+(8, 0, 8, 1, 'Online Dating', 0x4f6e6c696e6520446174696e67, 0x4f6e6c696e6520446174696e67, 4, 1, '', NULL, NULL, '2014-05-13 10:21:59'),
+(9, 0, 9, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 04:49:34'),
+(10, 0, 10, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-13 04:49:57'),
+(11, 0, 11, 0, 'insertModule', 0x696e736572744d6f64756c65, 0x696e736572744d6f64756c65, 5, 1, 'insertModule', 12, NULL, '2014-05-13 04:50:02'),
+(12, 0, 12, 0, 'userSearchResult', 0x75736572536561726368526573756c74, 0x75736572536561726368526573756c74, 3, 1, 'userSearchResult', 14, NULL, '2014-05-13 05:57:22'),
+(13, 0, 13, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 05:59:23'),
+(14, 0, 14, 0, 'register', 0x7265676973746572, 0x7265676973746572, 5, 1, 'register', 16, NULL, '2014-05-13 06:00:20'),
+(15, 0, 15, 0, 'userProfile', 0x7573657250726f66696c65, 0x7573657250726f66696c65, 3, 1, 'userProfile', 17, NULL, '2014-05-13 06:01:21'),
+(16, 0, 16, 0, 'userDetails', 0x7573657244657461696c73, 0x7573657244657461696c73, 3, 1, 'userDetails', 18, NULL, '2014-05-13 06:07:53'),
+(17, 0, 17, 0, 'profile', 0x70726f66696c65, 0x70726f66696c65, 5, 1, 'profile', 19, NULL, '2014-05-13 06:08:30'),
+(18, 0, 18, 0, 'adminTranslations', 0x61646d696e5472616e736c6174696f6e73, 0x61646d696e5472616e736c6174696f6e73, 5, 1, 'adminTranslations', 23, NULL, '2014-05-13 08:57:16'),
+(19, 0, 19, 0, 'userWall', 0x7573657257616c6c, 0x7573657257616c6c, 3, 1, 'userWall', 24, NULL, '2014-05-13 09:15:40'),
+(20, 0, 20, 0, 'userGallery', 0x7573657247616c6c657279, 0x7573657247616c6c657279, 3, 1, 'userGallery', 27, NULL, '2014-06-13 17:26:49'),
+(21, 0, 21, 0, 'userMessage', 0x757365724d657373616765, 0x757365724d657373616765, 3, 1, 'userMessage', 30, NULL, '2014-05-13 09:38:32'),
+(22, 0, 22, 0, 'userFriends', 0x75736572467269656e6473, 0x75736572467269656e6473, 5, 1, 'userFriends', 32, NULL, '2014-05-13 09:39:48'),
+(23, 0, 23, 0, 'userAddFriends', 0x75736572416464467269656e6473, 0x75736572416464467269656e6473, 5, 1, 'userAddFriends', 33, NULL, '2014-05-13 09:42:02'),
+(24, 0, 24, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-05-13 10:07:33'),
+(25, 0, 25, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-06-19 17:05:57'),
+(26, 0, 26, 0, '', '', '', 5, 1, '', NULL, NULL, '2014-06-19 18:11:57'),
+(27, 0, 27, 0, 'adminTemplates', 0x61646d696e54656d706c61746573, 0x61646d696e54656d706c61746573, 5, 1, 'adminTemplates', 35, NULL, '2014-05-13 10:14:19'),
+(28, 0, 28, 0, 'Messages', 0x4d65737361676573, 0x4d65737361676573, 3, 1, '', NULL, NULL, '2014-05-14 04:00:13'),
+(29, 0, 29, 0, 'Friends', 0x467269656e6473, 0x467269656e6473, 3, 1, '', NULL, NULL, '2014-05-14 04:01:26'),
+(30, 0, 30, 0, 'Login', 0x4c6f67696e, 0x4c6f67696e, 5, 1, '', NULL, NULL, '2014-05-14 04:07:56'),
+(31, 0, 31, 0, 'Logout', 0x4c6f676f7574, 0x4c6f676f7574, 5, 1, '', NULL, NULL, '2014-05-14 04:08:52'),
+(32, 0, 32, 0, 'adminRoles', 0x61646d696e526f6c6573, 0x61646d696e526f6c6573, 5, 1, 'adminRoles', 40, NULL, '2014-05-14 04:15:34'),
+(33, 0, 33, 0, 'unregistered', 0x756e72656769737465726564, 0x756e72656769737465726564, 0, 1, 'unregistered', 41, NULL, '2014-05-14 12:01:40'),
+(34, 0, 34, 0, 'userFriend', 0x75736572467269656e64, 0x75736572467269656e64, 3, 1, 'userFriend', 42, NULL, '2014-05-15 05:01:51'),
+(35, 0, 35, 0, 'Friend Requests', 0x467269656e64205265717565737473, 0x467269656e64205265717565737473, 3, 1, '', NULL, NULL, '2014-05-15 05:36:54'),
+(36, 0, 36, 0, 'Search Users', 0x536561726368205573657273, 0x536561726368205573657273, 3, 1, '', NULL, NULL, '2014-05-17 05:38:35'),
+(37, 0, 37, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 05:38:51'),
+(38, 0, 38, 0, '', '', '', 3, 1, '', NULL, NULL, '2014-05-17 05:39:56'),
+(39, 0, 39, 0, 'adminSocialNotifications', 0x61646d696e536f6369616c4e6f74696669636174696f6e73, 0x61646d696e536f6369616c4e6f74696669636174696f6e73, 5, 1, 'adminSocialNotifications', 56, NULL, '2014-06-11 10:26:46'),
+(40, 0, 40, 0, 'userProfileImage', 0x7573657250726f66696c65496d616765, 0x7573657250726f66696c65496d616765, 3, 1, 'userProfileImage', 57, NULL, '2014-06-13 15:28:23'),
+(41, 0, 41, 0, 'Chat', 0x43686174, 0x43686174, 5, 1, '', NULL, NULL, '2014-06-18 10:12:47');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_page_roles`
+-- Tabellenstruktur für Tabelle `t_page_roles`
 --
 
 CREATE TABLE IF NOT EXISTS `t_page_roles` (
@@ -1382,10 +1378,10 @@ CREATE TABLE IF NOT EXISTS `t_page_roles` (
   `roleid` int(10) NOT NULL,
   `pageid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=273 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=268 ;
 
 --
--- Dumping data for table `t_page_roles`
+-- Daten für Tabelle `t_page_roles`
 --
 
 INSERT INTO `t_page_roles` (`id`, `roleid`, `pageid`) VALUES
@@ -1582,17 +1578,12 @@ INSERT INTO `t_page_roles` (`id`, `roleid`, `pageid`) VALUES
 (259, 8, 41),
 (260, 9, 41),
 (261, 10, 41),
-(262, 13, 41),
-(268, 7, 42),
-(269, 8, 42),
-(270, 9, 42),
-(271, 10, 42),
-(272, 13, 42);
+(262, 13, 41);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_product`
+-- Tabellenstruktur für Tabelle `t_product`
 --
 
 CREATE TABLE IF NOT EXISTS `t_product` (
@@ -1615,7 +1606,7 @@ CREATE TABLE IF NOT EXISTS `t_product` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_product_group`
+-- Tabellenstruktur für Tabelle `t_product_group`
 --
 
 CREATE TABLE IF NOT EXISTS `t_product_group` (
@@ -1628,7 +1619,7 @@ CREATE TABLE IF NOT EXISTS `t_product_group` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_product_group_module`
+-- Tabellenstruktur für Tabelle `t_product_group_module`
 --
 
 CREATE TABLE IF NOT EXISTS `t_product_group_module` (
@@ -1639,7 +1630,7 @@ CREATE TABLE IF NOT EXISTS `t_product_group_module` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_roles`
+-- Tabellenstruktur für Tabelle `t_roles`
 --
 
 CREATE TABLE IF NOT EXISTS `t_roles` (
@@ -1648,24 +1639,12 @@ CREATE TABLE IF NOT EXISTS `t_roles` (
   `userid` int(10) NOT NULL,
   `roleid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
-
---
--- Dumping data for table `t_roles`
---
-
-INSERT INTO `t_roles` (`id`, `name`, `userid`, `roleid`) VALUES
-(1, '7', 1, 7),
-(2, '8', 1, 8),
-(3, '9', 1, 9),
-(4, '10', 1, 10),
-(5, '13', 1, 13),
-(6, NULL, 2, 8);
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_roles_custom`
+-- Tabellenstruktur für Tabelle `t_roles_custom`
 --
 
 CREATE TABLE IF NOT EXISTS `t_roles_custom` (
@@ -1676,7 +1655,7 @@ CREATE TABLE IF NOT EXISTS `t_roles_custom` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
--- Dumping data for table `t_roles_custom`
+-- Daten für Tabelle `t_roles_custom`
 --
 
 INSERT INTO `t_roles_custom` (`id`, `name`, `system`) VALUES
@@ -1689,7 +1668,7 @@ INSERT INTO `t_roles_custom` (`id`, `name`, `system`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_session`
+-- Tabellenstruktur für Tabelle `t_session`
 --
 
 CREATE TABLE IF NOT EXISTS `t_session` (
@@ -1705,7 +1684,7 @@ CREATE TABLE IF NOT EXISTS `t_session` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_site`
+-- Tabellenstruktur für Tabelle `t_site`
 --
 
 CREATE TABLE IF NOT EXISTS `t_site` (
@@ -1725,7 +1704,7 @@ CREATE TABLE IF NOT EXISTS `t_site` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_site_module`
+-- Tabellenstruktur für Tabelle `t_site_module`
 --
 
 CREATE TABLE IF NOT EXISTS `t_site_module` (
@@ -1738,7 +1717,7 @@ CREATE TABLE IF NOT EXISTS `t_site_module` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_site_template`
+-- Tabellenstruktur für Tabelle `t_site_template`
 --
 
 CREATE TABLE IF NOT EXISTS `t_site_template` (
@@ -1752,7 +1731,7 @@ CREATE TABLE IF NOT EXISTS `t_site_template` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_site_users`
+-- Tabellenstruktur für Tabelle `t_site_users`
 --
 
 CREATE TABLE IF NOT EXISTS `t_site_users` (
@@ -1763,7 +1742,7 @@ CREATE TABLE IF NOT EXISTS `t_site_users` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_social_notifications`
+-- Tabellenstruktur für Tabelle `t_social_notifications`
 --
 
 CREATE TABLE IF NOT EXISTS `t_social_notifications` (
@@ -1784,16 +1763,16 @@ CREATE TABLE IF NOT EXISTS `t_social_notifications` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `t_social_notifications`
+-- Daten für Tabelle `t_social_notifications`
 --
 
 INSERT INTO `t_social_notifications` (`id`, `siteid`, `friend_request`, `friend_confirmed`, `wall_post`, `wall_reply`, `message_received`, `sender_email`, `friend_request_title`, `friend_confirmed_title`, `wall_post_title`, `wall_reply_title`, `message_received_title`) VALUES
-(1, 1, 0x3c64697620636c6173733d226d657373616765436f6e7461696e6572223e0d0a20202020202020203c68333e467269656e6420526571756573743c2f68333e0d0a20202020202020203c703e0d0a20202020202020202020202048692025647374557365726e616d65252c0d0a2020202020202020202020203c6272202f3e0d0a2020202020202020202020203c6120687265663d22257372635573657250726f66696c654c696e6b25223e25737263557365726e616d65252028257372635573657241676525293c2f613e200d0a20202020202020202020202066726f6d20257372635573657243697479252c206861732073656e7420796f75206120667269656e642072657175657374210d0a20202020202020203c2f703e0d0a20202020202020203c703e0d0a2020202020202020202020203c6120687265663d2225636f6e6669726d4c696e6b25223e436f6e6669726d20467269656e6420526571756573743c2f613e0d0a20202020202020203c2f703e0d0a20202020202020203c7020636c6173733d22666f6f746572223e0d0a202020202020202020202020596f752061726520726563656976696e67207468697320656d61696c206265636175736520796f75206172652061207265676973746572642075736572206f66200d0a2020202020202020202020203c6120687265663d22256170706c69636174696f6e4c696e6b25223e6f6e6c696e6534646174696e672e6e65743c2f613e200d0a2020202020202020202020206f6e65206f6620746865206f6e6c7920746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e0d0a20202020202020203c2f703e0d0a202020203c2f6469763e, 0x3c64697620636c6173733d226d657373616765436f6e7461696e6572223e0d0a20202020202020203c68333e467269656e6420526571756573742041636365707465643c2f68333e0d0a20202020202020203c703e0d0a20202020202020202020202048692025647374557365726e616d65252c0d0a2020202020202020202020203c6272202f3e0d0a2020202020202020202020203c6120687265663d22257372635573657250726f66696c654c696e6b25223e25737263557365726e616d65252028257372635573657241676525293c2f613e200d0a20202020202020202020202066726f6d20257372635573657243697479252c2068617320616363657074656420796f757220667269656e642072657175657374210d0a20202020202020203c2f703e0d0a20202020202020203c703e0d0a2020202020202020202020203c6120687265663d2225636f6e6669726d4c696e6b25223e566965772025737263557365726e616d652527732070726f66696c653c2f613e0d0a20202020202020203c2f703e0d0a20202020202020203c7020636c6173733d22666f6f746572223e0d0a202020202020202020202020596f752061726520726563656976696e67207468697320656d61696c206265636175736520796f75206172652061207265676973746572642075736572206f66200d0a2020202020202020202020203c6120687265663d22256170706c69636174696f6e4c696e6b25223e6f6e6c696e6534646174696e672e6e65743c2f613e200d0a2020202020202020202020206f6e65206f6620746865206f6e6c7920746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e0d0a20202020202020203c2f703e0d0a202020203c2f6469763e, 0x3c64697620636c6173733d226d657373616765436f6e7461696e6572223e0d0a20202020202020203c68333e57616c6c204d6573736167653c2f68333e0d0a20202020202020203c703e0d0a20202020202020202020202048692025647374557365726e616d65252c0d0a2020202020202020202020203c6272202f3e0d0a2020202020202020202020203c6120687265663d22257372635573657250726f66696c654c696e6b25223e25737263557365726e616d65252028257372635573657241676525293c2f613e200d0a20202020202020202020202066726f6d202573726355736572436f756e747279252068617320706f737465642061206d657373616765206f6e20796f75722077616c6c2e0d0a20202020202020203c2f703e0d0a20202020202020203c703e0d0a2020202020202020202020203c6120687265663d22256d6573736167654c696e6b25223e56696577204d6573736167653c2f613e0d0a20202020202020203c2f703e0d0a20202020202020203c7020636c6173733d22666f6f746572223e0d0a202020202020202020202020596f752061726520726563656976696e67207468697320656d61696c206265636175736520796f75206172652061207265676973746572642075736572206f66200d0a2020202020202020202020203c6120687265663d22256170706c69636174696f6e4c696e6b25223e6f6e6c696e6534646174696e672e6e65743c2f613e200d0a2020202020202020202020206f6e65206f6620746865206f6e6c7920746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e0d0a20202020202020203c2f703e0d0a202020203c2f6469763e, 0x3c64697620636c6173733d226d657373616765436f6e7461696e6572223e0d0a20202020202020203c68333e57616c6c204d657373616765205265706c793c2f68333e0d0a20202020202020203c703e0d0a20202020202020202020202048692025647374557365726e616d65252c0d0a2020202020202020202020203c6272202f3e0d0a2020202020202020202020203c6120687265663d22257372635573657250726f66696c654c696e6b25223e25737263557365726e616d65252028257372635573657241676525293c2f613e200d0a20202020202020202020202066726f6d202573726355736572436f756e7472792520686173207265706c69656420746f2061206d657373616765206f6e20796f75722077616c6c2e0d0a20202020202020203c2f703e0d0a20202020202020203c703e0d0a2020202020202020202020203c6120687265663d22256d6573736167654c696e6b25223e56696577204d6573736167653c2f613e0d0a20202020202020203c2f703e0d0a20202020202020203c7020636c6173733d22666f6f746572223e0d0a202020202020202020202020596f752061726520726563656976696e67207468697320656d61696c206265636175736520796f75206172652061207265676973746572642075736572206f66200d0a2020202020202020202020203c6120687265663d22256170706c69636174696f6e4c696e6b25223e6f6e6c696e6534646174696e672e6e65743c2f613e200d0a2020202020202020202020206f6e65206f6620746865206f6e6c7920746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e0d0a20202020202020203c2f703e0d0a202020203c2f6469763e, 0x3c64697620636c6173733d226d657373616765436f6e7461696e6572223e0d0a20202020202020203c68333e4d6573736167652052656365697665643c2f68333e0d0a20202020202020203c703e0d0a20202020202020202020202048692025647374557365726e616d65252c0d0a2020202020202020202020203c6272202f3e0d0a2020202020202020202020203c6120687265663d22257372635573657250726f66696c654c696e6b25223e25737263557365726e616d65252028257372635573657241676525293c2f613e200d0a20202020202020202020202066726f6d202573726355736572436f756e74727925206861732073656e7420796f752061206d6573736167652e0d0a20202020202020203c2f703e0d0a20202020202020203c703e0d0a2020202020202020202020203c6120687265663d22256d6573736167654c696e6b25223e56696577204d6573736167653c2f613e0d0a20202020202020203c2f703e0d0a20202020202020203c7020636c6173733d22666f6f746572223e0d0a202020202020202020202020596f752061726520726563656976696e67207468697320656d61696c206265636175736520796f75206172652061207265676973746572642075736572206f66200d0a2020202020202020202020203c6120687265663d22256170706c69636174696f6e4c696e6b25223e6f6e6c696e6534646174696e672e6e65743c2f613e200d0a2020202020202020202020206f6e65206f6620746865206f6e6c7920746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e0d0a20202020202020203c2f703e0d0a202020203c2f6469763e, 0x6e6f2d7265706c79406f6e6c696e6534646174696e672e6e6574, 0x25737263557365726e616d65252028257372635573657241676525292077616e747320746f20626520796f757220667269656e64, 0x25737263557365726e616d65252028257372635573657241676525292068617320636f6e6669726d656420796f757220667269656e642072657175657374, 0x25737263557365726e616d652520282573726355736572416765252920706f73746564206f6e20796f75722077616c6c, 0x25737263557365726e616d6525202825737263557365724167652529207265706c69656420746f20796f75722077616c6c20706f7374, 0x25737263557365726e616d65252028257372635573657241676525292073656e7420796f752061206d657373616765);
+(1, 1, 0x667269656e64526571756573742e6465736372697074696f6e, 0x667269656e64436f6e6669726d65642e6465736372697074696f6e, 0x77616c6c506f73742e6465736372697074696f6e, 0x77616c6c5265706c792e6465736372697074696f6e, 0x6d65737361676552656365697665642e6465736372697074696f6e, 0x6e6f2d7265706c79406c6f63616c686f73742e636f6d, 0x667269656e64526571756573742e7375626a656374, 0x667269656e64436f6e6669726d65642e7375626a656374, 0x77616c6c506f73742e7375626a656374, 0x77616c6c5265706c792e7375626a656374, 0x6d65737361676552656365697665642e7375626a656374);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_template`
+-- Tabellenstruktur für Tabelle `t_template`
 --
 
 CREATE TABLE IF NOT EXISTS `t_template` (
@@ -1809,7 +1788,7 @@ CREATE TABLE IF NOT EXISTS `t_template` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
--- Dumping data for table `t_template`
+-- Daten für Tabelle `t_template`
 --
 
 INSERT INTO `t_template` (`id`, `name`, `template`, `interface`, `html`, `css`, `js`, `main`) VALUES
@@ -1822,7 +1801,7 @@ INSERT INTO `t_template` (`id`, `name`, `template`, `interface`, `html`, `css`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_templatearea`
+-- Tabellenstruktur für Tabelle `t_templatearea`
 --
 
 CREATE TABLE IF NOT EXISTS `t_templatearea` (
@@ -1832,10 +1811,10 @@ CREATE TABLE IF NOT EXISTS `t_templatearea` (
   `pageid` int(10) NOT NULL,
   `position` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=65 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
 
 --
--- Dumping data for table `t_templatearea`
+-- Daten für Tabelle `t_templatearea`
 --
 
 INSERT INTO `t_templatearea` (`id`, `instanceid`, `name`, `pageid`, `position`) VALUES
@@ -1899,14 +1878,12 @@ INSERT INTO `t_templatearea` (`id`, `instanceid`, `name`, `pageid`, `position`) 
 (59, 59, 'center', 41, 0),
 (60, 60, 'center', 25, 1),
 (61, 61, 'center', 25, 0),
-(62, 62, 'center', 26, 0),
-(63, 63, 'center', 8, 2),
-(64, 64, 'center', 42, 0);
+(62, 62, 'center', 26, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_track`
+-- Tabellenstruktur für Tabelle `t_track`
 --
 
 CREATE TABLE IF NOT EXISTS `t_track` (
@@ -1917,7 +1894,7 @@ CREATE TABLE IF NOT EXISTS `t_track` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_user`
+-- Tabellenstruktur für Tabelle `t_user`
 --
 
 CREATE TABLE IF NOT EXISTS `t_user` (
@@ -1947,7 +1924,7 @@ CREATE TABLE IF NOT EXISTS `t_user` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_user_address`
+-- Tabellenstruktur für Tabelle `t_user_address`
 --
 
 CREATE TABLE IF NOT EXISTS `t_user_address` (
@@ -1976,7 +1953,7 @@ CREATE TABLE IF NOT EXISTS `t_user_address` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_user_friend`
+-- Tabellenstruktur für Tabelle `t_user_friend`
 --
 
 CREATE TABLE IF NOT EXISTS `t_user_friend` (
@@ -1991,7 +1968,7 @@ CREATE TABLE IF NOT EXISTS `t_user_friend` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_user_message`
+-- Tabellenstruktur für Tabelle `t_user_message`
 --
 
 CREATE TABLE IF NOT EXISTS `t_user_message` (
@@ -2008,37 +1985,24 @@ CREATE TABLE IF NOT EXISTS `t_user_message` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_user_wall_event`
---
-
-CREATE TABLE IF NOT EXISTS `t_user_wall_event` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` int(11) NOT NULL,
-  `typeid` int(11) DEFAULT NULL,
-  `userid` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `t_user_wall_post`
+-- Tabellenstruktur für Tabelle `t_user_wall_post`
 --
 
 CREATE TABLE IF NOT EXISTS `t_user_wall_post` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL,
+  `typeid` int(11) NOT NULL,
   `srcuserid` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `comment` blob NOT NULL,
-  `eventid` int(11) DEFAULT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `parent` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_vdb_column`
+-- Tabellenstruktur für Tabelle `t_vdb_column`
 --
 
 CREATE TABLE IF NOT EXISTS `t_vdb_column` (
@@ -2060,7 +2024,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_column` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 --
--- Dumping data for table `t_vdb_column`
+-- Daten für Tabelle `t_vdb_column`
 --
 
 INSERT INTO `t_vdb_column` (`id`, `tableid`, `name`, `value`, `label`, `edittype`, `position`, `refcolumn`, `objectidcolumn`, `description`, `required`, `validator`, `minlength`, `maxlength`) VALUES
@@ -2105,7 +2069,7 @@ INSERT INTO `t_vdb_column` (`id`, `tableid`, `name`, `value`, `label`, `edittype
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_vdb_object`
+-- Tabellenstruktur für Tabelle `t_vdb_object`
 --
 
 CREATE TABLE IF NOT EXISTS `t_vdb_object` (
@@ -2118,7 +2082,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_object` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_vdb_table`
+-- Tabellenstruktur für Tabelle `t_vdb_table`
 --
 
 CREATE TABLE IF NOT EXISTS `t_vdb_table` (
@@ -2131,7 +2095,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_table` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
--- Dumping data for table `t_vdb_table`
+-- Daten für Tabelle `t_vdb_table`
 --
 
 INSERT INTO `t_vdb_table` (`physical`, `system`, `id`, `name`) VALUES
@@ -2145,7 +2109,7 @@ INSERT INTO `t_vdb_table` (`physical`, `system`, `id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_vdb_value`
+-- Tabellenstruktur für Tabelle `t_vdb_value`
 --
 
 CREATE TABLE IF NOT EXISTS `t_vdb_value` (
@@ -2159,7 +2123,7 @@ CREATE TABLE IF NOT EXISTS `t_vdb_value` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t_wysiwygpage`
+-- Tabellenstruktur für Tabelle `t_wysiwygpage`
 --
 
 CREATE TABLE IF NOT EXISTS `t_wysiwygpage` (
@@ -2172,7 +2136,7 @@ CREATE TABLE IF NOT EXISTS `t_wysiwygpage` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `t_wysiwygpage`
+-- Daten für Tabelle `t_wysiwygpage`
 --
 
 INSERT INTO `t_wysiwygpage` (`id`, `moduleid`, `lang`, `content`, `title`, `area`) VALUES
@@ -2194,8 +2158,7 @@ INSERT INTO `t_wysiwygpage` (`id`, `moduleid`, `lang`, `content`, `title`, `area
 (NULL, 21, 'en', 0x3c696d6720616c743d22746f6e67756522207469746c653d22746f6e67756522207372633d22687474703a2f2f6c6f63616c686f73742f76626d73636d732f7265736f757263652f6a732f656c7274652f696d616765732f736d696c6579732f746f6e6775652e706e6722202f3e, NULL, 0),
 (NULL, 20, 'en', 0x3c68313e4f6e6c696e6520446174696e673c2f68313e0d0a3c703e57656c636f6d6520746f206d79206f6e6c696e6520646174696e672e204f6e65206f66207468652066657720746f74616c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e3c2f703e0d0a3c68333e4d79204f6e6c696e6520446174696e673c2f68333e0d0a3c703e4d79206f6e6c696e6520646174696e67206973206f6e65206f6620746865206f6e6c792066726565206f6e6c696e6520646174696e67206e6574776f726b732e205265676973746572206e6f7720616e6420656e6a6f792066726565206f6e6c696e6520646174696e672e205768656e2069207761732073696e676c65206920736561726368656420666f72206f6e6c696e6520646174696e672077656220736974657320616e64206576656e20706179656420746f20757365206f6e652e204920736f6f6e206e6f746963656420636f6d6d65726369616c206f6e6c696e6520646174696e672077656220736974657320617265206f667465726e207363616d7320776974682066616b652075736572732e20546865792077657265206a757374206166746572206d79206d6f6e65792e20536f2069206465636964656420746f206d616b65206d79206f776e2066726565206f6e6c696e6520646174696e672077656220736974652e20536f20686572652069742069732e20506c65617365207265676973746572206e6f7720736f207468617420776520676574206173206d616e7920757365727320617320706f737369626c652e3c2f703e, NULL, 0),
 (NULL, 21, 'en', 0x3c696d6720616c743d22746f6e67756522207469746c653d22746f6e67756522207372633d22687474703a2f2f6c6f63616c686f73742f76626d73636d732f7265736f757263652f6a732f656c7274652f696d616765732f736d696c6579732f746f6e6775652e706e6722202f3e, NULL, 0),
-(NULL, 61, 'en', 0x3c68313e436f6e746163743c2f68313e0d0a3c703e4865726520796f752063616e2073656e642075732061206d6573736167652e20496620796f75206861766520616e79207175657374696f6e73206f722077616e7420746f2074656c6c20757320736f6d657468696e672061626f757420746865207765622073697465206665656c206672656520746f20757365207468697320636f6e7461637420666f726d20746f2073656e642075732061206d6573736167652e3c2f703e, NULL, 0);
-INSERT INTO `t_wysiwygpage` (`id`, `moduleid`, `lang`, `content`, `title`, `area`) VALUES
+(NULL, 61, 'en', 0x3c68313e436f6e746163743c2f68313e0d0a3c703e4865726520796f752063616e2073656e642075732061206d6573736167652e20496620796f75206861766520616e79207175657374696f6e73206f722077616e7420746f2074656c6c20757320736f6d657468696e672061626f757420746865207765622073697465206665656c206672656520746f20757365207468697320636f6e7461637420666f726d20746f2073656e642075732061206d6573736167652e3c2f703e, NULL, 0),
 (NULL, 62, 'en', 0x3c6831207374796c653d22746578742d616c69676e3a63656e746572223e57454253495445205445524d5320414e4420434f4e444954494f4e533c2f68313e0d0a3c68333e496e74726f64756374696f6e3c2f68333e0d0a3c703e5468657365207465726d7320616e6420636f6e646974696f6e7320676f7665726e20796f757220757365206f66207468697320776562736974653b206279207573696e67207468697320776562736974652c20796f7520616363657074207468657365207465726d7320616e6420636f6e646974696f6e7320696e2066756c6c2e266e6273703b266e6273703b20496620796f752064697361677265652077697468207468657365207465726d7320616e6420636f6e646974696f6e73206f7220616e792070617274206f66207468657365207465726d7320616e6420636f6e646974696f6e732c20796f75206d757374206e6f7420757365207468697320776562736974652e3c2f703e0d0a3c703e596f75206d757374206265206174206c65617374203138207965617273206f662061676520746f20757365207468697320776562736974652e204279207573696e672074686973207765627369746520616e64206279206167726565696e6720746f207468657365207465726d7320616e6420636f6e646974696f6e7320796f752077617272616e7420616e6420726570726573656e74207468617420796f7520617265206174206c65617374203138207965617273206f66206167652e3c2f703e0d0a3c703e546869732077656273697465207573657320636f6f6b6965732e204279207573696e672074686973207765627369746520616e64206167726565696e6720746f207468657365207465726d7320616e6420636f6e646974696f6e732c20796f7520636f6e73656e7420746f206f7572206f6e6c696e6534646174696e672e636f6d277320757365206f6620636f6f6b69657320696e206163636f7264616e6365207769746820746865207465726d73206f66206f6e6c696e6534646174696e672e636f6d3c2f703e0d0a3c68333e4c6963656e736520746f2075736520776562736974653c2f68333e0d0a3c703e556e6c657373206f7468657277697365207374617465642c206f6e6c696e6534646174696e672e636f6d20616e642f6f7220697473206c6963656e736f7273206f776e2074686520696e74656c6c65637475616c2070726f70657274792072696768747320696e20746865207765627369746520616e64206d6174657269616c206f6e2074686520776562736974652e205375626a65637420746f20746865206c6963656e73652062656c6f772c20616c6c20746865736520696e74656c6c65637475616c2070726f706572747920726967687473206172652072657365727665642e3c2f703e0d0a3c703e596f75206d617920766965772c20646f776e6c6f616420666f722063616368696e6720707572706f736573206f6e6c792c20616e64207072696e742070616765732066726f6d20746865207765627369746520666f7220796f7572206f776e20706572736f6e616c207573652c207375626a65637420746f20746865207265737472696374696f6e7320736574206f75742062656c6f7720616e6420656c7365776865726520696e207468657365207465726d7320616e6420636f6e646974696f6e732e3c2f703e0d0a3c703e596f75206d757374206e6f743a3c2f703e0d0a3c756c3e0d0a3c6c693e72657075626c697368206d6174657269616c2066726f6d207468697320776562736974652028696e636c7564696e672072657075626c69636174696f6e206f6e20616e6f746865722077656273697465292e3c2f6c693e0d0a3c6c693e73656c6c2c2072656e74206f72207375622d6c6963656e7365206d6174657269616c2066726f6d2074686520776562736974652e3c2f6c693e0d0a3c6c693e73686f7720616e79206d6174657269616c2066726f6d20746865207765627369746520696e207075626c69632e3c2f6c693e0d0a3c6c693e726570726f647563652c206475706c69636174652c20636f7079206f72206f7468657277697365206578706c6f6974206d6174657269616c206f6e2074686973207765627369746520666f72206120636f6d6d65726369616c20707572706f73652e3c2f6c693e0d0a3c6c693e65646974206f72206f7468657277697365206d6f6469667920616e79206d6174657269616c206f6e2074686520776562736974652e3c2f6c693e0d0a3c6c693e726564697374726962757465206d6174657269616c2066726f6d207468697320776562736974652e3c2f6c693e0d0a3c2f756c3e0d0a3c68333e41636365707461626c65207573653c2f68333e0d0a3c703e596f75206d757374206e6f74207573652074686973207765627369746520696e20616e79207761792074686174206361757365732c206f72206d61792063617573652c2064616d61676520746f207468652077656273697465206f7220696d706169726d656e74206f662074686520617661696c6162696c697479206f72206163636573736962696c697479206f66207468652077656273697465206f7220696e20616e792077617920776869636820697320756e6c617766756c2c20696c6c6567616c2c206672617564756c656e74206f72206861726d66756c2c206f7220696e20636f6e6e656374696f6e207769746820616e7920756e6c617766756c2c20696c6c6567616c2c206672617564756c656e74206f72206861726d66756c20707572706f7365206f722061637469766974792e3c2f703e3c703e596f75206d757374206e6f74207573652074686973207765627369746520746f20636f70792c2073746f72652c20686f73742c207472616e736d69742c2073656e642c207573652c207075626c697368206f72206469737472696275746520616e79206d6174657269616c20776869636820636f6e7369737473206f6620286f72206973206c696e6b656420746f2920616e7920737079776172652c20636f6d70757465722076697275732c2054726f6a616e20686f7273652c20776f726d2c206b65797374726f6b65206c6f676765722c20726f6f746b6974206f72206f74686572206d616c6963696f757320636f6d707574657220736f6674776172652e3c2f703e0d0a3c703e596f75206d757374206e6f7420636f6e6475637420616e792073797374656d61746963206f72206175746f6d61746564206461746120636f6c6c656374696f6e20616374697669746965732028696e636c7564696e6720776974686f7574206c696d69746174696f6e207363726170696e672c2064617461206d696e696e672c20646174612065787472616374696f6e20616e6420646174612068617276657374696e6729206f6e206f7220696e2072656c6174696f6e20746f2074686973207765627369746520776974686f7574206f6e6c696e6534646174696e672e636f6d27732065787072657373207772697474656e20636f6e73656e742e3c2f703e0d0a3c703e596f75206d757374206e6f74207573652074686973207765627369746520666f7220616e7920707572706f7365732072656c6174656420746f206d61726b6574696e6720776974686f7574206f6e6c696e6534646174696e672e636f6d27732065787072657373207772697474656e20636f6e73656e742e3c2f703e0d0a3c68333e52657374726963746564206163636573733c2f68333e0d0a3c703e6f6e6c696e6534646174696e672e636f6d2072657365727665732074686520726967687420746f2072657374726963742061636365737320746f2070726976617465206172656173206f66207468697320776562736974652c206f7220696e64656564207468697320656e7469726520776562736974652c206174206f6e6c696e6534646174696e672e636f6d2027732064697363726574696f6e2e3c2f703e0d0a3c703e4966206f6e6c696e6534646174696e672e636f6d2070726f766964657320796f7520776974682061207573657220494420616e642070617373776f726420746f20656e61626c6520796f7520746f206163636573732072657374726963746564206172656173206f6620746869732077656273697465206f72206f7468657220636f6e74656e74206f722073657276696365732c20796f75206d75737420656e73757265207468617420746865207573657220494420616e642070617373776f726420617265206b65707420636f6e666964656e7469616c2e3c2f703e0d0a3c703e6f6e6c696e6534646174696e672e636f6d206d61792064697361626c6520796f7572207573657220494420616e642070617373776f726420696e206f6e6c696e6534646174696e672e636f6d277320736f6c652064697363726574696f6e20776974686f7574206e6f74696365206f72206578706c616e6174696f6e2e3c2f703e0d0a3c68333e5573657220636f6e74656e743c2f68333e0d0a3c703e496e207468657365207465726d7320616e6420636f6e646974696f6e732c2022796f7572207573657220636f6e74656e7422206d65616e73206d6174657269616c2028696e636c7564696e6720776974686f7574206c696d69746174696f6e20746578742c20696d616765732c20617564696f206d6174657269616c2c20766964656f206d6174657269616c20616e6420617564696f2d76697375616c206d6174657269616c29207468617420796f75207375626d697420746f207468697320776562736974652c20666f7220776861746576657220707572706f73652e3c2f703e0d0a3c703e596f75206772616e7420746f206f6e6c696e6534646174696e672e636f6d206120776f726c64776964652c2069727265766f6361626c652c206e6f6e2d6578636c75736976652c20726f79616c74792d66726565206c6963656e736520746f207573652c20726570726f647563652c2061646170742c207075626c6973682c207472616e736c61746520616e64206469737472696275746520796f7572207573657220636f6e74656e7420696e20616e79206578697374696e67206f7220667574757265206d656469612e20596f7520616c736f206772616e7420746f206f6e6c696e6534646174696e672e636f6d20202074686520726967687420746f207375622d6c6963656e7365207468657365207269676874732c20616e642074686520726967687420746f206272696e6720616e20616374696f6e20666f7220696e6672696e67656d656e74206f66207468657365207269676874732e3c2f703e0d0a3c703e596f7572207573657220636f6e74656e74206d757374206e6f7420626520696c6c6567616c206f7220756e6c617766756c2c206d757374206e6f7420696e6672696e676520616e792074686972642070617274792773206c6567616c207269676874732c20616e64206d757374206e6f742062652063617061626c65206f6620676976696e67207269736520746f206c6567616c20616374696f6e207768657468657220616761696e737420796f75206f72206f6e6c696e6534646174696e672e636f6d206f7220612074686972642070617274792028696e2065616368206361736520756e64657220616e79206170706c696361626c65206c6177292e3c2f703e0d0a3c703e596f75206d757374206e6f74207375626d697420616e79207573657220636f6e74656e7420746f2074686520776562736974652074686174206973206f72206861732065766572206265656e20746865207375626a656374206f6620616e7920746872656174656e6564206f722061637475616c206c6567616c2070726f63656564696e6773206f72206f746865722073696d696c617220636f6d706c61696e742e3c2f703e0d0a3c703e6f6e6c696e6534646174696e672e636f6d2072657365727665732074686520726967687420746f2065646974206f722072656d6f766520616e79206d6174657269616c207375626d697474656420746f207468697320776562736974652c206f722073746f726564206f6e206f6e6c696e6534646174696e672e636f6d27732020736572766572732c206f7220686f73746564206f72207075626c69736865642075706f6e207468697320776562736974652e3c2f703e0d0a3c703e4e6f74776974687374616e64696e67206f6e6c696e6534646174696e672e636f6d27732072696768747320756e646572207468657365207465726d7320616e6420636f6e646974696f6e7320696e2072656c6174696f6e20746f207573657220636f6e74656e742c206f6e6c696e6534646174696e672e636f6d20646f6573206e6f7420756e64657274616b6520746f206d6f6e69746f7220746865207375626d697373696f6e206f66207375636820636f6e74656e7420746f2c206f7220746865207075626c69636174696f6e206f66207375636820636f6e74656e74206f6e2c207468697320776562736974652e3c2f703e0d0a3c68333e4e6f2077617272616e746965733c2f68333e0d0a3c703e5468697320776562736974652069732070726f7669646564209361732069739420776974686f757420616e7920726570726573656e746174696f6e73206f722077617272616e746965732c2065787072657373206f7220696d706c6965642e206f6e6c696e6534646174696e672e636f6d206d616b6573206e6f20726570726573656e746174696f6e73206f722077617272616e7469657320696e2072656c6174696f6e20746f20746869732077656273697465206f722074686520696e666f726d6174696f6e20616e64206d6174657269616c732070726f7669646564206f6e207468697320776562736974652e3c2f703e203c703e576974686f7574207072656a756469636520746f207468652067656e6572616c697479206f662074686520666f7265676f696e67207061726167726170682c206f6e6c696e6534646174696e672e636f6d20646f6573206e6f742077617272616e7420746861743a3c2f703e0d0a3c6f6c3e0d0a3c6c693e7468697320776562736974652077696c6c20626520636f6e7374616e746c7920617661696c61626c652c206f7220617661696c61626c6520617420616c6c2e3c2f6c693e0d0a3c6c693e74686520696e666f726d6174696f6e206f6e2074686973207765627369746520697320636f6d706c6574652c20747275652c206163637572617465206f72206e6f6e2d6d69736c656164696e672e3c2f6c693e0d0a3c2f6f6c3e0d0a3c703e4e6f7468696e67206f6e2074686973207765627369746520636f6e73746974757465732c206f72206973206d65616e7420746f20636f6e737469747574652c20616476696365206f6620616e79206b696e642e20496620796f7520726571756972652061647669636520696e2072656c6174696f6e20746f20616e79206c6567616c2c2066696e616e6369616c206f72206d65646963616c206d617474657220796f752073686f756c6420636f6e73756c7420616e20617070726f7072696174652070726f66657373696f6e616c2e3c2f703e0d0a3c68333e4c696d69746174696f6e73206f66206c696162696c6974793c2f68333e0d0a3c703e6f6e6c696e6534646174696e672e636f6d2077696c6c206e6f74206265206c6961626c6520746f20796f7520287768657468657220756e64657220746865206c6177206f6620636f6e746163742c20746865206c6177206f6620746f727473206f72206f74686572776973652920696e2072656c6174696f6e20746f2074686520636f6e74656e7473206f662c206f7220757365206f662c206f72206f746865727769736520696e20636f6e6e656374696f6e20776974682c207468697320776562736974653a3c2f703e0d0a3c6f6c3e0d0a3c6c693e746f2074686520657874656e7420746861742074686520776562736974652069732070726f766964656420667265652d6f662d6368617267652c20666f7220616e7920646972656374206c6f73732e3c2f6c693e0d0a3c6c693e666f7220616e7920696e6469726563742c207370656369616c206f7220636f6e73657175656e7469616c206c6f73732e3c2f6c693e0d0a3c6c693e666f7220616e7920627573696e657373206c6f737365732c206c6f7373206f6620726576656e75652c20696e636f6d652c2070726f66697473206f7220616e74696369706174656420736176696e67732c206c6f7373206f6620636f6e747261637473206f7220627573696e6573732072656c6174696f6e73686970732c206c6f7373206f66200d0a72657075746174696f6e206f7220676f6f6477696c6c2c206f72206c6f7373206f7220636f7272757074696f6e206f6620696e666f726d6174696f6e206f7220646174612e3c2f6c693e0d0a3c2f6f6c3e0d0a3c703e5468657365206c696d69746174696f6e73206f66206c696162696c697479206170706c79206576656e206966206f6e6c696e6534646174696e672e636f6d20686173206265656e20657870726573736c792061647669736564206f662074686520706f74656e7469616c206c6f73732e3c2f703e0d0a3c68333e457863657074696f6e733c2f68333e0d0a3c703e4e6f7468696e6720696e2074686973207765627369746520646973636c61696d65722077696c6c206578636c756465206f72206c696d697420616e792077617272616e747920696d706c696564206279206c6177207468617420697420776f756c6420626520756e6c617766756c20746f206578636c756465206f72206c696d697420616e64206e6f7468696e6720696e2074686973207765627369746520646973636c61696d65722077696c6c206578636c756465206f72206c696d6974206f6e6c696e6534646174696e672e636f6d2773206c696162696c69747920696e2072657370656374206f6620616e793a3c2f703e0d0a3c756c3e0d0a3c6c693e6465617468206f7220706572736f6e616c20696e6a75727920636175736564206279206f6e6c696e6534646174696e672773206e65676c6967656e63652e3c2f6c693e0d0a3c6c693e6672617564206f72206672617564756c656e74206d6973726570726573656e746174696f6e206f6e207468652070617274206f66206f6e6c696e6534646174696e672e636f6d2e3c2f6c693e0d0a3c6c693e6d617474657220776869636820697420776f756c6420626520696c6c6567616c206f7220756e6c617766756c20666f72206f6e6c696e6534646174696e672e636f6d20746f206578636c756465206f72206c696d69742c206f7220746f20617474656d7074206f7220707572706f727420746f206578636c756465206f72206c696d69742c20697473206c696162696c6974792e3c2f6c693e0d0a3c2f756c3e0d0a3c68333e526561736f6e61626c656e6573733c2f68333e0d0a3c703e4279207573696e67207468697320776562736974652c20796f75206167726565207468617420746865206578636c7573696f6e7320616e64206c696d69746174696f6e73206f66206c696162696c69747920736574206f757420696e2074686973207765627369746520646973636c61696d65722061726520726561736f6e61626c652e3c2f703e0d0a3c703e496620796f7520646f206e6f74207468696e6b20746865792061726520726561736f6e61626c652c20796f75206d757374206e6f7420757365207468697320776562736974652e3c2f703e0d0a3c68333e4f7468657220706172746965733c2f68333e0d0a3c703e596f752061636365707420746861742c2061732061206c696d69746564206c696162696c69747920656e746974792c206f6e6c696e6534646174696e672e636f6d2068617320616e20696e74657265737420696e206c696d6974696e672074686520706572736f6e616c206c696162696c697479206f6620697473206f6666696365727320616e6420656d706c6f796565732e20596f75206167726565207468617420796f752077696c6c206e6f74206272696e6720616e7920636c61696d20706572736f6e616c6c7920616761696e7374206f6e6c696e6534646174696e672e636f6d2773206f66666963657273206f7220656d706c6f7965657320696e2072657370656374206f6620616e79206c6f7373657320796f752073756666657220696e20636f6e6e656374696f6e20776974682074686520776562736974652e3c2f703e0d0a3c703e576974686f7574207072656a756469636520746f2074686520666f7265676f696e67207061726167726170682c20796f75206167726565207468617420746865206c696d69746174696f6e73206f662077617272616e7469657320616e64206c696162696c69747920736574206f757420696e2074686973207765627369746520646973636c61696d65722077696c6c2070726f74656374206f6e6c696e6534646174696e672e636f6d2773206f666669636572732c20656d706c6f796565732c206167656e74732c207375627369646961726965732c20737563636573736f72732c2061737369676e7320616e64207375622d636f6e74726163746f72732061732077656c6c206173206f6e6c696e6534646174696e672e636f6d2e203c2f703e0d0a3c68333e556e656e666f72636561626c652070726f766973696f6e733c2f68333e0d0a3c703e496620616e792070726f766973696f6e206f662074686973207765627369746520646973636c61696d65722069732c206f7220697320666f756e6420746f2062652c20756e656e666f72636561626c6520756e646572206170706c696361626c65206c61772c20746861742077696c6c206e6f74206166666563742074686520656e666f7263656162696c697479206f6620746865206f746865722070726f766973696f6e73206f662074686973207765627369746520646973636c61696d65722e3c2f703e0d0a3c68333e496e64656d6e6974793c2f68333e0d0a3c703e596f752068657265627920696e64656d6e696679206f6e6c696e6534646174696e672e636f6d20616e6420756e64657274616b6520746f206b656570206f6e6c696e6534646174696e672e636f6d20696e64656d6e696669656420616761696e737420616e79206c6f737365732c2064616d616765732c20636f7374732c206c696162696c697469657320616e6420657870656e7365732028696e636c7564696e6720776974686f7574206c696d69746174696f6e206c6567616c20657870656e73657320616e6420616e7920616d6f756e74732070616964206279206f6e6c696e6534646174696e672e636f6d20746f206120746869726420706172747920696e20736574746c656d656e74206f66206120636c61696d206f722064697370757465206f6e2074686520616476696365206f66206f6e6c696e6534646174696e672e636f6d27736c6567616c2061647669736572732920696e637572726564206f72207375666665726564206279206f6e6c696e6534646174696e672e636f6d2061726973696e67206f7574206f6620616e792062726561636820627920796f75206f6620616e792070726f766973696f6e206f66207468657365207465726d7320616e6420636f6e646974696f6e73206f722061726973696e67206f7574206f6620616e7920636c61696d207468617420796f75206861766520627265616368656420616e792070726f766973696f6e206f66207468657365207465726d7320616e6420636f6e646974696f6e732e3c2f703e0d0a3c68333e4272656163686573206f66207468657365207465726d7320616e6420636f6e646974696f6e733c2f68333e0d0a3c703e576974686f7574207072656a756469636520746f206f6e6c696e6534646174696e672e636f6d2773206f746865722072696768747320756e646572207468657365207465726d7320616e6420636f6e646974696f6e732c20696620796f7520627265616368207468657365207465726d7320616e6420636f6e646974696f6e7320696e20616e79207761792c206f6e6c696e6534646174696e672e636f6d206d61792074616b65207375636820616374696f6e206173206f6e6c696e6534646174696e672e636f6d206465656d7320617070726f70726961746520746f206465616c207769746820746865206272656163682c20696e636c7564696e672073757370656e64696e6720796f75722061636365737320746f2074686520776562736974652c2070726f6869626974696e6720796f752066726f6d20616363657373696e672074686520776562736974652c20626c6f636b696e6720636f6d707574657273207573696e6720796f757220495020616464726573732066726f6d20616363657373696e672074686520776562736974652c20636f6e74616374696e6720796f757220696e7465726e657420736572766963652070726f766964657220746f20726571756573742074686174207468657920626c6f636b20796f75722061636365737320746f20746865207765627369746520616e642f6f72206272696e67696e6720636f7572742070726f63656564696e677320616761696e737420796f752e3c2f703e0d0a3c68333e566172696174696f6e3c2f68333e0d0a3c703e6f6e6c696e6534646174696e672e636f6d206d617920726576697365207468657365207465726d7320616e6420636f6e646974696f6e732066726f6d2074696d652d746f2d74696d652e2052657669736564207465726d7320616e6420636f6e646974696f6e732077696c6c206170706c7920746f2074686520757365206f66207468697320776562736974652066726f6d207468652064617465206f6620746865207075626c69636174696f6e206f66207468652072657669736564207465726d7320616e6420636f6e646974696f6e73206f6e207468697320776562736974652e20506c6561736520636865636b2074686973207061676520726567756c61726c7920746f20656e7375726520796f75206172652066616d696c6961722077697468207468652063757272656e742076657273696f6e2e3c2f703e0d0a3c68333e41737369676e6d656e743c2f68333e0d0a3c703e6f6e6c696e6534646174696e672e636f6d206d6179207472616e736665722c207375622d636f6e7472616374206f72206f7468657277697365206465616c2077697468206f6e6c696e6534646174696e672e636f6d2072696768747320616e642f6f72206f626c69676174696f6e7320756e646572207468657365207465726d7320616e6420636f6e646974696f6e7320776974686f7574206e6f74696679696e6720796f75206f72206f627461696e696e6720796f757220636f6e73656e742e3c2f703e0d0a3c703e596f75206d6179206e6f74207472616e736665722c207375622d636f6e7472616374206f72206f7468657277697365206465616c207769746820796f75722072696768747320616e642f6f72206f626c69676174696f6e7320756e646572207468657365207465726d7320616e6420636f6e646974696f6e732e3c2f703e0d0a3c68333e53657665726162696c6974793c2f68333e0d0a3c703e496620612070726f766973696f6e206f66207468657365207465726d7320616e6420636f6e646974696f6e732069732064657465726d696e656420627920616e7920636f757274206f72206f7468657220636f6d706574656e7420617574686f7269747920746f20626520756e6c617766756c20616e642f6f7220756e656e666f72636561626c652c20746865206f746865722070726f766973696f6e732077696c6c20636f6e74696e756520696e206566666563742e20496620616e7920756e6c617766756c20616e642f6f7220756e656e666f72636561626c652070726f766973696f6e20776f756c64206265206c617766756c206f7220656e666f72636561626c652069662070617274206f6620697420776572652064656c657465642c207468617420706172742077696c6c206265206465656d656420746f2062652064656c657465642c20616e64207468652072657374206f66207468652070726f766973696f6e2077696c6c20636f6e74696e756520696e206566666563742e3c2f703e0d0a3c68333e456e746972652061677265656d656e743c2f68333e0d0a3c703e5468657365207465726d7320616e6420636f6e646974696f6e7320636f6e737469747574652074686520656e746972652061677265656d656e74206265747765656e20796f7520616e64206f6e6c696e6534646174696e672e636f6d20696e2072656c6174696f6e20746f20796f757220757365206f66207468697320776562736974652c20616e642073757065727365646520616c6c2070726576696f75732061677265656d656e747320696e2072657370656374206f6620796f757220757365206f66207468697320776562736974652e3c2f703e, NULL, 0);
 
 ; */ ?>

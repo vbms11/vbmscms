@@ -7,7 +7,7 @@ require_once 'core/context.php';
 
 class UsersModel {
     
-    static function search ($ageMin, $ageMax, $countryGeonameId, $place, $distance) {
+    static function search ($ageMin, $ageMax, $countryGeonameId, $place, $distance, $gender, $x, $y) {
         
         $country = CountryModel::getCountryByGeonameId($countryGeonameId);
         $countryName = "";
@@ -15,22 +15,26 @@ class UsersModel {
             $countryName = $country->name;
         }
         
-        $coordinates = UserAddressModel::getCoordinatesFromAddress($countryName." ".$place);
-        
+        // $coordinates = UserAddressModel::getCoordinatesFromAddress($countryName." ".$place);
+	$coordinates = null;
+	$coordinates->x = $x;
+	$coordinates->y = $y;
+	
         if (empty($coordinates)) {
             return array();
         }
         
         $radiusOfEarthKM = 6371;
-        $x = (sin($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
-        $y = (cos($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
-        $z = sin($coordinates->y) * $radiusOfEarthKM;
+        $x = (sin(deg2rad($coordinates->x)) * cos(deg2rad($coordinates->y))) * $radiusOfEarthKM;
+        $y = (cos(deg2rad($coordinates->x)) * cos(deg2rad($coordinates->y))) * $radiusOfEarthKM;
+        $z = sin(deg2rad($coordinates->y)) * $radiusOfEarthKM;
         
         $x = mysql_real_escape_string($x);
         $y = mysql_real_escape_string($y);
         $z = mysql_real_escape_string($z);
+	$gender = mysql_real_escape_string($gender);
         
-        return Database::queryAsArray("select 
+	$query = "select 
             u.*, 
             year(now()) - year(u.birthdate) as age, 
             sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) as distance,  
@@ -40,8 +44,11 @@ class UsersModel {
             where 
             sqrt(pow(a.vectorx - '$x', 2) + pow(a.vectory - '$y', 2) + pow(a.vectorz - '$z', 2)) <= '$distance' and 
             year(now()) - year(u.birthdate) >= '$ageMin' and 
-            year(now()) - year(u.birthdate) <= '$ageMax' 
-            order by distance asc limit 1000");
+            year(now()) - year(u.birthdate) <= '$ageMax' and 
+            u.gender = '$gender' 
+            order by distance asc limit 1000";
+	
+        return Database::queryAsArray($query);
     }
     
     static function listNewUsers () {

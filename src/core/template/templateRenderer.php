@@ -81,7 +81,7 @@ class TemplateRenderer extends BaseRenderer {
      * @param <type> $menuName
      */
     function renderMenu ($menuName) {
-        
+
         // render the menu
         echo "<div id='vcms_area_$menuName' >";
         ModuleController::renderModuleObject(current($this->getModules($menuName)),true,false);
@@ -230,24 +230,25 @@ class TemplateRenderer extends BaseRenderer {
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://localhost/vbmscms/modules/statistics/piwik/";
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://<?php echo $site->url; ?>/modules/statistics/piwik/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', <?php echo $site->piwikid; ?>]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
     g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
-
 </script>
-<noscript><p><img src="http://localhost/vbmscms/modules/statistics/piwik/piwik.php?idsite=<?php echo $site->piwikid; ?>" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Code -->
 <!-- facebook -->
-<script>(function(d, s, id) {
+<script id="facebook-jssdk" type="text/javascript" src="//connect.facebook.net/en_US/all.js#xfbml=1&amp;appId=<?php echo Context::getSite()->facebookappid; ?>"></script>
+<?php /*
+<script type="text/javascript">(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
   js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=<?php echo Context::getSite()->facebookappid; ?>";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
+*/ ?>
 <!-- end facebook -->
 <?php
         if (!empty($page->pagetrackerscript)) {
@@ -318,7 +319,7 @@ class TemplateRenderer extends BaseRenderer {
                     <?php
                 }
                 ?>
-                <script>
+                <script type="text/javascript">
                 $(".alertNotification").each(function(index,object){
                     $(object).click(function(){
                         if ($(this).hasClass("confirmOnce")) {
@@ -336,7 +337,7 @@ class TemplateRenderer extends BaseRenderer {
     }
     
     function invokeRender () {
-        
+
         ob_start();
         $this->renderHeader();
         $this->render();
@@ -360,6 +361,9 @@ class TemplateRenderer extends BaseRenderer {
             }
         }
         
+	echo '<noscript><p><img src="modules/statistics/piwik/piwik.php?idsite=';
+	echo Context::getSite()->piwikid;
+	echo '" style="border:0" alt="" /></p></noscript>';
         echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
         
     }

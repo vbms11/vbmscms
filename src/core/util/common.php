@@ -225,7 +225,7 @@ class InputFeilds {
         foreach ($valueNameArray as $key => $valueNames) {
             echo "<option value='".Common::htmlEscape($key)."'";
             if ($key == $selectedValue)
-                echo " selected=true";
+                echo " selected='selected'";
             echo ">".$valueNameArray[Common::htmlEscape($key)]."</option>";
         }
         echo "</select>";

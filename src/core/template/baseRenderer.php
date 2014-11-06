@@ -14,11 +14,11 @@ abstract class BaseRenderer {
         if ($pageId == null) {
             $pageId = Context::getPageId();
         }
-        
+
         // get static modules
         $staticModules = $this->getStaticModules();
         $templateAreas = $this->getAreas();
-        
+
         // load the modules
         $pageModules = TemplateModel::getAreaModules($pageId, $templateAreas, $staticModules);
         $pageAreaNames = array();
@@ -26,7 +26,7 @@ abstract class BaseRenderer {
             $this->addModule(ModuleModel::getModuleClass($module,false));
             $pageAreaNames[$module->id] = $module->name;
         }
-        
+
         // load the module parameters
         $this->setModuleParams(ModuleModel::getModulesParams(array_keys($pageAreaNames)));
     }

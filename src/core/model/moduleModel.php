@@ -69,6 +69,7 @@ class ModuleModel {
      */
     static function getModuleClass ($moduleObj, $params = true) {
         // get the module instance
+print_r($moduleObj);
         require_once($moduleObj->include);
         $className = $moduleObj->interface;
         $obj = eval("return new $className();");

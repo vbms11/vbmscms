@@ -199,6 +199,7 @@ class TemplateParser {
             echo $this->parts[$i];
             if ($i+1 < $cntParts) {
                 $area = $this->areas[$i];
+
                 switch ($area->type) {
                     case "main":
                         Context::getRenderer()->renderMainTemplateArea($area->name, Context::getPageId());

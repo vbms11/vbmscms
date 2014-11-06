@@ -73,15 +73,18 @@ class UserAddressModel {
         return $messages;
     }
     
-    static function updateCoordinates ($addressId) {
+    static function updateCoordinates ($addressId, $x, $y) {
         $address = self::getUserAddress($addressId);
         $str_address = $address->country." ".$address->city." ".$address->address;
-        $coordinates = self::getCoordinatesFromAddress($str_address);
+        // $coordinates = self::getCoordinatesFromAddress($str_address);
+	$coordinates = null;
+	$coordinates->x = $x;
+	$coordinates->y = $y;
         
         $radiusOfEarthKM = 6371;
-        $x = (sin($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
-        $y = (cos($coordinates->x) * cos($coordinates->y)) * $radiusOfEarthKM;
-        $z = sin($coordinates->y) * $radiusOfEarthKM;
+        $x = (sin(deg2rad($coordinates->x)) * cos(deg2rad($coordinates->y))) * $radiusOfEarthKM;
+        $y = (cos(deg2rad($coordinates->x)) * cos(deg2rad($coordinates->y))) * $radiusOfEarthKM;
+        $z = sin(deg2rad($coordinates->y)) * $radiusOfEarthKM;
         
         $x = mysql_real_escape_string($x);
         $y = mysql_real_escape_string($y);
@@ -109,7 +112,7 @@ class UserAddressModel {
         return Database::queryAsObject("select * from t_user_address where userid = '$userId'");
     }
     
-    static function createUserAddress ($userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode) {
+    static function createUserAddress ($userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode, $x, $y) {
         $userId = mysql_real_escape_string($userId);
         $continent = mysql_real_escape_string($continent);
         $continentId = mysql_real_escape_string($continentId);
@@ -126,11 +129,11 @@ class UserAddressModel {
         Database::query("insert into t_user_address (userid,continent,continentid,country,countryid,state,stateid,region,regionid,city,cityid,address,postcode) 
             values ('$userId', '$continent', '$continentId', '$country', '$countryId', '$state', '$stateId', '$region', '$regionId', '$city', '$cityId', '$address', '$postcode')");
         $userAddressId = Database::queryAsObject("select last_insert_id() as newid from t_user_address");
-        self::updateCoordinates($userAddressId->newid);
+        self::updateCoordinates($userAddressId->newid, $x, $y);
         return $userAddressId->newid;
     }
     
-    static function updateUserAddress ($userAddressId, $userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode) {
+    static function updateUserAddress ($userAddressId, $userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode, $x, $y) {
         $userAddressId = mysql_real_escape_string($userAddressId);
         $userId = mysql_real_escape_string($userId);
         $continent = mysql_real_escape_string($continent);
@@ -160,7 +163,7 @@ class UserAddressModel {
             address = '$address',
             postcode = '$postcode
             where id = '$userAddressId'");
-        self::updateCoordinates($userAddressId);
+        self::updateCoordinates($userAddressId, $x, $y);
     }
     
     static function deleteUserAddress ($userAddressId) {
