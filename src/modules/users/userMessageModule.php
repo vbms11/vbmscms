@@ -37,10 +37,11 @@ class UserMessageModule extends XModule {
                     parent::redirect();
                 }
                 break;
-            case "send":
+            case "doSend":
                 if (Context::hasRole(array("message.inbox"))) {
                     $validationMessages = ForumPageModel::validatePm(parent::post('subject'), parent::post('message'));
-                    if (count($validationMessages) == 0) {$messageId = ForumPageModel::savePm(Context::getUserId(), Context::getSelectedUserId(), parent::post('subject'), parent::post('message'));
+                    if (count($validationMessages) == 0) {
+$messageId = ForumPageModel::savePm(Context::getUserId(), Context::getSelectedUserId(), parent::post('subject'), parent::post('message'));
                         SocialController::notifyMessageSent($messageId);
                         parent::blur();
                         parent::redirect(array("action"=>"sent"));
@@ -65,6 +66,8 @@ class UserMessageModule extends XModule {
             case "view":
                 ForumPageModel::viewPm(parent::get("id"));
                 break;
+            case "send":
+		break;
             case "reply":
                 break;
             case "sent":
@@ -92,19 +95,20 @@ class UserMessageModule extends XModule {
                 break;
             case "new":
             case "send":
+            case "doSend":
                 if (Context::hasRole(array("message.inbox"))) {
                     $this->printCreateMessageView();
                 }
+                break;
+            case "reply":
+            case "doReply":
+                $this->printReplyView();
                 break;
             case "sent":
                 $this->printSentView();
                 break;
             case "view":
                 $this->printViewView();
-                break;
-            case "reply":
-            case "doReply":
-                $this->printReplyView();
                 break;
             default:
                 if (Context::hasRole(array("message.inbox"))) {
@@ -116,7 +120,7 @@ class UserMessageModule extends XModule {
     }
     
     function getRoles () {
-        return array("message.inbox","message.edit");
+        return array("message.edit","message.inbox");
     }
     
     function getStyles () {
@@ -156,7 +160,7 @@ class UserMessageModule extends XModule {
                 ?>
                 <p><?php echo parent::getTranslation("userMessage.description"); ?></p>
                 <table class="resultTable" cellspacing="0">
-                    <thead><tr><td class="contract nowrap">
+                    <thead><tr><td class="contract nowrap" colspan="2">
                         <?php echo parent::getTranslation("userMessage.table.user"); ?>
                     </td><td>
                         <?php echo parent::getTranslation("userMessage.table.title"); ?>
@@ -175,6 +179,7 @@ class UserMessageModule extends XModule {
                                 <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$message->srcuser)); ?>">
                                     <img alt="" src="<?php echo UsersModel::getUserImageSmallUrl($message->srcuser); ?>" />
                                 </a>
+                            </td><td>
                                 <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$message->srcuser)); ?>">
                                     <?php echo htmlentities($message->srcusername); ?>
                                 </a>
@@ -210,7 +215,7 @@ class UserMessageModule extends XModule {
         <div class="panel createUserMessagePanel">
             <h1><?php echo parent::getTranslation("userMessage.create.title"); ?></h1>
             <p><?php echo parent::getTranslation("userMessage.create.description"); ?></p>
-            <form name="createMessageForm" method="post" action="<?php echo parent::link(array("action"=>"send")); ?>">
+            <form name="createMessageForm" method="post" action="<?php echo parent::link(array("action"=>"doSend")); ?>">
                 <table class="formTable"><tr><td>
                     <?php echo parent::getTranslation("userMessage.create.toUser"); ?>
                 </td><td>

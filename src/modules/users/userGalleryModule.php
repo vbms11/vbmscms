@@ -347,7 +347,7 @@ class UserGalleryModule extends XModule {
                 <?php
                 foreach ($categorys as $category) {
                     ?>
-                    <div align="center" class="galleryGrid">
+                    <div class="galleryGrid">
                         <div class="galleryGridImage shadow">
                             <a href="<?php echo parent::link(array("category"=>$category->id)); ?>">
                                 <img class="imageLink" width="170" height="170" src="<?php 
@@ -384,7 +384,7 @@ class UserGalleryModule extends XModule {
                     if ($galleryEdit) 
                         $imageCss = "galleryGridAdmin";
                     ?>
-                    <div align="center" class="galleryGrid <?php echo $imageCss; ?>">
+                    <div class="galleryGrid <?php echo $imageCss; ?>">
                         <div class="galleryGridImage galleryImages shadow">
                             <a href="<?php echo parent::link(array("action"=>"viewImage","category"=>$selectedCategoryId,"id"=>$image->id)); ?>">
                                 <img class="imageLink" width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>

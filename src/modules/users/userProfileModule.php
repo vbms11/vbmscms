@@ -139,12 +139,12 @@ class UserProfileModule extends XModule {
                 </div>
                 <div class="userProfileMenu">
                     <div>
-                        <a href="<?php echo parent::staticLink("userWall",array("userId"=>$userId)); ?>">
+                        <a href="<?php echo NavigationModel::createStaticPageLink('userWall', array('userId' => $userId), true, false); ?>">
                             <?php echo parent::getTranslation("userProfile.wall"); ?>
                         </a>
                     </div>
                     <div>
-                        <a href="<?php echo parent::staticLink("userGallery",array("userId"=>$userId)); ?>">
+                        <a href="<?php echo NavigationModel::createStaticPageLink('userGallery', array('userId' => $userId), true, false); ?>">
                             <?php echo parent::getTranslation("userProfile.gallery"); ?>
                         </a>
                     </div>
@@ -158,7 +158,7 @@ class UserProfileModule extends XModule {
                     if (Context::isLoggedIn() == false) {
                         ?>
                         <div>
-                            <a href="<?php echo parent::staticLink("login"); ?>">
+                            <a href="<?php echo NavigationModel::createStaticPageLink("login", null, true, false); ?>">
                                 <?php echo parent::getTranslation("userProfile.message"); ?>
                             </a>
                         </div>
@@ -166,7 +166,7 @@ class UserProfileModule extends XModule {
                     } else if ($userId !== Context::getUserId()) {
                         ?>
                         <div>
-                            <a href="<?php echo parent::staticLink("userMessage",array("action"=>"new","userId"=>$userId)); ?>">
+                            <a href="<?php echo NavigationModel::createStaticPageLink('userMessage', array('action' => 'send', 'userId' => $userId), true, false); ?>">
                                 <?php echo parent::getTranslation("userProfile.message"); ?>
                             </a>
                         </div>
@@ -174,7 +174,7 @@ class UserProfileModule extends XModule {
                     } else {
                         ?>
                         <div>
-                            <a href="<?php echo parent::staticLink("userMessage",array("userId"=>$userId)); ?>">
+                            <a href="<?php echo NavigationModel::createStaticPageLink("userMessage",array("userId"=>$userId), true, false); ?>">
                                 <?php echo parent::getTranslation("userProfile.messages"); ?>
                             </a>
                         </div>
@@ -182,7 +182,7 @@ class UserProfileModule extends XModule {
                     }
                     ?>
                     <div>
-                        <a href="<?php echo parent::staticLink("userFriend",array("userId"=>$userId)); ?>">
+                        <a href="<?php echo NavigationModel::createStaticPageLink("userFriend",array("userId"=>$userId), true, false); ?>">
                             <?php echo parent::getTranslation("userProfile.friends"); ?>
                         </a>
                     </div>
@@ -192,7 +192,7 @@ class UserProfileModule extends XModule {
                         if (Context::isLoggedIn() == false) {
                             ?>
                             <div>
-                                <a href="<?php echo parent::staticLink("login"); ?>">
+                                <a href="<?php echo NavigationModel::createStaticPageLink("login", null, true, false); ?>">
                                     <?php echo parent::getTranslation("userProfile.addFriends"); ?>
                                 </a>
                             </div>
