@@ -122,8 +122,8 @@ class UserWallModule extends XModule {
             case "editComment":
                 $this->printEditPostView(parent::get("id"));
                 break;
-            case "reply":
-            case "comment":
+            // case "reply":
+            // case "comment":
             default:
                 if (Context::hasRole("user.profile.view")) {
                     $this->printMainView();
@@ -141,6 +141,10 @@ class UserWallModule extends XModule {
     
     function getStyles () {
         return array("css/userWall.css");
+    }
+    
+    function getScripts () {
+        return array("css/userWall.js");
     }
     
     function printEditView () {
@@ -201,7 +205,7 @@ class UserWallModule extends XModule {
                     <div class="userWallPostBody">
                         <form method="post" action="<?php echo parent::link(array("action"=>"editComment","id"=>$post->id)); ?>">
                             <div class="userWallPostTextarea">
-                                <textarea name="<?php echo parent::alias("comment"); ?>"><?php echo htmlentities($comment); ?></textarea>
+                                <textarea cols="1" rows="1" name="<?php echo parent::alias("comment"); ?>"><?php echo htmlentities($comment); ?></textarea>
                                 <?php
                                 $message = parent::getMessage("comment");
                                 if (!empty($message)) {
@@ -254,7 +258,7 @@ class UserWallModule extends XModule {
                     <div class="userWallPostBody">
                         <form method="post" action="<?php echo parent::link(array("action"=>"comment","userId"=>$userId)); ?>">
                             <div class="userWallPostTextarea">
-                                <textarea name="<?php echo parent::alias("comment") ?>"><?php echo parent::getAction() == "comment" ? htmlentities($comment) : ""; ?></textarea>
+                                <textarea cols="1" rows="1" placeholder="<?php echo parent::getTranslation("userWall.comment.placeholder"); ?>" name="<?php echo parent::alias("comment"); ?>" ><?php echo parent::getAction() == "comment" ? htmlentities($comment) : ""; ?></textarea>
                                 <?php
                                 $message = parent::getMessage("comment");
                                 if (!empty($message)) {
@@ -327,11 +331,13 @@ class UserWallModule extends XModule {
     }
     
     function printWallEventPosts ($wallEventId, $wallEventPosts) {
-        
+		
+        $userId = $this->getModeUserId();
+	
         foreach ($wallEventPosts as $wallPostReply) {
 
             $replyUser = UsersModel::getUser($wallPostReply->srcuserid);
-            $replyUserName = $replyUser->firstname." ".$replyUser->lastname;
+            $replyUserName = htmlentities($replyUser->firstname." ".$replyUser->lastname, ENT_QUOTES);
             $replyUserImage = UsersModel::getUserImageSmallUrl($replyUser->id);
             ?>
             <div class="userWallPostReply">
@@ -345,7 +351,7 @@ class UserWallModule extends XModule {
                         <?php
                         $allowDelete = false;
                         $allowEdit = false;
-                        if (Context::getUserId() == $wallPostReply->srcuserid) {
+                        if (Context::getUserId() == $wallPostReply->srcuserid || Context::hasRole("user.profile.edit")) {
                             $allowDelete = true;
                             $allowEdit = true;
                         }
@@ -388,7 +394,8 @@ class UserWallModule extends XModule {
             </div>
             <?php
         }
-        if (UserWallModel::canUserPost(Context::getUserId())) {
+	
+        if (UserWallModel::canUserPost($userId)) {
             ?>
             <div class="userWallPostShowReplyBox">
                 <div class="userWallPostImage"></div>
@@ -405,7 +412,7 @@ class UserWallModule extends XModule {
                 <div class="userWallPostBody">
                     <form method="post" action="<?php echo parent::link(array("action"=>"reply","eventId"=>$wallEventId,"userId"=>Context::getUserId())); ?>">
                         <div class="userWallPostTextarea">
-                            <textarea name="<?php echo parent::alias("comment") ?>"><?php parent::getAction() == "reply" ? htmlentities(parent::post("comment")) : ""; ?></textarea>
+                            <textarea cols="1" rows="1" placeholder="<?php echo parent::getTranslation("userWall.reply.placeholder"); ?>" name="<?php echo parent::alias("comment") ?>"><?php parent::getAction() == "reply" ? htmlentities(parent::post("comment")) : ""; ?></textarea>
                             <?php
                             $message = parent::getMessage("comment");
                             if (!empty($message)) {
@@ -430,19 +437,24 @@ class UserWallModule extends XModule {
     function printEventTypeWall ($wallEvent) {
 	
 	$currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
-        
+        /*
         $srcUser = UsersModel::getUser($wallEvent->userid);
         $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
         $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
-
+	*/
         $wallEventPosts = UserWallModel::getUserWallPostsByEventId($wallEvent->id);
         $originalPost = current($wallEventPosts);
-        
+	
+	$srcUser = UsersModel::getUser($originalPost->srcuserid);
+        $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
+        $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
+	
+	
         ?>
         <div class="userWallPost">
             <div class="userWallPostImage">
-                <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)) ?>">
-                    <img src="<?php echo $userProfileImage; ?>" alt="" title="" />
+                <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id),true,false); ?>">
+                    <img src="<?php echo $userProfileImage; ?>" alt="" title="<?php echo htmlentities($srcUserName, ENT_QUOTES); ?>" />
                 </a>
             </div>
             <div class="userWallPostBody">
@@ -454,7 +466,7 @@ class UserWallModule extends XModule {
                         $allowDelete = true;
                         $allowEdit = true;
                     }
-                    if ($userId == Context::getUserId()) {
+                    if ($this->getModeUserId() == Context::getUserId()) {
                         $allowDelete = true;
                     }
                     if ($allowDelete || $allowEdit) {
@@ -482,7 +494,7 @@ class UserWallModule extends XModule {
                         <?php echo $originalPost->date; ?>
                     </div>
                     <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)); ?>">
-                        <?php echo $srcUserName; ?>
+                        <?php echo htmlentities($srcUserName); ?>
                     </a>
                 </div>
                 <div class="userWallPostComment">

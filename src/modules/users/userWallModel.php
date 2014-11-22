@@ -94,10 +94,13 @@ class UserWallModel {
     }
     
     static function canUserPost ($friendId, $userId = null) {
-        if ($userId == null) {
+	if (Context::getUserId() == null) {
+		return false;
+	}        
+	if ($userId == null) {
             $userId = Context::getUserId();
         }
-        if ($userId == $friendId) {
+	if ($userId == $friendId) {
             return true;
         }
         return UserFriendModel::isFriend($userId, $friendId);
