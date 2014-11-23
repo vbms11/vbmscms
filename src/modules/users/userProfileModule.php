@@ -148,13 +148,18 @@ class UserProfileModule extends XModule {
                             <?php echo parent::getTranslation("userProfile.gallery"); ?>
                         </a>
                     </div>
-                    <?php /*
-                    <div>
-                        <a href="<?php echo parent::staticLink("userDetails",array("userId"=>$userId)); ?>">
-                            <?php echo parent::getTranslation("userProfile.details"); ?>
-                        </a>
-                    </div>
-                     */
+                    <?php
+                    
+                    if ($userId == Context::getUserId()) {
+	                    ?>
+	                    <div>
+	                        <a href="<?php echo parent::staticLink("userSettings",array("userId"=>$userId)); ?>">
+	                            <?php echo parent::getTranslation("userProfile.userSettings"); ?>
+	                        </a>
+	                    </div>
+	                    <?php
+                    }
+                    
                     if (Context::isLoggedIn() == false) {
                         ?>
                         <div>

@@ -7,6 +7,46 @@ require_once 'core/context.php';
 
 class UsersModel {
     
+    //TODO add 
+    
+    $orientations = array(
+    	0 => "straight",
+    	1 => "bisexual",
+    	2 => "gay"
+    );
+    
+    $religions = array(
+    );
+    
+    $ethnicitys = array(
+    	0 => "caucasion",
+    	1 => "african",
+    	2 => "assian",
+    	3 => "arrabic"
+    );
+    
+    $relationship = array(
+    	0 = "single",
+    	1 = "relationship"
+    );
+    
+    $haircolor = array(
+    	0 = "Brown",
+    	1 = "Blond",
+    	2 = "Red",
+    	3 = "Green",
+    	4 = "Blue",
+    	5 = "Yellow"
+    );
+    
+    $eyecolor = array(
+    	0 = "Brown",
+    	1 = "Blue",
+    	2 = "Red",
+    	3 = "Green",
+    	4 = "Yellow"
+    );
+    
     static function search ($ageMin, $ageMax, $countryGeonameId, $place, $distance, $gender, $x, $y) {
         
         $country = CountryModel::getCountryByGeonameId($countryGeonameId);
@@ -432,6 +472,37 @@ class UsersModel {
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
         return $id;
+    }
+    
+    static function validateUserInfo (orientation, religion, ethnicity, about, relationship, bodyheight, haircolor, eyecolor, weight) {
+    	
+    	$messages = array();
+    	
+    	return $messages;
+    }
+    
+    //TODO add lastonline,profileviews, orientation,religion,ethnicity,about,relationship, bodyheight, haircolor, eyecolor, weight
+    static function saveUserInfo (orientation, religion, ethnicity, about, relationship, bodyheight, haircolor, eyecolor, weight) {
+    	$orientation = mysql_real_escape_string($orientation);
+    	$religion = mysql_real_escape_string($religion);
+    	$ethnicity = mysql_real_escape_string($ethnicity);
+    	$about = mysql_real_escape_string($about);
+    	$relationship = mysql_real_escape_string($relationship);
+    	$bodyheight = mysql_real_escape_string($bodyheight);
+    	$haircolor = mysql_real_escape_string($haircolor);
+    	$eyecolor = mysql_real_escape_string($eyecolor);
+    	$weight = mysql_real_escape_string($weight);
+    	Database::query("update t_user set 
+    		orientation = '$orientation', 
+    		religion = '$religion' ,
+    		ethnicity = '$ethnicity', 
+    		about = '$about',
+    		relationship = '$relationship', 
+    		bodyheight = '$bodyheight',
+    		haircolor = '$haircolor',
+    		eyecolor = '$eyecolor',
+    		weight = '$weight'
+    		where id = '$id'");
     }
     
     static function setUserObjectId ($id, $objectId) {

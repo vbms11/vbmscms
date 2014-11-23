@@ -35,6 +35,10 @@ class UserInfoModule extends XModule {
             		UsersModel::saveUserInfo($userId, parent::post("orientation"), parent::post("religion"), parent::post("ethnicity"), parent::post("about"), parent::post("relationship"), parent::post("bodyheight"), parent::post("haircolor"), parent::post("eyecolor"), parent::post("weight"));
             	}
             	break;
+            	
+            	parent::blur();
+        	case "editInfo":
+        		parent::focus();
         }
     }
 
@@ -49,9 +53,12 @@ class UserInfoModule extends XModule {
                     $this->printEditView();
                 }
                 break;
+            case "editInfo":
+            	$this->printEditInfoView();
+            	break;
             default:
                 if (Context::hasRole("user.profile.view")) {
-                    $this->printMainView();
+					$this->printMainView();
                 }
                 break;
         }
@@ -62,6 +69,10 @@ class UserInfoModule extends XModule {
      */
     function getRoles () {
         return array("user.profile.edit","user.profile.view","user.profile.owner","user.profile.privateDetails");
+    }
+    
+    function getStyles () {
+    	return array("css/userInfo.css");
     }
     
     function getModeUserId () {
@@ -92,20 +103,18 @@ class UserInfoModule extends XModule {
                 </table>
                 <hr/>
                 <div class="alignRight">
-                    <button type="submit"><?php echo parent::getTranslation("common.save"); ?></button>
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
                 </div>
             </form>
-            <script>
-            $(".usersProfilePanel button").button();
-            </script>
         </div>
         <?php
     }
-    
-		
-		//todo user_interest user_language
-		// Interested In: Friends, Serious Relationship
-		// Languages: Italiano, Tagalog, English
+	
+    /*	
+	todo user_interest user_language
+	Interested In: Friends, Serious Relationship
+	Languages: Italiano, Tagalog, English
+    */
     function printMainView () {
     	
     	$userId = $this->getModeUserId();
@@ -114,7 +123,17 @@ class UserInfoModule extends XModule {
             $userAddress = UserAddressModel::getUserAddressByUserId($userId);
     		?>
 	    	<div class="panel userInfoPanel">
-	    	 
+	    	 	<?php
+	    	 	if ($userId == Context::getUserId()) {
+	    	 		?>
+	    	 		<div class="userInfoEdit">
+		    			<a href="<?php echo parent::link(array("action"=>"editInfo")); ?>">
+		    				<?php echo parent::getTranslation("common.edit"); ?>
+	    				</a>
+		    		</div>
+		    		<?php
+	    	 	}
+	    	 	?>
 	    		<div class="userInfoRow">
 	    			Last Active: <?php echo $user->lastonline; ?>
 	    		</div>
@@ -155,160 +174,103 @@ class UserInfoModule extends XModule {
     }
     
     function printEditInfoView () {
+        
+        $userId = $this->getModeUserId();
         ?>
         <div class="panel userEditInfoPanel">
             <?php
-            $userId = null;
-            switch (parent::param("mode")) {
-                case self::modeSelectedUser:
-                    $userId = Context::getSelectedUserId();
-                    break;
-                default:
-                case self::modeCurrentUser:
-                    if (Context::hasRole("user.profile.owner")) {
-                        $userId = Context::getUserId();
-                    }
-                    break;
-            }
             if (!empty($userId)) {
                 $user = UsersModel::getUser($userId);
                 ?>
-                
-                about, 
-                relationship, 
-                orientation, religion, ethnicity, bodyheight, haircolor, eyecolor, weight
-                
-                <table class="formTable"><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.label.about");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printTextArea(parent::alias("about"), parent::post("about") == null ? $user->about : parent::post("about")); 
-                    $message = parent::getMessage("about");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.label.relationship");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printSelect(parent::alias("relationship"), parent::post("relationship") == null ? $user->relationship : parent::post("relationship")); 
-                    $message = parent::getMessage("relationship");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printTextFeild(parent::alias(""),parent::post("") == null ? $user-> : parent::post("")); 
-                    $message = parent::getMessage("");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printTextFeild(parent::alias(""),parent::post("") == null ? $user-> : parent::post("")); 
-                    $message = parent::getMessage("");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printTextFeild(parent::alias(""),parent::post("") == null ? $user-> : parent::post("")); 
-                    $message = parent::getMessage("");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printTextFeild(parent::alias(""),parent::post("") == null ? $user-> : parent::post("")); 
-                    $message = parent::getMessage("");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printTextFeild(parent::alias(""),parent::post("") == null ? $user-> : parent::post("")); 
-                    $message = parent::getMessage("");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr><tr><td>
-                    <?php
-                    echo parent::getTranslation("userInfo.");
-                    ?>
-                </td><td>
-                    <?php 
-                    InputFeilds::printTextFeild(parent::alias(""),parent::post("") == null ? $user-> : parent::post("")); 
-                    $message = parent::getMessage("");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
-                    ?>
-                </td></tr></table>
-                    <?php
+                <form method="post" action="<?php echo parent::link(array("action"=>"saveInfo")); ?>">
+	                <table class="formTable"><tr><td>
+	                    <?php
+	                    echo parent::getTranslation("userInfo.label.about");
+	                    ?>
+	                </td><td>
+	                    <?php 
+	                    InputFeilds::printTextArea(parent::alias("about"), parent::post("about") == null ? $user->about : parent::post("about")); 
+	                    $message = parent::getMessage("about");
+	                    if (!empty($message)) {
+	                        echo '<span class="validateTips">'.$message.'</span>';
+	                    }
+	                    ?>
+	                </td></tr><tr><td>
+	                    <?php
+	                    echo parent::getTranslation("userInfo.label.relationship");
+	                    ?>
+	                </td><td>
+	                    <?php 
+	                    InputFeilds::printSelect(parent::alias("relationship"), parent::post("relationship") == null ? $user->relationship : parent::post("relationship")); 
+	                    $message = parent::getMessage("relationship");
+	                    if (!empty($message)) {
+	                        echo '<span class="validateTips">'.$message.'</span>';
+	                    }
+	                    ?>
+	                </td></tr><tr><td>
+	                    <?php
+	                    echo parent::getTranslation("userInfo.label.orientation");
+	                    ?>
+	                </td><td>
+	                    <?php 
+	                    InputFeilds::printTextFeild(parent::alias("orientation"),parent::post("orientation") == null ? $user->orientation : parent::post("orientation")); 
+	                    $message = parent::getMessage("orientation");
+	                    if (!empty($message)) {
+	                        echo '<span class="validateTips">'.$message.'</span>';
+	                    }
+	                    ?>
+	                </td></tr><tr><td>
+	                    <?php
+	                    echo parent::getTranslation("userInfo.label.ethnicity");
+	                    ?>
+	                </td><td>
+	                    <?php 
+	                    InputFeilds::printTextFeild(parent::alias("ethnicity"), parent::post("ethnicity") == null ? $user->ethnicity : parent::post("ethnicity")); 
+	                    $message = parent::getMessage("ethnicity");
+	                    if (!empty($message)) {
+	                        echo '<span class="validateTips">'.$message.'</span>';
+	                    }
+	                    ?>
+	                </td></tr><tr><td>
+	                    <?php
+	                    echo parent::getTranslation("userInfo.label.religion");
+	                    ?>
+	                </td><td>
+	                    <?php 
+	                    InputFeilds::printTextFeild(parent::alias("religion"),parent::post("religion") == null ? $user->religion : parent::post("religion")); 
+	                    $message = parent::getMessage("religion");
+	                    if (!empty($message)) {
+	                        echo '<span class="validateTips">'.$message.'</span>';
+	                    }
+	                    ?>
+	                </td></tr></table>
+	                
+	                <hr/>
+	                <div class="alignRight">
+	                	<button type="submit" class="jquiButton">
+	                		<?php echo parent::getTranslation("common.save"); ?>
+	            		</button>
+	            		<button type="button" class="jquiButton cancel">
+	            			<?php echo parent::getTranslation("common.cancel"); ?>
+	            		</button>
+	                </div>
+                </form>
+                <script type="text/javascript">
+            	$(".userInfoForm button.cancel").click(function(){
+            		callUrl("<?php echo parent::link(); ?>");
+            	});
+                </script>
+                <?php
             }
-            /*
-            Last Active: a day ago
-
-Profile Views: 524 times
-
-About: im yours!
-
-Member Since: January 22, 2007 [Tagged]
-
-Gender: Female
-
-Location: munich, Germany
-
-Age: 30
-
-Relationship Status: Single
-
-Interested In: Friends, Serious Relationship
-
-Languages: Italiano, Tagalog, English
-
-Ethnicity: Asian
-
-Religion: Christian
-
-Orientation: Straight
-    	
-            */
+            
+            
             ?>
         </div>
         <?php
+        
+        
     }
+    
 }
 
 ?>

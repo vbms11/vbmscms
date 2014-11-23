@@ -41,6 +41,7 @@ try {
     }
     
 } catch (Exception $e) {
+	echo "fatal error";
     echo $e->getTraceAsString();
 }
 

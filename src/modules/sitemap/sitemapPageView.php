@@ -20,7 +20,7 @@ class SitemapPageView extends XModule {
      */
     function onView () {
         
-        $this->printMainView(parent::getId());
+        $this->printMainView();
     }
 
     /**
@@ -56,9 +56,9 @@ class SitemapPageView extends XModule {
             $this->action = $_GET['action'];
     }
 
-    function printMainView ($pageId) {
+    function printMainView () {
         ?>
-        <div class="panel wysiwygPage">
+        <div class="panel siteMapPanel">
             <?php
             $pagesInMenus = MenuModel::getPagesInMenu();
             foreach ($pagesInMenus as $menus) {
@@ -70,16 +70,23 @@ class SitemapPageView extends XModule {
     }
 
     function printMenu ($menu) {
-        echo '<ul>';
+	if (count($menu) > 0) {        
+	echo '<ul>';
         foreach ($menu as $page) {
             ?>
-            <li><a href="<?php echo NavigationModel::createPageLink($page->page->id); ?>"><?php echo $page->page->name; ?></a></li>
+            <li><a href="<?php echo NavigationModel::createPageNameLink($page->page->name, $page->page->id); ?>">
+		<?php echo htmlentities($page->page->name); ?>
+            </a>
             <?php
             if (isset($page->children)) {
                 $this->printMenu ($page->children);
             }
+            ?>            
+            </li>
+            <?php          
         }
         echo '</ul>';
+	}
     }
 }
 
