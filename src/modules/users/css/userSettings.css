@@ -1,3 +1,10 @@
 .userSettingsItem {
-	
+	border-bottom: 1px solid silver;
+}
+.userSettingsItem:last-child {
+	border-bottom: none;
+}
+
+.userSettingsEdit {
+	float: right;
 }

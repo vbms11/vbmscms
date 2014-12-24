@@ -25,33 +25,46 @@ class ForumPageView extends XModule {
         
         switch (parent::getAction()) {
             case "deleteThread":
-                ForumPageModel::deleteThread($this->thread);
-                parent::blur();
-                parent::redirect();
+            	if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
+	            	ForumPageModel::deleteThread(parent::get("thread"));
+	                parent::blur();
+	                parent::redirect();
+            	}
                 break;
             case "deletePost":
-                ForumPageModel::deletePost($this->post);
-                parent::blur();
-                parent::redirect();
+            	if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
+	                ForumPageModel::deletePost(parent::get("post"));
+	                parent::blur();
+	                parent::redirect();
+                }
                 break;
             case "deleteTopic":
-                ForumPageModel::deleteTopic($this->topic);
-                parent::blur();
-                parent::redirect();
+                if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
+		            ForumPageModel::deleteTopic(parent::get("topic"));
+	                parent::blur();
+	                parent::redirect();
+                }
                 break;
             case "saveThread":
-                ForumPageModel::saveThread($this->topic, $this->thread, $this->threadTitel, $this->threadMessage);
-                parent::blur();
-                parent::redirect();
+            	if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
+			        $validationMessages = ForumPageModel::validateThread(parent::get("topic"), parent::get("thread"), parent::post("threadTitel"), parent::post("threadMessage"));
+	                if (empty($validationMessages)) {
+	                	ForumPageModel::saveThread($this->topic, $this->thread, $this->threadTitel, $this->threadMessage);
+		                parent::blur();
+		                parent::redirect();
+	                } else {
+	                	parent::setMessages($validationMessages);
+	                }
+                }
                 break;
             case "savePost":
-		if (Captcha::validate("captcha")) {
-			ForumPageModel::savePost($this->thread, $this->post, $this->postMessage, Context::getUserId());
-                	parent::blur();
-                	parent::redirect();
-		} else {
-			parent::redirect(array("action"=>"captchaWrong"));
-		}
+				if (Captcha::validate("captcha")) {
+					ForumPageModel::savePost($this->thread, $this->post, $this->postMessage, Context::getUserId());
+		                	parent::blur();
+		                	parent::redirect();
+				} else {
+					parent::redirect(array("action"=>"captchaWrong"));
+				}
                 break;
             case "saveTopic":
                 ForumPageModel::saveTopic($this->parent, $this->topic, $this->topicName, Context::getUserId());
@@ -91,6 +104,9 @@ class ForumPageView extends XModule {
                 }
                 
                 break;
+            case "viewUser":
+            	NavigationModel::redirectStaticModule("userProfile", array("userId"=>parent::get("user")));
+            	break;
         }
     }
 
@@ -122,9 +138,9 @@ class ForumPageView extends XModule {
                     $this->printViewThread(parent::getId(), $this->topic, $this->thread);
                 }
                 break;
-	    case "captchaWrong":
-		$this->printCaptchaWrongView();
-		break;
+		    case "captchaWrong":
+				$this->printCaptchaWrongView();
+			break;
             default:
                 if (Context::hasRole(array("forum.view"))) {
                     $this->printMainView(parent::getId(),$this->topic);
@@ -264,17 +280,92 @@ class ForumPageView extends XModule {
         </div>
         <?php
     }
-
+	
+	function printUserInfo ($user) {
+		$userAddress = UserAddressModule::getUserAddress($user->id);
+		$userProfileImage = UsersModel::getUserImageUrl($user->id);
+		?>
+		
+		<div class="forum_info_container">
+			<div class="forum_info_image">
+				<a href="<?php echo parent::link(array("action"=>"viewUser","user"=>$user->id)); ?>">
+                	<img src="<?php echo $userProfileImage; ?>" alt="" />
+                </a>
+			</div>
+			<div class="forum_info_name">
+				<?php echo $user->username." (".$user->age.")"; ?>
+			</div>
+			<div class="forum_info_location">
+				<?php echo $userAddress->country." ".$userAddress->city ?>
+			</div>
+			<div class="forum_info_posts">
+				<?php echo ForumPageModel::getUserTotalPosts($user->id); ?>
+			</div>
+			
+		</div>
+		
+		<?php
+	}
+	
     function printViewThread($pageId, $topicId, $threadId) {
         $thread = ForumPageModel::getThread($threadId);
         $replies = ForumPageModel::getPosts($threadId);
+        $threadUserProfileImage = UsersModel::getUserImageSmallUrl($thread->userid);
         ?>
-        <div class="panel forumPage">
-            <a href="<?php echo parent::link(array("action"=>"createPost","thread"=>$thread->id)); ?>">Reply</a> |
-            <a onclick="" href="javascript:history.back();">Back to topic</a>
+        <div class="panel forumPanel">
+        	<div class="forum_thread_buttons">
+        		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"createPost","thread"=>$thread->id)); ?>"><?php echo parent::getTranslation("forum.thread.reply"); ?></a> |
+            	<a class="jquiButton" onclick="" href="javascript:history.back();"><?php echo parent::getTranslation("forum.thread.back"); ?></a>
+            </div>
+        	<div class="forum_thread_message_container">
+        		<div class="forum_thread_message">
+	        		<div class="forum_layout_left">
+		        		<?php $this->printUserInfo($user); ?>
+		        	</div>
+		        	<div class="forum_layout_center">
+		        		<div class="forum_thread_message_titel">
+			        		<?php echo htmlentities($thread->name,ENT_QUOTES); ?>
+			        	</div>
+			        	<div class="forum_thread_message_body">
+			        		<?php echo htmlentities($thread->message,ENT_QUOTES); ?>
+			        	</div>
+		        	</div>
+	        	</div>
+        	</div>
+        	<div class="forum_thread_replys_container">
+        		<?php
+	            foreach ($replies as $reply) {
+	            	$replyUser = UsersModel::getUser($reply->userid);
+	            	$userProfileImage = UsersModel::getUserImageSmallUrl($reply->userid);
+        			?>
+        			<div class="forum_thread_reply">
+		        		<div class="forum_layout_left">
+			        		<?php $this->printUserInfo($replyUser); ?>
+			        	</div>
+			        	<div class="forum_layout_center">
+			        		<div class="forum_thread_message_titel">
+				        		
+				        	</div>
+				        	<div class="forum_thread_message_body">
+				        		<?php echo htmlentities($reply->message,ENT_QUOTES); ?>
+				        	</div>
+			        	</div>
+		        	</div>
+        			<?php
+    			}
+    			?>
+        	</div>
+        	<div class="forum_thread_buttons">
+        		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"createPost","thread"=>$thread->id)); ?>"><?php echo parent::getTranslation("forum.thread.reply"); ?></a> |
+            	<a class="jquiButton" onclick="" href="javascript:history.back();"><?php echo parent::getTranslation("forum.thread.back"); ?></a>
+            </div>
+        
             <br/><br/>
             <table class="expand"><tr><td valign="top">
                 <div class="forum_thread_postdata">
+                    <a class="forum_thread_titel_link" href="<?php echo parent::link(array("action"=>"viewUser","user"=>$thread->userid)); ?>">
+                    	<img src="<?php echo $threadUserProfileImage; ?>" alt="" />
+                    </a>
                     <a class="forum_thread_titel_link" href="<?php echo parent::link(array("action"=>"viewUser","user"=>$thread->userid)); ?>"><?php echo $thread->username; ?></a><br/>
                     <span class="nowrap"><?php echo htmlentities($thread->createdate,ENT_QUOTES); ?></span>
                 </div>
@@ -295,10 +386,14 @@ class ForumPageView extends XModule {
             </td></tr></table>
             <?php
             foreach ($replies as $reply) {
+            	$userProfileImage = UsersModel::getUserImageSmallUrl($reply->srcuser);
                 ?>
                 <br/><hr/>
                 <table class="expand"><tr><td valign="top">
                     <div class="forum_thread_postdata">
+                        <a class="forum_thread_titel_link" href="<?php echo parent::link(array("action"=>"viewUser","user"=>$reply->userid)); ?>">
+                        	<img src="<?php echo $userProfileImage; ?>" alt="" />
+                        </a><br/>
                         <a class="forum_thread_titel_link" href="<?php echo parent::link(array("action"=>"viewUser","user"=>$reply->userid)); ?>"><?php echo $reply->username; ?></a><br/>
                         <span class="nowrap"><?php echo htmlentities($reply->createdate,ENT_QUOTES); ?></span>
                     </div>

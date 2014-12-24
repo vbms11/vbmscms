@@ -24,6 +24,9 @@ class UserDetailsModule extends XModule {
                     parent::focus();
                 }
                 break;
+            case "saveDetails":
+            	
+            	break;
         }
     }
 
@@ -38,6 +41,7 @@ class UserDetailsModule extends XModule {
                     $this->printEditView();
                 }
                 break;
+            case "saveDetails":
             default:
                 if (Context::hasRole("user.profile.view")) {
                     $this->printMainView();
@@ -104,7 +108,10 @@ class UserDetailsModule extends XModule {
             if (!empty($userId)) {
                 $user = UsersModel::getUser($userId);
                 ?>
-                <table class="formTable"><tr><td>
+                <h1><?php echo parent::getTranslation("userDetails.title"); ?></h1>
+                <p><?php echo parent::getTranslation("userDetails.description"); ?></p>
+                <form method="post" action="<?php parent::link(array("action"=>"saveDetails")); ?>">
+                	<table class="formTable"><tr><td>
                         <?php echo parent::getTranslation("users.attrib.username"); ?>
                     </td><td>
                         <?php 
@@ -130,13 +137,13 @@ class UserDetailsModule extends XModule {
                     </td><td>
                         <?php InputFeilds::printDataPicker(parent::alias("dob"),parent::post("dob") == null ? $user->birthdate : parent::post("dob")); 
                         ?>
-                    </td></tr><tr><td>
-                        <?php echo parent::getTranslation("users.attrib.active"); ?>
-                    </td><td>
-                        <?php InputFeilds::printCheckbox(parent::alias("active"),parent::post("active") == null ? $user->active : parent::post("active")); 
-                        ?>
                     </td></tr></table>
-                    <?php
+                    <hr>
+                    <div class="alignRight">
+                    	<button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
+                	</div>
+                </form>
+                <?php
             }
             ?>
         </div>

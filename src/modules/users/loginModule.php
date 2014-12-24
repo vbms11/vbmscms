@@ -119,8 +119,8 @@ class LoginModule extends XModule {
                 exit;
                 break;
             case "logout":
-                parent::focus();
                 UsersModel::logout();
+                parent::blur();
                 break;
         }
     }

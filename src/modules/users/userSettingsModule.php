@@ -102,31 +102,28 @@ class UserSettingsModule extends XModule {
 	    	<h1><?php echo parent::getTranslation("userSettings.title"); ?></h1>
 	    	<p><?php echo parent::getTranslation("userSettings.description"); ?></p>
 	    	
-	    	<div class="userSettingItem">
-		    	<h3><?php echo parent::getTranslation("userSettings.accountDetails.title"); ?></h3>
-		    	<p><?php echo parent::getTranslation("userSettings.accountDetails.description"); ?></p>
-		    	<hr>
-		    	<div class="alignRight">
+	    	<div class="userSettingsItem">
+		    	<div class="userSettingsEdit">
 		    		<a class="jquiButton" href="<?php echo parent::staticLink("userDetails",array("userId"=>$userId)); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
 		    	</div>
+		    	<h3><?php echo parent::getTranslation("userSettings.accountDetails.title"); ?></h3>
+		    	<p><?php echo parent::getTranslation("userSettings.accountDetails.description"); ?></p>
 	    	</div>
 	    	
-	    	<div class="userSettingItem">
-		    	<h3><?php echo parent::getTranslation("userSettings.address.title"); ?></h3>
-		    	<p><?php echo parent::getTranslation("userSettings.address.description"); ?></p>
-		    	<hr>
-		    	<div class="alignRight">
+	    	<div class="userSettingsItem">
+		    	<div class="userSettingsEdit">
 		    		<a class="jquiButton"><?php echo parent::getTranslation("common.edit"); ?></a>
 		    	</div>
+		    	<h3><?php echo parent::getTranslation("userSettings.address.title"); ?></h3>
+		    	<p><?php echo parent::getTranslation("userSettings.address.description"); ?></p>
 	    	</div>
 	    	
-	    	<div class="userSettingItem">
+	    	<div class="userSettingsItem">
+	    		<div class="userSettingsEdit">
+	    			<a class="jquiButton" href="<?php echo parent::staticLink("userInfo",array("action"=>"editInfo", "userId"=>$userId)); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
+	    		</div>
 	    		<h3><?php echo parent::getTranslation("userSettings.userInfo.title"); ?></h3>
 		    	<p><?php echo parent::getTranslation("userSettings.userInfo.description"); ?></p>
-		    	<hr>
-		    	<div class="alignRight">
-		    		<a class="jquiButton" href="<?php echo parent::staticLink("userInfo",array("action"=>"editInfo", "userId"=>$userId)); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
-	    		</div>
 	    	</div>
     	</div>
     	<?php

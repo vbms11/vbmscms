@@ -28,15 +28,15 @@ class UserInfoModule extends XModule {
             	
             	$userId = $this->getModeUserId();
             	
-            	if (Context::hasRole("user.profile.owner") && $userId == Context::getUserId())
-            	
-            	$messages = UsersModel::validateUserInfo(parent::post("orientation"), parent::post("religion"), parent::post("ethnicity"), parent::post("about"), parent::post("relationship"), parent::post("bodyheight"), parent::post("haircolor"), parent::post("eyecolor"), parent::post("weight"));
-            	if (empty($messages)) {
-            		UsersModel::saveUserInfo($userId, parent::post("orientation"), parent::post("religion"), parent::post("ethnicity"), parent::post("about"), parent::post("relationship"), parent::post("bodyheight"), parent::post("haircolor"), parent::post("eyecolor"), parent::post("weight"));
+	            	if (Context::hasRole("user.profile.owner") && $userId == Context::getUserId()) {
+	            	
+	            	$messages = UsersModel::validateUserInfo(parent::post("orientation"), parent::post("religion"), parent::post("ethnicity"), parent::post("about"), parent::post("relationship"), parent::post("bodyheight"), parent::post("haircolor"), parent::post("eyecolor"), parent::post("weight"));
+	            	if (empty($messages)) {
+	            		UsersModel::saveUserInfo($userId, parent::post("orientation"), parent::post("religion"), parent::post("ethnicity"), parent::post("about"), parent::post("relationship"), parent::post("bodyheight"), parent::post("haircolor"), parent::post("eyecolor"), parent::post("weight"));
+	            	}
+	            	break;
             	}
-            	break;
-            	
-            	parent::blur();
+            	parent::redirect(array("action" => "editInfo"));
         	case "editInfo":
         		parent::focus();
         }
@@ -54,8 +54,10 @@ class UserInfoModule extends XModule {
                 }
                 break;
             case "editInfo":
-            	$this->printEditInfoView();
-            	break;
+            	if (Context::hasRole("user.profile.privateDetails") && Context::getUserId() == $this->getModeUserId()) {
+            		$this->printEditInfoView();
+            	}
+        		break;
             default:
                 if (Context::hasRole("user.profile.view")) {
 					$this->printMainView();

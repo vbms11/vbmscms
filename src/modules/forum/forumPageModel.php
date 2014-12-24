@@ -84,6 +84,16 @@ class ForumPageModel {
             $pms[] = $obj;
         return $pms;
     }
+    
+    static function getUserTotalPosts ($userId) {
+    	$userId = mysql_real_escape_string($userId);
+    	$result = Database::queryAsObject("select sum(amount) as sum from(
+			SELECT count(*) as amount FROM t_forum_thread as t where t.userid = '$userId'
+		    union
+			SELECT count(*) as amount FROM t_forum_post as p where p.userid = '$userId'
+		) as s");
+		return $result->sum;
+    }
 
     static function getForumPage ($pageId) {
         $pageId = mysql_real_escape_string($pageId);

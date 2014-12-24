@@ -8,7 +8,7 @@
  */
 
 $lang = array();
-$lang['title'] = 'Online 4 Dating Chat';
+$lang['title'] = 'Make UFO chat';
 $lang['userName'] = 'Username';
 $lang['password'] = 'Password';
 $lang['login'] = 'Login';

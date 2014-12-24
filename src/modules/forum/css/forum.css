@@ -1,4 +1,62 @@
 
+/* thread view */
+
+.forum_thread_message_container {
+	
+}
+.forum_thread_replys_container {
+	
+}
+
+.forum_thread_message {
+
+}
+
+.forum_thread_reply {
+	
+}
+
+.forum_layout_left {
+	float: left;
+	width: 170px;
+}
+
+.forum_layout_center {
+	margin-left: 170px;
+}
+
+.forum_thread_message_titel {
+	height: 25px;
+	border-bottom: 1px solid silver;
+}
+.forum_thread_message_body {
+	
+}
+
+.forum_thread_reply_titel {
+	height: 25px;
+	border-bottom: 1px solid silver;
+}
+
+.forum_thread_buttons {
+	border: 1px solid silver;
+}
+
+.forum_info_container {
+	width: 170px;
+}
+.forum_info_image {
+	width: 170px;
+}
+.forum_info_name {
+	font-weight: bold;
+}
+.forum_info_location {
+}
+.forum_info_posts {
+}
+
+/* thread & topic list view */
 
 .forum_thread_row {
     background-image: url('../img/threadBg.gif');

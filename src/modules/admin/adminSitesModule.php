@@ -25,6 +25,13 @@ class AdminSitesModule extends XModule {
                     SiteModel::deleteSite(parent::get("id")); 
                     parent::redirect();
                     break;
+                case "viewSite":
+                	$siteId = parent::get("id");
+                	//TODO validate cmsuseid
+                	// $site = SitesModel::getSite($siteId);
+                	// if (Context::getSite()->cmscustomerid == $site->cmscustomerid)
+                	Context::setSiteId($siteId);
+                	break;
             }
         }
     }
@@ -242,7 +249,7 @@ class AdminSitesModule extends XModule {
             <thead><tr>
                 <td>ID</td>
                 <td class="expand">Name</td>
-                <td colspan="2">Tools</td>
+                <td colspan="3">Tools</td>
             </tr></thead>
             <tbody>
             <?php
@@ -252,9 +259,10 @@ class AdminSitesModule extends XModule {
                 <tr>
                     <td><?php echo $site->id; ?></td>
                     <td><?php echo $site->name; ?></td>
+                    <td><a href="<?php echo parent::link(array("action"=>"viewSite","id"=>$site->id),false); ?>"><img src="resource/img/view.png" alt="" /></a></td>
                     <td><a href="<?php echo parent::link(array("action"=>"editSite","id"=>$site->id)); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
                     <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("admin.sites.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"deleteSite","id"=>$site->id),false); ?>');" /></td>
-                </tr>
+                </tr> 
                 <?php
             }
 
