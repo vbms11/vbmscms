@@ -2,6 +2,10 @@
 
 class Context {
     
+    // $selection
+    // $request
+    
+    
     // user
 
     static function setUser ($user) {
@@ -221,6 +225,11 @@ class Context {
         }
         return $site->siteid;
     }
+    
+    static function setSiteId ($siteId) {
+    	$site = self::getSite();
+        $site->siteid = $siteId;
+    }
 
     // renderer
 
@@ -264,6 +273,9 @@ class Context {
         } else {
             
             Session::useSession();
+            
+            // Context::
+            
             NavigationModel::startRequest();
             LanguagesModel::selectLanguage();
             

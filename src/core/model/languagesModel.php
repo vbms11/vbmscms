@@ -3,13 +3,20 @@
 class LanguagesModel {
     
     static function selectLanguage () {
-        // set the language
+        
+        // get site default language
         $lang = "en";
+        
+        // $urlLanguage = Context::getRequest()->getUrl()->language;
+        // if ($urlLanguage->id != $lang->id)
+        // 	$lang = $urlLanguage
+        
         if (isset($_GET['changelang'])) {
             $lang = $_GET['changelang'];
         } else if (isset($_SESSION["req.lang"])) {
             $lang = $_SESSION["req.lang"];
         } else {
+        	// get browser default language
             if (isset($_REQUEST['local'])) {
                 switch ($_REQUEST['local']) {
                     case "en_us":
@@ -36,7 +43,23 @@ class LanguagesModel {
         $active = mysql_real_escape_string($active);
         return Database::query("update t_language set flag = '$flag', active = '$active' where id = '$id'");
     }
-
+	
+	// site languages
+	
+	static function getSiteLanguages ($siteId) {
+		if (self::siteLanguages == null) {
+			self::siteLanguages = array();
+		}
+		if (isset(self::siteLanguages[$siteId])) {
+			return self::siteLanguages[$siteId];
+		}
+		$_siteId = mysql_real_escape_string($siteId);
+		self::siteLanguages[$siteId] = Database::queryAsArray(
+			"select sl.* from t_site_language sl
+			join t_language l on sl.languageid = l.id
+			where sl.siteid = '$_siteId' order by sl.default");
+		return self::siteLanguages[$siteId];
+	}
 }
 
 ?>

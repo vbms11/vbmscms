@@ -43,6 +43,15 @@ class NavigationController {
             NavigationModel::addToHistory();
         }*/
         
+        /*
+        // parse url request
+        switch () {
+        
+        }
+        
+        */
+        
+        
         if (Context::getSiteId() == null) {
             $page = PagesModel::getStaticPage("unregistered", Context::getLang());
         } else if (!isset($_GET['service']) && $page == null) {

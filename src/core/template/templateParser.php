@@ -6,7 +6,7 @@
  * template.area.left
  * template.main.center
  * template.menu.top
- * template.module.wysiwyg.banner
+ * template.module.static.wysiwyg.banner
  * $config.currencySign
  * $context.request.abc = $_REQUEST['abc']
  * $object->attribute;
@@ -17,6 +17,18 @@
  * object.display
  * object.search
  * object.edit
+
+
+render module 
+template.module.scope.moduleSysName.instanceName
+
+example:
+template.module.static.wysiwyg.banner
+template.module.static.wysiwyg.banner
+ 
+
+
+
  */
 
 class TemplateParser {
@@ -185,7 +197,6 @@ class TemplateParser {
             default;
                 Context::getRenderer()->renderInstanceModule($module->moduleType, $module->name, null, true);
                 break;
-            default;
         }
     }
     
