@@ -35,7 +35,7 @@ try {
         }
 
     } else {
-
+    	
         // if the user hasent set a startpage the help page is displayed
         TemplateModel::renderSetupPage();
     }

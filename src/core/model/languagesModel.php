@@ -1,7 +1,7 @@
 <?php
 
 class LanguagesModel {
-    
+	
     static function selectLanguage () {
         
         // get site default language
@@ -21,8 +21,10 @@ class LanguagesModel {
                 switch ($_REQUEST['local']) {
                     case "en_us":
                         $lang = $_SESSION["req.lang"] = "en";
+                        break;
                     case "es_sp":
                         $lang = $_SESSION["req.lang"] = "sp";
+                        break;
                 }
             }
         }
@@ -45,21 +47,20 @@ class LanguagesModel {
     }
 	
 	// site languages
-	
-	static function getSiteLanguages ($siteId) {
-		if (self::siteLanguages == null) {
-			self::siteLanguages = array();
+    static function getSiteLanguages ($siteId) {
+		if (self::$siteLanguages == null) {
+			self::$siteLanguages = array();
 		}
-		if (isset(self::siteLanguages[$siteId])) {
-			return self::siteLanguages[$siteId];
+		if (isset(self::$siteLanguages[$siteId])) {
+			return self::$siteLanguages[$siteId];
 		}
 		$_siteId = mysql_real_escape_string($siteId);
-		self::siteLanguages[$siteId] = Database::queryAsArray(
+		self::$siteLanguages[$siteId] = Database::queryAsArray(
 			"select sl.* from t_site_language sl
 			join t_language l on sl.languageid = l.id
 			where sl.siteid = '$_siteId' order by sl.default");
-		return self::siteLanguages[$siteId];
+		return self::$siteLanguages[$siteId];
 	}
+	
 }
-
 ?>

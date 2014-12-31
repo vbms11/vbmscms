@@ -8,7 +8,11 @@ class ResourcesModel {
         $host = "http://".$_SERVER['HTTP_HOST'];
         $dirName = dirname($_SERVER['SCRIPT_NAME']);
         $dirName = str_replace("\\", "/", $dirName);
-        return $host.$dirName.'/';
+        $webPath = $host.$dirName;
+        if (!empty($dirName)) {
+        	$webPath .= '/';
+        }
+        return $webPath;
     }
     
     static function getBasePath () {

@@ -8,8 +8,8 @@ require_once 'core/context.php';
 class UsersModel {
     
     //TODO add 
-    
-    $orientations = array(
+	/*
+    const orientations = array(
     	0 => "straight",
     	1 => "bisexual",
     	2 => "gay"
@@ -26,27 +26,27 @@ class UsersModel {
     );
     
     $relationship = array(
-    	0 = "single",
-    	1 = "relationship"
+    	0 => "single",
+    	1 => "relationship"
     );
     
     $haircolor = array(
-    	0 = "Brown",
-    	1 = "Blond",
-    	2 = "Red",
-    	3 = "Green",
-    	4 = "Blue",
-    	5 = "Yellow"
+    	0 => "Brown",
+    	1 => "Blond",
+    	2 => "Red",
+    	3 => "Green",
+    	4 => "Blue",
+    	5 => "Yellow"
     );
     
     $eyecolor = array(
-    	0 = "Brown",
-    	1 = "Blue",
-    	2 = "Red",
-    	3 = "Green",
-    	4 = "Yellow"
+    	0 => "Brown",
+    	1 => "Blue",
+    	2 => "Red",
+    	3 => "Green",
+    	4 => "Yellow"
     );
-    
+    */
     static function search ($ageMin, $ageMax, $countryGeonameId, $place, $distance, $gender, $x, $y) {
         
         $country = CountryModel::getCountryByGeonameId($countryGeonameId);
@@ -474,7 +474,7 @@ class UsersModel {
         return $id;
     }
     
-    static function validateUserInfo (orientation, religion, ethnicity, about, relationship, bodyheight, haircolor, eyecolor, weight) {
+    static function validateUserInfo ($orientation, $religion, $ethnicity, $about, $relationship, $bodyheight, $haircolor, $eyecolor, $weight) {
     	
     	$messages = array();
     	
@@ -482,7 +482,7 @@ class UsersModel {
     }
     
     //TODO add lastonline,profileviews, orientation,religion,ethnicity,about,relationship, bodyheight, haircolor, eyecolor, weight
-    static function saveUserInfo (orientation, religion, ethnicity, about, relationship, bodyheight, haircolor, eyecolor, weight) {
+    static function saveUserInfo ($orientation, $religion, $ethnicity, $about, $relationship, $bodyheight, $haircolor, $eyecolor, $weight) {
     	$orientation = mysql_real_escape_string($orientation);
     	$religion = mysql_real_escape_string($religion);
     	$ethnicity = mysql_real_escape_string($ethnicity);
@@ -537,7 +537,7 @@ class UsersModel {
         $userId = mysql_real_escape_string($userId);
         $result = Database::queryAsObject("select authkey from t_user where id = '$userId'");
         return $result->authkey;
-    }
+    } 
     
 }
 

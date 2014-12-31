@@ -28,7 +28,7 @@ class InstallerController {
         $config .= '$GLOBALS[\'cmsSessionExpireTime\'] = 60;'.PHP_EOL;
 
         // resource config
-        $config .= '$GLOBALS[\'resourcePath\'] = \'files/\';'.PHP_EOL;
+        $config .= '$GLOBALS[\'resourcePath\'] = \'files\';'.PHP_EOL;
 
         // cms info
         $config .= '$GLOBALS[\'cmsName\'] = \'vbmscms\';'.PHP_EOL;
