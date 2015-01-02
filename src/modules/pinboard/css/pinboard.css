@@ -1,0 +1,50 @@
+
+
+.pinboardPanel .pinboardButtons div {
+    float: right;
+    width: 50px;
+    height: 50px;
+    margin: 5px 5px 0 0;
+}
+
+.pinboardPanel .pinboardButtons .closeButton {
+}
+
+.pinboardPanel .pinboardButtons .newButton {
+}
+
+.pinboardPanel .pinboardNewMenu {
+}
+
+.pinboardPanel .pinboardNote {
+    position: absolute;
+    width: 100px;
+    width: 100px;
+    border: 1px solid silver;
+    background: white;
+}
+
+.pinboardPanel .pinboardNote .noteButtons {
+    float: right;
+}
+
+.pinboardPanel .pinboardNote .noteButtons a {
+    border: 1px solid silver;
+}
+
+.pinboardPanel .pinboardNote .noteButtons a ul {
+    display: none;
+    position: relative;
+}
+
+.pinboardPanel .pinboardNote .noteButtons a:hover ul {
+    display: block;
+}
+
+.pinboardPanel .pinboardNote .noteMessage {
+    position: absolute;
+    width: 100px;
+    width: 100px;
+    border: 1px solid silver;
+    background: white;
+}
