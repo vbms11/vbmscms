@@ -2,7 +2,7 @@
 
 include_once 'core/plugin.php';
 
-class WysiwygPageView extends XModule {
+class PinboardMapModule extends XModule {
 
     /**
      * called when page is viewed before output stream is filled
@@ -44,7 +44,7 @@ class WysiwygPageView extends XModule {
      * called when page is viewed and html created
      */
     function onView () {
-        
+
         switch (parent::getAction()) {
             case "edit":
                 if (Context::hasRole("pinboardMap.edit")) {
@@ -75,7 +75,7 @@ class WysiwygPageView extends XModule {
 
         ?>
         <script type="text/javascript">
-        $("#<?php echo parent::param("mapContainer"); ?>").pinboardMap({
+        $(".mapHolder").pinboardMap({
             dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
         });
         </script>

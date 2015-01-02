@@ -1,0 +1,26 @@
+
+
+
+sub domains:
+
+sub domain per:
+	continent
+	country
+	city > x
+set
+
+context selection
+	continent
+	country
+	city
+
+ui strings
+	replace context selection
+		<% context.selection.city.name %>
+
+user info module
+	same as user info view in other networks
+
+
+
+

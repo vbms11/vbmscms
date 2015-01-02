@@ -1,9 +1,9 @@
 <?php
 
 class IconModel {
-    
-    $iconsPath = "resource/img/icons";
-    
+
+    const iconsPath = "resource/img/icons";
+ 
     function getIcons () {
         
         $result = Database::queryAsArray("select * from t_icon");
@@ -29,12 +29,12 @@ class IconModel {
     function loadIcons () {
         
         // open directory
-        if ($handle = opendir(self::$iconsPath)) {
+        if ($handle = opendir(self::iconsPath)) {
             
             // itterate files
             while (false !== ($filename = readdir($handle))) {
                 
-                $file = self::$iconsPath."/".$filename;
+                $file = self::iconsPath."/".$filename;
                 
                 // get image info
                 $result = getimagesize($file);
@@ -48,6 +48,7 @@ class IconModel {
             closedir($handle);
         }
     }
+
 }
 
 ?>

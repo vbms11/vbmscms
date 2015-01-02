@@ -9,7 +9,7 @@ class ResourcesModel {
         $dirName = dirname($_SERVER['SCRIPT_NAME']);
         $dirName = str_replace("\\", "/", $dirName);
         $webPath = $host.$dirName;
-        if (!empty($dirName)) {
+        if (!empty($dirName) && $dirName != "/") {
         	$webPath .= '/';
         }
         return $webPath;

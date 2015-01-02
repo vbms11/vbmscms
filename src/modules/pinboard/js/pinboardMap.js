@@ -1,6 +1,6 @@
 
 
-$.widget( "custom.pinboardmap", {
+$.widget("custom.pinboardMap", {
     
     // default options
     options: {
@@ -17,9 +17,9 @@ $.widget( "custom.pinboardmap", {
     _create: function () {
         
         this.element
-            .addClass("pinboardmap")
+            .addClass("pinboardMap")
             .disableSelection();
-        
+
         this.attach();
         
         this._refresh();
@@ -35,7 +35,7 @@ $.widget( "custom.pinboardmap", {
     _destroy : function () {
         
         this.element
-            .removeClass("pinboardmap")
+            .removeClass("pinboardMap")
             .empty()
             .enableSelection();
     },
@@ -79,9 +79,12 @@ $.widget( "custom.pinboardmap", {
         
         var thisObject = this;
         
-	    var center = new google.maps.LatLng(this.options.lat, this.options.lng);
+	    // var center = new google.maps.LatLng(this.options.lat, this.options.lng);
+var center = new google.maps.LatLng(45,0);
 	    
-    	var myMapOptions = {
+google.maps.event.addDomListener(window, 'load', function () {
+    	
+var myMapOptions = {
           	zoom: 10,
     		center: center,
     		streetViewControl: false,
@@ -93,9 +96,12 @@ $.widget( "custom.pinboardmap", {
             }
     	};
     	
-    	this.map = new google.maps.Map(this.element,myMapOptions);
+    	thisObject.map = new google.maps.Map(thisObject.element[0], myMapOptions);
     	
-        this.completeAttach();
+        thisObject.completeAttach();
+
+});
+
     },
     
     completeAttach : function () {
