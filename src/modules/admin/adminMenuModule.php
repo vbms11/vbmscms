@@ -447,7 +447,7 @@ class AdminMenuModule extends XModule {
         ?>
         <div class="adminMenuTemplatesDiv">
             <ul>
-                <li class="<?php if ($siteTemplatesOpen) { echo "jstree-open"; } ?>">
+                <li class="adminNodeEditorListTemplates <?php if ($siteTemplatesOpen) { echo "jstree-open"; } ?>">
                     <a href="#"><?php echo parent::getTranslation("admin.menu.template.installed"); ?></a>
                     <ul>
                     <?php
@@ -477,6 +477,8 @@ class AdminMenuModule extends XModule {
                 if (data.rslt.obj.hasClass("adminNodeEditorTemplate")) {
                     var templateId = data.rslt.obj.attr("id").substring(9);
                     callUrl("<?php echo parent::staticLink("adminTemplates",array("action"=>"editTemplate","setAdminMode"=>"adminTemplates")); ?>&adminTemplateId="+templateId+"&id="+templateId);
+                } else if (data.rslt.obj.hasClass("adminNodeEditorListTemplates")) {
+                    callUrl("<?php echo parent::staticLink("adminTemplates",array("setAdminMode"=>"adminTemplates")); ?>);
                 }
             });
         });
