@@ -51,6 +51,9 @@ class PinboardMapModule extends XModule {
                     $this->printEditView();
                 }
                 break;
+            case "newPinboard":
+                $this->printNewPinboardView();
+                break;
             default:
                 $this->printMainView();
         }
@@ -74,14 +77,62 @@ class PinboardMapModule extends XModule {
     function printMainView () {
 
         ?>
-        <script type="text/javascript">
-        $(".mapHolder").pinboardMap({
-            dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
-        });
-        </script>
+        <div class="panel pinboardMapPanel">
+            
+            <div class="buttonsHolder">
+                <a href="<?php echo parent::link(array("action"=>"newPinboard")); ?>" class="newPinboardButton">
+                    <img src="modules/pinboard/img/newPinboard.png" alt="" />
+                </a>
+            </div>
+            
+            <script type="text/javascript">
+            $(".pinboardMapPanel .newPinboardButton").click(function () {
+                
+            });
+            $(".mapHolder").pinboardMap({
+                dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
+            });
+            </script>
+        
+        </div>
         <?php
     }
-
+    
+    function printNewPinboardView () {
+        
+        $icons = IconModel::getIcons();
+        
+        ?>
+        <div class="panel pinboardMapPanel">
+            
+            <h1><?php echo parent::getTranslation("pinboardMap.new.title"); ?></h1>
+            <p><?php echo parent::getTranslation("pinboardMap.new.description"); ?></p>
+            
+            <table><tr><td>
+                <?php echo parent::getTranslation("pinboardMap.new.name"); ?>
+            </td><td>
+                <input name="name" type="text" value="" placeholder="<?php echo parent::getTranslation("pinboardMap.new.name.placeholder"); ?>" />
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("pinboardMap.new.description"); ?>
+            </td><td>
+                <textarea name="description" placeholder="<?php echo parent::getTranslation("pinboardMap.new.description.placeholder"); ?>"></textarea>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("pinboardMap.new.icon"); ?>
+            </td><td>
+                <input type="hidden" value="" />
+                <?php
+                foreach ($icons as $icon) {
+                    ?>
+                    <div class="iconOption"></div>
+                    <?php
+                }
+                ?>
+            </td></tr></table>
+            
+        </div>
+        <?php
+    }
+    
     function printEditView () {
 	
         ?>
