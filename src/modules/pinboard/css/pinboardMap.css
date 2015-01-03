@@ -8,4 +8,8 @@
     z-index: 20;
 }
 
+.pinboardMapPanel .buttonsHolder img {
+    height: 40px;
+}
+
 

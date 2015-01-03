@@ -36,6 +36,25 @@ class PinboardMapModule extends XModule {
                         NavigationModel::redirectStaticModule("pinboard", array("action"=>"createPinboard", "lng"=>parent::get("lng"), "lat"=>parent::get("lat")));
                     }
                     break;
+                case "newPinboard":
+                    parent::focus();
+                    break;
+                case "createPinboard":
+                    if (Context::hasRole("pinboardMap.create")) {
+                        if (parent::post("createPinboard")) {
+                            
+                            $messages = PinboardModel::validatePinboard(parent::post("name"), parent::post("description"), parent::post("icon"));
+                            if (empty($messages)) {
+                                PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("lat"), parent::post("lng"), Context::getUserId());
+                            } else {
+                                parent::setMessages($messages);
+                                break;
+                            }
+                            
+                        }
+                    }
+                    parent::blur();
+                    break;
             }
         }
     }
@@ -53,6 +72,8 @@ class PinboardMapModule extends XModule {
                 break;
             case "newPinboard":
                 $this->printNewPinboardView();
+                break;
+            case "createPinboard":
                 break;
             default:
                 $this->printMainView();
@@ -105,29 +126,48 @@ class PinboardMapModule extends XModule {
         ?>
         <div class="panel pinboardMapPanel">
             
-            <h1><?php echo parent::getTranslation("pinboardMap.new.title"); ?></h1>
-            <p><?php echo parent::getTranslation("pinboardMap.new.description"); ?></p>
-            
-            <table><tr><td>
-                <?php echo parent::getTranslation("pinboardMap.new.name"); ?>
-            </td><td>
-                <input name="name" type="text" value="" placeholder="<?php echo parent::getTranslation("pinboardMap.new.name.placeholder"); ?>" />
-            </td></tr><tr><td>
-                <?php echo parent::getTranslation("pinboardMap.new.description"); ?>
-            </td><td>
-                <textarea name="description" placeholder="<?php echo parent::getTranslation("pinboardMap.new.description.placeholder"); ?>"></textarea>
-            </td></tr><tr><td>
-                <?php echo parent::getTranslation("pinboardMap.new.icon"); ?>
-            </td><td>
-                <input type="hidden" value="" />
-                <?php
-                foreach ($icons as $icon) {
-                    ?>
-                    <div class="iconOption"></div>
+            <form method="post" action="<?php echo parent::link(array("action"=>"createPinboard")); ?>">
+                
+                <input name="lat" type="hidden" value="" />
+                <input name="lng" type="hidden" value="" />
+                
+                <h1><?php echo parent::getTranslation("pinboardMap.new.title"); ?></h1>
+                <p><?php echo parent::getTranslation("pinboardMap.new.description"); ?></p>
+                
+                <table><tr><td>
+                    <?php echo parent::getTranslation("pinboardMap.new.name"); ?>
+                </td><td>
+                    <input name="name" type="text" value="" placeholder="<?php echo parent::getTranslation("pinboardMap.new.name.placeholder"); ?>" />
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("pinboardMap.new.description"); ?>
+                </td><td>
+                    <textarea name="description" placeholder="<?php echo parent::getTranslation("pinboardMap.new.description.placeholder"); ?>"></textarea>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("pinboardMap.new.icon"); ?>
+                </td><td>
+                    <input type="hidden" value="" />
                     <?php
-                }
-                ?>
-            </td></tr></table>
+                    foreach ($icons as $icon) {
+                        ?>
+                        <div class="iconOption"></div>
+                        <?php
+                    }
+                    ?>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("pinboardMap.new.security"); ?>
+                </td><td>
+                    <?php
+                    InputFeilds::printCaptcha("security");
+                    ?>
+                </td></tr></table>
+                
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit" name="createPinboard" value="1"><?php echo parent::getTranslation("pinboardMap.new.submit"); ?></button>
+                    <button type="submit" name="cancel"><?php echo parent::getTranslation("pinboardMap.new.cancel"); ?></button>
+                </div>
+                
+            </form>
             
         </div>
         <?php
