@@ -89,7 +89,7 @@ class PinboardMapModule extends XModule {
             $(".pinboardMapPanel .newPinboardButton").click(function () {
                 
             });
-            $(".mapHolder").pinboardMap({
+            $(".gMapHolder").pinboardMap({
                 dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
             });
             </script>
