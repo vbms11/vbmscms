@@ -107,11 +107,13 @@ class PinboardMapModule extends XModule {
             </div>
             
             <script type="text/javascript">
-            $(".pinboardMapPanel .newPinboardButton").click(function () {
-                
-            });
-            $(".gMapHolder").pinboardMap({
-                dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
+            $(function(){
+                $(".pinboardMapPanel .newPinboardButton").click(function () {
+                    
+                });
+                $(".gMapHolder").pinboardMap({
+                    dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
+                });
             });
             </script>
         

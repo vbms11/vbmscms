@@ -82,7 +82,7 @@ $.widget("custom.pinboardMap", {
 	    // var center = new google.maps.LatLng(this.options.lat, this.options.lng);
 var center = new google.maps.LatLng(45,0);
 	    
-google.maps.event.addDomListener(window, 'load', function () {
+// google.maps.event.addDomListener(window, 'load', function () {
     	
 var myMapOptions = {
           	zoom: 10,
@@ -100,7 +100,7 @@ var myMapOptions = {
     	
         thisObject.completeAttach();
 
-});
+// });
 
     },
     
