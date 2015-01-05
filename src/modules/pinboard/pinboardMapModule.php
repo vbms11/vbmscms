@@ -9,53 +9,50 @@ class PinboardMapModule extends XModule {
      */
     function onProcess () {
         
-        if (Context::hasRole("wysiwyg.edit")) {
-            
-            switch (parent::getAction()) {
-                case "save":
-                    if (Context::hasRole("pinboardMap.edit")) {
-                        parent::param("mapContainer", parent::post("mapContainer"));
-                        parent::blur();
-                        parent::redirect();
-                    }
-                    break;
-                case "edit":
-                    if (Context::hasRole("pinboardMap.edit")) {
-                        parent::focus();
-                    }
-                    break;
-                case "cancel":
+        switch (parent::getAction()) {
+            case "save":
+                if (Context::hasRole("pinboardMap.edit")) {
+                    parent::param("mapContainer", parent::post("mapContainer"));
                     parent::blur();
-                    break;
-                case "getPinboards":
-                    $pinboards = PinboardModel::getPinbords(parent::get("minLng"), parent::get("minLat"), parent::get("maxLng"), parent::get("maxLat"));
-                    Context::setReturnValue(json_encode($pinboards));
-                    break;
-                case "setPinboardLocation":
-                    if (Context::hasRole("pinboardMap.create")) {
-                        NavigationModel::redirectStaticModule("pinboard", array("action"=>"createPinboard", "lng"=>parent::get("lng"), "lat"=>parent::get("lat")));
-                    }
-                    break;
-                case "newPinboard":
+                    parent::redirect();
+                }
+                break;
+            case "edit":
+                if (Context::hasRole("pinboardMap.edit")) {
                     parent::focus();
-                    break;
-                case "createPinboard":
-                    if (Context::hasRole("pinboardMap.create")) {
-                        if (parent::post("createPinboard")) {
-                            
-                            $messages = PinboardModel::validatePinboard(parent::post("name"), parent::post("description"), parent::post("icon"));
-                            if (empty($messages)) {
-                                PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("lat"), parent::post("lng"), Context::getUserId());
-                            } else {
-                                parent::setMessages($messages);
-                                break;
-                            }
-                            
+                }
+                break;
+            case "cancel":
+                parent::blur();
+                break;
+            case "getPinboards":
+                $pinboards = PinboardModel::getPinbords(parent::get("minLng"), parent::get("minLat"), parent::get("maxLng"), parent::get("maxLat"));
+                Context::setReturnValue(json_encode($pinboards));
+                break;
+            case "setPinboardLocation":
+                if (Context::hasRole("pinboardMap.create")) {
+                    NavigationModel::redirectStaticModule("pinboard", array("action"=>"createPinboard", "lng"=>parent::get("lng"), "lat"=>parent::get("lat")));
+                }
+                break;
+            case "newPinboard":
+                parent::focus();
+                break;
+            case "createPinboard":
+                if (Context::hasRole("pinboardMap.create")) {
+                    if (parent::post("createPinboard")) {
+                        
+                        $messages = PinboardModel::validatePinboard(parent::post("name"), parent::post("description"), parent::post("icon"));
+                        if (empty($messages)) {
+                            PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("lat"), parent::post("lng"), Context::getUserId());
+                        } else {
+                            parent::setMessages($messages);
+                            break;
                         }
+                        
                     }
-                    parent::blur();
-                    break;
-            }
+                }
+                parent::blur();
+                break;
         }
     }
 
