@@ -74,12 +74,12 @@ $.widget("custom.locationSelectMap", {
         // add map and inputs container to this element
         
         this.element
-            .append("<div>", {"class": "locationSelectMapContainer"})
+            .append("div", {"class": "locationSelectMapContainer"})
                 .css({"height": this.element.height()})
             .end()
-            .append("<div>", {"class": "locationSelectMapInputs"})
-                .append("<input>", {"type": "hidden", "name": this.options.inputName + "_lng", "value": this.options.lng})
-                .append("<input>", {"type": "hidden", "name": this.options.inputName + "_lat", "value": this.options.lat});
+            .append("div", {"class": "locationSelectMapInputs"})
+                .append("input", {"type": "hidden", "name": this.options.inputName + "_lng", "value": this.options.lng})
+                .append("input", {"type": "hidden", "name": this.options.inputName + "_lat", "value": this.options.lat});
         
         // create the mape
         
