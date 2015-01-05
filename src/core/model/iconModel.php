@@ -41,7 +41,7 @@ class IconModel {
                 if ($result) {
                     
                     // add icon
-                    self::addIcon($file, $width, $height);
+                    self::addIcon($file, $result[0], $result[1]);
                 }
             }
             

@@ -43,7 +43,7 @@ class PinboardMapModule extends XModule {
                         
                         $messages = PinboardModel::validatePinboard(parent::post("name"), parent::post("description"), parent::post("icon"));
                         if (empty($messages)) {
-                            PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("lat"), parent::post("lng"), Context::getUserId());
+                            PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("locationSelect_lat"), parent::post("locationSelect_lng"), Context::getUserId());
                         } else {
                             parent::setMessages($messages);
                             break;
@@ -147,16 +147,19 @@ class PinboardMapModule extends XModule {
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.icon"); ?>
                 </td><td>
-                    <input type="hidden" value="" />
-                    <?php
-                    foreach ($icons as $icon) {
-                        ?>
-                        <div class="iconOption"></div>
+                    <select name="icon">
                         <?php
-                    }
-                    ?>
+                        foreach ($icons as $icon) {
+                            ?>
+                            <option value="<?php echo $icon->id; ?>">
+                                <img src="<?php echo $icon->iconfile; ?>" alt="" />
+                            </option>
+                            <?php
+                        }
+                        ?>
+                    </select>
                 </td></tr><tr><td>
-                    <?php echo parent::getTranslation("pinboardMap.new.security"); ?>
+                    <?php echo parent::getTranslation("pinboardMap.new.location"); ?>
                 </td><td>
                     <div class="locationSelect"></div>
                 </td></tr><tr><td>
@@ -177,7 +180,7 @@ class PinboardMapModule extends XModule {
             
         </div>
         <script type="text/javascript">
-        $(".pinboardMapPanel .locationSelect").locationSelectMap({
+        $(".pinboardMapNewPanel .locationSelect").locationSelectMap({
             "lat": <?php echo parent::get("lat"); ?>, 
             "lng": <?php echo parent::get("lng"); ?>,
             "zoom": <?php echo parent::get("zoom"); ?>,
