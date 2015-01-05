@@ -97,7 +97,7 @@ $.widget("custom.locationSelectMap", {
             }
     	};
     	
-    	this.map = new google.maps.Map(thisObject.element.find(".locationSelectMapContainer")[0], myMapOptions);
+    	this.map = new google.maps.Map(thisObject.element.find(".locationSelectMapContainer")[0][0], myMapOptions);
     	
     	this.initMarker();
     	
