@@ -92,7 +92,7 @@ class PinboardMapModule extends XModule {
     }
     
     function getScripts () {
-    	return array("https://maps.googleapis.com/maps/api/js", "js/pinboardMap.js");
+    	return array("https://maps.googleapis.com/maps/api/js", "js/pinboardMap.js", "js/locationSelectMap.js");
     }
 
     function printMainView () {
@@ -109,7 +109,10 @@ class PinboardMapModule extends XModule {
             <script type="text/javascript">
             $(function(){
                 $(".pinboardMapPanel .newPinboardButton").click(function () {
-                    
+                    var center = $(".gMapHolder").pinboardMap("getCenter");
+                    var zoom = $(".gMapHolder").pinboardMap("getZoom");
+                    callUrl("<?php echo parent::link(array("action"=>"newPinboard")); ?>", {"lat": center.lat, "lng": center.lng, "zoom": zoom});
+                    return false;
                 });
                 $(".gMapHolder").pinboardMap({
                     dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
@@ -126,7 +129,7 @@ class PinboardMapModule extends XModule {
         $icons = IconModel::getIcons();
         
         ?>
-        <div class="panel pinboardMapPanel">
+        <div class="panel pinboardMapNewPanel">
             
             <form method="post" action="<?php echo parent::link(array("action"=>"createPinboard")); ?>">
                 
@@ -136,7 +139,7 @@ class PinboardMapModule extends XModule {
                 <h1><?php echo parent::getTranslation("pinboardMap.new.title"); ?></h1>
                 <p><?php echo parent::getTranslation("pinboardMap.new.description"); ?></p>
                 
-                <table><tr><td>
+                <table class="formTable"><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.name"); ?>
                 </td><td>
                     <input name="name" type="text" value="" placeholder="<?php echo parent::getTranslation("pinboardMap.new.name.placeholder"); ?>" />
@@ -158,6 +161,10 @@ class PinboardMapModule extends XModule {
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.security"); ?>
                 </td><td>
+                    <div class="locationSelect"></div>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("pinboardMap.new.security"); ?>
+                </td><td>
                     <?php
                     InputFeilds::printCaptcha("security");
                     ?>
@@ -172,6 +179,14 @@ class PinboardMapModule extends XModule {
             </form>
             
         </div>
+        <script type="text/javascript">
+        $(".pinboardMapPanel .locationSelect").locationSelectMap({
+            "lat": <?php echo parent::get("lat"); ?>, 
+            "lng": <?php echo parent::get("lng"); ?>,
+            "zoom": <?php echo parent::get("zoom"); ?>,
+            "inputName": "locationSelect"
+        });
+        </script>
         <?php
     }
     

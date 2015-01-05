@@ -262,20 +262,17 @@ var myMapOptions = {
     
     onPinboardMouseOver : function () {
         
+    },
+    
+    getZoom : function () {
+        
+        return this.map.getZoom();
+    },
+    
+    getCenter : function () {
+        
+        var center = this.map.getCenter();
+        return {"lat": center.lat(), "lng": center.lng()}
     }
     
 });
-
-
-
-
-/*
-
-var map;	
-var marker;
-var shape;
-var myInfoWindowOptions;
-var infoWindow;
-var center = new google.maps.LatLng(50.915516, 0.346269);
-var markerPosition = new google.maps.LatLng(50.875311, 0.351563);
-*/
