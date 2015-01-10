@@ -39,8 +39,7 @@ class PinboardMapModule extends XModule {
                 break;
             case "createPinboard":
                 if (Context::hasRole("pinboardMap.create")) {
-                    if (parent::post("createPinboard")) {
-                        
+                    if (parent::post("createPinboard") && Captcha::validateInput('security')) {
                         $messages = PinboardModel::validatePinboard(parent::post("name"), parent::post("description"), parent::post("icon"));
                         if (empty($messages)) {
                             PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("locationSelect_lat"), parent::post("locationSelect_lng"), Context::getUserId());
@@ -52,6 +51,7 @@ class PinboardMapModule extends XModule {
                     }
                 }
                 parent::blur();
+                parent::redirect();
                 break;
         }
     }
@@ -69,8 +69,6 @@ class PinboardMapModule extends XModule {
                 break;
             case "newPinboard":
                 $this->printNewPinboardView();
-                break;
-            case "createPinboard":
                 break;
             default:
                 $this->printMainView();

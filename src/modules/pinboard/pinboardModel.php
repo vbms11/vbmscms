@@ -1,6 +1,26 @@
 
 class PinboardModel {
 	
+	function validatePinboard ($name, $description, $icon) {
+		
+		$errors = array();
+        if (strlen($name) == 0) {
+            $errors["name"] = "This feild cannot be empty!";
+        }
+        if (strlen($name) > 100) {
+            $errors["comment"] = "Maximum 100 characters allowed!";
+        }
+        
+        if (strlen($description) == 0) {
+            $errors["name"] = "This feild cannot be empty!";
+        }
+        if (strlen($description) > 1000) {
+            $errors["comment"] = "Maximum 1000 characters allowed!";
+        }
+        
+        return $errors;
+	}
+	
 	function createPinboard ($name, $description, $iconId, $lat, $lng, $userId = null) {
 		
 		if (empty($userId)) {
