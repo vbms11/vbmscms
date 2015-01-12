@@ -478,7 +478,7 @@ class AdminMenuModule extends XModule {
                     var templateId = data.rslt.obj.attr("id").substring(9);
                     callUrl("<?php echo parent::staticLink("adminTemplates",array("action"=>"editTemplate","setAdminMode"=>"adminTemplates")); ?>&adminTemplateId="+templateId+"&id="+templateId);
                 } else if (data.rslt.obj.hasClass("adminNodeEditorListTemplates")) {
-                    callUrl("<?php echo parent::staticLink("adminTemplates",array("setAdminMode"=>"adminTemplates")); ?>);
+                    callUrl("<?php echo parent::staticLink("adminTemplates",array("setAdminMode"=>"adminTemplates")); ?>");
                 }
             });
         });
