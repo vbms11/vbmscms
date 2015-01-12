@@ -38,7 +38,7 @@ class PinboardModel {
 			values ('$name', '$description', '$userId', 'iconId', '$lat', '$lng', now(), now())");
 		
 		$result = Database::queryAsObject("select last_insert_id() as newid from t_pinboard");
-		return $result;
+		return $result->newid;
 	}
 	
 	function setPinboardLocation ($id, $lat, $lng) {
@@ -76,7 +76,7 @@ class PinboardModel {
 		$maxLat = mysql_real_escape_string($maxLat);
 		$max = (int) $max;
 		
-		return Database::queryAsArray("select p.*, i.iconfile from t_pinboard p 
+		return Database::queryAsArray("select p.*, i.iconfile, i.width, i.height from t_pinboard p 
 			join t_icon i on p.iconid = i.id 
 			where p.lng > '$minLng' and p.lat > '$minLat' and p.lng < '$maxLng' and p.lat < '$maxLat' 
 			limit $max");

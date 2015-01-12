@@ -23,7 +23,52 @@ class WysiwygPageView extends XModule {
                     break;
                 case "cancel":
                     parent::blur();
+                    
+                case "closePinboard":
+                    NavigationModel::staticRedirect("pinboardMap");
+                    break;
+                case "createNote":
+                    
+                    if (parent::post("createNote")) {
+                        
+                        $message = parent::post("message");
+                        $pinboardId = parent::get("pinboardId");
+                        $type = parent::get("type");
+                        $typeId = parent::post("typeId");
+                        
+                        $userId = Context::getUserId();
+                        $x = parent::post("x");
+                        $y = parent::post("y");
+                        
+                        PinboardModel::validateNote($message, $pinboardId, $type, $typeId, $userId, $x, $y);
+                        if (empty($messages)) {
+                            PinboardModel::createNote($message, $pinboardId, $type, $typeId, $userId, $x, $y);
+                            parent::blur();
+                            parent::redirect();
+                        } else {
+                            parent::setMessages($messages);
+                        }
+                    }
+                    break;
+                case "deleteNote":
+                    
+                    $note = PinboardModel::getNote(parent::get("noteId"));
+                    if (!empty($note) && ($note->userid == Context::getUserId() || Context::hasRole("pinboard.admin"))) {
+                        PinboardModel::deleteNote($note->id);
+                    }
+                    break;
+                case "getNotes":
+                    $notes = PinboardModel::getNotes(parent::get("pinboardId"));
+                    Context::setReturnValue(json_enode($notes));
+                    break;
+                case "setNotePosition":
+                    $note = PinboardModel::getNote(parent::get("noteId"));
+                    if (!empty($note) && ($note->userid == Context::getUserId() || Context::hasRole("pinboard.admin"))) {
+                        PinboardModel::setNotePosition(parent::get("x"), parent::get("y"));
+                    }
+                    break;
             }
+             
         }
     }
 
@@ -34,8 +79,13 @@ class WysiwygPageView extends XModule {
         
         switch (parent::getAction()) {
             case "edit":
-                if (Context::hasRole("wysiwyg.edit")) {
+                if (Context::hasRole("pinboard.edit")) {
                     $this->printEditView();
+                }
+                break;
+            case "newNote":
+                if (Context::hasRole("pinboard.createNote")) {
+                    $this->printCreateNoteView();
                 }
                 break;
             default:
@@ -47,16 +97,16 @@ class WysiwygPageView extends XModule {
      * returns the roles defined by this module
      */
     function getRoles () {
-        return array("wysiwyg.edit");
+        return array("pinboard.edit", "pinboard.admin", "pinboard.createNote");
     }
-
-function getStyles () {
-	return array("css/mapStyles");
-}
-
-function getScripts () {
-	return array("https://maps.googleapis.com/maps/api/js");
-}
+    
+    function getStyles () {
+    	return array("css/mapStyles");
+    }
+    
+    function getScripts () {
+    	return array("https://maps.googleapis.com/maps/api/js");
+    }
 
 
 
@@ -64,83 +114,86 @@ function getScripts () {
      * returns search results for given text
      */
     function search ($searchText, $lang) {
-        return WysiwygPageModel::search($searchText,$lang);
+        // return PinboardModel::search($searchText,$lang);
+    }
+    
+    function printEditView () {
+        
     }
 
     function printMainView () {
-
+        
+        $notes = PinboardModel::getNotes(parent::get("pinboardId"));
+        
         ?>
-        <div class="panel addressMapPanel <?php echo parent::alias("mapContainer"); ?>">
-	
-	<style>
-      #map_canvas {
-        width: 500px;
-        height: 400px;
-      }
-    </style>
-<script type="text/javascript">	
-
-
-// find coordinate from address
-	var map_<?php echo parent::alias("jsmap"); ?> = null;
-	var place = $(".<?php echo parent::alias("mapContainer"); ?>").find(".address").val()
-	if (place != "") {
-		updateCoordinatesByPlace(elX, elY, place, function () {
-			
-			// when address has been changed
-			// move map to new position
-	 	});
+        <div class="panel pinboardPanel <?php echo parent::alias("pinboardPanel"); ?>">
+            <div class="pinboardButtons">
+                <a href="#">
+                    <img src="" alt="+"></img>
+                    <ul>
+                        <li><a href="<?php echo parent::link(array("action"=>"newNote","pinboardId"=>parent::get("pinboardId"))); ?>"><?php echo parent::getTranslation("pinboard.options.note"); ?></a></li>
+                    </ul>
+                <a>
+            </div>
+            <?php
+            foreach ($notes as $note) {
+                ?>
+                <div class="pinboardNote">
+                    <div class="noteInfo">
+                    </div>
+                    <div clas="noteMessage">
+                        <?php echo $note->message; ?>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+	    </div>
+	    <script type="text/javascript">
+	    $(".<?php echo parent::alias("pinboardPanel"); ?>").pinboard({
+	        
+	    });
+	    </script>
+	    <?php
 	}
 	
-
-
-
-	// make map with center on coordinates
-
-	
-	function initialize() {
-
-        var mapCanvas = document.getElementById('map_canvas');
-        var mapOptions = {
-          center: new google.maps.LatLng(<?php echo parent::param("addressLat"); ?>, <?php echo parent::param("addressLng"); ?>),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-        var map = new google.maps.Map(mapCanvas, mapOptions)
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-    
-	<div id="map_canvas"></div>
-       
-        <?php
-    }
-
-    function printEditView () {
-	
+    function printCreateNoteView () {
         ?>
-        <div class="panel wysiwygPanel <?php echo parent::alias("addressForm"); ?>">
-            <form method="post" action="<?php echo parent::link(array("action"=>"update")); ?>">
-                <table class="formTable"><tr><td>
-			<?php echo htmlspecialchars(parent::getTranslation("addressMap.address")); ?>			
-			<textarea name="address">
-				<?php echo htmlspecialchars(parent::param("address")); ?>
-			</textarea>
-		</td>
-                <hr/>
-                <div class="alignRight">
-                    <button type="submit" class="jquiButton btnSave"><?php echo parent::getTranslation("common.save"); ?></button>
-                    <button type="button" class="jquiButton btnCancel"><?php echo parent::getTranslation("editor.label.cancel"); ?></button>
+        <div class="panel createNotePanel <?php echo parent::alias("pinboardPanel"); ?>">
+            <div class="pinboardNote">
+                <div class="noteInfo">
                 </div>
-            </form>
-        </div>
-	<script>
-        $(".<?php echo parent::alias("addressForm") ?> .btnCancel").click(function () {
-        	callUrl("<?php echo parent::link(array("action"=>"cancel")); ?>");
-	});
-	</script>
-        <?php
+                <div clas="noteMessage">
+                    <form method="post" action="<?php echo parent::link(array("action"=>"createNote","pinboarId"=>parent::post("pinboarId"))) ?>">
+                        <textarea cols="10" rows="5" name="message"/>
+                            <?php echo htmlspecialchars(parent::post("message")); ?>
+                        </textarea>
+                        <?php
+                        $message = parent::getMessage("message");
+                        if (!empty($message)) {
+                            echo '<span class="validateTips">'.$message.'</span>';
+                        }
+                        ?>
+                        <hr/>
+                        <div class="alignRight">
+                            <button name="createNote"><?php echo parent::getTranslation("poinboard.new.button.createPinboard"); ?></button>
+                            <button name="cancel"><?php echo parent::getTranslation("poinboard.new.button.cancel"); ?></button>
+                        </div>
+                    </form>
+                </div>
+                <?php
+            }
+            ?>
+	    </div>
+	    <script type="text/javascript">
+	    $(".<?php echo parent::alias("createNotePanel"); ?>").pinboard({
+	        
+	    });
+	    </script>
+	    <?php
     }
+    
+    
 }
 
 ?>

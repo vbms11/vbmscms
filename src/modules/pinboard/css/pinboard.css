@@ -22,6 +22,7 @@
     width: 100px;
     border: 1px solid silver;
     background: white;
+    border-radius: 3px;
 }
 
 .pinboardPanel .pinboardNote .noteButtons {
@@ -42,9 +43,5 @@
 }
 
 .pinboardPanel .pinboardNote .noteMessage {
-    position: absolute;
-    width: 100px;
-    width: 100px;
-    border: 1px solid silver;
-    background: white;
+    margin: 5px;
 }

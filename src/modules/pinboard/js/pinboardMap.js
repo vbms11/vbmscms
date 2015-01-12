@@ -108,7 +108,8 @@ var myMapOptions = {
         
         var thisObject = this;
         
-        this.show();
+        //this.show();
+        this.updatePinboards();
         
         if (this.attachCompleteListener) {
             this.attachCompleteListener();
