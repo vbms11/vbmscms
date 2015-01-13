@@ -68,6 +68,13 @@ class PinboardModel {
 			where id = '$id'");
 	}
 	
+	function getPinboard ($id) {
+		
+		$id = mysql_real_escape_string(id);
+		
+		return Database::queryAsObject("select * from t_pinboard_note where id = '$id'");
+	}
+	
 	function getPinbords ($minLng, $minLat, $maxLng, $maxLat, $max=100) {
 		
 		$minLng = mysql_real_escape_string($minLng);
@@ -80,6 +87,24 @@ class PinboardModel {
 			join t_icon i on p.iconid = i.id 
 			where p.lng > '$minLng' and p.lat > '$minLat' and p.lng < '$maxLng' and p.lat < '$maxLat' 
 			limit $max");
+	}
+	
+	function validateNote ($message, $pinboardId, $type, $typeId, $userId, $x, $y) {
+		
+		$errors = array();
+		if (strlen($message) == 0) {
+            $errors["message"] = "This feild cannot be empty!";
+        }
+        if (strlen($message) > 10000) {
+            $errors["message"] = "Maximum 10000 characters allowed!";
+        }
+        
+        $pinboard = self::getPinboard($pinboardId);
+        if (empty($pinboard)) {
+        	$errors["pinboard"] = "This pinboard dose not exist!";
+        }
+        
+		return $errors;
 	}
 	
 	function createNote ($message, $pinboardId, $type, $typeId, $userId, $x, $y) {

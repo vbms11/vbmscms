@@ -138,10 +138,22 @@ class PinboardMapModule extends XModule {
                     <?php echo parent::getTranslation("pinboardMap.new.name"); ?>
                 </td><td>
                     <input name="name" type="text" value="" placeholder="<?php echo parent::getTranslation("pinboardMap.new.name.placeholder"); ?>" />
+                    <?php
+                    $message = parent::getMessage("name");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
+                    ?>
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.description"); ?>
                 </td><td>
                     <textarea name="description" placeholder="<?php echo parent::getTranslation("pinboardMap.new.description.placeholder"); ?>"></textarea>
+                    <?php
+                    $message = parent::getMessage("description");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
+                    ?>
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.icon"); ?>
                 </td><td>
@@ -156,6 +168,12 @@ class PinboardMapModule extends XModule {
                         }
                         ?>
                     </select>
+                    <?php
+                    $message = parent::getMessage("icon");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
+                    ?>
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.location"); ?>
                 </td><td>
@@ -165,6 +183,10 @@ class PinboardMapModule extends XModule {
                 </td><td>
                     <?php
                     InputFeilds::printCaptcha("security");
+                    $message = parent::getMessage("security");
+                    if (!empty($message)) {
+                        echo '<span class="validateTips">'.$message.'</span>';
+                    }
                     ?>
                 </td></tr></table>
                 

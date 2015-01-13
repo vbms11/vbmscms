@@ -82,6 +82,8 @@ $.widget( "custom.pinboard", {
         
         var thisObject = this;
         
+        this.element.find(".pinboardNote").draggable({ containment: this.element, scroll: false });
+        
         this.completeAttach();
     },
     
@@ -98,7 +100,7 @@ $.widget( "custom.pinboard", {
     
     resize : function (width, height) {
     	
-    	// this.element
+    	this.element.css({"width": width, "height": height});
     },
     
 
@@ -121,26 +123,3 @@ $.widget( "custom.pinboard", {
 
     
 });
-
-var ivTranslationTexts = {
-    "en" : {
-        "iv.nextimage" : "show next image"
-    },
-    "de":{
-        "iv.nextimage" : "show next image"
-    }
-};
-
-
-
-
-// pin
-
-// drag drop
-
-// delete
-
-// create view
-
-// captcha
-

@@ -207,8 +207,8 @@ var myMapOptions = {
     	    
     	    var markerOptions = {
         		draggable: false,
-        		icon: image,
-        		shape: shape,
+        	//	icon: image,
+        	//	shape: shape,
         		map: this.map,
         		position: position
         	}
