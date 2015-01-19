@@ -58,7 +58,7 @@ class SystemService extends XModule {
                 }
                 break;
             case "installProgress":
-		echo isset($_SESSION['installProgress']) ? $_SESSION['installProgress'] : "";
+				echo isset($_SESSION['installProgress']) ? $_SESSION['installProgress'] : "";
                 break;
             default:
                 break;

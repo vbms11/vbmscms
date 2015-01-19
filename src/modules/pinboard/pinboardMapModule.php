@@ -1,6 +1,7 @@
 <?php
 
 include_once 'core/plugin.php';
+include_once 'modules/pinboard/pinboardModel.php';
 
 class PinboardMapModule extends XModule {
 
@@ -42,16 +43,13 @@ class PinboardMapModule extends XModule {
                     if (parent::post("createPinboard") && Captcha::validateInput('security')) {
                         $messages = PinboardModel::validatePinboard(parent::post("name"), parent::post("description"), parent::post("icon"));
                         if (empty($messages)) {
-                            PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("locationSelect_lat"), parent::post("locationSelect_lng"), Context::getUserId());
+                            $pinboardId = PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("locationSelect_lat"), parent::post("locationSelect_lng"), Context::getUserId());
+							NavigationModel::redirectStaticModule("binboard", array("pinboardId"=>$pinboardId));
                         } else {
                             parent::setMessages($messages);
-                            break;
                         }
-                        
                     }
                 }
-                parent::blur();
-                parent::redirect();
                 break;
         }
     }
@@ -110,7 +108,8 @@ class PinboardMapModule extends XModule {
                     return false;
                 });
                 $(".gMapHolder").pinboardMap({
-                    dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>"
+                    dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>",
+                    viewUrl: "<?php echo parent::staticLink("pinboard", array(), false); ?>"
                 });
             });
             </script>

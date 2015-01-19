@@ -1,17 +1,12 @@
 <?php
 
 include_once 'core/plugin.php';
-include_once 'modules/editor/wysiwygPageModel.php';
+include_once 'modules/pinboard/pinboardModel.php';
 
-class WysiwygPageView extends XModule {
-
-    /**
-     * called when page is viewed before output stream is filled
-     */
+class PinboardModule extends XModule {
+	
     function onProcess () {
         
-        if (Context::hasRole("wysiwyg.edit")) {
-            
             switch (parent::getAction()) {
                 case "update":
 			
@@ -23,10 +18,12 @@ class WysiwygPageView extends XModule {
                     break;
                 case "cancel":
                     parent::blur();
-                    
                 case "closePinboard":
                     NavigationModel::staticRedirect("pinboardMap");
                     break;
+                case "newNote":
+                	parent::focus();
+                	break;
                 case "createNote":
                     
                     if (parent::post("createNote")) {
@@ -66,15 +63,14 @@ class WysiwygPageView extends XModule {
                     if (!empty($note) && ($note->userid == Context::getUserId() || Context::hasRole("pinboard.admin"))) {
                         PinboardModel::setNotePosition(parent::get("x"), parent::get("y"));
                     }
-                    break;
-            }
-             
-        }
+         			break;
+                
+                case "noteCmd":
+                	// "move" "delete" "edit" "new":
+                	break;
+     	}
     }
 
-    /**
-     * called when page is viewed and html created
-     */
     function onView () {
         
         switch (parent::getAction()) {
@@ -92,108 +88,102 @@ class WysiwygPageView extends XModule {
                 $this->printMainView();
         }
     }
-
-    /**
-     * returns the roles defined by this module
-     */
+    
     function getRoles () {
         return array("pinboard.edit", "pinboard.admin", "pinboard.createNote");
     }
     
     function getStyles () {
-    	return array("css/mapStyles");
+    	return array("css/pinboard.css");
     }
     
     function getScripts () {
-    	return array("https://maps.googleapis.com/maps/api/js");
-    }
-
-
-
-    /**
-     * returns search results for given text
-     */
-    function search ($searchText, $lang) {
-        // return PinboardModel::search($searchText,$lang);
+    	return array("js/pinboard.js");
     }
     
     function printEditView () {
         
     }
-
+    
     function printMainView () {
         
         $notes = PinboardModel::getNotes(parent::get("pinboardId"));
         
         ?>
-        <div class="panel pinboardPanel <?php echo parent::alias("pinboardPanel"); ?>">
-            <div class="pinboardButtons">
-                <a href="#">
-                    <img src="" alt="+"></img>
-                    <ul>
-                        <li><a href="<?php echo parent::link(array("action"=>"newNote","pinboardId"=>parent::get("pinboardId"))); ?>"><?php echo parent::getTranslation("pinboard.options.note"); ?></a></li>
-                    </ul>
-                <a>
-            </div>
+		<div class="panel pinboardPanel <?php echo parent::alias("pinboardPanel"); ?>">
+			<div class="pinboardButtons">
+				<a href="#" class="pinboardNewButton">
+					<img src="modules/pinboard/img/newNote.png" alt="+" />
+				<a>
+				<a href="<?php echo parent::link(array("action"=>"closePinboard")); ?>" class="pinboardCloseButton">
+					<img src="modules/pinboard/img/closePinboard.png" alt="-" />
+				<a>
+				<div class="pinboardNewButtons">
+					<div>
+						<a href="<?php echo parent::link(array("action"=>"newNote","pinboardId"=>parent::get("pinboardId"))); ?>"><?php echo parent::getTranslation("pinboard.options.note"); ?></a>
+					</div>
+					<div>
+						<a href="<?php echo parent::link(array("action"=>"newNote","pinboardId"=>parent::get("pinboardId"))); ?>"><?php echo parent::getTranslation("pinboard.options.offer"); ?></a>
+					</div>
+					<div>
+						<a href="<?php echo parent::link(array("action"=>"newNote","pinboardId"=>parent::get("pinboardId"))); ?>"><?php echo parent::getTranslation("pinboard.options.blog"); ?></a>
+					</div>
+				</div>
+			</div>
             <?php
-            foreach ($notes as $note) {
-                ?>
-                <div class="pinboardNote">
-                    <div class="noteInfo">
-                    </div>
-                    <div clas="noteMessage">
-                        <?php echo $note->message; ?>
-                    </div>
-                </div>
-                <?php
+            if (!empty($notes)) {
+	            foreach ($notes as $note) {
+	                ?>
+	                <div class="pinboardNote" style="left: <?php $note->x; ?>; top: <?php $note->y; ?>;">
+						<div class="noteInfo"></div>
+						<div clas="noteMessage">
+	                        <?php echo $note->message; ?>
+	                    </div>
+					</div>
+	                <?php
+	            }
+            } else {
+            	// no notes
             }
             ?>
 	    </div>
-	    <script type="text/javascript">
+		<script type="text/javascript">
 	    $(".<?php echo parent::alias("pinboardPanel"); ?>").pinboard({
-	        
+	    	cmdUrl: "<?php echo parent::ajaxLink(array("action"=>"noteCmd")); ?>"
 	    });
 	    </script>
-	    <?php
+		<?php
 	}
 	
     function printCreateNoteView () {
-        ?>
-        <div class="panel createNotePanel <?php echo parent::alias("pinboardPanel"); ?>">
-            <div class="pinboardNote">
-                <div class="noteInfo">
-                </div>
-                <div clas="noteMessage">
-                    <form method="post" action="<?php echo parent::link(array("action"=>"createNote","pinboarId"=>parent::post("pinboarId"))) ?>">
-                        <textarea cols="10" rows="5" name="message"/>
-                            <?php echo htmlspecialchars(parent::post("message")); ?>
-                        </textarea>
+    	
+    	?>
+		<div class="panel createNotePanel <?php echo parent::alias("pinboardPanel"); ?>">
+			<div class="pinboardNote">
+				<div class="noteInfo"></div>
+				<div clas="noteMessage">
+					<form method="post" action="<?php echo parent::link(array("action"=>"createNote","pinboarId"=>parent::post("pinboarId"))) ?>">
+						<textarea cols="10" rows="5" name="message" /><?php 
+							echo htmlspecialchars(parent::post("message")); 
+						?></textarea>
                         <?php
                         $message = parent::getMessage("message");
                         if (!empty($message)) {
                             echo '<span class="validateTips">'.$message.'</span>';
                         }
                         ?>
-                        <hr/>
-                        <div class="alignRight">
-                            <button name="createNote"><?php echo parent::getTranslation("poinboard.new.button.createPinboard"); ?></button>
-                            <button name="cancel"><?php echo parent::getTranslation("poinboard.new.button.cancel"); ?></button>
-                        </div>
-                    </form>
-                </div>
-                <?php
-            }
-            ?>
+                        <hr />
+						<div class="alignRight">
+							<button type="submit" name="createNote" value="1"><?php echo parent::getTranslation("poinboard.new.button.createPinboard"); ?></button>
+							<button name="cancel"><?php echo parent::getTranslation("poinboard.new.button.cancel"); ?></button>
+						</div>
+					</form>
+				</div>
+            </div>
 	    </div>
-	    <script type="text/javascript">
-	    $(".<?php echo parent::alias("createNotePanel"); ?>").pinboard({
-	        
-	    });
-	    </script>
 	    <?php
+	    
     }
-    
-    
 }
 
 ?>

@@ -3,35 +3,35 @@
 class Captcha {
     
     static function getCaptcha ($inputName) {
-	if (isset($_SESSION['captcha.'.$inputName])) {
+		if (isset($_SESSION['captcha.'.$inputName])) {
             return $_SESSION['captcha.'.$inputName];
         }
-	$captcha;
-	$captcha->answer = Captcha::createAnswer(7);
-	$captcha->key = Common::hash(strtolower($captcha->answer));
-	$captcha->inputName = "captcha_".Common::rand();
-	$_SESSION['captcha.'.$inputName] = $captcha;
+		$captcha;
+		$captcha->answer = Captcha::createAnswer(7);
+		$captcha->key = Common::hash(strtolower($captcha->answer));
+		$captcha->inputName = "captcha_".Common::rand();
+		$_SESSION['captcha.'.$inputName] = $captcha;
         return $captcha;
     }
     
     static function loadFont () {
         $im = imagecreatetruecolor($width, $height);
-	$transparent=imagecolorallocatealpha($im, 255, 255, 255, 127);
-	imagefill($im,0,0,$transparent);
+		$transparent=imagecolorallocatealpha($im, 255, 255, 255, 127);
+		imagefill($im,0,0,$transparent);
 
-	// Replace path by your own font path
-	$font = "OptimusPrinceps.ttf";
-	// The text to draw
-	$text = 'Testing...';
-	// Replace path by your own font path
-	$font = 'arial.ttf';
-	// Create black color
-	$black = imagecolorallocate($im, 0, 0, 0);
-	//Get image from text
-	imagettftext($im, 14, 0, 10, 20, $black, $font, $text);
-        
+		// Replace path by your own font path
+		$font = "OptimusPrinceps.ttf";
+		// The text to draw
+		$text = 'Testing...';
+		// Replace path by your own font path
+		$font = 'arial.ttf';
+		// Create black color
+		$black = imagecolorallocate($im, 0, 0, 0);
+		//Get image from text
+		imagettftext($im, 14, 0, 10, 20, $black, $font, $text);
+	        
         //rotate the image
-	// $im=imagerotate($im, $degrees, 0);
+		// $im=imagerotate($im, $degrees, 0);
         
         //create the image with transparent background
 	
@@ -39,7 +39,7 @@ class Captcha {
     }
     
     static function createImage ($inputName) {
-	
+		
         $captcha = Captcha::getCaptcha($inputName);
         
         // create image
@@ -48,21 +48,25 @@ class Captcha {
         $fakeColor_r = 225;
         $fakeColor_g = 225;
         $fakeColor_b = 225;
-        $img = imagecreate($width,$height);
+        
+        $img = imagecreatetruecolor($width,$height);
+        
         $background = imagecolorallocate($img, 230, 230, 240);
+        imagefilledrectangle($img, 0, 0, $width , $height, $background);
+        
         $fakecoloroffset = 60;
         $colors = array(
             imagecolorallocate($img, 0, 0, 0),
             imagecolorallocate($img, 120, 0, 0),
             imagecolorallocate($img, 0, 0, 120),
             imagecolorallocate($img, 0, 120, 0)
-	);
+		);
         
         $countColors = count($colors);
         
         $maxHorizontalDisplace = 1;
         $maxVerticalDisplace = 12;
-        $characterSpaceing = 21;
+        $characterSpaceing = 22;
         $posx = 10;
         $posy = 14;
         $font = 20;
@@ -156,7 +160,7 @@ class Captcha {
         if (Common::hash(strtolower($answer)) == $key) {
             $valid = true;
         }
-	unset($_SESSION['captcha.'.$inputName]);
+		unset($_SESSION['captcha.'.$inputName]);
         return $valid;
     }
 }

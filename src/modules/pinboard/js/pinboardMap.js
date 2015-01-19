@@ -12,6 +12,7 @@ $.widget("custom.pinboardMap", {
 	},
     
     map: null,
+    pinboards: [],
     
     // the constructor
     _create: function () {
@@ -79,12 +80,21 @@ $.widget("custom.pinboardMap", {
         
         var thisObject = this;
         
+        this.element.append(
+    		$("<div>",{"class": "gMapContainer"})
+    			.css({
+    				"position": "absolute",
+    				"width": "100%",
+    				"height": "100%"
+    			})
+        );
+        
 	    // var center = new google.maps.LatLng(this.options.lat, this.options.lng);
-var center = new google.maps.LatLng(45,0);
+    	var center = new google.maps.LatLng(45,0);
 	    
-// google.maps.event.addDomListener(window, 'load', function () {
+    	// google.maps.event.addDomListener(window, 'load', function () {
     	
-var myMapOptions = {
+    	var myMapOptions = {
           	zoom: 10,
     		center: center,
     		streetViewControl: false,
@@ -96,9 +106,12 @@ var myMapOptions = {
             }
     	};
     	
-    	thisObject.map = new google.maps.Map(thisObject.element[0], myMapOptions);
+    	this.map = new google.maps.Map(this.element.find(".gMapContainer")[0], myMapOptions);
     	
-        thisObject.completeAttach();
+    	google.maps.event.addListenerOnce(this.map, 'idle', function(){
+        	thisObject.completeAttach();
+    	});
+
 
 // });
 
@@ -137,42 +150,38 @@ var myMapOptions = {
         
         // get map view rect
         var bounds = this.map.getBounds();
-        
         var params = "&minLng=" + bounds.getSouthWest().lng() +
-            "&minLat=" + bounds.getNorthEast().lat() + 
+            "&minLat=" + bounds.getSouthWest().lat() + 
             "&maxLng=" + bounds.getNorthEast().lng() + 
-            "&maxLat=" + bounds.getSouthWest().lat()
+            "&maxLat=" + bounds.getNorthEast().lat();
         
         // get pinboards in view
-        $.ajax(this.options.dataUrl + params)
-            .done(function(data) {
-                
-                var results = $.parseJSON(data);
-                var newPinbords = {};
-                var oldPinbords = thisObject.pinboards.slice();
-                
-                for (var pinboard in results) {    
-                    if (pinboard["id"] in thisObject.pinboards) {
-                        delete oldPinbords[pinboard["id"]];
-                        continue;
-                    }
-                    newPinbords[pinboard["id"]] = pinboard;
+        $.get(this.options.dataUrl + params, function(data,status){
+            
+        	var results = $.parseJSON(data);
+            var newPinbords = {};
+            var oldPinbords = thisObject.pinboards.slice();
+            
+            for (var key in results) {    
+                var pinboard = results[key];
+            	if (pinboard.id in thisObject.pinboards) {
+                	delete oldPinbords[pinboard.id];
+                    continue;
                 }
-                
-                // add pinboards new in view
-                for (var pinboard in newPinbords) {
-                    thisObject.addPinboard(pinboard);
-                }
-                
-                // remove pinboards no longer in view
-                for (var pinboard in oldPinbords) {
-                    thisObject.removePinboard(pinboard);
-                }
-                
-            })
-            .fail(function() {
-                alert("error");
-            });
+                newPinbords[pinboard.id] = pinboard;
+            }
+            
+            // add pinboards new in view
+            for (var id in newPinbords) {
+            	thisObject.addPinboard(newPinbords[id]);
+            }
+            
+            // remove pinboards no longer in view
+            for (var pinboard in oldPinbords) {
+                thisObject.removePinboard(pinboard);
+            }
+            
+        });
         
     },
     
@@ -188,30 +197,32 @@ var myMapOptions = {
     
     addPinboard : function (pinboard) {
     	
+    	var thisObject = this;
+    	
     	if (!(pinboard.id in this.pinboards)) {
     	    
-    	    // create the map marker
+    		// create the map marker
     	    var image = new google.maps.MarkerImage(
         	    pinboard.iconfile,
-        		new google.maps.Size(20, 20),
+        		new google.maps.Size(60, 60),
         		new google.maps.Point(0, 0),
         		new google.maps.Point(10, 10)
         	);
     	    
     	    var shape = {
-                coords: [0, 0, 0, 20, 20, 20, 20 , 0],
+                coords: [0, 0, 0, 60, 60, 60, 60 , 0],
                 type: 'poly'
             };
     	    
-    	    var position = new google.maps.LatLng(pinboard.lat, pinboard.lng)
+    	    var position = new google.maps.LatLng(pinboard.lat, pinboard.lng);
     	    
     	    var markerOptions = {
         		draggable: false,
-        	//	icon: image,
-        	//	shape: shape,
+        		icon: image,
+        		shape: shape,
         		map: this.map,
         		position: position
-        	}
+        	};
         	
         	if (pinboard.canedit) {
         		markerOptions["draggable"] = true;
@@ -229,13 +240,13 @@ var myMapOptions = {
     	    info = new google.maps.InfoWindow(infoOptions);
 
         	google.maps.event.addListener(marker, 'click', function() {
-        		if (this.options.viewUrl) {
-        		    callUrl(this.options.viewUrl+pinboard.id);
+        		if (thisObject.options.viewUrl) {
+        		    callUrl(thisObject.options.viewUrl+"&pinboardId="+pinboard.id);
         		}
         	});
             
         	google.maps.event.addListener(marker, 'mouseover', function(){
-        		info.open(this.map, marker);
+        		info.open(thisObject.map, marker);
         	});
         	
         	google.maps.event.addListener(marker, 'mouseout', function(){

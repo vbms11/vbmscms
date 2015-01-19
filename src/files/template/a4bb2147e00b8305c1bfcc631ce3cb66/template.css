@@ -1,81 +1,124 @@
 body {
-    padding:0px;
-    margin:0px;
-}    
-.frameDiv {
-    min-width: 700px;
-    margin: 0px 10px 0px 10px;
+	background-color: rgb(200,200,200);
 }
-.topMenuDiv {
-    margin: 0px 10px 0px 10px;
+.searchHolder {
+	position: absolute;
+	top: 35px;
+	left: 50px;
+	width: 200px;
+	height: 40px;
+	background-color: black;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
+    border: 1px solid silver;
 }
-.topMenuMarginDiv {
-    float: right;
+.mainMenuHolder {
+	position: absolute;
+	top: 35px;
+	right: 50px;
+	width: 300px;
+	height: 40px;
+	background-color: black;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
+    border: 1px solid silver;
+
 }
-.headerDiv {
-    clear: both;
-    height: 100px;
-    margin: 10px 0px 0px 0px;
-    border: 1px dashed silver;
-    background: url('gradBig.gif') white repeat-x;
+.mapHolder {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 10;
 }
-.headerMenuDiv {
-    min-height: 30px;
-    margin: 10px 0px 0px 0px;
-    border: 1px dashed silver;
-    background: url('gradSmall.gif') white repeat-x;
+.centerHolder {
+	position: absolute;
+	top: 85px;
+	left: 50px;
+	right: 50px;
+	bottom: 35px;
+	background-color: white;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
+    border: 1px solid silver;
 }
-.headerMenuMarginDiv {
-    margin:10px;
+.centerHolderInvisible {
+	bottom: auto;
+border: 0px none;
 }
-.bodyDiv {
-    min-height: 200px;
-    margin: 10px 0px 0px 0px;
-    border: 1px dashed silver;
-    background: url('gradBig.gif') white repeat-x;
+.centerHolderInvisible .vcms_area {
+min-height:0px;
 }
-.bodyMarginDiv {
-    margin:10px;
+.centerLeftMargin {
+	left: 260px;
 }
-.bodyDivLeftMargin {
-    margin-left: 206px;
+.centerRightMargin {
+	right: 260px;
 }
-.bodyDivRightMargin {
-    margin-right: 210px;
+.centerRightBigMargin {
+       right: 425px;
 }
-.bodyRightDiv {
-    min-height: 200px;
-    width: 200px;
-    float: right;
-    margin: 10px 0px 0px 0px;
-    border: 1px dashed silver;
-    background: url('gradBig.gif') white repeat-x;
+.leftHolder {
+	position: absolute;
+	top: 85px;
+	left: 50px;
+	width: 200px;
+	height: auto;
+	background-color: white;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
+    border: 1px solid silver;
 }
-.bodyRightMarginDiv {
-    margin:10px;
+.rightHolder {
+	position: absolute;
+	top: 85px;
+	right: 50px;
+	width: 200px;
+	height: auto;
+	background-color: white;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
+    border: 1px solid silver;
 }
-.bodyLeftDiv {
-    min-height: 200px;
-    width: 194px;
-    float: left;
-    margin: 10px 0px 0px 0px;
-    border: 1px dashed silver;
-    background: url('gradBig.gif') white repeat-x;
+.rightBigHolder {
+	position: absolute;
+	top: 85px;
+	right: 50px;
+	width: 345px;
+	height: auto;
+	background-color: white;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
+    border: 1px solid silver;
+    padding: 10px;
 }
-.bodyLeftMarginDiv {
-    margin:10px;
+.topMenuHolder {
+	position: fixed;
+	top: 0px;
+	left: 50px;
+	right: 50px;
+	height: 25px;
+	background-color: black;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
 }
-.footerMenuDiv {
-    clear: both;
-    min-height: 30px;
-    margin: 10px 0px 10px 0px;
-    border: 1px dashed silver;
-    background: url('gradSmall.gif') white repeat-x;
-}
-.footerMenuMarginDiv {
-    margin:10px;
-}
-.floatContainerDiv {
-    float:left;
-    width:100%;
+
+.bottomMenuHolder {
+	position: fixed;
+	bottom: 0px;
+	left: 50px;
+	right: 50px;
+	height: 25px;
+	background-color: black;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
 }

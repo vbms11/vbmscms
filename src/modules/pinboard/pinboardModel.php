@@ -1,7 +1,8 @@
+<?php
 
 class PinboardModel {
 	
-	function validatePinboard ($name, $description, $icon) {
+	static function validatePinboard ($name, $description, $icon) {
 		
 		$errors = array();
         if (strlen($name) == 0) {
@@ -21,7 +22,7 @@ class PinboardModel {
         return $errors;
 	}
 	
-	function createPinboard ($name, $description, $iconId, $lat, $lng, $userId = null) {
+	static function createPinboard ($name, $description, $iconId, $lat, $lng, $userId = null) {
 		
 		if (empty($userId)) {
 			$userId = Context::getUserId();
@@ -41,7 +42,7 @@ class PinboardModel {
 		return $result->newid;
 	}
 	
-	function setPinboardLocation ($id, $lat, $lng) {
+	static function setPinboardLocation ($id, $lat, $lng) {
 		
 		$id = mysql_real_escape_string($id);
 		$lat = mysql_real_escape_string($lat);
@@ -53,7 +54,7 @@ class PinboardModel {
 			where id = '$id'");
 	}
 	
-	function savePinboard ($id, $name, $description, $iconId) {
+	static function savePinboard ($id, $name, $description, $iconId) {
 		
 		$id = mysql_real_escape_string($id);
 		$name = mysql_real_escape_string($name);
@@ -68,14 +69,14 @@ class PinboardModel {
 			where id = '$id'");
 	}
 	
-	function getPinboard ($id) {
+	static function getPinboard ($id) {
 		
 		$id = mysql_real_escape_string(id);
 		
 		return Database::queryAsObject("select * from t_pinboard_note where id = '$id'");
 	}
 	
-	function getPinbords ($minLng, $minLat, $maxLng, $maxLat, $max=100) {
+	static function getPinbords ($minLng, $minLat, $maxLng, $maxLat, $max=100) {
 		
 		$minLng = mysql_real_escape_string($minLng);
 		$minLat = mysql_real_escape_string($minLat);
@@ -89,7 +90,7 @@ class PinboardModel {
 			limit $max");
 	}
 	
-	function validateNote ($message, $pinboardId, $type, $typeId, $userId, $x, $y) {
+	static function validateNote ($message, $pinboardId, $type, $typeId, $userId, $x, $y) {
 		
 		$errors = array();
 		if (strlen($message) == 0) {
@@ -107,7 +108,7 @@ class PinboardModel {
 		return $errors;
 	}
 	
-	function createNote ($message, $pinboardId, $type, $typeId, $userId, $x, $y) {
+	static function createNote ($message, $pinboardId, $type, $typeId, $userId, $x, $y) {
 		
 		$message = mysql_real_escape_string($message);
 		$pinboardId = mysql_real_escape_string($pinboardId);
@@ -124,7 +125,7 @@ class PinboardModel {
 		return $result->newid;
 	}
 	
-	function setNotePosition ($noteId, $x, $y) {
+	static function setNotePosition ($noteId, $x, $y) {
 		
 		$noteId = mysql_real_escape_string($noteId);
 		$x = mysql_real_escape_string($x);
@@ -136,7 +137,7 @@ class PinboardModel {
 			where id = '$noteId'");
 	}
 	
-	function saveNote ($noteId, $message) {
+	static function saveNote ($noteId, $message) {
 		
 		$noteId = mysql_real_escape_string($noteId);
 		$message = mysql_real_escape_string($message);
@@ -146,7 +147,7 @@ class PinboardModel {
 			where id = '$noteId'");
 	}
 	
-	function getNotes ($pinboardId, $max=100) {
+	static function getNotes ($pinboardId, $max=100) {
 		
 		$pinboardId = mysql_real_escape_string($pinboardId);
 		$max = (int) $max;
@@ -154,7 +155,7 @@ class PinboardModel {
 		Database::queryAsArray("select * from t_pinboard_note where pinboardid = '$pinboardId' limit $max");
 	}
 	
-	function deleteNote ($noteId) {
+	static function deleteNote ($noteId) {
 		
 		$noteId = mysql_real_escape_string($noteId);
 		
@@ -163,3 +164,5 @@ class PinboardModel {
 	
 	
 }
+
+?>
