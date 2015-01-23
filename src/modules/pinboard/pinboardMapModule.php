@@ -32,7 +32,7 @@ class PinboardMapModule extends XModule {
                 break;
             case "setPinboardLocation":
                 if (Context::hasRole("pinboardMap.create")) {
-                    NavigationModel::redirectStaticModule("pinboard", array("action"=>"createPinboard", "lng"=>parent::get("lng"), "lat"=>parent::get("lat")));
+                
                 }
                 break;
             case "newPinboard":
@@ -66,7 +66,9 @@ class PinboardMapModule extends XModule {
                 }
                 break;
             case "newPinboard":
-                $this->printNewPinboardView();
+            	if (Context::hasRole("pinboardMap.create")) {
+            		$this->printNewPinboardView();
+            	}
                 break;
             default:
                 $this->printMainView();
@@ -154,29 +156,41 @@ class PinboardMapModule extends XModule {
                     }
                     ?>
                 </td></tr><tr><td>
+                    <?php echo parent::getTranslation("pinboardMap.new.location"); ?>
+                </td><td>
+                    <div class="locationSelect"></div>
+                </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.icon"); ?>
                 </td><td>
-                    <select name="icon">
+                	<input type="hidden" name="icon" value="" />
+                    <ol class="icons">
                         <?php
                         foreach ($icons as $icon) {
                             ?>
-                            <option value="<?php echo $icon->id; ?>">
-                                <img src="<?php echo $icon->iconfile; ?>" alt="" />
-                            </option>
+                            <li class="icon icon_<?php echo $icon->id; ?>">
+                            	<img src="<?php echo $icon->iconfile; ?>" alt="" />
+                            </li>
                             <?php
                         }
                         ?>
-                    </select>
+                    </ol>
+                    <div class="clear"></div>
+                    <script type="text/javascript">
+					$(".pinboardMapNewPanel .icons").selectable({
+						"filter": ".icon",
+			            "selected": function( event, ui ) {
+							$(".pinboardMapNewPanel input[name=icon]").val($.grep(ui.selected.className.split(" "), function(v, i){
+						       return v.indexOf('icon_') === 0;
+						   	}).join().substr(5));
+						}
+					});
+                    </script>
                     <?php
                     $message = parent::getMessage("icon");
                     if (!empty($message)) {
                         echo '<span class="validateTips">'.$message.'</span>';
                     }
                     ?>
-                </td></tr><tr><td>
-                    <?php echo parent::getTranslation("pinboardMap.new.location"); ?>
-                </td><td>
-                    <div class="locationSelect"></div>
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.security"); ?>
                 </td><td>

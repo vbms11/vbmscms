@@ -9,7 +9,7 @@ class PinboardModule extends XModule {
         
             switch (parent::getAction()) {
                 case "update":
-			
+					
                     parent::redirect();
                     parent::blur();
                     break;
@@ -102,7 +102,20 @@ class PinboardModule extends XModule {
     }
     
     function printEditView () {
-        
+    	?>
+		<div class="panel pinboardEditPanel <?php echo parent::alias("pinboardPanel"); ?>">
+    		<h1><?php echo parent::getTranslation("pinboard.edit.title"); ?></h1>
+    		<p><?php echo parent::getTranslation("pinboard.edit.description"); ?></p>
+    		
+    		<hr/>
+    		<form method="post" action="<?php echo parent::link(array("action"=>"update")); ?>">
+	    		<div class="alignRight">
+	    			<button class="jquiButton" name="save"><?php echo parent::getTranslation("common.save"); ?></button>
+	    			<button class="jquiButton" name="cancel"><?php echo parent::getTranslation("common.cancel"); ?></button>
+	    		</div>
+    		</form>
+    	</div>
+    	<?php
     }
     
     function printMainView () {

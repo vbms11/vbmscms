@@ -13,5 +13,19 @@
 }
 
 .pinboardMapNewPanel .locationSelect {
-    height: 400px;
+    height: 300px;
+}
+
+.pinboardMapNewPanel li.icon {
+	width: 64px;
+	height: 64px;
+	float: left;
+	margin: 2px 2px 0px 0px;
+	border: 1px solid silver;
+	list-style: none;
+}
+
+.pinboardMapNewPanel li.icon.ui-selected { 
+	background: rgb(245,245,245);
+	border: 1px solid black;
 }
