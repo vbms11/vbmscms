@@ -482,6 +482,11 @@ $ar_translations = array(
 ,'pinboard.options.blog'=>'cGluYm9hcmQub3B0aW9ucy5ibG9n'
 ,'poinboard.new.button.createPinboard'=>'cG9pbmJvYXJkLm5ldy5idXR0b24uY3JlYXRlUGluYm9hcmQ='
 ,'poinboard.new.button.cancel'=>'cG9pbmJvYXJkLm5ldy5idXR0b24uY2FuY2Vs'
+,'pinboard.create.title'=>'cGluYm9hcmQuY3JlYXRlLnRpdGxl'
+,'pinboard.create.description'=>'cGluYm9hcmQuY3JlYXRlLmRlc2NyaXB0aW9u'
+,'pinboard.create.message.label'=>'cGluYm9hcmQuY3JlYXRlLm1lc3NhZ2UubGFiZWw='
+,'pinboard.create.message.placeholder'=>'cGluYm9hcmQuY3JlYXRlLm1lc3NhZ2UucGxhY2Vob2xkZXI='
+,'pinboard.create.security.label'=>'cGluYm9hcmQuY3JlYXRlLnNlY3VyaXR5LmxhYmVs'
 ),'de'=>array(
 'login.email'=>'R2ViZW4gc2llIGVpbmUgRW1haWxhZHJlc3NlIGVpbjo='
 ,'login.reset'=>'UGFzc3dvcnQgIFp1cnVja3NldHplbg=='
@@ -964,6 +969,11 @@ $ar_translations = array(
 ,'pinboard.options.blog'=>'cGluYm9hcmQub3B0aW9ucy5ibG9n'
 ,'poinboard.new.button.createPinboard'=>'cG9pbmJvYXJkLm5ldy5idXR0b24uY3JlYXRlUGluYm9hcmQ='
 ,'poinboard.new.button.cancel'=>'cG9pbmJvYXJkLm5ldy5idXR0b24uY2FuY2Vs'
+,'pinboard.create.title'=>'cGluYm9hcmQuY3JlYXRlLnRpdGxl'
+,'pinboard.create.description'=>'cGluYm9hcmQuY3JlYXRlLmRlc2NyaXB0aW9u'
+,'pinboard.create.message.label'=>'cGluYm9hcmQuY3JlYXRlLm1lc3NhZ2UubGFiZWw='
+,'pinboard.create.message.placeholder'=>'cGluYm9hcmQuY3JlYXRlLm1lc3NhZ2UucGxhY2Vob2xkZXI='
+,'pinboard.create.security.label'=>'cGluYm9hcmQuY3JlYXRlLnNlY3VyaXR5LmxhYmVs'
 ),''=>array(
 'login.email'=>'bG9naW4uZW1haWw='
 ,'login.reset'=>'bG9naW4ucmVzZXQ='
@@ -1446,5 +1456,10 @@ $ar_translations = array(
 ,'pinboard.options.blog'=>'cGluYm9hcmQub3B0aW9ucy5ibG9n'
 ,'poinboard.new.button.createPinboard'=>'cG9pbmJvYXJkLm5ldy5idXR0b24uY3JlYXRlUGluYm9hcmQ='
 ,'poinboard.new.button.cancel'=>'cG9pbmJvYXJkLm5ldy5idXR0b24uY2FuY2Vs'
+,'pinboard.create.title'=>'cGluYm9hcmQuY3JlYXRlLnRpdGxl'
+,'pinboard.create.description'=>'cGluYm9hcmQuY3JlYXRlLmRlc2NyaXB0aW9u'
+,'pinboard.create.message.label'=>'cGluYm9hcmQuY3JlYXRlLm1lc3NhZ2UubGFiZWw='
+,'pinboard.create.message.placeholder'=>'cGluYm9hcmQuY3JlYXRlLm1lc3NhZ2UucGxhY2Vob2xkZXI='
+,'pinboard.create.security.label'=>'cGluYm9hcmQuY3JlYXRlLnNlY3VyaXR5LmxhYmVs'
 )); 
 ?>

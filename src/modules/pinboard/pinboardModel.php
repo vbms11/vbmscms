@@ -71,9 +71,9 @@ class PinboardModel {
 	
 	static function getPinboard ($id) {
 		
-		$id = mysql_real_escape_string(id);
+		$id = mysql_real_escape_string($id);
 		
-		return Database::queryAsObject("select * from t_pinboard_note where id = '$id'");
+		return Database::queryAsObject("select * from t_pinboard where id = '$id'");
 	}
 	
 	static function getPinbords ($minLng, $minLat, $maxLng, $maxLat, $max=100) {
@@ -118,8 +118,8 @@ class PinboardModel {
 		$x = mysql_real_escape_string($x);
 		$y = mysql_real_escape_string($y);
 		
-		Database::query("insert into t_pinboard_note (message, pinboardid type, typeid, userid, x, y)
-			values ('$message', '$pinboardId', '$type', '$typeId', '$userId', '$x', '$y')");
+		Database::query("insert into t_pinboard_note (message, pinboardid, type, typeid, userid, x, y, createdate)
+			values ('$message', '$pinboardId', '$type', '$typeId', '$userId', '$x', '$y', now())");
 		
 		$result = Database::queryAsObject("select last_insert_id() as newid from t_pinboard_note");
 		return $result->newid;
@@ -152,7 +152,14 @@ class PinboardModel {
 		$pinboardId = mysql_real_escape_string($pinboardId);
 		$max = (int) $max;
 		
-		Database::queryAsArray("select * from t_pinboard_note where pinboardid = '$pinboardId' limit $max");
+		return Database::queryAsArray("select * from t_pinboard_note where pinboardid = '$pinboardId' limit $max");
+	}
+	
+	static function getNote ($id) {
+	
+		$id = mysql_real_escape_string($id);
+	
+		return Database::queryAsObject("select * from t_pinboard_note where id = '$id'");
 	}
 	
 	static function deleteNote ($noteId) {

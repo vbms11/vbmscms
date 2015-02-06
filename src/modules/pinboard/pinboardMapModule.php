@@ -48,6 +48,8 @@ class PinboardMapModule extends XModule {
                         } else {
                             parent::setMessages($messages);
                         }
+                    } else {
+                    	parent::setMessages(array("security"=>"Your answer was wrong, try this code!"));
                     }
                 }
                 break;
@@ -65,6 +67,7 @@ class PinboardMapModule extends XModule {
                     $this->printEditView();
                 }
                 break;
+            case "createPinboard":
             case "newPinboard":
             	if (Context::hasRole("pinboardMap.create")) {
             		$this->printNewPinboardView();

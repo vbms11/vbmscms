@@ -1,4 +1,33 @@
 
+.pinboardPanel {
+	position: absolute;
+	bottom: 0px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+}
+
+.pinboardPanel .coverPanel {
+	position:fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	opacity: 0.5;
+	background-color: black;
+	z-index: 10000;
+	display: none;
+}
+
+.pinboardPanel .formPanel {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -250px 0px 0px -250px;
+	width: 500px;
+	height: auto;
+	z-index: 10010;
+}
 
 .pinboardPanel .pinboardButtons {
     float: right;
@@ -28,11 +57,13 @@
 
 .pinboardPanel .pinboardNote {
     position: absolute;
-    width: 100px;
-    width: 100px;
+    width: 220px;
+    height: 220px;
+    overflow: hidden;
     border: 1px solid silver;
     background: white;
     border-radius: 3px;
+    display: none;
 }
 
 .pinboardPanel .pinboardNote .noteButtons {

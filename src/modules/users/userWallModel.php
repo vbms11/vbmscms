@@ -18,6 +18,8 @@ class UserWallModel {
     const type_register = 4;
     const type_friend = 5;
     const type_share = 6;
+    const type_note = 7;
+    const type_pinboard = 8;
     
     static function getUserWallEventsByUserId ($userId) {
         
@@ -91,6 +93,11 @@ class UserWallModel {
     static function createUserWallEventShare ($userId, $eventId) {
         
         return self::createUserWallEvent($userId, self::type_share, $eventId);
+    }
+    
+    static function createUserWallEventNote ($userId, $noteId) {
+        
+        return self::createUserWallEvent($userId, self::type_note, $noteId);
     }
     
     static function canUserPost ($friendId, $userId = null) {

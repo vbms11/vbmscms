@@ -6,12 +6,12 @@ $.widget( "custom.pinboardNote", {
     
     // default options
     options: {
-		width : "500",
-		height : "500",
+		width : "250", 
+		height : "250", 
 		visible: true, 
-		cmdUrl: null,
-		x: null,
-		y: null
+		x: null, 
+		y: null, 
+		pinboard: null
 	},
     
 	noteMenuOpen: false, 
@@ -82,6 +82,33 @@ $.widget( "custom.pinboardNote", {
         
         var thisObject = this;
         
+        var pinboardRectSteps = [
+            (this.options.pinboard.element.width() - this.element.width()) / 1000, 
+            (this.options.pinboard.element.height() - this.element.height()) / 1000
+        ];
+        
+        // get position
+        var position = {};
+        $(this.element.attr('class').split(' ')).each(function(index, object) { 
+            if (object.indexOf("notex_") === 0) {
+            	position.x = (object.substr(6) * pinboardRectSteps[0]);
+            } else if (object.indexOf("notey_") === 0) {
+            	position.y = (object.substr(6) * pinboardRectSteps[1]);
+            }
+        });
+        
+        // if no position generate posistion
+        if (position.length != 2) {
+        	position = this.options.pinboard.generateNotePosition();
+        	this.notifyPositionChanged(position);
+        }
+        
+        // set position
+        this.element.css({
+    		"left": position.x + "px",
+    		"top": position.y + "px"
+    	});
+        
         // make the note draggable
         this.element.draggable({ 
         	containment: this.options.pinboard, 
@@ -94,6 +121,11 @@ $.widget( "custom.pinboardNote", {
         // focus the note when clicked
         this.element.mousedown(function(){
         	thisObject.focus();
+        });
+        
+        // blur when mouse out
+        this.element.mouseout(function(){
+        	thisObject.blur();
         });
         
         this.element.find(".noteOptionsButton")
@@ -135,30 +167,28 @@ $.widget( "custom.pinboardNote", {
     	return this.element.attr("id").substr(5);
     },
     
-    notifyPositionChanged : function () {
+    notifyPositionChanged : function (position) {
     	
-    	var position = this.element.position();
-    	var params = "&noteId="+this.getId()+
-    				"&cmd=move"+
-					"&xpos="+position.left+
-					"&ypos="+position.top;
+    	var params = "&action=setNotePosition&noteId="+this.getId()+"&x="+position.x+"&y="+position.y;
     	
-		$.get(this.options.cmdUrl + params, function(data,status){
-    		
-    	}); 
+		$.get(this.options.pinboard.options.cmdUrl + params, function(data,status){}); 
     },
     
     // put on top of all notes
     focus : function () {
     	
     	var maxZIndex = -1;
-    	$(this.element.parent.find(".pinboarNoteInstance")).each(function(index, object){
+    	$(this.element.parent().find(".pinboarNoteInstance")).each(function(index, object){
     		var noteZIndex = $(object).css("z-index");
     		if (noteZIndex > maxZIndex) {
     			maxZIndex = noteZIndex;
     		}
     	});
     	this.element.css({"z-index": maxZIndex + 1});
+    },
+    
+    blur : function () {
+    	// hide scrollbars
     },
 
     show : function () {
@@ -170,6 +200,11 @@ $.widget( "custom.pinboardNote", {
     hide : function () {
     	
     	this.element.fadeOut();
+    },
+    
+    highlight : function () {
+    	
+    	this.element.effect("pulsate", {times:5}, 1000 );
     },
     
 	openMenu : function () {
@@ -185,7 +220,6 @@ $.widget( "custom.pinboardNote", {
     		thisObject.pinboardMenuOpen = false;
 		});
     },
-
     
 });
 
@@ -277,18 +311,16 @@ $.widget( "custom.pinboard", {
 	        		thisObject.openMenu();
 	        	}
 	        }).mouseout(function () {
-	        	// thisObject.notifyCloseMenu();
-	        }).end()
-        .find(".pinboardNewButtons")
-        	.mouseout(function () {
 	        	if (thisObject.pinboardMenuOpen) {
 	        		thisObject.closeMenu();
 	        	}
+	        }).find(".newNoteButton").click(function () {
+	        	thisObject.showCreateNotePanel();
         	});
         
         this.completeAttach();
     },
-    
+	
     completeAttach : function () {
         
         var thisObject = this;
@@ -335,13 +367,17 @@ $.widget( "custom.pinboard", {
     
     updateNotes : function () {
     	
+    	var thisObject = this;
+    	
     	// if notes already in dom, make them pinboardNote instances
-    	this.element.find(".pinboarNote").each(function(index, object){
-    		if ($(object).hasClass(".pinboarNoteInstance")) {
+    	this.element.find(".pinboardNote").each(function(index, object){
+    		if ($(object).hasClass("pinboardNoteInstance")) {
     			// add note to list
 	    	} else {
 	    		// make it a note
-	    		$(object).pinboarNote(thisObject);
+	    		$(object).pinboardNote({
+	    			pinboard: thisObject
+	    		});
 	    	}
     	});
     	
@@ -385,10 +421,78 @@ $.widget( "custom.pinboard", {
         */
     },
     
-    addNote : function () {
+    showCreateNotePanel : function () {
     	
+    	var thisObject = this;
+    	
+    	this.element.find(".coverPanel").fadeIn("slow",function(){
+    		thisObject.elemenet.find(".formPanel").load(thisObject.options.cmdUrl+"&action=createNote",function(){
+    			thisObject.elemenet.find(".formPanel form").submit(function (e) {
+    				$.post(thisObject.options.cmdUrl+"&action=createNote", $(thisObject.elemenet.find(".formPanel form")).serialize(), function (data) {
+    					thisObject.addNote(data);
+    					thisObject.element.find(".coverPanel").fadeOut("fast");
+    				});
+    				e.preventDefault();
+    			});
+    			thisObject.elemenet.find(".formPanel").slideDown();
+    		});
+    	});
+    },
+    
+    addNote : function (data) {
+    	if (data != undefined) {
+    		$(data).appendTo(this.element).pinboardNote({
+				pinboard: this
+			}).highlight();
+    	}
+    },
+    
+    generateNotePosition : function () {
+    	
+    	// try 5 * 5 positions
+    	
+    	var noteSize = 250;
+    	var resolution = 1000;
+    	var pinboardRectSteps = [
+			(this.element.width() - noteSize) / resolution, 
+			(this.element.height() - noteSize) / resolution
+     	];
+    	position = {};
+    	position.x = (Math.random() * resolution) * pinboardRectSteps[0];
+    	position.y = (Math.random() * resolution) * pinboardRectSteps[1];
+    	return position;
+    	
+    	//TODO make better version
+    	/*
+    	var steps = 5;
+    	
+    	var bestScore = -1;
+    	var bestPosition = {};
+    	
+    	// get all notes that have a position
+    	$notes = this.element.find(".pinboardNote");
+    	
+    	
+    	for (var xi=0; xi<steps; xi++) {
+    		for (var xy=0; xy<steps; xy++) {
+    			
+    			// generate a random position
+    			var x = ((pinboardRectSteps[0] / steps) % Math.rand(10000)) + (xi * (pinboardRectSteps[0] / steps));
+    			var y = ((pinboardRectSteps[1] / steps) % Math.rand(10000)) + (yi * (pinboardRectSteps[1] / steps));
+    			
+    			// check score
+    			var score = 0;
+    			
+    			// check for collision with other notes
+    			
+    			if (bestScore == -1 || bestScore > score) {
+    				bestScore == score;
+    				bestPosition.x = x;
+    				bestPosition.y = y;
+    			}
+    		}
+    	}
+    	*/ 
     }
- // new pin
-
     
 });

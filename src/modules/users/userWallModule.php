@@ -315,6 +315,9 @@ class UserWallModule extends XModule {
                             case UserWallModel::type_image:
                                 $this->printEventTypeImage($sameTypeEvents);
                                 break;
+                            case UserWallModel::type_note:
+                                $this->printEventTypeNote($originalEvent);
+                                break;
                             //case UserWallModel::type_share:
                             //    $this->printEventTypeShare($originalEvent);
                             //    break;
@@ -434,18 +437,86 @@ class UserWallModule extends XModule {
         }
     }
     
+    function printEventTypeNote ($wallEvent) {
+    	
+    	$note = PinboardModel::getNote($wallEvent->typeid);
+    	$wallEventPosts = UserWallModel::getUserWallPostsByEventId($wallEvent->id);
+        $srcUser = UsersModel::getUser($originalPost->srcuserid);
+        $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
+        $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
+		$currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
+        
+        ?>
+        <div class="userWallNote">
+            <div class="userWallPostImage">
+                <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id),true,false); ?>">
+                    <img src="<?php echo $userProfileImage; ?>" alt="" title="<?php echo htmlentities($srcUserName, ENT_QUOTES); ?>" />
+                </a>
+            </div>
+            <div class="userWallPostBody">
+                <div class="userWallPostTitle">
+                    <?php
+                    $allowDelete = false;
+                    $allowEdit = false;
+                    if (Context::getUserId() == $originalPost->srcuserid) {
+                        $allowDelete = true;
+                        $allowEdit = true;
+                    }
+                    if ($this->getModeUserId() == Context::getUserId()) {
+                        $allowDelete = true;
+                    }
+                    if ($allowDelete || $allowEdit) {
+                        ?>
+                        <div class="userWallPostTitleTools">
+                            <?php
+                            if ($allowDelete) {
+                                ?>
+                                <img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("userWall.dialog.confirmDelete"); ?>','<?php echo parent::link(array("action"=>"deleteEvent","id"=>$wallEvent->id),false); ?>');" />
+                                <?php
+                            }
+                            if ($allowEdit) {
+                                ?>
+                                <a href="<?php echo parent::link(array("action"=>"editComment","id"=>$originalPost->id)); ?>">
+                                    <img src="resource/img/preferences.png" alt="" />
+                                </a>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    <div class="userWallPostTitleDate">
+                        <?php echo $originalPost->date; ?>
+                    </div>
+                    <a href="<?php echo parent::staticLink("userProfile",array("userId"=>$srcUser->id)); ?>">
+                        <?php echo htmlentities($srcUserName); ?>
+                    </a>
+                </div>
+                <div class="userWallPostComment">
+                    <?php echo htmlentities($note->message); ?>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php
+        
+        $this->printWallEventPosts($wallEvent->id, $wallEventPosts);
+        
+    }
+    
     function printEventTypeWall ($wallEvent) {
 	
-	$currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
+		$currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
         /*
         $srcUser = UsersModel::getUser($wallEvent->userid);
         $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
         $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
-	*/
+		*/
         $wallEventPosts = UserWallModel::getUserWallPostsByEventId($wallEvent->id);
         $originalPost = current($wallEventPosts);
 	
-	$srcUser = UsersModel::getUser($originalPost->srcuserid);
+		$srcUser = UsersModel::getUser($originalPost->srcuserid);
         $srcUserName = $srcUser->firstname." ".$srcUser->lastname;
         $userProfileImage = UsersModel::getUserImageSmallUrl($srcUser->id);
 	
