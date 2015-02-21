@@ -46,6 +46,7 @@ class AdminTemplate extends XTemplate {
      * 
      */
     static function renderAdminHeader () {
+    	/*
         if (Context::isAdminMode()) {
             $adminPageId = isset($_GET['adminPageId']) ? $_GET['adminPageId'] : null;
             if (empty($adminPageId)) {
@@ -73,6 +74,7 @@ class AdminTemplate extends XTemplate {
         </div>
         <div class="adminContentDiv">
         <?php
+        */
     }
     
     /**
@@ -83,7 +85,7 @@ class AdminTemplate extends XTemplate {
         </div>
         <?php
     }
-    
+        
     /**
      * renders the main template area
      * @param type $pageId

@@ -110,8 +110,8 @@ $.widget( "custom.pinboardNote", {
     	});
         
         // make the note draggable
-        this.element.draggable({ 
-        	containment: this.options.pinboard, 
+        $(this.element).draggable({ 
+        	containment: this.options.pinboard.element, 
         	scroll: false, 
 			stop: function() {
 				thisObject.notifyPositionChanged();
@@ -178,8 +178,12 @@ $.widget( "custom.pinboardNote", {
     focus : function () {
     	
     	var maxZIndex = -1;
-    	$(this.element.parent().find(".pinboarNoteInstance")).each(function(index, object){
+    	$(this.element.parent().find(".pinboardNoteInstance")).each(function(index, object){
     		var noteZIndex = $(object).css("z-index");
+    		if (noteZIndex == "auto") {
+    			noteZIndex = maxZIndex + 1;
+    			maxZIndex += 1;
+    		} 
     		if (noteZIndex > maxZIndex) {
     			maxZIndex = noteZIndex;
     		}
@@ -305,19 +309,28 @@ $.widget( "custom.pinboard", {
         
         var thisObject = this;
         
+        this.element.find(".pinboardNewButton").click(function (e) {
+        	thisObject.showCreateNotePanel();
+    		return false;
+    	});
+        
+        /*
         this.element.find(".pinboardNewButton")
         	.mouseover(function () {
 	        	if (!thisObject.pinboardMenuOpen) {
 	        		thisObject.openMenu();
 	        	}
-	        }).mouseout(function () {
+	        }).end()
+	        .find(".newNoteButton").click(function () {
+	        	thisObject.showCreateNotePanel();
+        	}).end()
+        	.find(".pinboardNewButtons")
+        	.mouseout(function () {
 	        	if (thisObject.pinboardMenuOpen) {
 	        		thisObject.closeMenu();
 	        	}
-	        }).find(".newNoteButton").click(function () {
-	        	thisObject.showCreateNotePanel();
-        	});
-        
+	        });
+        */
         this.completeAttach();
     },
 	
@@ -424,19 +437,55 @@ $.widget( "custom.pinboard", {
     showCreateNotePanel : function () {
     	
     	var thisObject = this;
+    	if ($(".pinboardCreateNotePanel").length == 0) {
+    		$("body").append(
+				$("<div>", {"class": "pinboardCreateNotePanel"})
+					.append($("<div>", {"class": "coverPanel"}))
+					.append($("<div>", {"class": "formPanel"}))
+    		);
+    	}
+    	var coverPanel = $(".pinboardCreateNotePanel .coverPanel");
+    	var formPanel = $(".pinboardCreateNotePanel .formPanel");
     	
-    	this.element.find(".coverPanel").fadeIn("slow",function(){
-    		thisObject.elemenet.find(".formPanel").load(thisObject.options.cmdUrl+"&action=createNote",function(){
-    			thisObject.elemenet.find(".formPanel form").submit(function (e) {
-    				$.post(thisObject.options.cmdUrl+"&action=createNote", $(thisObject.elemenet.find(".formPanel form")).serialize(), function (data) {
-    					thisObject.addNote(data);
-    					thisObject.element.find(".coverPanel").fadeOut("fast");
+    	coverPanel.fadeIn("slow",function(){
+    		$(".pinboardCreateNotePanel .formPanel").load(thisObject.options.cmdUrl+"&action=createNote",function(){
+    			
+    			$(".pinboardCreateNotePanel .formPanel form").submit(function (e) {
+    				thisObject.hideCreateNotePanel();
+    				var form = {"createNote" : "1"};
+    				$(".pinboardCreateNotePanel .formPanel form").find("input, textarea").each(function(index,object){
+    					form[$(object).attr("name")] = $(object).val();
+    				});
+    				$.post(thisObject.options.cmdUrl+"&action=createNote", form, function (data) {
+    					$(".pinboardCreateNotePanel .formPanel").empty().html(data);
+    					/*
+    					$(".pinboardCreateNotePanel .formPanel").fadeOut("slow",function(){
+    						$(".pinboardCreateNotePanel .formPanel").empty().html(data).fadeIn("slow");
+    					});
+    					*/
     				});
     				e.preventDefault();
+    				return false;
     			});
-    			thisObject.elemenet.find(".formPanel").slideDown();
+    			
+    			thisObject.element.find(".formPanel").slideDown();
     		});
     	});
+    },
+    
+    hideCreateNotePanel : function (callback) {
+    	
+     	$(".pinboardCreateNotePanel .formPanel").slideUp(function () {
+     		$(".pinboardCreateNotePanel .coverPanel").fadeOut("slow", function () {
+        		if (callback != undefined) {
+        			callback();
+        		}
+        	});
+     	});
+    },
+    
+    addNoteById : function () {
+    	
     },
     
     addNote : function (data) {
@@ -445,6 +494,13 @@ $.widget( "custom.pinboard", {
 				pinboard: this
 			}).highlight();
     	}
+    },
+    
+    loadNote : function (noteId) {
+    	var thisObject = this;
+    	$.get(this.options.cmdUrl+"&action=viewNote&noteId"+noteId, function (data) {
+    		thisObject.addNote(data);
+    	});
     },
     
     generateNotePosition : function () {

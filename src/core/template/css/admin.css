@@ -37,6 +37,16 @@
     right: 0px;
     overflow: auto;
 }
+.adminIframe {
+	position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    border: 0px none;
+    width: 100%;
+    height: 100%;
+}
 .adminBodyDiv {
     position: fixed;
     top: 41px;

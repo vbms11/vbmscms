@@ -35,7 +35,7 @@ class PinboardModel {
 		$lat = mysql_real_escape_string($lat);
 		$lng = mysql_real_escape_string($lng);
 		
-		Database::query("insert into t_pinboard (name, description, userid, iconid, lat, lng, createdata, updatedate)
+		Database::query("insert into t_pinboard (name, description, userid, iconid, lat, lng, createdate, updatedate)
 			values ('$name', '$description', '$userId', '$iconId', '$lat', '$lng', now(), now())");
 		
 		$result = Database::queryAsObject("select last_insert_id() as newid from t_pinboard");

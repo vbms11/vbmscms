@@ -145,7 +145,19 @@ abstract class XModule implements IModule, ITranslatable {
             $params = $moduleId;
             $moduleId = null;
         }
-        NavigationModel::redirectModule($moduleId == null ? $this->moduleId : $moduleId, $params);
+        if (!is_numeric($moduleId)) {
+        	if (Context::isAjaxRequest()) {
+        		NavigationModel::redirectAjaxStaticModule($moduleId, $params);
+        	} else {
+        		NavigationModel::redirectStaticModule($moduleId, $params);
+        	}
+        	break;
+        }
+        if (Context::isAjaxRequest()) {
+        	NavigationModel::redirectAjaxModule($moduleId == null ? $this->moduleId : $moduleId, $params);
+        } else {
+        	NavigationModel::redirectModule($moduleId == null ? $this->moduleId : $moduleId, $params);
+        }
     }
     function focus () {
         Context::setFocusedArea($this->moduleId);

@@ -20,40 +20,56 @@ class PinboardModule extends XModule {
                 case "cancel":
                     parent::blur();
                 case "closePinboard":
-                    NavigationModel::staticRedirect("pinboardMap");
+                    parent::redirect("pinboardMap");
                     break;
                 case "newNote":
                 	parent::focus();
                 	break;
                 case "createNote":
                     
-                    if (parent::post("createNote")) {
-                        
-                        $message = parent::post("message");
-                        $pinboardId = parent::get("pinboardId");
-                        $type = parent::get("type");
-                        $typeId = parent::post("typeId");
-                        
-                        $userId = Context::getUserId();
-                        $x = parent::post("x");
-                        $y = parent::post("y");
-                        
-                        $messages = PinboardModel::validateNote($message, $pinboardId, $type, $typeId, $userId, $x, $y);
-                        if (empty($messages)) {
-                            $noteId = PinboardModel::createNote($message, $pinboardId, $type, $typeId, $userId, $x, $y);
-                            UserWallModel::createUserWallEventNote($userId, $noteId);
-                            if (!Context::isAjaxRequest()) {
-                            	parent::blur();
-                            	parent::redirect(array("pinboardId"=>$pinboardId));
-                            }
-                        } else {
-                            parent::setMessages($messages);
-                        }
-                    } else if (parent::post("cancel") == "1") {
-                    	if (!Context::isAjaxRequest()) {
-                    		parent::redirect(array("pinboardId"=>$pinboardId));
-                    	}
+                	if (Context::hasRole("pinboard.createNote")) {
+                		
+	                    if (parent::post("createNote")) {
+	                        
+	                    	
+	                    	
+	                        $message = parent::post("message");
+	                        $pinboardId = parent::get("pinboardId");
+	                        $type = parent::get("type");
+	                        $typeId = parent::post("typeId");
+	                        
+	                        $userId = Context::getUserId();
+	                        $x = parent::post("x");
+	                        $y = parent::post("y");
+	                        
+	                        $messages = PinboardModel::validateNote($message, $pinboardId, $type, $typeId, $userId, $x, $y);
+	                        
+	                        $human = Captcha::validate("security");
+	                        if (!$human) {
+	                        	$messages["security"] = "Wrong answer please try again!";
+	                        }
+	                        
+	                        if (empty($messages)) {
+	                            $noteId = PinboardModel::createNote($message, $pinboardId, $type, $typeId, $userId, $x, $y);
+	                            UserWallModel::createUserWallEventNote($userId, $noteId);
+	                            if (!Context::isAjaxRequest()) {
+	                            	parent::blur();
+	                            	parent::redirect(array("pinboardId"=>$pinboardId));
+	                            } else {
+	                            	parent::redirect(array("action"=>"noteCreated", "noteId"=>$noteId, "pinboardId"=>$pinboardId));
+	                            }
+	                        } else {
+	                            parent::setMessages($messages);
+	                        }
+	                    } else if (parent::post("cancel") == "1") {
+	                    	if (!Context::isAjaxRequest()) {
+	                    		parent::redirect(array("pinboardId"=>$pinboardId));
+	                    	}
+	                    }
+                    } else {
+                   		parent::redirect("login");
                     }
+                    
                     break;
                 case "deleteNote":
                     
@@ -64,6 +80,11 @@ class PinboardModule extends XModule {
                     break;
                 case "getNotes":
                     $notes = PinboardModel::getNotes(parent::get("pinboardId"));
+                    foreach ($notes as $note) {
+                    	if (Context::hasRole("pinboard.admin") || $note->userid == Context::getUserId()) {
+                    		$note->editable = "true";
+                    	}
+                    }
                     Context::setReturnValue(json_enode($notes));
                     break;
                 case "setNotePosition":
@@ -73,6 +94,7 @@ class PinboardModule extends XModule {
                     }
          			break;
      	}
+     	
     }
 
     function onView () {
@@ -83,14 +105,17 @@ class PinboardModule extends XModule {
                     $this->printEditView();
                 }
                 break;
+            case "noteCreated":
+            	if (Context::isAjaxRequest()) {
+            		$this->renderNoteCreated();
+            	}
             case "newNote":
+            case "viewNote":
+            	$this->renderNote(parent::get("noteId"));
+            	break;	
             case "createNote":
                 if (Context::hasRole("pinboard.createNote")) {
-                	if (Context::isAjaxRequest()) {
-                    	$this->renderNote();
-                	} else {
-                		$this->printCreateNoteView();
-                	}
+                	$this->printCreateNoteView();
                 }
                 break;
             case "saveMessage":
@@ -104,7 +129,7 @@ class PinboardModule extends XModule {
     }
     
     function getStyles () {
-    	return array("css/pinboard.css");
+    	return array("css/pinboard.css", "/resource/css/captcha.css");
     }
     
     function getScripts () {
@@ -135,12 +160,16 @@ class PinboardModule extends XModule {
         ?>
 		<div class="panel pinboardPanel <?php echo parent::alias("pinboardPanel"); ?>">
 			<div class="pinboardButtons">
-				<a href="#" class="pinboardNewButton">
+				<a href="<?php echo parent::link(array("action"=>"createNote","pinboardId"=>parent::get("pinboardId"))); ?>" class="pinboardNewButton">
+					<img src="modules/pinboard/img/newNote.png" alt="+" />
+				</a>
+				<a href="<?php echo parent::link(array("action"=>"closePinboard","pinboardId"=>parent::get("pinboardId"))); ?>" class="pinboardCloseButton">
+					<img src="modules/pinboard/img/closePinboard.png" alt="-" />
+				</a><?php /*
+				<a href="<?php echo parent::link(array("action"=>"createNote","pinboardId"=>parent::get("pinboardId"))); ?>" class="pinboardNewButton">
 					<img src="modules/pinboard/img/newNote.png" alt="+" />
 				<a>
-				<a href="<?php echo parent::link(array("action"=>"closePinboard")); ?>" class="pinboardCloseButton">
-					<img src="modules/pinboard/img/closePinboard.png" alt="-" />
-				<a>
+				
 				<div class="pinboardNewButtons">
 					<div>
 						<a class="newNoteButton" href="<?php echo parent::link(array("action"=>"newNote","pinboardId"=>parent::get("pinboardId"))); ?>"><?php echo parent::getTranslation("pinboard.options.note"); ?></a>
@@ -151,7 +180,8 @@ class PinboardModule extends XModule {
 					<div>
 						<a href="<?php echo parent::link(array("action"=>"newNote","pinboardId"=>parent::get("pinboardId"))); ?>"><?php echo parent::getTranslation("pinboard.options.blog"); ?></a>
 					</div>
-				</div>
+				</div> 
+				*/ ?>
 			</div>
             <?php
             if (!empty($notes)) {
@@ -162,12 +192,10 @@ class PinboardModule extends XModule {
             	// no notes
             }
             ?>
-            <div class="coverPanel"></div>
-            <div class="formPanel"></div>
 	    </div>
 		<script type="text/javascript">
 	    $(".<?php echo parent::alias("pinboardPanel"); ?>").pinboard({
-	    	cmdUrl: "<?php echo parent::ajaxLink(); ?>"
+	    	cmdUrl: "<?php echo parent::ajaxLink(array("pinboardId"=>parent::get("pinboardId"))); ?>"
 	    });
 	    </script>
 	    <noscript>
@@ -181,6 +209,16 @@ class PinboardModule extends XModule {
 	    	}
 	    	</style>
 	    </noscript>
+		<?php
+	}
+	
+	function renderNoteCreated () {
+		?>
+		<script>
+		$(".<?php echo parent::alias("pinboardPanel"); ?>")
+			.pinboard("hideCreateNotePanel")
+			.pinboard("loadNote", "<?php echo parent::get("noteId"); ?>");
+		</script>
 		<?php
 	}
 	
@@ -212,7 +250,7 @@ class PinboardModule extends XModule {
 				<table class="formTable"><tr><td>
 					<?php echo parent::getTranslation("pinboard.create.message.label"); ?>
 				</td><td>
-					<textarea class="expand" cols="10" rows="5" name="message" placeholder="<?php echo parent::getTranslation("pinboard.create.message.placeholder"); ?>" /><?php 
+					<textarea class="expand" cols="10" rows="5" name="message" placeholder="<?php echo parent::getTranslation("pinboard.create.message.placeholder"); ?>"><?php 
 						echo htmlspecialchars(parent::post("message")); 
 					?></textarea>
 					<?php

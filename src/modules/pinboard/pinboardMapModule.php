@@ -44,7 +44,7 @@ class PinboardMapModule extends XModule {
                         $messages = PinboardModel::validatePinboard(parent::post("name"), parent::post("description"), parent::post("icon"));
                         if (empty($messages)) {
                             $pinboardId = PinboardModel::createPinboard(parent::post("name"), parent::post("description"), parent::post("icon"), parent::post("locationSelect_lat"), parent::post("locationSelect_lng"), Context::getUserId());
-							NavigationModel::redirectStaticModule("binboard", array("pinboardId"=>$pinboardId));
+							NavigationModel::redirectStaticModule("pinboard", array("pinboardId"=>$pinboardId));
                         } else {
                             parent::setMessages($messages);
                         }
@@ -90,7 +90,9 @@ class PinboardMapModule extends XModule {
     }
     
     function getScripts () {
-    	return array("https://maps.googleapis.com/maps/api/js", "js/pinboardMap.js", "js/locationSelectMap.js");
+    	// https://maps.googleapis.com/maps/api/js
+    	//return array("https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=map,places", "js/pinboardMap.js", "js/locationSelectMap.js");
+    	return array("https://maps.googleapis.com/maps/api/js?libraries=map,places", "js/pinboardMap.js", "js/locationSelectMap.js");
     }
 
     function printMainView () {
@@ -141,7 +143,7 @@ class PinboardMapModule extends XModule {
                 <table class="formTable"><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.name"); ?>
                 </td><td>
-                    <input name="name" type="text" value="" placeholder="<?php echo parent::getTranslation("pinboardMap.new.name.placeholder"); ?>" />
+                    <input name="name" type="text" value="<?php echo htmlentities(parent::post("name"), ENT_QUOTES); ?>" placeholder="<?php echo parent::getTranslation("pinboardMap.new.name.placeholder"); ?>" />
                     <?php
                     $message = parent::getMessage("name");
                     if (!empty($message)) {
@@ -151,7 +153,9 @@ class PinboardMapModule extends XModule {
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.description"); ?>
                 </td><td>
-                    <textarea name="description" placeholder="<?php echo parent::getTranslation("pinboardMap.new.description.placeholder"); ?>"></textarea>
+                    <textarea name="description" placeholder="<?php echo parent::getTranslation("pinboardMap.new.description.placeholder"); ?>"><?php 
+                    	echo htmlentities(parent::post("description"));
+                    ?></textarea>
                     <?php
                     $message = parent::getMessage("description");
                     if (!empty($message)) {
@@ -165,12 +169,28 @@ class PinboardMapModule extends XModule {
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("pinboardMap.new.icon"); ?>
                 </td><td>
-                	<input type="hidden" name="icon" value="" />
+                	<input type="hidden" name="icon" value="<?php 
+                	if (parent::post("icon")) {
+                		echo parent::post("icon");
+                	} else {
+                		echo current($icons)->id;
+                	}
+                	?>" />
                     <ol class="icons">
                         <?php
+                        $first = true;
                         foreach ($icons as $icon) {
-                            ?>
-                            <li class="icon icon_<?php echo $icon->id; ?>">
+                            $class = "";
+	                        if (parent::post("icon")) {
+	                        	if (parent::post("icon") == $icon->id) {
+		                			$class = "ui-selected";
+	                        	}
+		                	} else if ($first) {
+		                		$class = "ui-selected";
+		                		$first = false;
+		                	}
+                        	?>
+                            <li class="icon icon_<?php echo $icon->id." ".$class; ?>">
                             	<img src="<?php echo $icon->iconfile; ?>" alt="" />
                             </li>
                             <?php

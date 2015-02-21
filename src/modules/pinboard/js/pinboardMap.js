@@ -20,7 +20,7 @@ $.widget("custom.pinboardMap", {
         this.element
             .addClass("pinboardMap")
             .disableSelection();
-
+        
         this.attach();
         
         this._refresh();
@@ -77,9 +77,10 @@ $.widget("custom.pinboardMap", {
     
     // init
     attach : function () {
-        
+    	
         var thisObject = this;
         
+        // add the map container
         this.element.append(
     		$("<div>",{"class": "gMapContainer"})
     			.css({
@@ -89,10 +90,17 @@ $.widget("custom.pinboardMap", {
     			})
         );
         
-	    // var center = new google.maps.LatLng(this.options.lat, this.options.lng);
-    	var center = new google.maps.LatLng(45,0);
-	    
-    	// google.maps.event.addDomListener(window, 'load', function () {
+        // create the map centered on user location
+        this.getUserLocation(function (lngLat) {
+        	
+        	thisObject.initMap(lngLat.lng, lngLat.lat, 10);
+        });
+        
+    },
+    
+    initMap : function (lng, lat, zoom) {
+    	
+    	var center = new google.maps.LatLng(lat,lng);
     	
     	var myMapOptions = {
           	zoom: 10,
@@ -100,26 +108,110 @@ $.widget("custom.pinboardMap", {
     		streetViewControl: false,
     		scaleControl: false,
     		mapTypeId: google.maps.MapTypeId.TERRAIN,
-		    mapTypeControl: true,
+    		disableDefaultUI: true, 
+    		mapTypeControl: false,
             mapTypeControlOptions: {
                 style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-            }
+            },
+            styles : [
+                      {
+                          "featureType": "road.highway",
+                          "elementType": "geometry",
+                          "stylers": [
+                            { "saturation": -100 },
+                            { "lightness": -8 },
+                            { "gamma": 1.18 }
+                          ]
+                      }, {
+                          "featureType": "road.arterial",
+                          "elementType": "geometry",
+                          "stylers": [
+                            { "saturation": -100 },
+                            { "gamma": 1 },
+                            { "lightness": -24 }
+                          ]
+                      }, {
+                          "featureType": "poi",
+                          "elementType": "geometry",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                          "featureType": "administrative",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                          "featureType": "transit",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                          "featureType": "water",
+                          "elementType": "geometry.fill",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                          "featureType": "road",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                          "featureType": "administrative",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                          "featureType": "landscape",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                          "featureType": "poi",
+                          "stylers": [
+                            { "saturation": -100 }
+                          ]
+                      }, {
+                  }
+               ]
     	};
     	
     	this.map = new google.maps.Map(this.element.find(".gMapContainer")[0], myMapOptions);
+    	/*
+    	var roadAtlasStyles = [{
+           "featureType": "road.highway", // "road.arterial", "poi", "water", "administrative"
+           "elementType": "geometry", // "geometry.fill",
+           "stylers": [
+             { "saturation": -100 },
+             { "lightness": -8 },
+             { "gamma": 1.18 }
+           ]
+       }];
+    	*/
+    	    	
     	
+    	
+    	
+    	
+    	
+    	
+    	var thisObject = this;
     	google.maps.event.addListenerOnce(this.map, 'idle', function(){
         	thisObject.completeAttach();
     	});
+    	
+    	
 
-
-// });
-
-    },
+    	
+    	
+    	
+    	
+    }, 
     
     completeAttach : function () {
         
-        var thisObject = this;
+        // var thisObject = this;
         
         //this.show();
         this.updatePinboards();
@@ -224,7 +316,7 @@ $.widget("custom.pinboardMap", {
         		position: position
         	};
         	
-        	if (pinboard.canedit) {
+        	if (pinboard.editable) {
         		markerOptions["draggable"] = true;
         	}
         	
@@ -269,7 +361,9 @@ $.widget("custom.pinboardMap", {
     
     openPinbord : function () {
     	
-    	this.options.pinboardName
+    	// this.options.pinboardName;
+    	// load pinboard module into center area
+    	// $("#vcms_area_center").load(...);
     },
     
     onPinboardMouseOver : function () {
@@ -281,10 +375,141 @@ $.widget("custom.pinboardMap", {
         return this.map.getZoom();
     },
     
+    setPlace : function (place) {
+    	
+    	// pinboardMap.closeInfoWindow();
+		
+		// set map position
+		if (place.geometry.viewport) {
+			this.map.fitBounds(place.geometry.viewport);
+		} else {
+			this.map.setCenter(place.geometry.location);
+			this.map.setZoom(17);
+	    }
+	    
+		// dose the place have a pinboard?
+		
+		
+		// go to places pinboard
+		// else
+		// place marker
+		
+	    // put a marker on the place
+	    marker.setIcon(/** @type {google.maps.Icon} */({
+	      url: place.icon,
+	      size: new google.maps.Size(71, 71),
+	      origin: new google.maps.Point(0, 0),
+	      anchor: new google.maps.Point(17, 34),
+	      scaledSize: new google.maps.Size(35, 35)
+	    }));
+	    marker.setPosition(place.geometry.location);
+	    marker.setVisible(true);
+	    
+	    
+	    
+		var address = '';
+		if (place.address_components) {
+		  address = [
+		    (place.address_components[0] && place.address_components[0].short_name || ''),
+		    (place.address_components[1] && place.address_components[1].short_name || ''),
+		    (place.address_components[2] && place.address_components[2].short_name || '')
+		  ].join(' ');
+		}
+
+	    infowindow.setContent('<div><strong>' + place.name + '</strong><a>New Pinboard</a><br/>' + address);
+	    infowindow.open(this.map, marker);
+	  
+    },
+    
+    setCenter : function (latLng) {
+    	
+    	this.map.panTo(new google.maps.LatLng(latLng.lat, latLng.lng));
+    },
+    
     getCenter : function () {
-        
-        var center = this.map.getCenter();
-        return {"lat": center.lat(), "lng": center.lng()}
+    	
+    	if (this.map != null) {
+    		var center = this.map.getCenter();
+    		return {"lat": center.lat(), "lng": center.lng()};
+    	}
+    	
+    	var center = this.mapCenter;
+    	if (center != null) {
+    		return center;
+    	}
+    	
+    	var center = $.cookie("mapCenter");
+    	if (center != null) {
+    		return $.parseJSON(center);
+    	}
+    },
+    
+    getUserLocation : function (callback) {
+    	
+    	var latLng = $.cookie('userLocation');
+    	if (typeof(latLng) == "undefined") {
+    		
+    		var thisObject = this;
+    		
+    		// get user location
+    		var ip = null;
+            var callbackCalled = false;
+            
+        	$.ajax({url: "http://www.telize.com/ip"})
+        		.done(function (data) {
+	        		
+	        		ip = data;
+	        		$.ajax({url: "https://freegeoip.net/json/"+ip}).done(function (data) {
+	        			var info = $.parseJSON(data);
+	        			if (info.longitude != "" && info.longitude == 0 && info.latitude != "" && info.latitude != 0) {
+	        				callback({"lat": info.latitude, "lng": info.longitude});
+	        				callbackCalled = true;
+	        			}
+	                }).always(function() {
+	        			// check if map has been initialized
+	        			if (!callbackCalled) {
+	        				thisObject.askUserForLocation(callback);
+	        			}
+	        		});
+            }).always(function() {
+    			// check if map has been initialized
+    			if (ip == null && !callbackCalled) {
+    				thisObject.askUserForLocation(callback);
+    			}
+    		});
+        	
+    		this.setUserLocation(latLng);
+    	
+    	} else {
+    		
+    		callback($.parseJSON(latLng));
+    	}
+    	
+    	return $.parseJSON(latLng);
+    },
+    
+    setUserLocation : function (latLng) {
+    	
+    	$.cookie('userLocation', JSON.stringify(latLng), {
+            expires : 10
+        });
+    },
+    
+    askUserForLocation : function (callback) {
+    	
+    	var thisObject = this;
+    	navigator.geolocation.getCurrentPosition(function(position) {
+    		var result = {"lat": position.coords.latitude, "lng": position.coords.longitude};
+    		thisObject.setUserLocation(result);
+    		if (typeof(callback) != "undefined") {
+        		callback(result);
+    		}
+		});
+    },
+    
+    getMap : function () {
+    	
+    	return this.map;
     }
     
 });

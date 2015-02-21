@@ -92,6 +92,19 @@ function callUrl (url,replace,anchor) {
     document.location.href = url;
 }
 
+function checkIfAdminIframNeeded () {
+	//TODO the admin iframe needs a place to poll to know when to close
+	
+	if ($.cookie("adminIframe") == "0") {
+		window.parent.postMessage("close");
+	} else if ($.cookie("adminIframe") == "1") {
+		if (!window.parent) {
+			$.cookie("adminIframe","0");
+		}
+	}
+}
+checkIfAdminIframNeeded();
+
 function initSortableAreas (moduleId, sortLink) {
     
     var vcmsArea = $(".vcms_area");

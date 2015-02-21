@@ -184,6 +184,10 @@ class NavigationModel {
         NavigationModel::redirect(NavigationModel::createModuleLink($moduleId,NavigationModel::addAjaxParam($params),false));
     }
     
+    static function redirectAjaxStaticModule ($name,$params=null) {
+        NavigationModel::redirectStaticModule($name,NavigationModel::addAjaxParam($params),false);
+    }
+    
     static function createActionLink ($action,$params=null,$xhtml=true) {
         $moduleId = Context::getModuleId();
         $link = "?moduleid=$moduleId&action=$action".NavigationModel::buildParams($params,$xhtml).(!NavigationModel::$secureLink ? NavigationModel::addSessionKeys($xhtml) : "");

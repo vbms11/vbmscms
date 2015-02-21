@@ -293,6 +293,7 @@ a img {
     right: 0px;
     width: auto;
     height: auto;
+    z-index: 1000;
 }
 .notification {
     border: 1px solid black;

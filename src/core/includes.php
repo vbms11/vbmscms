@@ -19,6 +19,7 @@ include_once 'core/template/baseRenderer.php';
 include_once 'core/template/ajaxRenderer.php';
 include_once 'core/template/vcmsRenderer.php';
 include_once 'core/template/templateRenderer.php';
+include_once 'core/template/adminIframeRenderer.php';
 include_once 'core/template/editableTemplate.php';
 include_once 'core/template/editableTemplatePreview.php';
 

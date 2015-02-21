@@ -1,0 +1,18 @@
+
+.pinboardSearchBoxPanel a {
+	background-image: url('../img/search.png');
+	background-position: top left;
+	background-repeat: no-repeat;
+	width: 28px;
+	height: 28px;
+	display: block;
+	float: left;
+}
+
+.pinboardSearchBoxPanel div {
+	margin-left: 28px;
+}
+
+.pinboardSearchBoxPanel input {
+	width: 100%;
+}

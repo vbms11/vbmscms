@@ -1,5 +1,15 @@
 
 
+
+# suppress PHP errors from displaying in the browser
+#php_flag display_startup_errors off
+#php_flag display_errors off
+#php_flag html_errors off
+
+# enable PHP error logging
+#php_flag  log_errors on
+#php_value error_log  log/php_errors.log
+
 # block directorys and files
 
 #<DirectoryMatch core/ > 

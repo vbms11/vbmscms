@@ -3,6 +3,10 @@
 require_once 'core/template/adminTemplate.php';
 
 class TemplateRenderer extends BaseRenderer {
+	
+    function getTemplate () {
+    	return null;
+    }
     
     /**
      * called when an area of the template is to be rendered
@@ -188,7 +192,11 @@ class TemplateRenderer extends BaseRenderer {
         <?php
 
         // get template resources
-        $template = TemplateModel::getTemplateObj($page);
+        $template = $this->getTemplate();
+        if ($template == null) {
+        	$template = TemplateModel::getTemplateObj($page);
+        }
+        
         $styles = $template->getStyles();
         if (!empty($styles)) {
             $templateStylePaths = $template->getResourcePaths($styles);
@@ -230,7 +238,7 @@ class TemplateRenderer extends BaseRenderer {
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://<?php echo $site->url; ?>/modules/statistics/piwik/";
+    var u="<?php echo NavigationModel::getSitePath(); ?>/modules/statistics/piwik/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', <?php echo $site->piwikid; ?>]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
@@ -264,17 +272,17 @@ class TemplateRenderer extends BaseRenderer {
     
     function renderHeader () {
         
-        if (Context::hasRoleGroup("admin")) {
-            AdminTemplate::renderAdminHeader();
-            Context::addRequiredStyle(AdminTemplate::getAdminStyle());
-        }
+        //if (Context::hasRoleGroup("admin")) {
+        //    AdminTemplate::renderAdminHeader();
+        //    Context::addRequiredStyle(AdminTemplate::getAdminStyle());
+        //}
     }
     
     function renderFooter () {
         
-        if (Context::hasRoleGroup("admin")) {
-            AdminTemplate::renderAdminFooter();
-        }
+        //if (Context::hasRoleGroup("admin")) {
+        //    AdminTemplate::renderAdminFooter();
+        //}
         
         if (Context::hasRole("pages.edit")) {
             Context::addRequiredScript("resource/js/contextmenu/jquery.contextmenu.js");

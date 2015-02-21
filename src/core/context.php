@@ -149,7 +149,7 @@ class Context {
     // current request
 
     static function isAjaxRequest () {
-        return (isset($_GET["moduleAjaxRequest"]) && $_GET["moduleAjaxRequest"] == "true");
+        return ((isset($_GET["moduleAjaxRequest"]) && $_GET["moduleAjaxRequest"] == "true") || (isset($_GET["moduleAjaxRequest"]) && $_GET["moduleAjaxRequest"] == "1"));
     }
     
     static function isRenderRequest () {
@@ -235,7 +235,10 @@ class Context {
 
     static function loadRenderer () {
         
-        if (Context::isRenderRequest()) {
+        if (self::hasRoleGroup("admin") && (!isset($_COOKIE["adminIframe"]) || $_COOKIE["adminIframe"] != "1")) {
+        	$renderer = new AdminIframeRenderer();
+        	setcookie("adminIframe", "1", 0, "/");
+        } else if (Context::isRenderRequest()) {
             $renderer = new VCmsRenderer();
         } else if (Context::isAjaxRequest()) {
             $renderer = new AJaxRenderer();

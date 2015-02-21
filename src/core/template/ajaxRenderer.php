@@ -5,9 +5,10 @@ class AjaxRenderer extends BaseRenderer {
     function invokeRender () {
         
         // ajax request
-        $module = TemplateModel::getTemplateModule(Context::getModuleId());
-        ModuleModel::renderModule($module);
-        
+        $moduleId = Context::getModuleId();
+        $moduleClass = ModuleModel::getModuleClass(TemplateModel::getTemplateModule($moduleId));
+        $moduleClass->setParams(ModuleModel::getModulesParams($moduleId));
+        $moduleClass->view($moduleClass->getId());
     }
 
 }
