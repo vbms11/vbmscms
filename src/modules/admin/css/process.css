@@ -1,0 +1,10 @@
+.processItem {
+	border-bottom: 1px solid silver;
+}
+.processItem:last-child {
+	border-bottom: none;
+}
+
+.processEdit {
+	float: right;
+}

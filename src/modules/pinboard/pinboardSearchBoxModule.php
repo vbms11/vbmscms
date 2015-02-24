@@ -74,8 +74,8 @@ class PinboardSearchBoxModule extends XModule {
     function printSearchBoxView () {
         ?>
         <div class="panel pinboardSearchBoxPanel">
-            <form method="post" id="searchForm" name="searchForm" action="<?php echo parent::link("search"); ?>">
-                <a href="" onclick="$('#searchForm').submit(); return false;" title="<?php echo parent::getTranslation("pinboardSearchBox.button.title"); ?>"></a>
+            <form method="post" class="searchForm" name="searchForm" action="<?php echo parent::link("search"); ?>">
+                <a href="#" title="<?php echo parent::getTranslation("pinboardSearchBox.button.title"); ?>"></a>
                 <div>
                 	<input type="text" name="search" placeholder="<?php echo parent::getTranslation("pinboardSearchBox.placeholder"); ?>" />
                 </div>
@@ -88,9 +88,6 @@ class PinboardSearchBoxModule extends XModule {
 
 	        var input = $(".pinboardSearchBoxPanel input[name=search]");
 
-	        input.submit(function(){
-				return false;
-	        });
 	        //var map = $(".gMapHolder").pinboardMap("getMap");
 	        var autocomplete = new google.maps.places.Autocomplete(input[0]);
 	       	// autocomplete.bindTo('bounds', map);
@@ -102,9 +99,52 @@ class PinboardSearchBoxModule extends XModule {
 	      	    if (!place.geometry) {
 	      	    	return;
 	      	    }
-				
 				var pinboardMap = $(".gMapHolder").pinboardMap("setPlace", place);
 	          });
+
+	          $(".pinboardSearchBoxPanel .searchForm").submit(function(){
+
+					return false;
+	          });
+
+	          function panToSearchBoxLocation () {
+      	    	var query = $(".pinboardSearchBoxPanel input[name=search]").val();
+				if (query.trim() == "") {
+					// if empty view globe
+				} else {
+					// search for the place
+					var geocoder = new google.maps.Geocoder();
+	        	    geocoder.geocode({"address": query}, function(results, status){
+	        	        if (status == google.maps.GeocoderStatus.OK) {
+							if (!results[0].geometry) {
+	        	      	    	return;
+	        	      	    }
+
+							if (results[0].address_components) {
+								var address = results[0].address_components[0].long_name;
+								$(".pinboardSearchBoxPanel input[name=search]").val(address);
+							}
+							$(".gMapHolder").pinboardMap("setPlace", results[0]);
+							$(".pac-container").css({"display": "none"});
+	        	        }
+	        	    });
+				}
+	          }
+	          
+			$(".pinboardSearchBoxPanel a").click(function(){
+				panToSearchBoxLocation();
+				return false;
+			});
+				
+	          $('.pinboardSearchBoxPanel input[name=search]').keypress(function(event){
+	        	    var keycode = (event.keyCode ? event.keyCode : event.which);
+	        	    if(keycode == '13'){
+		        	    panToSearchBoxLocation();
+	        	    }
+	        	});
+
+	       // var firstResult = $(".pinboardSearchBoxPanel").find(".pac-container .pac-item:first").text();
+				
 		});
         </script>
         <?php

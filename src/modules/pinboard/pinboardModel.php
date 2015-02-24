@@ -2,6 +2,12 @@
 
 class PinboardModel {
 	
+	public $noteType_note = 1;
+	public $noteType_placeInfo = 2;
+	public $noteType_placeWiki = 3;
+	public $noteType_placeNews = 4;
+	public $noteType_advert = 5;
+	
 	static function validatePinboard ($name, $description, $icon) {
 		
 		$errors = array();
