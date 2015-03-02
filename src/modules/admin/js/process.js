@@ -80,28 +80,36 @@ function startSearchWikipediaTask () {
 			if (data.status && data.status == "continue" && data.subjects) {
 				for (var subject in data.subjects) {
 					var serviceUrl = "http://en.wikipedia.org/w/index.php?search="+subject.name+"&title=&go=Artikel";
-				    $.get(serviceUrl, function(data){
-				    	
-				    	// check data status
-				    	var data = $(data);
-				    	
-				    	// check if it was found
-				    	var found = true;
-				    	if (data.find(".searchresults")) {
-				    		found = false;
-				    	}
-				    	
-				    	if (found) {
-				    		
-				    		// extract the first paragraph
-					    	var description = data.find(".mw-content-text p").first().html();
-				    		
-				    		// create wiki post
-				    		$.post("?static=pinboard&action=wikinote&url="+""+"&pinboardId="+subject.pinboardId, {"message":description}, function(status) {
-					    		var status = jQuery.parseJSON(status);
-				    		});
-				    	}
-				    });
+					$.ajax({
+					    type: "GET",
+					    url: serviceUrl,
+					    success: function(data, status, xhr) {
+					        var redirectUrl = xhr.getResponseHeader('Location');
+					        if (redirectUrl) {
+					        	
+
+						    	// check data status
+						    	var data = $(data);
+						    	
+						    	// check if it was found
+						    	var found = true;
+						    	if (data.find(".searchresults")) {
+						    		found = false;
+						    	}
+						    	
+						    	if (found) {
+						    		
+						    		// extract the first paragraph
+							    	var description = data.find(".mw-content-text p").first().html();
+						    		
+						    		// create wiki post
+						    		$.post("?static=pinboard&action=wikinote&url="+redirectUrl+"&pinboardId="+subject.pinboardId, {"message":description}, function(status) {
+							    		var status = jQuery.parseJSON(status);
+						    		});
+						    	}
+						    }
+					    }
+					});
 				}
 			}
 			
@@ -118,7 +126,9 @@ function startSearchGoogleNewsTask () {
 	// create news notes for places
 }
 
-
+function startSearchGoogleImagesTask () {
+	// http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=munich
+}
 
 
 

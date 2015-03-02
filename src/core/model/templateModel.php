@@ -168,12 +168,12 @@ class TemplateModel {
 
     static function getTemplateModule ($moduleId) {
         $moduleId = mysql_real_escape_string($moduleId);
-        $result = Database::query("select mi.id, a.id as includeid, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname, m.name as modulename
+        $result = Database::queryAsObject("select mi.id, a.id as includeid, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname, m.name as modulename
             from t_templatearea a
             join t_module_instance mi on a.instanceid = mi.id 
             join t_module m on m.id = mi.moduleid
             where a.id = '$moduleId'");
-        return mysql_fetch_object($result);
+        return $result;
     }
 
     static function shiftTemplateModulesDown ($pageId,$area,$fromPosition) {

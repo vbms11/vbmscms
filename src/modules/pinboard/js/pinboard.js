@@ -314,6 +314,12 @@ $.widget( "custom.pinboard", {
     		return false;
     	});
         
+        this.element.find(".pinboardCloseButton").click(function (e) {
+        	
+        	thisObject.hide();
+    		return false;
+    	});
+        
         /*
         this.element.find(".pinboardNewButton")
         	.mouseover(function () {
@@ -355,13 +361,13 @@ $.widget( "custom.pinboard", {
 
     show : function () {
     	
-    	this.element.fadeIn();
+    	this.element.parents(".centerHolder").fadeIn();
     },
     
 
     hide : function () {
     	
-    	this.element.fadeOut();
+    	this.element.parents(".centerHolder").fadeOut();
     },
     
 	openMenu : function () {

@@ -20,7 +20,7 @@ class PinboardModule extends XModule {
                 case "cancel":
                     parent::blur();
                 case "closePinboard":
-                    parent::redirect("pinboardMap");
+                    // parent::redirect("pinboardMap");
                     break;
                 case "newNote":
                 	parent::focus();
@@ -163,7 +163,7 @@ class PinboardModule extends XModule {
 				<a href="<?php echo parent::link(array("action"=>"createNote","pinboardId"=>parent::get("pinboardId"))); ?>" class="pinboardNewButton">
 					<img src="modules/pinboard/img/newNote.png" alt="+" />
 				</a>
-				<a href="<?php echo parent::link(array("action"=>"closePinboard","pinboardId"=>parent::get("pinboardId"))); ?>" class="pinboardCloseButton">
+				<a href="<?php echo parent::staticLink("pinboardMap"); ?>" class="pinboardCloseButton">
 					<img src="modules/pinboard/img/closePinboard.png" alt="-" />
 				</a><?php /*
 				<a href="<?php echo parent::link(array("action"=>"createNote","pinboardId"=>parent::get("pinboardId"))); ?>" class="pinboardNewButton">

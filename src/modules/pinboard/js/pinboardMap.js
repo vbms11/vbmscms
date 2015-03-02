@@ -7,6 +7,7 @@ $.widget("custom.pinboardMap", {
     	visible: true,
     	dataUrl: null,
     	viewUrl: null,
+    	cmdUrl: null,
     	lat : null,
     	lng : null
 	},
@@ -292,7 +293,7 @@ $.widget("custom.pinboardMap", {
     	var thisObject = this;
     	
     	if (!(pinboard.id in this.pinboards)) {
-    	    
+    		
     		// create the map marker
     	    var image = new google.maps.MarkerImage(
         	    pinboard.iconfile,
@@ -344,9 +345,14 @@ $.widget("custom.pinboardMap", {
         	google.maps.event.addListener(marker, 'mouseout', function(){
         		info.close();
         	});
-        	
+
         	google.maps.event.addListener(marker, 'dragstart', function(){
         		info.close();
+        	});
+        	
+        	google.maps.event.addListener(marker, 'dragend', function(){
+        		// ask user if he would like to save the location
+        		thisObject.saveMarkerLocation(pinboard.id, marker);
         	});
     	    
     	    // save the pinboard
@@ -355,7 +361,13 @@ $.widget("custom.pinboardMap", {
     	    this.pinboards[pinboard.id] = pinboard;
     	}
     },
-
+    
+    saveMarkerLocation : function (pinboardId, marker) {
+    	
+    	// send the location of the marker
+    	$.ajax(this.options.cmdUrl+"&action=setPinboardLocation&pinboardId="+pinboardId+"&lat="+marker.position.lat()+"&lng="+marker.position.lng(), function (data) {});
+    },
+    
     onMapDrag : function () {
     },
     

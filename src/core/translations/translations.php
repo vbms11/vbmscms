@@ -500,6 +500,7 @@ $ar_translations = array(
 ,'userSettings.userInfo.title'=>'dXNlclNldHRpbmdzLnVzZXJJbmZvLnRpdGxl'
 ,'userSettings.userInfo.description'=>'dXNlclNldHRpbmdzLnVzZXJJbmZvLmRlc2NyaXB0aW9u'
 ,'pinboardMap.edit.label.mapContainer'=>'cGluYm9hcmRNYXAuZWRpdC5sYWJlbC5tYXBDb250YWluZXI='
+,'pinboardMap.edit.label.hide'=>'cGluYm9hcmRNYXAuZWRpdC5sYWJlbC5oaWRl'
 ),'de'=>array(
 'login.email'=>'R2ViZW4gc2llIGVpbmUgRW1haWxhZHJlc3NlIGVpbjo='
 ,'login.reset'=>'UGFzc3dvcnQgIFp1cnVja3NldHplbg=='
@@ -1000,6 +1001,7 @@ $ar_translations = array(
 ,'userSettings.userInfo.title'=>'dXNlclNldHRpbmdzLnVzZXJJbmZvLnRpdGxl'
 ,'userSettings.userInfo.description'=>'dXNlclNldHRpbmdzLnVzZXJJbmZvLmRlc2NyaXB0aW9u'
 ,'pinboardMap.edit.label.mapContainer'=>'cGluYm9hcmRNYXAuZWRpdC5sYWJlbC5tYXBDb250YWluZXI='
+,'pinboardMap.edit.label.hide'=>'cGluYm9hcmRNYXAuZWRpdC5sYWJlbC5oaWRl'
 ),''=>array(
 'login.email'=>'bG9naW4uZW1haWw='
 ,'login.reset'=>'bG9naW4ucmVzZXQ='
@@ -1500,5 +1502,6 @@ $ar_translations = array(
 ,'userSettings.userInfo.title'=>'dXNlclNldHRpbmdzLnVzZXJJbmZvLnRpdGxl'
 ,'userSettings.userInfo.description'=>'dXNlclNldHRpbmdzLnVzZXJJbmZvLmRlc2NyaXB0aW9u'
 ,'pinboardMap.edit.label.mapContainer'=>'cGluYm9hcmRNYXAuZWRpdC5sYWJlbC5tYXBDb250YWluZXI='
+,'pinboardMap.edit.label.hide'=>'cGluYm9hcmRNYXAuZWRpdC5sYWJlbC5oaWRl'
 )); 
 ?>

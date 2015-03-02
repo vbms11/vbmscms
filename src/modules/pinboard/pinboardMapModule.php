@@ -14,6 +14,7 @@ class PinboardMapModule extends XModule {
             case "save":
                 if (Context::hasRole("pinboardMap.edit")) {
                     parent::param("mapContainer", parent::post("mapContainer"));
+                    parent::param("hide", parent::post("hide") != null ? true : false);
                     parent::blur();
                     parent::redirect();
                 }
@@ -28,13 +29,20 @@ class PinboardMapModule extends XModule {
                 break;
             case "getPinboards":
                 $pinboards = PinboardModel::getPinbords(parent::get("minLng"), parent::get("minLat"), parent::get("maxLng"), parent::get("maxLat"));
+                foreach ($pinboards as $pinboard) {
+                	if (Context::hasRole("pinboardMap.edit") || $pinboard->userid == Context::getUserId()) {
+                		$pinboard->editable = true; 
+                	}
+                }
                 Context::setReturnValue(json_encode($pinboards));
                 break;
             case "setPinboardLocation":
-                if (Context::hasRole("pinboardMap.create")) {
-                
+            	$pinboard = PinboardModel::getPinboard(parent::get("pinboardId"));
+                if (!empty($pinboard) && (Context::hasRole("pinboardMap.edit") || (Context::hasRole("pinboardMap.create") && $pinboard->userid == Context::getUserId()))) {
+                	PinboardModel::setPinboardLocation($pinboard->id,parent::get("lat"),parent::get("lng"));
                 }
                 break;
+                Context::setReturnValue("");
             case "newPinboard":
                 parent::focus();
                 break;
@@ -74,6 +82,8 @@ class PinboardMapModule extends XModule {
             	}
                 break;
             default:
+            	if (parent::param("hide"))
+            		break;
                 $this->printMainView();
         }
     }
@@ -116,7 +126,8 @@ class PinboardMapModule extends XModule {
                 });
                 $(".gMapHolder").pinboardMap({
                     dataUrl: "<?php echo parent::ajaxLink(array("action"=>"getPinboards")); ?>",
-                    viewUrl: "<?php echo parent::staticLink("pinboard", array(), false); ?>"
+                    viewUrl: "<?php echo parent::staticLink("pinboard", array(), false); ?>", 
+                    cmdUrl: "<?php echo parent::ajaxLink(); ?>"
                 });
             });
             </script>
@@ -255,6 +266,10 @@ class PinboardMapModule extends XModule {
 			        <?php echo parent::getTranslation("pinboardMap.edit.label.mapContainer"); ?>
         		</td><td>
 			        <input type="text" value="<?php echo parent::param("mapContainer");  ?>"  />
+        		</td></tr><tr><td>
+			        <?php echo parent::getTranslation("pinboardMap.edit.label.hide"); ?>
+        		</td><td>
+			        <?php echo InputFeilds::printCheckbox("hide", parent::param("hide")); ?>
         		</td></tr></table>
                 <hr/>
                 <div class="alignRight">

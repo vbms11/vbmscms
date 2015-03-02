@@ -49,7 +49,7 @@ border: 0px 1px 1px 1px solid silver;
 	bottom: 35px;
 	background-color: white;
     filter: alpha(opacity=90);
-    z-index: 30;
+    z-index: 15;
     border: 1px solid silver;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
