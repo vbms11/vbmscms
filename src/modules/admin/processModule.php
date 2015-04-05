@@ -126,7 +126,7 @@ class ProcessModule extends XModule {
           		
           		$info = array();
           		
-          		$places = CountriesModel::getPlacesThatNeedWikiUpdating(10);
+          		$places = CountriesModel::getPlacesThatNeedNewsUpdating(10);
           		if (empty($places)) {
           			$info["status"] = "stop";
           		} else {
@@ -137,19 +137,61 @@ class ProcessModule extends XModule {
           		Context::setReturnValue(json_encode($info));
           		break;
   		    case "reportPlaceNews":
+  		        
+          		$info = array();
+          		
+          		$data = json_decode(parent::post("news"));
+          		
+          		if (!empty($data)) {
+          			
+          			$rowsAffected = 0;
+          			
+          			foreach ($data["responseData"]["results"] as $news) {
+          			    // Sat, 04 Apr 2015 11:28:28 -0700
+          			    // date_parse_from_format("D, d M Y H:i:s O", $news["publishedDate"]);
+          			    $date = date_parse_from_format("D, d M Y H:i:s O", $news["publishedDate"]);
+          			    
+          			    
+          			    NewsModel::createNews($news["content"], $news["unescapedUrl"], $news["titleNoFormatting"], $news["publisher"], $news["image"]["url"], $news["image"]["tbUrl"], $date);
+          			    
+          			    $rowsAffected++;
+          			}
+          			
+          			$info["status"] = "continue";
+          			$info["updated"] = $rowsAffected;
+          			
+          		} else {
+          			$info["status"] = "error";
+          		}
+          		
+          		Context::setReturnValue(json_encode($info));
+  		        
   		        break;
           	case "getPlacePictureTasks"
           	    break;
       	    case "reportPlacePicture":
       	        break;
           	case "getPlaceWikiTasks":
-          	    break;
-          	case "reportPlacecWiki":
+          	
+          		$info = array();
+          		
+          		$places = CountriesModel::getPlacesThatNeedWikiUpdating(10);
+          		if (empty($places)) {
+          			$info["status"] = "stop";
+          		} else {
+          			$info["status"] = "continue";
+          			$info["places"] = $places;
+          		}
+          		
+          		Context::setReturnValue(json_encode($info));
+          		break;
+          	case "reportPlaceWiki":
           		
           		$message = parent::post("message");
           		$url = parent::get("url");
-$noteType_placeWiki
-          		PinboardModel::createNote($message, $pinboardId, PinboardModel::$noteType_placeWiki, $typeId, $userId);
+          		$pinboardId = parent::get("pinboardId");
+
+          		PinboardModel::createNote($message, $pinboardId, PinboardModel::$noteType_placeWiki, null, null);
           		
           		break;
           	case "getProcesses":

@@ -17,7 +17,7 @@ cms.addProcess({
 		   
 		   this.nextTimeout = millis + this.timeout;
 		   
-		   $.getJSON("?static=process&action=getWebsitesForEmailCrawlingTasks", function (data) {
+		   .getJSON("?static=process&action=getWebsitesForEmailCrawlingTasks", function (data) {
 		       
 		       this.websitesWaiting = data.websites.length;
 		       
@@ -33,7 +33,7 @@ cms.addProcess({
 					$.get(website, function(data){
 		      			
 		      			$(data).find("a").each(function(index, object){
-		      				
+		      				$
 		      				var href = this.toAbsoluteUrl($(object).attr("href"), website);
 		      				
 		      				if (href) {
@@ -64,52 +64,5 @@ cms.addProcess({
 		   });
 		});
 		
-	}, 
-	"toAbsoluteUrl" : function (url, base) {
-		
-		
-		
-		// Handle absolute URLs (with protocol-relative prefix)
-		// Example: //domain.com/file.png
-		if (url.search(/^\/\//) != -1) {
-			
-			if (base == undefined) {
-				
-				return "http://" + url;
-				
-			} else {
-				
-				return base.substring(0, base.indexOf("://") + 2) + url;
-				
-			}
-		}
-		
-		// Handle absolute URLs (with explicit origin)
-		// Example: http://domain.com/file.png
-		if (url.search(/:\/\//) != -1) {
-			return url
-		}
-		
-		// Handle absolute URLs (without explicit origin)
-		// Example: /file.png
-		if (url.search(/^\//) != -1) {
-			var pos = base.indexOf("/", 7)
-			if (pos < 0) {
-				pos = base.length;
-				if (base.lastIndexOf("?") > -1) {
-					pos = base.lastIndexOf("?");
-				}
-				if (base.lastIndexOf("#") > -1 && base.lastIndexOf("#") < pos) {
-					pos = base.lastIndexOf("#");
-				}
-			}
-			base.substring(0, pos - 1);
-			return base + url
-		}
-		
-		// Handle relative URLs
-		// Example: file.png
-		var base = base.substring(0, base.lastIndexOf("/"));
-		return base + url
 	}
 });

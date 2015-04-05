@@ -3,30 +3,16 @@ cms.addProcess({
 	interval : 5000,
 	intervalId : null,
 	name : "crawlWebsite", 
-	timeout : 60000,
-	nextTimeout : null, 
-	websitesWaiting : null, 
 	start : function () {
 		this.intervalId = window.setInterval(this.interval, function () {
 		   
-		   var millis = new Date().getMilliseconds();
-		   
-		   if (this.websitesWaiting > 0 && this.nextTimeout > millis) {
-		   		return;
-		   }
-		   
-		   this.nextTimeout = millis + this.timeout;
-		   
-		   $.getJSON("?static=process&action=getWebsitesForEmailCrawlingTasks", function (data) {
-		       
-		       this.websitesWaiting = data.websites.length;
+		   $.getJSON("?static=process&action=getWebsitesForEmailCrawling", function (data) {
 		       
 		       for (var website in data.websites) {
 		           	
 					var website = this.toAbsoluteUrl(website);
 					
 					if (website == null) {
-						this.websitesWaiting--;
 						continue;
 					}
 
@@ -49,15 +35,11 @@ cms.addProcess({
 		                    		$.post("?static=process&action=reportWebsiteEmails", {"websiteInfo": websiteInfo}, function(status) {
 		                        		var status = jQuery.parseJSON(status);
 		                        		
-		                    		}).always(function(){
-		                    			this.websitesWaiting--;
 		                    		});
 		      					});
 		      				}
 		      			});
 		      				
-		      		}).fail(function(){
-		      			this.websitesWaiting--;
 		      		});
 		       }
 		       
