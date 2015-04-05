@@ -68,8 +68,64 @@ function startGeodataSearchTask () {
 
 
 
+var cms = {
+	
+	
+	
+	processes : [],
+	process : {
+		start : function () {
+			
+		},
+		stop : function () {
+			
+		}
+	},
+	
+	addProcess : function (process) {
+		this.processes[this.process.name] = extend({}, this.process, process);
+	},
+	
+	
+	
+	updateProcesses : function () {
+		
+		// get list of processes
+		$.getJSON("", function (data) {
+			
+			
+			
+		});
+		
+		// run if process not started
+		
+		switch (data.status) {
+			
+			case "":
+				break;
+			case "stop":
+				break;
+		}
+		for (var process in data.processes) {
+			if (this.processes[process.name] == undefined) {
+				this.loadProcess(process.url);
+			}
+		}
+		
+		
+	}
+	
+}
 
+cms.addProcess({
+	interval : 5000,
+	intervalId : null,
+	start : function () {
+		
+	}
+});
 
+ 
 var searchWikipediaInterval = null;
 
 function startSearchWikipediaTask () {

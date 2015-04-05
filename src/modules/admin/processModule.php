@@ -13,14 +13,19 @@ class ProcessModule extends XModule {
     function onProcess () {
         switch (parent::getAction()) {
             case "save":
-                if (Context::hasRole("user.profile.edit")) {
-                    parent::param("mode",$_POST["mode"]);
+                if (Context::hasRole("process.edit")) {
+                    parent::param("crawlPlacesInGeoname", $_POST["crawlPlacesInGeoname"]);
+                    parent::param("crawlPlaces", $_POST["crawlPlaces"]);
+                    parent::param("crawlGooglePlaces", $_POST["crawlGooglePlaces"]);
+                    parent::param("crawlWikiPlaces", $_POST["crawlWikiPlaces"]);
+                    parent::param("crawlPlacesInGooglePictures", $_POST["crawlPlacesInGooglePictures"]);
+                    parent::param("crawlPlacesInGoogleNews", $_POST["crawlPlacesInGoogleNews"]);
                 }
                 parent::blur();
                 parent::redirect();
                 break;
             case "edit":
-                if (Context::hasRole("user.profile.edit")) {
+                if (Context::hasRole("process.edit")) {
                     parent::focus();
                 }
                 break;
@@ -44,13 +49,13 @@ class ProcessModule extends XModule {
           				}
           			}
           			
-          			if ($targetContinent != null) {
+          			if ($targetContinent == null) {
           				
           				// collect countries
           				
           				$countries = CountriesModel::getCountries();
           				if (empty($continents)) {
-          			$continentsCount = CountriesModel::updateContinentList();
+          			    $continentsCount = CountriesModel::updateContinentList();
           			$info["continents"] = $continentsCount;
           		} else {
           			
@@ -81,7 +86,7 @@ class ProcessModule extends XModule {
           		
           		break;
           		
-          	case "getGeonameIds":
+          	case "getPlaceGeonameTasks":
           		
           		$info = array();
           		
@@ -96,7 +101,7 @@ class ProcessModule extends XModule {
           		Context::setReturnValue(json_encode($info));
           		break;
           	
-          	case "reportGeodata":
+          	case "reportPlaceGeoname":
           		
           		$info = array();
           		
@@ -117,16 +122,75 @@ class ProcessModule extends XModule {
           		
           		Context::setReturnValue(json_encode($info));
           		break;
-          	
-          	case "wikiNote":
+      		case "getPlaceNewsTask":
+          		
+          		$info = array();
+          		
+          		$places = CountriesModel::getPlacesThatNeedWikiUpdating(10);
+          		if (empty($places)) {
+          			$info["status"] = "stop";
+          		} else {
+          			$info["status"] = "continue";
+          			$info["places"] = $places;
+          		}
+          		
+          		Context::setReturnValue(json_encode($info));
+          		break;
+  		    case "reportPlaceNews":
+  		        break;
+          	case "getPlacePictureTasks"
+          	    break;
+      	    case "reportPlacePicture":
+      	        break;
+          	case "getPlaceWikiTasks":
+          	    break;
+          	case "reportPlacecWiki":
           		
           		$message = parent::post("message");
           		$url = parent::get("url");
-          		
-          		PinboardModel::createNote();
+$noteType_placeWiki
+          		PinboardModel::createNote($message, $pinboardId, PinboardModel::$noteType_placeWiki, $typeId, $userId);
           		
           		break;
-          	
+          	case "getProcesses":
+          	    
+          	    $result = array("status"=>"none", "processes"=>array());
+          	    
+          	    
+          	    // get places
+          	    if (parent::param("crawlPlacesInGeoname")) {
+          	        if (CountriesModel::hasPlacesThatNeedUpdating()) {
+          	            $result["processes"][] = array("name"=>"crawlPlaces", "url"=>parent::getResourcePath("js/crawlPlaces.js"));
+          	        }
+          	    }
+          	    
+          	    // get google place information
+          	    if (parent::param("crawlPlacesInGooglePlaces")) {
+          	        $result["processes"][] = array("name"=>"crawlGooglePlaces", "url"=>parent::getResourcePath("js/crawlGooglePlaces.js"));
+          	    }
+          	    
+          	    // make wiki notes
+          	    if (parent::param("crawlPlacesInWiki")) {
+          	        $result["processes"][] = array("name"=>"crawlWikiPlaces", "url"=>parent::getResourcePath("js/crawlWikiPlaces.js"));
+          	    }
+          	    
+          	    // make picture notes
+          	    if (parent::param("crawlPlacesInGooglePictures")) {
+          	        $result["processes"][] = array("name"=>"crawlGooglePicturePlaces", "url"=>parent::getResourcePath("js/crawlGooglePicturePlaces.js"));
+          	    }
+
+          	    // make news notes
+          	    if (parent::param("crawlPlacesInGoogleNews")) {
+          	        $result["processes"][] = array("name"=>"crawlGoogleNewsPlaces", "url"=>parent::getResourcePath("js/crawlGoogleNewsPlaces.js"));
+          	    }
+          	    
+          	    if (count($result["processes"]) > 0) {
+          	        $result["status"] = "tasks";
+          	    }
+          	    
+          	    Context::setReturnValue(json_encode($result));
+          	    
+          	    break;
         }
     }
 
@@ -189,30 +253,54 @@ class ProcessModule extends XModule {
 	    	<h1><?php echo parent::getTranslation("process.title"); ?></h1>
 	    	<p><?php echo parent::getTranslation("process.description"); ?></p>
 	    	
-	    	<div class="processItem">
-		    	<div class="processEdit">
-		    		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"geodata")); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
-		    	</div>
-		    	<h3><?php echo parent::getTranslation("process.collectGeodata.title"); ?></h3>
-		    	<p><?php echo parent::getTranslation("process.collectGeodata.description"); ?></p>
-	    	</div>
+	    	<div class="processStatistics">
+	    	    <table class="formTable"><tr>
+	    	        <td><?php echo parent::getTranslation("process.statistic.places"); ?></td>
+	    	        <td></td>
+    	        </tr><tr>
+	    	        <td><?php echo parent::getTranslation("process.statistic.pinboards"); ?></td>
+	    	        <td></td>
+    	        </tr><tr>
+	    	        <td><?php echo parent::getTranslation("process.statistic.news"); ?></td>
+	    	        <td></td>
+    	        </tr><tr>
+	    	        <td><?php echo parent::getTranslation("process.statistic.pictures"); ?></td>
+	    	        <td></td>
+    	        </tr><tr>
+	    	        <td><?php echo parent::getTranslation("process.statistic.wikipedia"); ?></td>
+	    	        <td></td>
+    	        </tr><tr>
+	    	        <td><?php echo parent::getTranslation("process.statistic.googlePlaces"); ?></td>
+	    	        <td></td>
+    	        </tr></table>
+    	    </div>
 	    	
-	    	<div class="processItem">
-		    	<div class="processEdit">
-		    		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"createPinboards")); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
-		    	</div>
-		    	<h3><?php echo parent::getTranslation("process.createPinboards.title"); ?></h3>
-		    	<p><?php echo parent::getTranslation("process.createPinboards.description"); ?></p>
-	    	</div>
+	    	<div class="proocessItems">
 	    	
-	    	<div class="processItem">
-	    		<div class="processEdit">
-	    			<a class="jquiButton" href="<?php echo parent::staticLink("userInfo",array("action"=>"editInfo", "userId"=>$userId)); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
-	    		</div>
-	    		<h3><?php echo parent::getTranslation("process.createWikiNotes.title"); ?></h3>
-		    	<p><?php echo parent::getTranslation("process.userInfo.description"); ?></p>
+    	    	<div class="processItem">
+    		    	<div class="processEdit">
+    		    		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"geodata")); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
+    		    	</div>
+    		    	<h3><?php echo parent::getTranslation("process.collectGeodata.title"); ?></h3>
+    		    	<p><?php echo parent::getTranslation("process.collectGeodata.description"); ?></p>
+    	    	</div>
+    	    	
+    	    	<div class="processItem">
+    		    	<div class="processEdit">
+    		    		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"createPinboards")); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
+    		    	</div>
+    		    	<h3><?php echo parent::getTranslation("process.createPinboards.title"); ?></h3>
+    		    	<p><?php echo parent::getTranslation("process.createPinboards.description"); ?></p>
+    	    	</div>
+    	    	
+    	    	<div class="processItem">
+    	    		<div class="processEdit">
+    	    			<a class="jquiButton" href="<?php echo parent::staticLink("userInfo",array("action"=>"editInfo", "userId"=>$userId)); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
+    	    		</div>
+    	    		<h3><?php echo parent::getTranslation("process.createWikiNotes.title"); ?></h3>
+    		    	<p><?php echo parent::getTranslation("process.userInfo.description"); ?></p>
+    	    	</div>
 	    	</div>
-	    	
 	    	
     	</div>
     	<?php

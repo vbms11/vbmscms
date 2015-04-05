@@ -59,16 +59,16 @@ class CountryModel {
 	
     static function getCountry ($countryId) {
         $countryId = mysql_real_escape_string($countryId);
-        return Database::queryAsObject("select * from t_country where id = '$countryId'");
+        return Database::queryAsObject("select * from t_geo_country where id = '$countryId'");
     }
     
     static function getCountryByGeonameId ($geonameId) {
         $geonameId = mysql_real_escape_string($geonameId);
-        return Database::queryAsObject("select * from t_country where geonameid = '$geonameId'");
+        return Database::queryAsObject("select * from t_geo_country where geonameid = '$geonameId'");
     }
     
     static function getCountries () {
-        $countries = Database::queryAsArray("select * from t_country order by name asc","geonameid");
+        $countries = Database::queryAsArray("select * from t_geo_country order by name asc","geonameid");
         if (empty($countries)) {
             self::updateCountriesList();
             $countries = self::getCountries();
@@ -92,7 +92,7 @@ class CountryModel {
         if (empty($country)) {
             Database::query("insert into t_geo_country (name,longname,geonameid,population,countrycode,countryId,lng,lat,continentid) values('$name','$longName','$geonameId','$population','$countryCode','$countryId','$lng','$lat','$continentId')");
         } else {
-            Database::query("update t_country set 
+            Database::query("update t_geo_country set 
             	name = '$name', 
             	longname = '$longName', 
             	population = '$population', 
@@ -106,6 +106,21 @@ class CountryModel {
     }
     
     // states
+    
+    static function getState ($stateId) {
+        $stateId = mysql_real_escape_string($stateId);
+        return Database::queryAsObject("select * from t_geo_state where id = '$stateId'");
+    }
+    
+    static function getStateByGeonameId ($geonameId) {
+        $geonameId = mysql_real_escape_string($geonameId);
+        return Database::queryAsObject("select * from t_geo_state where geonameid = '$geonameId'");
+    }
+    
+    static function getStates () {
+        $states = Database::queryAsArray("select * from t_geo_state order by name asc","geonameid");
+        return $states;
+    }
     
     static function saveState ($name, $longName, $geonameId, $population, $countryId, $lng, $lat) {
     	 
@@ -134,6 +149,21 @@ class CountryModel {
     
     // regions
     
+    static function getRegion ($regionId) {
+        $regionId = mysql_real_escape_string($regionId);
+        return Database::queryAsObject("select * from t_geo_region where id = '$regionId'");
+    }
+    
+    static function getRegionByGeonameId ($geonameId) {
+        $geonameId = mysql_real_escape_string($geonameId);
+        return Database::queryAsObject("select * from t_geo_region where geonameid = '$geonameId'");
+    }
+    
+    static function getRegions () {
+        $regions = Database::queryAsArray("select * from t_geo_region order by name asc","geonameid");
+        return $regions;
+    }
+    
     static function saveRegion($name, $longName, $geonameId, $population, $stateId, $lng, $lat) {
     	
     	$name = mysql_real_escape_string($name);
@@ -161,6 +191,21 @@ class CountryModel {
     }
 
     // city
+    
+    static function getCity ($cityId) {
+        $cityId = mysql_real_escape_string($cityId);
+        return Database::queryAsObject("select * from t_geo_city where id = '$cityId'");
+    }
+    
+    static function getCityByGeonameId ($geonameId) {
+        $geonameId = mysql_real_escape_string($geonameId);
+        return Database::queryAsObject("select * from t_geo_city where geonameid = '$geonameId'");
+    }
+    
+    static function getCitys () {
+        $citys = Database::queryAsArray("select * from t_geo_city order by name asc","geonameid");
+        return $citys;
+    }
     
     static function saveCity ($name, $longName, $geonameId, $population, $regionId, $lng, $lat) {
     	 
@@ -371,9 +416,24 @@ class CountryModel {
     						}
     						Database::query("update t_geo_region set collection_scheduled = now() where geonameid in ('".implode("','",$update["geocodeIds"])."')");
     						
+    					} else {
+    					    
+    					    self::updatePollScheduled();
+    					    //TODO we could update for cities
+    					    /*
+        			    	$citys = Database::queryAsArray("select geonameid from t_geo_city where collected = '0' and collection_scheduled = null limit '$amount'");
+        					if (!empty($citys)) {
+    						
+    	    					$update["type"] = "city";
+    		    				foreach ($regions as $region) {
+    			    				$update["geocodeIds"][] = mysql_real_escape_string($region->geonameid);
+    				    		}
+    					    	Database::query("update t_geo_region set collection_scheduled = now() where geonameid in ('".implode("','",$update["geocodeIds"])."')");
+    				        }
+    				        */
     					}
     					
-    					//TODO we could update for cities
+    					
     				}
     			}
     		}
@@ -395,6 +455,25 @@ class CountryModel {
     	
     	return $update;
     }
+    
+    function updatePollScheduled () {
+        
+        $rowsUpdated = 0;
+        
+        $result = Database::query("update geo_continent set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
+		$rowsUpdated += Database::affectedRows($result);
+		
+		$result = Database::query("update geo_country set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
+		$rowsUpdated += Database::affectedRows();
+		
+		$result = Database::query("update geo_region set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
+		$rowsUpdated += Database::affectedRows();
+		
+		$result = Database::query("update geo_state set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
+		$rowsUpdated += Database::affectedRows();
+		
+		return $rowsUpdated;
+	}
 }
 
 ?>

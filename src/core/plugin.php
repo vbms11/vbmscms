@@ -226,16 +226,22 @@ abstract class XModule implements IModule, ITranslatable {
     /**
      * returns path names as required
      */
+    function getResourcePath ($path) {
+        $retPath = null;
+        if (strpos($path, "http://") === 0 || strpos($path, "https://") === 0) {
+            $retPath = $path;
+        } else if (strpos($path, "/") === 0) {
+            $retPath = substr($path,1);
+        } else {
+            $retPath = ResourcesModel::createModuleResourceLink($this, $path);
+        }
+        return $retPath;
+    }
+    
     function getResourcePaths ($paths) {
         $retPaths = array();
         foreach ($paths as $path) {
-            if (strpos($path, "http://") === 0 || strpos($path, "https://") === 0) {
-                $retPaths[] = $path;
-            } else if (strpos($path, "/") === 0) {
-                $retPaths[] = substr($path,1);
-            } else {
-                $retPaths[] = ResourcesModel::createModuleResourceLink($this, $path);
-            }
+            $retPaths[] = $this->getResourcePath($path);
         }
         return $retPaths;
     }
