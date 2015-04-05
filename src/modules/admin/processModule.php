@@ -150,7 +150,8 @@ class ProcessModule extends XModule {
           			    // Sat, 04 Apr 2015 11:28:28 -0700
           			    // date_parse_from_format("D, d M Y H:i:s O", $news["publishedDate"]);
           			    $date = date_parse_from_format("D, d M Y H:i:s O", $news["publishedDate"]);
-          			    
+          			    $dateStr = {$date[]}/{$date[]}/{$date[]} {$date[]}:{$date[]}:{$date[]}
+          			    STR_TO_DATE('11:59:59', '%m/%d/%Y %h:%i:%s'); 
           			    
           			    NewsModel::createNews($news["content"], $news["unescapedUrl"], $news["titleNoFormatting"], $news["publisher"], $news["image"]["url"], $news["image"]["tbUrl"], $date);
           			    
