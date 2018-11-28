@@ -1,0 +1,184 @@
+
+
+body {
+	background-color: rgb(200,200,200);
+}
+.searchHolder {
+    height: 30px;
+    position: absolute;
+    right: 80px;
+    left: 0px;
+    max-width: 700px;
+}
+.languageHolder {
+    height: 30px;
+    position: absolute;
+    right: 0px;
+    width: 80px;
+}
+/*
+.searchHolder input {
+    background-color: white;
+    border: 0 none;
+    height: 28px;
+    line-height: 28px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+*/
+.mainMenuHolder {
+	position: absolute;
+	top: 35px;
+	right: 50px;
+	width: 300px;
+	height: 40px;
+	background-color: black;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 20;
+    border: 0px 1px 1px 1px solid silver;
+}
+.slideshowHolder {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 10;
+}
+.centerHolder {
+	position: absolute;
+	top: 40px;
+	left: 50px;
+	right: 50px;
+	bottom: 35px;
+	background-color: white;
+    filter: alpha(opacity=90);
+    z-index: 30;
+    border: 1px solid silver;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0px 0px 5px rgb(220, 220, 220);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.centerHolderInvisible {
+	bottom: auto;
+    border: 0px none;
+}
+.centerHolderInvisible .vcms_area {
+    min-height:0px;
+}
+.centerHolderInvisible .panel {
+}
+.centerLeftMargin {
+	left: 260px;
+}
+.centerRightMargin {
+	right: 260px;
+}
+.centerRightBigMargin {
+       right: 425px;
+}
+.leftHolder {
+	position: absolute;
+	top: 40px;
+	left: 50px;
+	width: 200px;
+	height: auto;
+	background-color: white;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 30;
+    border: 1px solid silver;
+    box-shadow: 0px 0px 5px rgb(220, 220, 220);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.rightHolder {
+	position: absolute;
+	top: 40px;
+	right: 50px;
+	width: 200px;
+	height: auto;
+	background-color: white;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 30;
+    border: 1px solid silver;
+    box-shadow: 0px 0px 5px rgb(220, 220, 220);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.rightBigHolder {
+	position: absolute;
+	top: 40px;
+	right: 50px;
+	width: 345px;
+	height: auto;
+	background-color: white;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 30;
+    border: 1px solid silver;
+    padding: 10px;
+    box-shadow: 0px 0px 5px rgb(220, 220, 220);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.topMenuHolder {
+	position: fixed;
+	top: 0px;
+	left: 50px;
+	right: 50px;
+	height: 30px;
+	background-color: black;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 30;
+    box-shadow: 0px 0px 5px rgb(220, 220, 220);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.topLeftMenuHolder {
+    float: left;
+}
+
+.bottomMenuHolder {
+	position: fixed;
+	bottom: 0px;
+	left: 50px;
+	right: 50px;
+	height: 25px;
+	background-color: black;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+    z-index: 30;
+    box-shadow: 0px 0px 5px rgb(220, 220, 220);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+
+
+
+
+
+/* module customizations */
+
+.searchHolder input {
+    height: 24px;
+    line-height: 24px;
+}
+.searchButton a {
+    line-height: 20px;
+}

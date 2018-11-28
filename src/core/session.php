@@ -135,7 +135,7 @@ class Session {
     static function endSession ($sessionId) {
         
         // end database session
-	SessionModel::endSession($sessionId);
+	    SessionModel::endSession($sessionId);
         // end php session
         session_unset();
         session_destroy();

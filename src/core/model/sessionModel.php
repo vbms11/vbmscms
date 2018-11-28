@@ -18,8 +18,8 @@ class SessionModel {
     }
     
     static function pollSession ($sessionId,$sessionKey) {
-        $sessionId = mysql_real_escape_string($sessionId);
-        $sessionKey = mysql_real_escape_string($sessionKey);
+        $sessionId = Database::escape($sessionId);
+        $sessionKey = Database::escape($sessionKey);
         // check if session exists
         $rSes = Database::queryAsObject("select 1 as sesexist from t_session where sessionid = '$sessionId' and sessionkey = '$sessionKey'");
         // update the last poll time
@@ -33,33 +33,35 @@ class SessionModel {
     }
     
     static function startSession ($sessionId,$sessionKey,$ip) {
-        $sessionId = mysql_real_escape_string($sessionId);
-        $sessionKey = mysql_real_escape_string($sessionKey);
-        $ip = mysql_real_escape_string($ip);
+        $sessionId = Database::escape($sessionId);
+        $sessionKey = Database::escape($sessionKey);
+        $ip = Database::escape($ip);
         $name = SessionModel::createSessionName();
         Database::query("insert into t_session (lastpolltime,sessionid,sessionkey,ip,name) values(now(),'$sessionId','$sessionKey','$ip','$name')");
     }
     
     static function endSession ($sessionId) {
-        $sessionId = mysql_real_escape_string($sessionId);
+        $sessionId = Database::escape($sessionId);
         Database::query("delete from t_session where sessionid = '$sessionId'");
     }
     
     static function setSessionUser ($sessionId, $userId) {
-        $sessionId = mysql_real_escape_string($sessionId);
+        $sessionId = Database::escape($sessionId);
         if ($userId == null) {
             $userIdStr = "null";
             $name = SessionModel::createSessionName();
             $nameStr = "'$name'";
         } else {
-            $userIdStr = "'".mysql_real_escape_string($userId)."'";
+            $userIdStr = "'".Database::escape($userId)."'";
             $nameStr = "(select username from t_user where id = $userIdStr)";
         }
         Database::query("update t_session set userid = $userIdStr, name = $nameStr, logintime = now() where sessionid = '$sessionId'");
     }
     
     static function cleanOldSessions () {
-        Database::query("delete from t_session where lastpolltime < now() - INTERVAL ".$GLOBALS['cmsSessionExpireTime']." MINUTE");
+        $expireTime = Config::getCmsSessionExpireTime();
+        //$expireTime = Database::escape($expireTime);
+        Database::query("delete from t_session where lastpolltime < now() - INTERVAL $expireTime MINUTE");
     }
 }
 

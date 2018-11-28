@@ -334,7 +334,7 @@ class GalleryView extends XModule {
         </div>
         <script type="text/javascript">
         $(function() {
-            $('.galleryImages a').lightBox();
+            $('.galleryImages .galleryImages a').lightBox();
         });
         </script>
         <?php    

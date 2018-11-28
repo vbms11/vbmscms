@@ -1,4 +1,4 @@
-a<?php
+<?php
 
 class Database {
     
@@ -22,20 +22,24 @@ class Database {
         if ($dataSourceName == null) {
             $dataSourceName = self::$defaultDataSourceName;
         }
-        if (!isset(self::$dataSource[$dataSourceName])) {
+        if (isset(self::$dataSource[$dataSourceName])) {
             self::$dataSource[$dataSourceName] = DataSourceFactory::getDataSource($dataSourceName);
         }
         return self::$dataSource[$dataSourceName];
     }
     
-    static function escape (&$vars) {
+    static function escape ($vars) {
+        
+        return Database::getDataSource()->escape($vars);
+        /*
         if (is_array($vars)) {
             foreach ($vars as $var) {
-                $var = Database::getDataSource()->escape($var);
+                $var = Database::escape()->escape($var);
             }
         } else {
-            $vars = Database::getDataSource()->escape($vars);
+            $vars = Database::escape()->escape($vars);
         }
+        */
     }
     
     static function affectedRows ($result) {
@@ -74,7 +78,7 @@ class Database {
     
     static function queryAsArray ($query,$index = null) {
         Log::query($query);
-        $result = Database::getDataSource()->query($query) or die(Database::getDataSource()->getError());
+        $result = Database::getDataSource()->query($query) or die(Database::getError());
         $ret = array();
         if ($index != null) {
             while ($obj = Database::getDataSource()->fetchObject($result)) {
@@ -191,6 +195,95 @@ class MysqlDataSource implements IDataSource {
     }
 }
 
+class MysqliDataSource implements IDataSource {
+    
+    private $connected = false;
+    private $error = null;
+    private $mysqliLink = null;
+    
+    private function getDbLink () {
+        if (!isset($_REQUEST["mysqliDataSource.mysqliLink"])) {
+            $this->connect();
+        }
+        return $_REQUEST["mysqliDataSource.mysqliLink"];
+    }
+    
+    private function setDbLink ($link) {
+        $_REQUEST["mysqliDataSource.mysqliLink"] = $link;
+    }
+    
+    function getTableNames () {
+        return Database::queryAsArray('select tablename from info_schema where database = datebase()');
+    }
+    
+    function getTableFeilds ($tableName) {
+        $tableName = Database::escape($tableName);
+        return Database::queryAsArray("select * from info_schema where database = datebase() and tablename = '$tableName'");
+    }
+    
+    function query ($query) {
+        $result = mysqli_query($this->getDbLink(), $query) or $this->error = true;
+        return $result;
+    }
+    
+    function escape ($input) {
+        return mysqli_real_escape_string($this->getDbLink(), $input);
+    }
+    
+    function affectedRows ($result) {
+        return mysqli_affected_rows($this->getDbLink());
+    }
+    
+    function numRows ($result) {
+        return mysqli_num_rows($result);
+    }
+    
+    function fetchObject ($result) {
+        if ($result) {
+            $rows = mysqli_num_rows($result);
+            if ($rows < 1) {
+                return;
+            }
+            $obj = mysqli_fetch_object($result);
+            return $obj;
+        }
+        return;
+    }
+    
+    function getError () {
+        $error = mysqli_error($this->getDbLink());
+        if ($this->error == null && empty($error)) {
+            $error = null;
+        } else {
+            //if (empty($error)) {
+            //    $error = $this->error;
+            //}
+        }
+        return $error;
+    }
+    
+    function isAvalible () {
+        return true;
+    }
+    
+    function connect () {
+        $dbLink = mysqli_connect(Config::getDBHost(),Config::getDBUser(),Config::getDBPassword());
+        if (false !== $dbLink && true === mysqli_select_db($dbLink, Config::getDBName())) {
+            $this->setDbLink($dbLink);
+            $this->connected = true;
+        } else {
+            $this->connected = false;
+            Context::addError("database::connect() : failed to connect : ".$this->getError());
+        }
+        return $this->connected;
+    }
+    
+    function isConnected () {
+        return $this->connected;
+    }
+}
+
+
 class SqliteDataSource implements IDataSource {
     
     private $database = null;
@@ -262,7 +355,7 @@ class DataSourceFactory {
     // static $dataSources = array(MysqlDataSource);
     
     static function getDefaultDataSource () {
-        $dataSource = new MysqlDataSource();
+        $dataSource = new MysqliDataSource();
         if ($dataSource->isAvalible() && $dataSource->connect()) {
             return $dataSource;
         }

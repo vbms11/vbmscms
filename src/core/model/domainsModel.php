@@ -3,13 +3,13 @@
 class DomainsModel {
     
     static function getDomain ($domainId) {
-        $domainId = mysql_real_escape_string($domainId);
+        $domainId = Database::escape($domainId);
         return Database::queryAsObject("select * from t_domain where id = '$domainId'");
     }
     
     static function getDomains ($siteId = null) {
         if ($siteId != null) {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
             return Database::queryAsArray("select d.id, d.url, d.siteid, d.domaintrackerscript, s.name, s.sitetrackerscript 
                 from t_domain d 
                 left join t_site s on d.siteid = s.id 
@@ -21,7 +21,7 @@ class DomainsModel {
     
     static function getDomainSite ($domain) {
         $cleanDomain = self::cleanDomainName($domain);
-        $sqlDomain = mysql_real_escape_string($cleanDomain);
+        $sqlDomain = Database::escape($cleanDomain);
         return Database::queryAsObject("select d.url, d.siteid, s.cmscustomerid, s.piwikid, s.sitetrackerscript, d.domaintrackerscript, s.facebookappid, s.facebooksecret, s.googleclientid, s.googleclientsecret, s.twitterkey, s.twittersecret
             from t_domain d 
             join t_site s on s.id = d.siteid 
@@ -59,24 +59,24 @@ class DomainsModel {
         $cleanUrl = self::cleanDomainName($url);
         $site = SiteModel::getSite($siteId);
         PiwikModel::addDomain($site->piwikid, $cleanUrl);
-        $sqlUrl = mysql_real_escape_string($cleanUrl);
-        $siteId = mysql_real_escape_string($siteId);
-        $domainTrackerScript = mysql_real_escape_string($domainTrackerScript);
+        $sqlUrl = Database::escape($cleanUrl);
+        $siteId = Database::escape($siteId);
+        $domainTrackerScript = Database::escape($domainTrackerScript);
         Database::query("insert into t_domain (url,siteid,domaintrackerscript) values ('$sqlUrl','$siteId','$domainTrackerScript')");
         $result = Database::queryAsObject("select last_insert_id() as id from t_domain");
         return $result->id;
     }
     
     static function updateDomain ($domainId, $url, $siteId = null, $domainTrackerScript = '') {
-        $domainId = mysql_real_escape_string($domainId);
-        $domainTrackerScript = mysql_real_escape_string($domainTrackerScript);
+        $domainId = Database::escape($domainId);
+        $domainTrackerScript = Database::escape($domainTrackerScript);
         $cleanUrl = self::cleanDomainName($url);
-        $sqlUrl = mysql_real_escape_string($cleanUrl);
+        $sqlUrl = Database::escape($cleanUrl);
         $originalUrl = self::getDomain($domainId);
         $site = SiteModel::getSite($siteId);
         PiwikModel::removeDomain($site->piwikid, $originalUrl->url);
         PiwikModel::addDomain($site->piwikid, $cleanUrl);
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         Database::query("update t_domain set
             url = '$sqlUrl',
             domaintrackerscript = '$domainTrackerScript'
@@ -87,7 +87,7 @@ class DomainsModel {
         $domain = self::getDomain($id);
         $site = SiteModel::getSite($domain->siteid);
         PiwikModel::removeDomain($site->piwikid, $domain->url);
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::query("delete from t_domain where id = '$id'");
     }
 }

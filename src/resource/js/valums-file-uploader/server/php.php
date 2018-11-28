@@ -45,6 +45,9 @@ class qqUploadedFileForm {
      * Save the file to the specified path
      * @return boolean TRUE on success
      */
+    function getTempPath() {
+        return $_FILES['qqfile']['tmp_name'];
+    }
     function save($path) {
         if(!move_uploaded_file($_FILES['qqfile']['tmp_name'], $path)){
             return false;
@@ -128,10 +131,17 @@ class qqFileUploader {
         $filename = $pathinfo['filename'];
         //$filename = md5(uniqid());
         $ext = $pathinfo['extension'];
+        $uploadDirectory . $filename . '.' . $ext;
 
         if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)){
             $these = implode(', ', $this->allowedExtensions);
             return array('error' => 'File has an invalid extension, it should be one of '. $these . '.');
+        }
+        
+        if (!is_readable($this->file->getTempPath())) {
+            if (!chmod($this->file->getTempPath(), 0777)) {
+                return array('error' => 'Temp file is not readable.');
+            }
         }
         
         if(!$replaceOldFile){
@@ -139,9 +149,15 @@ class qqFileUploader {
             while (file_exists($uploadDirectory . $filename . '.' . $ext)) {
                 $filename .= rand(10, 99);
             }
+        } else {
+            if (file_exists($filePath) && !is_writable($filePath)) {
+                if (!chmod($filePath, 0777)) {
+                    return array('error' => 'Cannot write to file due to access rights.');
+                }
+            }
         }
         
-        if ($this->file->save($uploadDirectory . $filename . '.' . $ext)){
+        if ($this->file->save($filePath)){
             return array('success'=>true, 'filename'=>$filename.'.'.$ext);
         } else {
             return array('error'=> 'Could not save uploaded file.' .

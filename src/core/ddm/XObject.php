@@ -105,7 +105,7 @@ abstract class XOjbect {
             if ($feild != current($feilds)) {
                 $query .= ',';
             }
-            $query .= '\''.mysql_real_escape_string(self::getFeildValue($feild)).'\'';
+            $query .= '\''.Database::escape(self::getFeildValue($feild)).'\'';
         }
         $query .= ')';
         Database::query($query);
@@ -124,7 +124,7 @@ abstract class XOjbect {
             if ($feild != current($feilds)) {
                 $query .= ',';
             }
-            $query .= $feild.' = \''.mysql_real_escape_string(self::getFeildValue($feild)).'\'';
+            $query .= $feild.' = \''.Database::escape(self::getFeildValue($feild)).'\'';
         }
         $query .= ' where '.self::getIdFeild().' = \''.self::getFeildValue(self::getIdFeild()).'\'';
         Database::query($query);
@@ -133,7 +133,7 @@ abstract class XOjbect {
     
     static function getByFeild ($name, $value) {
         if (self::hasFeild($name)) {
-            $value = mysql_real_escape_string($value);
+            $value = Database::escape($value);
             $query = "select from ".Config::getTablePrefix().self::getTableName()." where $name = '$value'";
             if ($name == self::getIdFeild()) {
                 return Database::queryAsObject($query);
@@ -145,7 +145,7 @@ abstract class XOjbect {
     
     static function getLikeFeild ($name, $value) {
         if (self::hasFeild($name)) {
-            $value = mysql_real_escape_string($value);
+            $value = Database::escape($value);
             $query = "select from ".Config::getTablePrefix().self::getTableName()." where $name like '$value'";
             if ($name == self::getIdFeild()) {
                 return Database::queryAsObject($query);

@@ -1,0 +1,12 @@
+[10-Feb-2016 11:51:44 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 7
+[10-Feb-2016 11:51:44 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 9
+[10-Feb-2016 11:54:52 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 7
+[10-Feb-2016 11:54:52 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 9
+[11-Feb-2016 14:47:14 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 9
+[11-Feb-2016 14:47:15 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 11
+[11-Feb-2016 14:47:23 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 9
+[11-Feb-2016 14:47:23 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 11
+[11-Feb-2016 14:47:39 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 9
+[11-Feb-2016 14:47:39 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 11
+[19-Feb-2016 10:42:25 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 9
+[19-Feb-2016 10:42:25 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/servey/sendMail.php on line 11

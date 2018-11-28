@@ -74,7 +74,7 @@ class PinboardSearchBoxModule extends XModule {
     function printSearchBoxView () {
         ?>
         <div class="panel pinboardSearchBoxPanel">
-            <form method="post" class="searchForm" name="searchForm" action="<?php echo parent::link("search"); ?>">
+            <form method="post" class="searchForm" name="searchForm" action="<?php echo parent::link(array("search")); ?>">
                 <a href="#" title="<?php echo parent::getTranslation("pinboardSearchBox.button.title"); ?>"></a>
                 <div>
                 	<input type="text" name="search" placeholder="<?php echo parent::getTranslation("pinboardSearchBox.placeholder"); ?>" />

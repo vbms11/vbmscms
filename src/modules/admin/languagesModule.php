@@ -21,7 +21,8 @@ class LanguagesModule extends XModule {
                     }
                     LanguagesModel::saveLanguage($language->id,$language->flag,isset($_POST["active_".$language->local]) ? "1" : "0");
                 }
-                parent::redirect(array("action"=>"edit"));
+                //parent::redirect(array("action"=>"edit"));
+                parent::redirect();
                 break;
             case "edit":
                 parent::focus();

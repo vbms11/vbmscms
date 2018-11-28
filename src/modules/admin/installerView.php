@@ -12,18 +12,19 @@ class InstallView extends XModule {
                 $_SESSION['dbusername'] = $_POST['username'];
                 $_SESSION['dbpassword'] = $_POST['password'];
                 $_SESSION['database'] = $_POST['database'];
-
-                $link = @mysql_connect($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword']);
+                
+                $link = @mysqli_connect($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword']);
                 if (!$link) {
                     $_SESSION['installMsg'] = "Unable to connect to the database!";
                     NavigationModel::redirect("?action=dbConfig&session=nodb",false);
                 } else {
-                    $check = @mysql_select_db($_SESSION['database']);
+                    $check = @mysqli_select_db($link,$_SESSION['database']);
                     if (!$check) {
                         $_SESSION['installMsg'] = "Connection established but invalid database name!";
                         NavigationModel::redirect("?action=dbConfig&session=nodb",false);
                     } else {
-                        NavigationModel::redirect("?action=printInstallingView&session=nodb",false);
+                        //NavigationModel::redirect("?action=printInstallingView&session=nodb",false);
+                        NavigationModel::redirect("?action=install&session=nodb",false);
                     }
                 }
                 break;
@@ -40,11 +41,13 @@ class InstallView extends XModule {
                 break;
             case "install":
                 // create config file
+                echo "build config<br/>";
                 InstallerController::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
-                require_once('config.php');
                 // install datamodel
+                echo "install model<br/>";
                 InstallerController::installModel();
                 // create initial user
+                echo "create initial user<br/>";
                 InstallerController::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate'], $_SESSION['gender']);
                 // redirect to startpage
                 NavigationModel::redirect("?session=nodb",false);
@@ -70,7 +73,11 @@ class InstallView extends XModule {
                 $this->printInstallingView();
                 break;
             default:
-                $this->printWelcomeView();
+                if (!Config::getInstalled()) {
+                    $this->printWelcomeView();
+                } else if (Config::getDbInstalled()) {
+                    $this->printDatabaseEmptyView();
+                }
                 break;
         }
     }
@@ -97,6 +104,47 @@ class InstallView extends XModule {
                 }
             });
             </script>
+        </div>
+        <?php
+    }
+    
+    function printDatabaseEmptyView () {
+        
+        $backups = BackupModel::getBackupFiles();
+        ?>
+        <div class="panel installPanel">
+            <h2>Database Empty</h2>
+            <p>
+            The database seems to be missing its tables. 
+            They will have to be reinstalled from a backup or the original dataset. 
+            Select backup to reload. 
+            </p>
+            <div class="divTable">
+                <?php
+                foreach ($backups as $backup) {
+                    $fullPath = ResourceModel::resourcePath("backup", $backup);
+                    ?>
+                    <div>
+                        <div>
+                            <?php echo $backup; ?>
+                        </div>
+                        <div>
+                            <?php echo filemtime($fullPath); ?>
+                        </div>
+                        <div>
+                            <a href="<?php echo parent::link("loadBackup", array("file"=>$backup)); ?>">
+                                Restore
+                            </a>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+            <hr/>
+            <div class="alignRight">
+                <button type="submit" class="jquiButton btnInstallNext">Load Default</button>
+            </div>
         </div>
         <?php
     }

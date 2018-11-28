@@ -5,7 +5,7 @@ require_once 'core/model/moduleModel.php';
 class ModuleModel {
     
     static function getModule ($id) {
-        $aid = mysql_real_escape_string($id);
+        $aid = Database::escape($id);
         return Database::queryAsObject("select * from t_module where id = '$aid'");
     }
 
@@ -14,12 +14,12 @@ class ModuleModel {
     }
     
     static function getModuleBySysname ($sysname) {
-        $sysname = mysql_real_escape_string($sysname);
+        $sysname = Database::escape($sysname);
         return Database::queryAsObject("select * from t_module where sysname = '$sysname' and static = '1'");
     }
     
     static function getModuleByName ($moduleName) {
-        $moduleName = mysql_real_escape_string($moduleName);
+        $moduleName = Database::escape($moduleName);
         return Database::queryAsObject("select * from t_module where sysname = '$moduleName'");
     }
     
@@ -36,19 +36,19 @@ class ModuleModel {
     }
 
     static function createModule ($name,$description,$include,$interface,$inmenu) {
-        $name = mysql_real_escape_string($name);
-        $description = mysql_real_escape_string($description);
-        $include = mysql_real_escape_string($include);
-        $interface = mysql_real_escape_string($interface);
-        $inmenu = mysql_real_escape_string($inmenu);
+        $name = Database::escape($name);
+        $description = Database::escape($description);
+        $include = Database::escape($include);
+        $interface = Database::escape($interface);
+        $inmenu = Database::escape($inmenu);
         Database::query("insert into t_module(name,description,include,interface,inmenu) values ('$name','$description','$include','$interface','$inmenu')");
         $newObj = Database::query("select last_insert_id() as lastid from t_module");
         return $newObj->lastid;
     }
     
     static function addModule ($siteId,$moduleId) {
-        $siteId = mysql_real_escape_string($siteId);
-        $moduleId = mysql_real_escape_string($moduleId);
+        $siteId = Database::escape($siteId);
+        $moduleId = Database::escape($moduleId);
         $obj = Database::queryAsObject("select 1 from t_site_module where siteid = '$siteId' and moduleid = '$moduleId'");
         if ($obj == null) {
             Database::query("insert into t_site_module (siteid,moduleid) values('$siteId','$moduleId')");
@@ -56,8 +56,8 @@ class ModuleModel {
     }
     
     static function removeModule ($siteId,$moduleId) {
-        $siteId = mysql_real_escape_string($siteId);
-        $moduleId = mysql_real_escape_string($moduleId);
+        $siteId = Database::escape($siteId);
+        $moduleId = Database::escape($moduleId);
         Database::query("delete from t_site_module where siteid = '$siteId' and templateid = '$moduleId'");
     }
     
@@ -68,8 +68,13 @@ class ModuleModel {
      * @return type
      */
     static function getModuleClass ($moduleObj, $params = true) {
+        if (empty($moduleObj) || empty($moduleObj->include) || empty($moduleObj->interface)) {
+            echo "error loading module object<br/>";
+            print_r($moduleObj);
+            exit;
+        }
         // get the module instance
-		include_once($moduleObj->include);
+        include_once($moduleObj->include);
         $className = $moduleObj->interface;
         $obj = eval("return new $className();");
         $obj->moduleId = $moduleObj->id;
@@ -104,11 +109,11 @@ class ModuleModel {
         $moduleParams = array();
         if (is_array($moduleIds)) {
             foreach ($moduleIds as $key => $value) {
-                $moduleIds[$key] = mysql_real_escape_string($value);
+                $moduleIds[$key] = Database::escape($value);
             }
             $moduleIdsStr = " in ('".implode("','",$moduleIds)."') ";
         } else {
-            $moduleIdsStr = " = '".mysql_real_escape_string($moduleIds)."' ";
+            $moduleIdsStr = " = '".Database::escape($moduleIds)."' ";
         }
         $moduleParamsData = Database::queryAsArray("select * from t_module_instance_params where instanceid $moduleIdsStr");
         foreach ($moduleParamsData as $param) {
@@ -125,9 +130,9 @@ class ModuleModel {
     }
     
     static function setModuleParam ($moduleId,$name,$value) {
-        $moduleId = mysql_real_escape_string($moduleId);
-        $name = mysql_real_escape_string($name);
-        $value = mysql_real_escape_string(serialize($value));
+        $moduleId = Database::escape($moduleId);
+        $name = Database::escape($name);
+        $value = Database::escape(serialize($value));
         $result = Database::queryAsObject("select 1 as paramexists from t_module_instance_params where instanceid = '$moduleId' and name = '$name'");
         if ($result != null && $result->paramexists == 1) {
             Database::query("update t_module_instance_params set value = '$value' where instanceid = '$moduleId' and name = '$name'");

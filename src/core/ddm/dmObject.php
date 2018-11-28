@@ -28,8 +28,8 @@ class DmObject {
     }
     
     function getByColumnName ($name,$val) {
-        $name = mysql_real_escape_string($name);
-        $val = mysql_real_escape_string($val);
+        $name = Database::escape($name);
+        $val = Database::escape($val);
         return $this->citeria("'$name' = '$val'");
     }
             
@@ -74,8 +74,8 @@ class DmObject {
     }
     
     function getByColumn ($columnName,$val) {
-        $columnName = mysql_real_escape_string($columnName);
-        $val = mysql_real_escape_string($val);
+        $columnName = Database::escape($columnName);
+        $val = Database::escape($val);
         return $this->citeria("$columnName = '$val'");
     }
         
@@ -91,8 +91,8 @@ class DmObject {
                 $updateQuery .= " $seperator ";
             }
             $first = false;
-            $name = mysql_real_escape_string($name);
-            $value = mysql_real_escape_string($value);
+            $name = Database::escape($name);
+            $value = Database::escape($value);
             $params .= "'$name' $operator '$value' ";
         }
         return $params;
@@ -106,7 +106,7 @@ class DmObject {
                 $list .= ",";
             }
             $first = false;
-            $name = mysql_real_escape_string($name);
+            $name = Database::escape($name);
             $list .= $escape ? " '$name'" : " $name";
         }
         return $list;

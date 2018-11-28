@@ -53,6 +53,21 @@ class Context {
             return "home/".Common::hash($_SESSION["context.selectedUser"]);
         return null;
     }
+    /*
+    static function select ($name, $value = null) {
+        
+        if ($value == null) {
+            
+        }
+        self::getSelection()->set($name, $value);
+    }
+    */
+    static function getSelection () {
+        if (!isset($_SESSION["context.selection"])) {
+            $_SESSION["context.selection"] = new Selection();
+        }
+        return $_SESSION["context.selection"];
+    }
     
     // user roles
 
@@ -111,7 +126,7 @@ class Context {
     }
     
     static function reloadRoles () {
-	Context::clearRoles();
+	    Context::clearRoles();
     	$userRoles = RolesModel::getRoles(Context::getUserId());
         foreach ($userRoles as $userRole) {
             Context::addRoleGroup($userRole->customrole, $userRole->rolegroup);
@@ -271,7 +286,7 @@ class Context {
      */
     static function startRequest () {
         
-        if (Config::getNoDatabase()) {
+        if (!Config::getInstalled()) {
             Session::startDefaultSession();
         } else {
             
@@ -335,7 +350,7 @@ class Context {
     	return null;
     }
 
-    function setFocusedArea ($incudeId) {
+    static function setFocusedArea ($incudeId) {
     	$_SESSION['focusedArea'] = $incudeId;
     }
 
@@ -374,7 +389,7 @@ class Context {
     }
     
     static function getErrors () {
-        if (isset($_REQUEST['context.errors'])) {
+        if (!isset($_REQUEST['context.errors'])) {
             return array();
         }
         return $_REQUEST['context.errors'];
@@ -447,77 +462,5 @@ class Context {
     
     
 }
-
-
-
-
-class Config {
-
-    static function getCurrency () {
-        return $GLOBALS['currencySymbol'];
-    }
-
-    static function getWeight () {
-        return $GLOBALS['weightUnit'];
-    }
-
-    static function getQueryLog () {
-        if (!isset($GLOBALS['queryLog'])) {
-            return false;
-        }
-        return $GLOBALS['queryLog'];
-    }
-    
-    static function getNoDatabase () {
-        if (!isset($GLOBALS['noDatabase'])) {
-            return true;
-        }
-        return $GLOBALS['noDatabase'];
-    }
-    
-    static function getDBHost () {
-        return $GLOBALS['dbHost'];
-    }
-    
-    static function getDBUser () {
-        return $GLOBALS['dbUser'];
-    }
-    
-    static function getDBPassword () {
-        return $GLOBALS['dbPass'];
-    }
-    
-    static function getDBName () {
-        return $GLOBALS['dbName'];
-    }
-    
-    static function getShippingMode () {
-        return $GLOBALS['shippingMode'];
-    }
-    
-    static function getCmsMainDomain () {
-        return $GLOBALS['cmsMainDomain'];
-    }
-    
-    static function getSeoUrl () {
-        if (isset($GLOBALS['seoUrl']) && $GLOBALS['seoUrl'] === true) {
-            return true;
-        }
-        return false;
-    }
-    
-    static function getPiwikUsername () {
-        return $GLOBALS['piwikUsername'];
-    }
-    
-    static function getPiwikPassword () {
-        return $GLOBALS['piwikPassword'];
-    }
-    
-    static function getAdminEmail () {
-        return $GLOBALS['cmsAdminEmail'];
-    }
-}
-
 
 ?>

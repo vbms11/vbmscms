@@ -139,6 +139,41 @@ class Common {
         }
         return $trace;
     }
+    
+    static function getAllowedImageFormats() {
+        return array("jpg","jpeg","png","gif");
+    }
+    
+    static function getAllowedDocumentFormats () {
+        return array("doc","dot","docx","docm","dotx","dotm","docb","xls","xlt","xlm","xlsx","xlsm","xltx","xltm","xlsb","xla","xlam","xll","xlw","ppt","pot","pps","pptx","pptm","potx","potm","ppam","ppsx","ppsm","sldx","sldm","accdb","accde","accdt","accdr","pub");
+    }
+    
+    static function getMaximumUploadSize () {
+        $default = 5 * 1024 * 1024;
+        $result = -1;
+        $max_size = parseSizeToBytes(ini_get('post_max_size'));
+        $upload_max = parseSizeToBytes(ini_get('upload_max_filesize'));
+        if ($upload_max > 0 && $upload_max < $max_size) {
+            $max_size = $upload_max;
+        }
+        if ($max_size > 0) {
+            $result = $max_size;
+        } else {
+            $result = $default;
+        }
+        return $max_size;
+    }
+    
+    static function parseSizeToBytes ($size) {
+        $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
+        $size = preg_replace('/[^0-9\.]/', '', $size);
+        if ($unit) {
+            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+        } else {
+            return round($size);
+        }
+    }
+    
 }
 
 class InputFeilds {
@@ -359,7 +394,7 @@ class Http {
     }
     
     static function getContent ($url) {
-        return file_get_contents($url);
+        return @file_get_contents($url);
     }
     
 }
@@ -402,7 +437,7 @@ class Log {
         $lines = "";
         if (isset($_SESSION['log.lines'])) {
             foreach ($_SESSION['log.lines'] as $text) {
-                $lines .= "[".date("d/m/Y h:i:s", mktime())."]\t".$_SERVER['REMOTE_ADDR']."\t".$text.PHP_EOL;
+                $lines .= "[".date("d/m/Y h:i:s")."]\t".$_SERVER['REMOTE_ADDR']."\t".$text.PHP_EOL;
             }
         }
         fwrite($fd, $lines);

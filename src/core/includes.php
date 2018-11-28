@@ -7,13 +7,11 @@ if (!defined("vbmscms_allowAccess") || vbmscms_allowAccess != true) {
 
 @set_magic_quotes_runtime(0);
 
-if (!@include_once('config.php')) {
-    $GLOBALS['noDatabase'] = true;
-} else {
-    $GLOBALS['noDatabase'] = false;
-}
+include_once 'core/config.class.php';
 
+Config::load();
 
+include_once 'core/selection.php';
 include_once 'core/template/templateParser.php';
 include_once 'core/template/baseRenderer.php';
 include_once 'core/template/ajaxRenderer.php';
@@ -33,6 +31,7 @@ require_once 'core/model/countriesModel.php';
 require_once 'core/model/rolesModel.php';
 include_once 'core/model/piwikModel.php';
 include_once 'core/model/sitesModel.php';
+include_once 'core/model/cmsVersionModel.php';
 include_once 'core/model/cmsCustomerModel.php';
 include_once 'core/model/resourcesModel.php';
 include_once 'core/model/translationsModel.php';

@@ -8,14 +8,14 @@ class ArticleModel {
 	
 	function createArticle ($name, $description, $content, $imageId, $userId = null, $siteId = null) {
 		
-		$name = mysql_real_escape_string($name);
-		$description = mysql_real_escape_string($description);
-		$content = mysql_real_escape_string($content);
+		$name = Database::escape($name);
+		$description = Database::escape($description);
+		$content = Database::escape($content);
 		
 		if ($userId = null) {
-			$userId = "'".mysql_real_escape_string(Context::getUserId())."'";
+			$userId = "'".Database::escape(Context::getUserId())."'";
 		} else {
-			$userId = "'".mysql_real_escape_string($userId)."'";
+			$userId = "'".Database::escape($userId)."'";
 		}
 		
 		if ($siteId == null) {
@@ -31,15 +31,15 @@ class ArticleModel {
 	
 	function saveArticle ($id, $name, $description, $content, $userId = null, $siteId = null) {
 
-		$id = mysql_real_escape_string($id);
-		$name = mysql_real_escape_string($name);
-		$description = mysql_real_escape_string($description);
-		$content = mysql_real_escape_string($content);
+		$id = Database::escape($id);
+		$name = Database::escape($name);
+		$description = Database::escape($description);
+		$content = Database::escape($content);
 		
 		if ($userId = null) {
-			$userId = "'".mysql_real_escape_string(Context::getUserId())."'";
+			$userId = "'".Database::escape(Context::getUserId())."'";
 		} else {
-			$userId = "'".mysql_real_escape_string($userId)."'";
+			$userId = "'".Database::escape($userId)."'";
 		}
 		
 		if ($siteId == null) {
@@ -58,14 +58,14 @@ class ArticleModel {
 	
 	function deleteArticle ($id) {
 		
-		$id = mysql_real_escape_string($id);
+		$id = Database::escape($id);
 		
 		Database::query("delete from t_article where id = '$id'");
 	}
 	
 	function getArticle ($id) {
 		
-		$id = mysql_real_escape_string($id);
+		$id = Database::escape($id);
 		
 		return Database::queryAsObject("select * from t_article where id = '$id'");
 	}
@@ -75,13 +75,13 @@ class ArticleModel {
 		if ($visibility == null) {
 			$visibility = self::visibility_public;
 		} else {
-			$visibility = mysql_real_escape_string($visibility);
+			$visibility = Database::escape($visibility);
 		}
 		
 		if ($userId = null) {
 			$userId = "";
 		} else {
-			$userId = "and userid = '".mysql_real_escape_string($userId)."'";
+			$userId = "and userid = '".Database::escape($userId)."'";
 		}
 		
 		if ($siteId == null) {
@@ -109,7 +109,7 @@ class ArticleModel {
 	function getArticleByKeywordIds ($keywords) {
 		
 		foreach ($keywords as $key => $value) {
-			$keywords[$key] = mysql_real_escape_string($value);
+			$keywords[$key] = Database::escape($value);
 		}
 		
 		$keywordsSql = "'".implode($keywords, "','")."'";
@@ -119,7 +119,7 @@ class ArticleModel {
 	
 	function getArticleKeywords ($articleId) {
 		
-		$articleId = mysql_real_escape_string($articleId);
+		$articleId = Database::escape($articleId);
 		
 		return Database::queryAsArray("select k.*, ak.articleId as articleId from t_keyword k join t_article_keyword ak where ak.articleId = '$articleId'");
 	}

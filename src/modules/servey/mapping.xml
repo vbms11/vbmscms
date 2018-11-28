@@ -1,0 +1,72 @@
+<!--
+    "name"          : null,
+    "value"         : null,
+    "label"         : null,
+    "description"   : null,
+    "validator"     : null,
+    "maxLength"     : null,
+    "minLength"     : null,
+    "required"      : null,
+    "styleClass"    : null,
+    "typeName"      : null,
+    "inputName"     : null
+};
+
+var FormObject = {
+    
+    name : null, 
+    description : null,
+    feilds : null
+-->
+<mapping tablePrefix="t_">
+    <table name="company">
+        <column>
+            <name></name> <!-- [az] -->
+            <type></type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length></length> <!-- [09] -->
+            <null></null> <!-- 0,1 -->
+            <increment></increment> <!-- 0,1 -->
+            <index></index> <!-- primary,uniqu -->
+        </column>
+    </table>
+    <table name="action">
+        <column>
+            <name></name> <!-- [az] -->
+            <type></type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length></length> <!-- [09] -->
+            <null></null> <!-- 0,1 -->
+            <increment></increment> <!-- 0,1 -->
+            <index></index> <!-- primary,uniqu -->
+            <relation>
+                <table>condition</table>
+                <type>n-n</type>
+            </relation>
+        </column>
+    </table>
+    <table name="task">
+        <column>
+            <name>name</name>
+            <type>varchar</type>
+            <length>100</length>
+        </column>
+        <column>
+            <name>frequency</name>
+            <type>varchar</type>
+            <length>100</length>
+        </column>
+        <column>
+            <name>conditions</name>
+            <relation>
+                <table>condition</table>
+                <type>n-n</type>
+            </relation>
+        </column>
+        <column>
+            <name>actions</name>
+            <relation>
+                <table>action</table>
+                <type>n-n</type>
+            </relation>
+        </column>
+    </table>
+</mapping>

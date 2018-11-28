@@ -12,20 +12,20 @@ class RolesView extends XModule {
         if (Context::hasRole("admin.roles.edit")) {
             switch (parent::getAction()) {
                 case "saveRoles":
-                    $customRole = $_GET['group'];
+                    $customRole = parent::get('group');
                     RolesModel::clearCustomRoles($customRole);
-                    $selectedModuleRoles = $_POST['roles'];
+                    $selectedModuleRoles = parent::post("roles");
                     if (is_array($selectedModuleRoles)) {
                         RolesModel::addModuleRoleToCustomRole($selectedModuleRoles, $customRole);
                     }
                     parent::redirect();
                     break;
                 case "createRole":
-                    RolesModel::createCustomRole($_GET['rolename'], "0");
-                    parent::redirect();
+                    $group = RolesModel::createCustomRole(parent::post('rolename'), "0");
+                    parent::redirect(array("group"=>$group));
                     break;
                 case "deleteRole":
-                    RolesModel::deleteCustomRole($_GET['group']);
+                    RolesModel::deleteCustomRole(parent::get('group'));
                     parent::redirect();
                     break;
             }
@@ -38,7 +38,7 @@ class RolesView extends XModule {
     function onView () {
         
         if (Context::hasRole("admin.roles.edit")) {
-            switch (isset($_GET['action']) ? $_GET['action'] : null) {
+            switch (parent::getAction()) {
                 case "addRole":
                 case "removeRole":
                     break;
@@ -77,7 +77,7 @@ class RolesView extends XModule {
         $roleGroups = RolesModel::getCustomRoles();
         $allRoles = Common::toMap(RolesModel::getModuleRoles());
         $roleGroupIds = array_keys($roleGroups);
-        $group = isset($_GET['group']) ? $_GET['group'] : current($roleGroupIds); 
+        $group = parent::get('group') != null ? parent::get('group') : current($roleGroupIds); 
         $pageRoles = RolesModel::getCustomRoleModuleRoles($group);
         ?>
 	<div class="panel rolesPage">
@@ -108,15 +108,15 @@ class RolesView extends XModule {
                     <button id="deleteRole" class="nowrap"><?php echo parent::getTranslation("admin.roles.button.delete"); ?></button>
                 </div>
             </form>
-            <div id="dialog-form" title="Create Role">
+            <div id="createRoleForm" title="Create Role">
                 <p class="validateTips">
                     <?php echo parent::getTranslation("admin.roles.dialog.message"); ?>
                 </p>
-                <form action="">
+                <form action="<?php echo parent::link(array("action"=>"createRole")); ?>" method="post">
                     <table class="formTable"><tr><td>
                         <?php echo parent::getTranslation("admin.roles.dialog.label"); ?>
                     </td><td>
-                        <input type="text" name="rolename" id="rolename" class="expand" />
+                        <input type="text" name="rolename" class="expand" />
                     </td></tr></table>
                 </form>
             </div>
@@ -126,27 +126,28 @@ class RolesView extends XModule {
                     var url = "<?php echo parent::link(array(), false); ?>";
                     callUrl(url,{"group":$(this).val()});
                 });
-                $( "#dialog-form" ).dialog({
+                $("#createRoleForm").dialog({
                     autoOpen: false, modal: true,
                     height: 300, width: 350,
                     buttons: {
                         "Create Role": function() {
-                            $( this ).dialog( "close" );
-                            callUrl("<?php echo parent::link(array("action"=>"createRole"),false); ?>",{"rolename":$("#rolename").val()});
+                            $(this).dialog("close");
+                            $("#createRoleForm form").submit();
                         },
                         "Cancel": function() {
-                            $( this ).dialog( "close" );
+                            $(this).dialog("close");
                         }
                     }
                 });
                 $("#saveRoles").button();
-                $( "#createRole" ).button().click(function(e) {
-                    $( "#dialog-form" ).dialog( "open" );
+                $("#createRole").button().click(function(e) {
+                    $("#createRoleForm").dialog("open");
                     e.preventDefault();
                 });
-                $( "#deleteRole" ).button().click(function() {
+                $("#deleteRole").button().click(function(e) {
                     var url = "<?php echo parent::link(array("action"=>"deleteRole"),false); ?>";
-                    callUrl(url,{"group":$("#rolegroup").val()});
+                    callUrl(url,{"group":$("#rolename").val()});
+                    e.preventDefault();
                 });
             });
             </script>

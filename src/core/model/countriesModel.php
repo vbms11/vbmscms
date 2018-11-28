@@ -18,12 +18,12 @@ class CountryModel {
 	// continents
 	
 	static function getContinent ($continentId) {
-		$continentId = mysql_real_escape_string($continentId);
+		$continentId = Database::escape($continentId);
 		return Database::queryAsObject("select * from t_geo_continent where id = '$continentId'");
 	}
 	
 	static function getContinentByGeonameId ($geonameId) {
-		$geonameId = mysql_real_escape_string($geonameId);
+		$geonameId = Database::escape($geonameId);
 		return Database::queryAsObject("select * from t_geo_continent where geonameid = '$geonameId'");
 	}
 	
@@ -36,59 +36,64 @@ class CountryModel {
 		return $countries;
 	}
 	
-	static function saveContinent ($name, $geonameId, $population, $lng, $lat) {
-		$name = mysql_real_escape_string($name);
-		$geonameId = mysql_real_escape_string($geonameId);
-		$population = mysql_real_escape_string(population);
-		$lng = mysql_real_escape_string($lng);
-		$lat = mysql_real_escape_string($lat);
-		$continent = self::getContinentByGeonameId($geonameId);
-		if (empty($continent)) {
-			Database::query("insert into t_geo_continent (name,geonameid,population,lng,lat) values('$name','$geonameId','$population','$lng','$lat')");
-		} else {
-			Database::query("update t_geo_continent set 
-				name = '$name', 
-				population = '$population', 
-				lng = '$lng', 
-				lat = '$lat'
-				where geonameid = '$geonameId'");
-		}
+	static function saveContinent ($name, $longName, $geonameId, $population, $lng, $lat) {
+            $name = Database::escape($name);
+            $longName = Database::escape($longName);
+            $geonameId = Database::escape($geonameId);
+            $population = Database::escape(population);
+            $lng = Database::escape($lng);
+            $lat = Database::escape($lat);
+            $continent = self::getContinentByGeonameId($geonameId);
+            if (empty($continent)) {
+                Database::query("insert into t_geo_continent (name,longname,geonameid,population,lng,lat) values('$name','$longName','$geonameId','$population','$lng','$lat')");
+            } else {
+                Database::query("update t_geo_continent set 
+                    name = '$name', 
+                    longname = '$longName', 
+                    population = '$population', 
+                    lng = '$lng', 
+                    lat = '$lat' 
+                    where geonameid = '$geonameId'");
+            }
 	}
 	
 	// countries
 	
     static function getCountry ($countryId) {
-        $countryId = mysql_real_escape_string($countryId);
+        $countryId = Database::escape($countryId);
         return Database::queryAsObject("select * from t_geo_country where id = '$countryId'");
     }
     
     static function getCountryByGeonameId ($geonameId) {
-        $geonameId = mysql_real_escape_string($geonameId);
+        $geonameId = Database::escape($geonameId);
         return Database::queryAsObject("select * from t_geo_country where geonameid = '$geonameId'");
     }
     
     static function getCountries () {
         $countries = Database::queryAsArray("select * from t_geo_country order by name asc","geonameid");
         if (empty($countries)) {
-            self::updateCountriesList();
-            $countries = self::getCountries();
+            if (self::updateCountriesList()) {
+                $countries = self::getCountries();
+            } else {
+                return array();
+            }
         }
         return $countries;
     }
     
     static function saveCountry ($name, $longName, $geonameId, $population, $countryCode, $countryId, $lng, $lat) {
     	
-        $name = mysql_real_escape_string($name);
-        $longName = mysql_real_escape_string($longName);
-        $geonameId = mysql_real_escape_string($geonameId);
-        $population = mysql_real_escape_string(population);
-        $countryCode = mysql_real_escape_string($countryCode);
-        $countryId = mysql_real_escape_string($countryId);
-		$lng = mysql_real_escape_string($lng);
-		$lat = mysql_real_escape_string($lat);
-		$continentId = mysql_real_escape_string($continentId);
-		
-		$country = self::getCountryByGeonameId($geonameId);
+        $name = Database::escape($name);
+        $longName = Database::escape($longName);
+        $geonameId = Database::escape($geonameId);
+        $population = Database::escape(population);
+        $countryCode = Database::escape($countryCode);
+        $countryId = Database::escape($countryId);
+        $lng = Database::escape($lng);
+        $lat = Database::escape($lat);
+        $continentId = Database::escape($continentId);
+        $country = self::getCountryByGeonameId($geonameId);
+        
         if (empty($country)) {
             Database::query("insert into t_geo_country (name,longname,geonameid,population,countrycode,countryId,lng,lat,continentid) values('$name','$longName','$geonameId','$population','$countryCode','$countryId','$lng','$lat','$continentId')");
         } else {
@@ -108,12 +113,12 @@ class CountryModel {
     // states
     
     static function getState ($stateId) {
-        $stateId = mysql_real_escape_string($stateId);
+        $stateId = Database::escape($stateId);
         return Database::queryAsObject("select * from t_geo_state where id = '$stateId'");
     }
     
     static function getStateByGeonameId ($geonameId) {
-        $geonameId = mysql_real_escape_string($geonameId);
+        $geonameId = Database::escape($geonameId);
         return Database::queryAsObject("select * from t_geo_state where geonameid = '$geonameId'");
     }
     
@@ -124,13 +129,13 @@ class CountryModel {
     
     static function saveState ($name, $longName, $geonameId, $population, $countryId, $lng, $lat) {
     	 
-    	$name = mysql_real_escape_string($name);
-    	$longName = mysql_real_escape_string($longName);
-    	$geonameId = mysql_real_escape_string($geonameId);
-    	$population = mysql_real_escape_string(population);
-    	$countryId = mysql_real_escape_string($countryId);
-    	$lng = mysql_real_escape_string($lng);
-    	$lat = mysql_real_escape_string($lat);
+    	$name = Database::escape($name);
+    	$longName = Database::escape($longName);
+    	$geonameId = Database::escape($geonameId);
+    	$population = Database::escape(population);
+    	$countryId = Database::escape($countryId);
+    	$lng = Database::escape($lng);
+    	$lat = Database::escape($lat);
     
     	$country = self::getStateByGeonameId($geonameId);
     	if (empty($country)) {
@@ -150,12 +155,12 @@ class CountryModel {
     // regions
     
     static function getRegion ($regionId) {
-        $regionId = mysql_real_escape_string($regionId);
+        $regionId = Database::escape($regionId);
         return Database::queryAsObject("select * from t_geo_region where id = '$regionId'");
     }
     
     static function getRegionByGeonameId ($geonameId) {
-        $geonameId = mysql_real_escape_string($geonameId);
+        $geonameId = Database::escape($geonameId);
         return Database::queryAsObject("select * from t_geo_region where geonameid = '$geonameId'");
     }
     
@@ -166,13 +171,13 @@ class CountryModel {
     
     static function saveRegion($name, $longName, $geonameId, $population, $stateId, $lng, $lat) {
     	
-    	$name = mysql_real_escape_string($name);
-    	$longName = mysql_real_escape_string($longName);
-    	$geonameId = mysql_real_escape_string($geonameId);
-    	$population = mysql_real_escape_string(population);
-    	$stateId = mysql_real_escape_string($stateId);
-    	$lng = mysql_real_escape_string($lng);
-    	$lat = mysql_real_escape_string($lat);
+    	$name = Database::escape($name);
+    	$longName = Database::escape($longName);
+    	$geonameId = Database::escape($geonameId);
+    	$population = Database::escape(population);
+    	$stateId = Database::escape($stateId);
+    	$lng = Database::escape($lng);
+    	$lat = Database::escape($lat);
     	
     	$region = self::getRegionByGeonameId($geonameId);
     	if (empty($country)) {
@@ -193,12 +198,12 @@ class CountryModel {
     // city
     
     static function getCity ($cityId) {
-        $cityId = mysql_real_escape_string($cityId);
+        $cityId = Database::escape($cityId);
         return Database::queryAsObject("select * from t_geo_city where id = '$cityId'");
     }
     
     static function getCityByGeonameId ($geonameId) {
-        $geonameId = mysql_real_escape_string($geonameId);
+        $geonameId = Database::escape($geonameId);
         return Database::queryAsObject("select * from t_geo_city where geonameid = '$geonameId'");
     }
     
@@ -209,13 +214,13 @@ class CountryModel {
     
     static function saveCity ($name, $longName, $geonameId, $population, $regionId, $lng, $lat) {
     	 
-    	$name = mysql_real_escape_string($name);
-    	$longName = mysql_real_escape_string($longName);
-    	$geonameId = mysql_real_escape_string($geonameId);
-    	$population = mysql_real_escape_string(population);
-    	$regionId = mysql_real_escape_string($regionId);
-    	$lng = mysql_real_escape_string($lng);
-    	$lat = mysql_real_escape_string($lat);
+    	$name = Database::escape($name);
+    	$longName = Database::escape($longName);
+    	$geonameId = Database::escape($geonameId);
+    	$population = Database::escape(population);
+    	$regionId = Database::escape($regionId);
+    	$lng = Database::escape($lng);
+    	$lat = Database::escape($lat);
     	 
     	$region = self::getCityByGeonameId($geonameId);
     	if (empty($country)) {
@@ -238,40 +243,42 @@ class CountryModel {
     }
     
     
-    protected $continentsCode = "6295630";
-    protected $geoDataUrl = "http://www.geonames.org/childrenJSON?geonameId=";
+    protected static $continentsCode = "6295630";
+    protected static $geoDataUrl = "http://www.geonames.org/childrenJSON?geonameId=";
     
     static function updateContinentList () {
     	
-    	$continentsJson = Http::getContent($this->geoDataUrl.$this->continentsCode);
+    	$continentsJson = Http::getContent(self::$geoDataUrl.self::$continentsCode);
     	$continents = json_decode($continentsJson);
     	foreach ($continents->geonames as $continent) {
-    		
-    		self::saveContinent($country->name,$continent->geonameId);
-    		
-    	}
+            self::saveContinent($country->name,$country->longname,$continent->geonameId,$continent->population,$continent->lng,$continent->lat);
+        }
     }
     
     static function updateCountriesList () {
         
-        $continentsJson = Http::getContent($this->geoDataUrl.$this->continentsCode);
+        $updated = false;
+        $continentsJson = Http::getContent(self::$geoDataUrl.self::$continentsCode);
         $continents = json_decode($continentsJson);
-        foreach ($continents->geonames as $continent) {
-            
-            $countriesJson = Http::getContent($geoDataUrl.$continent->geonameId);
-            $countries = json_decode($countriesJson);
-            
-            foreach ($countries->geonames as $country) {
-                
-            	self::saveCountry($country->name,$country->geonameId);
+        if (!empty($continents) && !empty($continents->geonames)) {
+            foreach ($continents->geonames as $continent) {
+
+                $countriesJson = Http::getContent(self::$geoDataUrl.$continent->geonameId);
+                $countries = json_decode($countriesJson);
+
+                foreach ($countries->geonames as $country) {
+
+                    self::saveCountry($country->countryName, $country->toponymName,$country->geonameId, $country->population, $country->countryId, $country->lng,  $country->lat);
+                    $updated = true;
+                }
             }
         }
-        
+        return $updated;
     }
     
     static function updateStateList ($country) {
     	
-    	$continentsJson = Http::getContent($this->geoDataUrl.$country->geonameid);
+    	$continentsJson = Http::getContent(self::$geoDataUrl.$country->geonameid);
     	$continents = json_decode($continentsJson);
     	foreach ($continents->geonames as $continent) {
     	
@@ -282,7 +289,7 @@ class CountryModel {
     
     static function updateRegionList ($country) {
     	
-    	$continentsJson = Http::getContent($this->geoDataUrl.$country->geonameid);
+    	$continentsJson = Http::getContent(self::$geoDataUrl.$country->geonameid);
     	$continents = json_decode($continentsJson);
     	foreach ($continents->geonames as $continent) {
     	
@@ -293,7 +300,7 @@ class CountryModel {
     
     static function updateCityList ($region) {
     	
-    	$continentsJson = Http::getContent($this->geoDataUrl.$region->geonameid);
+    	$continentsJson = Http::getContent(self::$geoDataUrl.$region->geonameid);
     	$continents = json_decode($continentsJson);
     	foreach ($continents->geonames as $continent) {
     	
@@ -351,7 +358,7 @@ class CountryModel {
     	
     	$update = array("status" => "none", "geonameIds" => array());
     	
-    	$amount = mysql_real_escape_string($amount);
+    	$amount = Database::escape($amount);
     	
     	// get places that need upting do we have each of them then what is missing?
     	
@@ -370,7 +377,7 @@ class CountryModel {
     			
     			$update["type"] = "country";
     			foreach ($continents as $continent) {
-    				$update["geocodeIds"][] = mysql_real_escape_string($continent->geonameid);
+    				$update["geocodeIds"][] = Database::escape($continent->geonameid);
     			}
     			Database::query("update t_geo_continent set collection_scheduled = now() where geonameid in ('".implode("','",$update["geocodeIds"])."')");
     			
@@ -384,7 +391,7 @@ class CountryModel {
     				
     				$update["type"] = "state";
     				foreach ($countries as $country) {
-    					$update["geocodeIds"][] = mysql_real_escape_string($country->geonameid);
+    					$update["geocodeIds"][] = Database::escape($country->geonameid);
     				}
     				Database::query("update t_geo_country set collection_scheduled = now() where geonameid in ('".implode("','",$update["geocodeIds"])."')");
     				
@@ -398,7 +405,7 @@ class CountryModel {
     					
     					$update["type"] = "region";
     					foreach ($states as $state) {
-    						$update["geocodeIds"][] = mysql_real_escape_string($state->geonameid);
+    						$update["geocodeIds"][] = Database::escape($state->geonameid);
     					}
     					Database::query("update t_geo_state set collection_scheduled = now() where geonameid in ('".implode("','",$update["geocodeIds"])."')");
     					
@@ -412,7 +419,7 @@ class CountryModel {
     						
     						$update["type"] = "city";
     						foreach ($regions as $region) {
-    							$update["geocodeIds"][] = mysql_real_escape_string($region->geonameid);
+    							$update["geocodeIds"][] = Database::escape($region->geonameid);
     						}
     						Database::query("update t_geo_region set collection_scheduled = now() where geonameid in ('".implode("','",$update["geocodeIds"])."')");
     						
@@ -426,7 +433,7 @@ class CountryModel {
     						
     	    					$update["type"] = "city";
     		    				foreach ($regions as $region) {
-    			    				$update["geocodeIds"][] = mysql_real_escape_string($region->geonameid);
+    			    				$update["geocodeIds"][] = Database::escape($region->geonameid);
     				    		}
     					    	Database::query("update t_geo_region set collection_scheduled = now() where geonameid in ('".implode("','",$update["geocodeIds"])."')");
     				        }
@@ -459,21 +466,21 @@ class CountryModel {
     function updatePollScheduled () {
         
         $rowsUpdated = 0;
-        
+
         $result = Database::query("update geo_continent set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
-		$rowsUpdated += Database::affectedRows($result);
-		
-		$result = Database::query("update geo_country set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
-		$rowsUpdated += Database::affectedRows();
-		
-		$result = Database::query("update geo_region set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
-		$rowsUpdated += Database::affectedRows();
-		
-		$result = Database::query("update geo_state set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
-		$rowsUpdated += Database::affectedRows();
-		
-		return $rowsUpdated;
-	}
+        $rowsUpdated += Database::affectedRows($result);
+
+        $result = Database::query("update geo_country set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
+        $rowsUpdated += Database::affectedRows();
+
+        $result = Database::query("update geo_region set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
+        $rowsUpdated += Database::affectedRows();
+
+        $result = Database::query("update geo_state set collection_scheduled = null where collection_scheduled != null and collection_scheduled < now() - houre(1)");
+        $rowsUpdated += Database::affectedRows();
+
+        return $rowsUpdated;
+    }
 }
 
 ?>

@@ -3,7 +3,7 @@
 class MenuModel {
     
     static function getMenuStyle ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         return Database::queryAsObject("select * from t_menu_style where id = '$id'");
     }
     
@@ -12,21 +12,21 @@ class MenuModel {
     }
     
     static function saveMenuStyle ($id,$name,$cssname,$cssstyle) {
-        $name = mysql_real_escape_string($name);
-        $cssname = mysql_real_escape_string($cssname);
-        $cssstyle = mysql_real_escape_string($cssstyle);
+        $name = Database::escape($name);
+        $cssname = Database::escape($cssname);
+        $cssstyle = Database::escape($cssstyle);
         if ($id == null) {
             Database::query("insert into t_menu_style(name,cssclass,cssstyle) values('$name','$cssname','$cssstyle')");
             $result = Database::queryAsObject("select last_insert_id() as lastid from t_menu_style");
             return $result->lastid;
         } else {
-            $id = mysql_real_escape_string($id);
+            $id = Database::escape($id);
             Database::query("update t_menu_style set name = '$name', cssclass = '$cssname', cssstyle = '$cssstyle' where id = '$id'");
         }
     }
     
     static function deleteMenuStyle ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::queryAsObject("delete from t_menu_style where id = '$id'");
     }
     
@@ -35,24 +35,24 @@ class MenuModel {
     }
     
     static function getMenuInstance ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         return Database::queryAsObject("select * from t_menu_instance where id = '$id'");
     }
     
     static function deleteMenuInstance ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::query("delete from t_menu_instance where id = '$id'");
     }
     
     static function saveMenuInstance ($id,$name) {
-        $name = mysql_real_escape_string($name);
-        $siteId = mysql_real_escape_string(Context::getSiteId());
+        $name = Database::escape($name);
+        $siteId = Database::escape(Context::getSiteId());
         if ($id == null) {
             Database::query("insert into t_menu_instance(name,siteid) values('$name','$siteId')");
             $result = Database::queryAsObject("select last_insert_id() as lastid from t_menu_instance");
             return $result->lastid;
         } else {
-            $id = mysql_real_escape_string($id);
+            $id = Database::escape($id);
             Database::query("update t_menu_instance set name = '$name' where id = '$id'");
         }
     }
@@ -63,18 +63,18 @@ class MenuModel {
     }
 
     static function setPagePosition ($pageId,$position,$lang = null) {
-        $pageId = mysql_real_escape_string($pageId);
-        $position = mysql_real_escape_string($position);
+        $pageId = Database::escape($pageId);
+        $position = Database::escape($position);
         if ($lang != null) {
-            $lang = mysql_real_escape_string($lang);
+            $lang = Database::escape($lang);
         }
         // Database::query("update t_menu set position = '$position' where page = '$pageId'".($lang != null ? " and lang = '$lang'" : ""));
         Database::query("update t_menu set position = '$position' where page = '$pageId'");
     }
 
     static function setPageActivateInMenu ($pageId,$active,$lang) {
-        $pageId = mysql_real_escape_string($pageId);
-        $lang = mysql_real_escape_string($lang);
+        $pageId = Database::escape($pageId);
+        $lang = Database::escape($lang);
         $active = ($active || $active == 1) ? 1 : 0;
         $query = "update t_menu set active = '$active' where page = '$pageId' and lang = '$lang'";
         Database::query($query);
@@ -87,13 +87,13 @@ class MenuModel {
             if (empty($siteId)) {
                 $siteId = "null";
             } else {
-                $siteId = "'".mysql_real_escape_string($siteId)."'";
+                $siteId = "'".Database::escape($siteId)."'";
             }
         } else {
-            $siteId = "'".mysql_real_escape_string($siteId)."'";
+            $siteId = "'".Database::escape($siteId)."'";
         }
         $lang = ($lang == null) ? Context::getLang() : $lang;
-        $lang = mysql_real_escape_string($lang);
+        $lang = Database::escape($lang);
         
         if (count(Context::getRoleGroups()) < 1) {
             echo "No role Groups:";
@@ -138,7 +138,7 @@ class MenuModel {
     
     static function getChildPage ($pages,$id) {
         
-        $pageObj;
+        $pageObj = new stdClass();
         $pageObj->page = null;
         $pageObj->children = array();
         $pageObj->selected = false;
@@ -169,14 +169,14 @@ class MenuModel {
     }
 
     static function getPagesInAllLangs ($type, $parent, $active, $lang) {
-        $type = mysql_real_escape_string($type);
-        $lang = mysql_real_escape_string($lang);
-        $parent = mysql_real_escape_string($parent);
+        $type = Database::escape($type);
+        $lang = Database::escape($lang);
+        $parent = Database::escape($parent);
         $siteId = DomainsModel::getCurrentSite();
         if ($siteId == null) {
             $siteId = "is null";
         } else {
-            $siteId = "= '".mysql_real_escape_string($siteId->siteid)."'";
+            $siteId = "= '".Database::escape($siteId->siteid)."'";
         }
         $query = "select p.id, p.type, m.type as menuid, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, t.template as templateinclude, t.interface as interface
             from t_menu m 
@@ -207,8 +207,8 @@ class MenuModel {
     }
 
     static function getPageParents ($pageId, $lang) {
-        $pageId = mysql_real_escape_string($pageId);
-        $lang = mysql_real_escape_string($lang);
+        $pageId = Database::escape($pageId);
+        $lang = Database::escape($lang);
         $parent = $pageId;
         $parents = array();
         $pos = 0;
@@ -219,8 +219,7 @@ class MenuModel {
                 left join t_menu as m on p.id = m.page
                 left join t_code as c on p.namecode = c.code and c.lang = '$lang'
                 where  m.page = '$parent'";
-            $result = Database::query($query);
-            $row = mysql_fetch_object($result);
+            $row = Database::queryAsObject($query);
             if ($row != null) {
                 $parent = $row->parent;
                 $parents[] = $row;
@@ -233,14 +232,14 @@ class MenuModel {
     }
     
     static function createPageInMenu ($pageId,$menuType,$menuParent,$lang) {
-        $pageId = mysql_real_escape_string($pageId);
-        $menuType = mysql_real_escape_string($menuType);
-        $lang = mysql_real_escape_string($lang);
+        $pageId = Database::escape($pageId);
+        $menuType = Database::escape($menuType);
+        $lang = Database::escape($lang);
         // add page to menu
         if (empty($menuParent)) {
             $parentStr = "null";
         } else {
-            $menuParent = mysql_real_escape_string($menuParent);
+            $menuParent = Database::escape($menuParent);
             $parentStr = "'$menuParent'";
         }
         $result = Database::queryAsArray("select 1 as doseexist from t_menu where page = '$pageId' and lang = '$lang'");
@@ -269,10 +268,10 @@ class MenuModel {
     }
     
     static function dosePageInMenuExist ($pageId,$menuType,$menuParent,$lang) {
-        $lang = mysql_real_escape_string($lang);
-        $pageId = mysql_real_escape_string($pageId);
-        $menuType = mysql_real_escape_string($menuType);
-        $menuParent = mysql_real_escape_string($menuParent);
+        $lang = Database::escape($lang);
+        $pageId = Database::escape($pageId);
+        $menuType = Database::escape($menuType);
+        $menuParent = Database::escape($menuParent);
         $obj = Database::queryAsObject("select 1 as res from t_menu where page = '$pageId' and type = '$menuType' and lang = '$lang'");
         return ($obj != null && $obj->res == '1') ? true : false;
     }

@@ -24,10 +24,10 @@ class MysqlDataModel {
     
     static function swapPhysical ($tableName, $feild, $id1, $id2, $idFeildName=null) {
         
-        $tableName = mysql_real_escape_string($tableName);
-        $feild = mysql_real_escape_string($feild);
-        $id1 = mysql_real_escape_string($id1);
-        $id2 = mysql_real_escape_string($id2);
+        $tableName = Database::escape($tableName);
+        $feild = Database::escape($feild);
+        $id1 = Database::escape($id1);
+        $id2 = Database::escape($id2);
         
         $selectSql1 = "id = '$id1'";
         $selectSql2 = "id = '$id2'";
@@ -50,8 +50,8 @@ class MysqlDataModel {
                 $query .= "and ";
             }
             $first = false;
-            $extName = mysql_real_escape_string($extName);
-            $extValue = mysql_real_escape_string($extValue);
+            $extName = Database::escape($extName);
+            $extValue = Database::escape($extValue);
             $query .= "'$extName' like '%$extValue%' ";
         }
         

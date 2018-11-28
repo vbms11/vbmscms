@@ -15,6 +15,7 @@ class PageConfigModule extends AdminPagesBaseModule {
             switch (parent::getAction()) {
                 case "savepage":
                     $this->savePageAction();
+                    // parent::redirect();
             }
         }
 

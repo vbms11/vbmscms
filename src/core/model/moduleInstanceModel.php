@@ -14,7 +14,7 @@ class ModuleInstanceModel {
     
     static function deleteModuleInstance ($instanceId) {
         
-        $instanceId = mysql_real_escape_string($instanceId);
+        $instanceId = Database::escape($instanceId);
         
         Database::query("delete from t_module_instance_params where instanceid = '$instanceId'");
         Database::query("delete from t_module_instance where id = '$instanceId'");
@@ -22,7 +22,7 @@ class ModuleInstanceModel {
     
     static function createModuleInstance ($moduleId) {
         
-        $moduleId = mysql_real_escape_string($moduleId);
+        $moduleId = Database::escape($moduleId);
         
         Database::query("insert into t_module_instance(moduleid) values('$moduleId')");
         $lastIdObj = Database::queryAsObject("select last_insert_id() as id from t_module_instance");

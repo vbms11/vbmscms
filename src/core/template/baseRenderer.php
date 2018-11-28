@@ -101,7 +101,7 @@ abstract class BaseRenderer {
      * @return null
      */
     function getModule ($id) {
-        $modules = &$this->getPageModules();
+        $modules = $this->getPageModules();
         foreach ($modules as $modules) {
             if (isset($modules[$id])) {
                 return $modules[$id];

@@ -44,6 +44,34 @@ class FilesystemView extends XModule {
 
     function printMainView () {
         
+        $params = array();
+        
+        if (parent::get("companyId")) {
+            $id = parent::get("companyId");
+            if (empty($id)) {
+                $id = Context::getSelection()->company;
+            }
+            $params = array(
+                "action" => "company", 
+                "id" => $id
+            );
+        } else if (parent::get("userId")) {
+            $id = parent::get("userId");
+            if (empty($id)) {
+                $id = Context::getSelection()->user;
+            }
+            $params = array(
+                "action" => "user", 
+                "id" => $id
+            );
+        }
+        
+        if ($params == null) {
+            $params = array(
+                "action" => "user" 
+            );
+        }
+        
         Context::addRequiredScript("resource/js/elfinder/js/elfinder.min.js");
         Context::addRequiredStyle("resource/js/elfinder/css/elfinder.min.css");
         
@@ -52,10 +80,10 @@ class FilesystemView extends XModule {
             <div id="myelfinder" ></div>
             <script>
             $('#myelfinder').elfinder({
-                url : '<?php echo NavigationModel::createServiceLink("fileSystem", array("action"=>parent::param("domain"))); ?>',
+                url : '<?php echo NavigationModel::createServiceLink("fileSystem", $params); ?>',
                 lang : 'en',
                 docked: true
-            })
+            });
             $('#myelfinder').elfinder("open");
             </script>
         </div>
@@ -71,9 +99,9 @@ class FilesystemView extends XModule {
                 </div>
                 <br/>
                 <div>
-                    <?php InputFeilds::printSelect("domain", parent::param("domain"), array("www"=>"www","user"=>"user","all"=>"all")) ?>
+                    <?php InputFeilds::printSelect("domain", parent::param("domain"), array("www"=>"www","user"=>"user","all"=>"all","all"=>"all")) ?>
                 </div>
-                <hr noshade/>
+                <hr/>
                 <div class="formFeildButtons" align="right">
                     <button type="submit">Speichern</button>
                     <button type="submit" onclick="callUrl('<?php echo parent::link(array("action"=>"cancel")); ?>'); return false;">Abbrechen</button>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>image viewer demo</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    
+    <script src="js/findGirl.js"></script>
+    
+</head>
+<body>
+    
+    <h1>Find girl demo</h1>
+    
+    <h3>Plain find girl example</h3>
+    <p>This is an example of how to find a girl friend, with the least possible amount of code.</p>
+    
+    <form method="" action="" id="findGirl">
+        <label for="cityName">City: </label>
+        <input type="text" name="cityName" value="" placeholder="Enter City Name Here..." />
+        <button type="submit">Go!</button>
+    </form>
+    
+    <div id="serveyEditor1" style="width:100%; height:500px;"></div>
+    
+    <script type="text/javascript">
+    $("button.findGirl").click(function(e){
+        startFindGirlInterval();
+        e.preventDefault();
+    });
+    </script>
+    
+</body>
+</html>

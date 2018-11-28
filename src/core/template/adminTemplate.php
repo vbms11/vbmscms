@@ -91,7 +91,7 @@ class AdminTemplate extends XTemplate {
      * @param type $pageId
      * @param type $teplateArea
      */
-    function renderMainTemplateArea ($teplateArea) {
+    function renderMainTemplateArea ($teplateArea, $pageId=null) {
         $focusedModuleId = Context::getFocusedArea();
         if (!empty($focusedModuleId)) {
             $module = $this->getModule($focusedModuleId);

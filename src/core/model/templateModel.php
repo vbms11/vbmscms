@@ -64,11 +64,11 @@ class TemplateModel {
             $templateAreaClean = "";
         } elseif (is_array($templateArea)) {
             foreach ($templateArea as $key => $area) {
-                $templateAreaClean[$key] = mysql_real_escape_string($area);
+                $templateAreaClean[$key] = Database::escape($area);
             }
             $templateAreaClean = "a.name in ('".implode("','", $templateAreaClean)."') ";
         } else {
-            $templateAreaClean = "a.name = '".mysql_real_escape_string($templateArea)."' ";
+            $templateAreaClean = "a.name = '".Database::escape($templateArea)."' ";
         }
         
         // make static modules condition
@@ -78,11 +78,11 @@ class TemplateModel {
             $staticModulesCondition = "";
         } elseif (is_array($staticModules)) {
             foreach ($staticModules as $staticModule) {
-                $staticModuleNames[$staticModule['type']] = mysql_real_escape_string($staticModule['type']);
+                $staticModuleNames[$staticModule['type']] = Database::escape($staticModule['type']);
             }
             $staticModulesCondition = "m.sysname in ('".implode("','", $staticModuleNames)."') ";
         } else {
-            $staticModulesCondition = "m.sysname = '".mysql_real_escape_string($staticModules['type'])."' ";
+            $staticModulesCondition = "m.sysname = '".Database::escape($staticModules['type'])."' ";
         }
 
         // make the condition
@@ -96,7 +96,7 @@ class TemplateModel {
         }
 
         // 
-        $pageId = mysql_real_escape_string($pageId);
+        $pageId = Database::escape($pageId);
         $moduleIncludes = Database::queryAsArray("select a.id as includeid, mi.id, a.name as name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.name as modulename, m.sysname as sysname 
             from t_templatearea a
             join t_module_instance mi on a.instanceid = mi.id
@@ -127,8 +127,8 @@ class TemplateModel {
     }
 
     static function getStaticModule ($areaName, $sysName) {
-        $areaName = mysql_real_escape_string($areaName);
-        $sysName = mysql_real_escape_string($sysName);
+        $areaName = Database::escape($areaName);
+        $sysName = Database::escape($sysName);
         $result = Database::queryAsObject("select a.id as includeid, mi.id, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname as sysname, m.name as modulename
             from t_templatearea a 
             join t_module_instance mi on a.instanceid = mi.id
@@ -142,7 +142,7 @@ class TemplateModel {
     }
     
     static function createStaticModule ($areaName, $sysName) {
-        $areaName = mysql_real_escape_string($areaName);
+        $areaName = Database::escape($areaName);
         $module = ModuleModel::getModuleByName($sysName);
         if ($module == null) {
             return null;
@@ -153,7 +153,7 @@ class TemplateModel {
     }
 
     static function getTemplateAreas ($pageId) {
-        $pageId = mysql_real_escape_string($pageId);
+        $pageId = Database::escape($pageId);
         $result = Database::queryAsArray("select a.id as includeid, mi.id, a.name, a.pageid, m.id as typeid, m.include, m.interface
             from t_templatearea a
             join t_module_instance mi on a.instanceid = mi.id 
@@ -167,7 +167,7 @@ class TemplateModel {
     }
 
     static function getTemplateModule ($moduleId) {
-        $moduleId = mysql_real_escape_string($moduleId);
+        $moduleId = Database::escape($moduleId);
         $result = Database::queryAsObject("select mi.id, a.id as includeid, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname, m.name as modulename
             from t_templatearea a
             join t_module_instance mi on a.instanceid = mi.id 
@@ -177,9 +177,9 @@ class TemplateModel {
     }
 
     static function shiftTemplateModulesDown ($pageId,$area,$fromPosition) {
-        $pageId = mysql_real_escape_string($pageId);
-        $area = mysql_real_escape_string($area);
-        $fromPosition = mysql_real_escape_string($fromPosition);
+        $pageId = Database::escape($pageId);
+        $area = Database::escape($area);
+        $fromPosition = Database::escape($fromPosition);
         Database::query("update t_templatearea set position = position + 1 where pageid = '$pageId' and name = '$area' and position >= '$fromPosition'");
     }
 
@@ -192,49 +192,47 @@ class TemplateModel {
             $result = Database::queryAsObject("select max(position)+1 as max from t_templatearea where name = '$area' and pageid = '$pageId'");
             $position = $result->max;
         }
-        $pageId = mysql_real_escape_string($pageId);
-        $area = mysql_real_escape_string($area);
-        $position = mysql_real_escape_string($position);
+        $pageId = Database::escape($pageId);
+        $area = Database::escape($area);
+        $position = Database::escape($position);
         $instanceId = ModuleInstanceModel::createModuleInstance($moduleId);
         Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$area','$instanceId','$pageId','$position')");
         return $instanceId;
     }
 
     static function moveTemplateModuleUp ($pageId, $moduleId) {
-        $pageId = mysql_real_escape_string($pageId);
-        $moduleId = mysql_real_escape_string($moduleId);
+        $pageId = Database::escape($pageId);
+        $moduleId = Database::escape($moduleId);
         $moduleObj = TemplateModel::getTemplateModule($moduleId);
         $area = $moduleObj->name;
         $modulePosition = $moduleObj->position;
-        $result = Database::query("select max(position) as max from t_templatearea where position < '$modulePosition' and name = '$area' and pageid = '$pageId'");
-        $maxPosition = mysql_fetch_object($result);
-        if ($maxPosition != null) {
-            $newPosition = $maxPosition->max;
+        $result = Database::queryAsObject("select max(position) as max from t_templatearea where position < '$modulePosition' and name = '$area' and pageid = '$pageId'");
+        if ($result != null) {
+            $newPosition = $result->max;
             Database::query("update t_templatearea set position = '$modulePosition' where pageid = '$pageId' and name = '$area' and position = '$newPosition'");
             Database::query("update t_templatearea set position = '$newPosition' where id = '$moduleId'");
         }
     }
 
     static function moveTemplateModuleDown ($pageId, $moduleId) {
-        $pageId = mysql_real_escape_string($pageId);
-        $moduleId = mysql_real_escape_string($moduleId);
+        $pageId = Database::escape($pageId);
+        $moduleId = Database::escape($moduleId);
         $moduleObj = TemplateModel::getTemplateModule($moduleId);
         $area = $moduleObj->name;
         $modulePosition = $moduleObj->position;
-        $result = Database::query("select min(position) as max from t_templatearea where position > '$modulePosition' and name = '$area' and pageid = '$pageId'");
-        $maxPosition = mysql_fetch_object($result);
-        if ($maxPosition != null && $maxPosition->max != 0) {
-            $newPosition = $maxPosition->max;
+        $result = Database::queryAsObject("select min(position) as max from t_templatearea where position > '$modulePosition' and name = '$area' and pageid = '$pageId'");
+        if ($result != null && $result->max != 0) {
+            $newPosition = $result->max;
             Database::query("update t_templatearea set position = '$modulePosition' where pageid = '$pageId' and name = '$area' and position = '$newPosition'");
             Database::query("update t_templatearea set position = '$newPosition' where id = '$moduleId'");
         }
     }
 
     static function moveTemplateModule($pageId,$moduleId,$areaName,$position) {
-        $pageId = mysql_real_escape_string($pageId);
-        $moduleId = mysql_real_escape_string($moduleId);
-        $areaName = mysql_real_escape_string($areaName);
-        $position = mysql_real_escape_string($position);
+        $pageId = Database::escape($pageId);
+        $moduleId = Database::escape($moduleId);
+        $areaName = Database::escape($areaName);
+        $position = Database::escape($position);
         // set the area
         Database::query("update t_templatearea set name = '$areaName', position = '$position' where id = '$moduleId'");
         // set the order
@@ -249,7 +247,7 @@ class TemplateModel {
     }
 
     static function deleteTemplateAreas ($pageId) {
-        $pageId = mysql_real_escape_string($pageId);
+        $pageId = Database::escape($pageId);
         $moduleInstances = Database::query("select instanceid from t_templatearea where pageid = '$pageId'");
         foreach ($moduleInstances as $moduleInstance) {
             ModuleInstanceModel::deleteModuleInstance($moduleInstance->instanceid);
@@ -264,32 +262,32 @@ class TemplateModel {
             file_put_contents(ResourcesModel::getResourcePath($templatePath, "template.js"), $js);
             file_put_contents(ResourcesModel::getResourcePath($templatePath, "template.css"), $css);
         }
-        $id = mysql_real_escape_string($id);
-        $name = mysql_real_escape_string($name);
-        $include = mysql_real_escape_string($include);
-        $interface = mysql_real_escape_string($interface);
-        $html = mysql_real_escape_string($html);
-        $js = mysql_real_escape_string($js);
-        $css = mysql_real_escape_string($css);
+        $id = Database::escape($id);
+        $name = Database::escape($name);
+        $include = Database::escape($include);
+        $interface = Database::escape($interface);
+        $html = Database::escape($html);
+        $js = Database::escape($js);
+        $css = Database::escape($css);
         Database::query("update t_template set template = '$include', name = '$name', interface = '$interface', html = '$html', js = '$js', css = '$css' where id = '$id'");
     }
     
     static function createTemplate ($name,$include,$interface,$html="",$js="",$css="") {
-        $name = mysql_real_escape_string($name);
-        $include = mysql_real_escape_string($include);
-        $interface = mysql_real_escape_string($interface);
-        $html = mysql_real_escape_string($html);
-        $js = mysql_real_escape_string($js);
-        $css = mysql_real_escape_string($css);
+        $name = Database::escape($name);
+        $include = Database::escape($include);
+        $interface = Database::escape($interface);
+        $html = Database::escape($html);
+        $js = Database::escape($js);
+        $css = Database::escape($css);
         Database::query("insert into t_template(template,name,interface,html,js,css) values('$include','$name','$interface','$html','$js','$css')");
         $newId = Database::queryAsObject("select last_insert_id() as newid from t_template");
         return $newId->newid;
     }
     
     static function addTemplate ($siteId,$templateId,$main = '0') {
-        $siteId = mysql_real_escape_string($siteId); 
-        $templateId = mysql_real_escape_string($templateId);
-        $main = mysql_real_escape_string($main);
+        $siteId = Database::escape($siteId); 
+        $templateId = Database::escape($templateId);
+        $main = Database::escape($main);
         $obj = Database::queryAsObject("select 1 from t_site_template where siteid = '$siteId' and templateid = '$templateId'");
         if ($obj == null) {
             Database::query("insert into t_site_template (siteid,templateid,main) values('$siteId','$templateId','$main')");
@@ -297,20 +295,20 @@ class TemplateModel {
     }
     
     static function removeTemplate ($siteId,$templateId) {
-        $siteId = mysql_real_escape_string($siteId);
-        $templateId = mysql_real_escape_string($templateId);
+        $siteId = Database::escape($siteId);
+        $templateId = Database::escape($templateId);
         Database::query("delete from t_site_template where siteid = '$siteId' and templateid = '$templateId'");
     }
     
     static function setMainTemplate ($siteId,$templateId) {
-        $siteId = mysql_real_escape_string($siteId);
-        $templateId = mysql_real_escape_string($templateId);
+        $siteId = Database::escape($siteId);
+        $templateId = Database::escape($templateId);
         Database::query("update t_site_template set main = '0' where siteid = '$siteId'");
         Database::query("update t_site_template set main = '1' where templateid = '$templateId' and siteid = '$siteId'");
     }
     
     static function getMainTemplate ($siteId) {
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         return Database::queryAsObject("select t.id, t.name, t.template, t.interface 
             from t_template t
             join t_site_template st on st.templateid = t.id and st.siteid = '$siteId' 
@@ -326,7 +324,7 @@ class TemplateModel {
     static function getTemplates ($siteId = null) {
         $templates = array();
         if ($siteId != null) {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
             $templates = Database::queryAsArray("select t.id, t.name, t.template, t.interface, t.main from t_template t
                                                 join t_site_template st on st.templateid = t.id and st.siteid = '$siteId'");
         } else {
@@ -336,9 +334,8 @@ class TemplateModel {
     }
 
     static function getTemplate ($id) {
-        $id = mysql_real_escape_string($id);
-        $result = Database::query("select id, name, template, interface, css, html, js from t_template where id = '$id'");
-        return mysql_fetch_object($result);
+        $id = Database::escape($id);
+        return Database::queryAsObject("select id, name, template, interface, css, html, js from t_template where id = '$id'");
     }
     
 }

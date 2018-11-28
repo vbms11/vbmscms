@@ -15,26 +15,24 @@ class GalleryModel {
     // ordering
     
     static function getNextImageOrderKey () {
-        $result = Database::query("select max(orderkey) as max from t_gallery_image");
-        $row = mysql_fetch_array($result);
-        return intval($row['max']) + 1;
+        $result = Database::queryAsObject("select max(orderkey) as max from t_gallery_image");
+        return $result->max + 1;
     }
     
     static function getNextCategoryOrderKey () {
-        $result = Database::query("select max(orderkey) as max from t_gallery_category");
-        $row = mysql_fetch_array($result);
-        return intval($row['max']) + 1;
+        $result = Database::queryAsObject("select max(orderkey) as max from t_gallery_category");
+        return $result->max + 1;
     }
 
     static function setImageOrderKey ($id, $orderKey) {
-        $id = mysql_real_escape_string($id);
-        $orderKey = mysql_real_escape_string($orderKey);
+        $id = Database::escape($id);
+        $orderKey = Database::escape($orderKey);
         Database::query("update t_gallery_image set orderkey='$orderKey' where id='$id'");
     }
     
     static function setCategoryOrderKey ($id, $orderKey) {
-        $id = mysql_real_escape_string($id);
-        $orderKey = mysql_real_escape_string($orderKey);
+        $id = Database::escape($id);
+        $orderKey = Database::escape($orderKey);
         Database::query("update t_gallery_category set orderkey='$orderKey' where id='$id'");
     }
     
@@ -115,8 +113,8 @@ class GalleryModel {
     }
     
     static function getGallery ($theId, $galleryType) {
-        $moduleId = mysql_real_escape_string($theId);
-        $galleryType = mysql_real_escape_string($galleryType);
+        $moduleId = Database::escape($theId);
+        $galleryType = Database::escape($galleryType);
         $gallery = Database::queryAsObject("select * from t_gallery_page where typeid = '$moduleId' and type = '$galleryType'");
         if ($gallery == null) {
             $rootCategory = GalleryModel::createCategory("root_$moduleId", "root_$moduleId", null, null);
@@ -127,19 +125,17 @@ class GalleryModel {
     }
     
     static function getCategory ($id) {
-        $id = mysql_real_escape_string($id);
-        $result = Database::query("
+        $id = Database::escape($id);
+        return Database::queryAsArray("
                 select c.*, i.image as filename 
                 from t_gallery_category c 
                 left join t_gallery_image i on c.image = i.id 
                 where c.id='$id'");
-        return mysql_fetch_object($result);
     }
 
     static function getImage ($id) {
-        $id = mysql_real_escape_string($id);
-        $result = Database::query("select * from t_gallery_image where id='$id'");
-        return mysql_fetch_object($result);
+        $id = Database::escape($id);
+        return Database::queryAsObject("select * from t_gallery_image where id='$id'");
     }
 
     static function getCategorys ($parent=null) {
@@ -148,7 +144,7 @@ class GalleryModel {
             from t_gallery_category c 
             left join t_gallery_image i on c.image = i.id order by c.orderkey");
         } else {
-            $parent = mysql_real_escape_string($parent);
+            $parent = Database::escape($parent);
             return Database::queryAsArray("select c.*, c.parent, i.image as filename 
                 from t_gallery_category c 
                 left join t_gallery_image i on c.image = i.id 
@@ -161,42 +157,42 @@ class GalleryModel {
     // crete update delete
 
     static function createCategory ($title, $description, $image, $parent) {
-        $title = mysql_real_escape_string($title);
-        $image = mysql_real_escape_string($image);
-        $description = mysql_real_escape_string($description);
+        $title = Database::escape($title);
+        $image = Database::escape($image);
+        $description = Database::escape($description);
         $nextOrderKey = GalleryModel::getNextCategoryOrderKey();
         if ($parent == null) {
             $parent = "null";
         } else {
-            $parent = "'".mysql_real_escape_string($parent)."'";
+            $parent = "'".Database::escape($parent)."'";
         }
         Database::query("INSERT INTO t_gallery_category(title,image,parent,orderkey,description) VALUES('$title','$image',$parent,'$nextOrderKey','$description');");
-        $result = Database::query("SELECT LAST_INSERT_ID() as lastid");
-        return mysql_fetch_object($result)->lastid;
+        $result = Database::queryAsObject("SELECT LAST_INSERT_ID() as lastid");
+        return $result->lastid;
     }
     
     static function updateCategory ($id, $title, $image, $description) {
-        $id = mysql_real_escape_string($id);
-        $title = mysql_real_escape_string($title);
-        $image = mysql_real_escape_string($image);
-        $description = mysql_real_escape_string($description);
+        $id = Database::escape($id);
+        $title = Database::escape($title);
+        $image = Database::escape($image);
+        $description = Database::escape($description);
         Database::query("update t_gallery_category set title='$title', image='$image', description='$description' where id='$id'");
     }
     
     static function deleteCategory ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::query("delete from t_gallery_category where id = '$id';");
     }
     
     static function getImageCount ($category) {
-        $category = mysql_real_escape_string($category);
+        $category = Database::escape($category);
         $handle = Database::query("select count(id) as count from t_gallery_image where categoryid = '$category'");
         $row = mysql_fetch_array($handle);
         return $row['count'];
     }
     
     static function getImages ($category) {
-        $category = mysql_real_escape_string($category);
+        $category = Database::escape($category);
         return Database::queryAsArray("select * from t_gallery_image where categoryid = '$category' order by orderkey");
     }
 
@@ -211,7 +207,7 @@ class GalleryModel {
     
     
     static function deleteImage ($id) {
-        $id = mysql_escape_string($id);
+        $id = Database::escape($id);
         $image = self::getImage($id);
         unlink(ResourcesModel::getResourcePath("gallery",$image->image));
         unlink(ResourcesModel::getResourcePath("gallery/small",$image->image));
@@ -220,18 +216,18 @@ class GalleryModel {
     }
     
     function updateImage ($id, $title, $image, $description) {
-        $id = mysql_real_escape_string($id);
-        $title = mysql_real_escape_string($title);
-        $image = mysql_real_escape_string($image);
-        $description = mysql_real_escape_string($description);
+        $id = Database::escape($id);
+        $title = Database::escape($title);
+        $image = Database::escape($image);
+        $description = Database::escape($description);
         Database::query("update t_gallery_image set title='$title' image='$image' description='$description' where id='$id'");
     }
     
     static function addImage ($categoryId,$imageName,$title,$description) {
-        $categoryId = mysql_escape_string($categoryId);
-        $imageName = mysql_escape_string($imageName);
-        $title = mysql_escape_string($title);
-        $description = mysql_escape_string($description);
+        $categoryId = Database::escape($categoryId);
+        $imageName = Database::escape($imageName);
+        $title = Database::escape($title);
+        $description = Database::escape($description);
         $orderKey = GalleryModel::getNextImageOrderKey();
         Database::query("insert into t_gallery_image (image,categoryid,orderkey,title,description) values('$imageName','$categoryId','$orderKey','$title','$description')");
         $newObj = Database::queryAsObject("select last_insert_id() as newid from t_gallery_image");
@@ -318,17 +314,17 @@ class GalleryModel {
         return $imageId;
     }
     
-    function getNextFilename ($ext = "jpg") {
+    static function getNextFilename ($ext = "jpg") {
         $filename = null;
         do {
             $filename = Common::randHash(32, false).".".$ext;
-            $filename = mysql_real_escape_string($filename);
+            $filename = Database::escape($filename);
             $result = Database::queryAsObject("select 1 as taken from t_gallery_image where image = '$filename'");
         } while (!empty($result) && $result->taken == "1");
         return $filename;
     }
     
-    function renderImage ($imageId,$width,$height,$x=null,$y=null,$w=null,$h=null) {
+    static function renderImage ($imageId,$width,$height,$x=null,$y=null,$w=null,$h=null) {
         
         $image = self::getImage($imageId);
         

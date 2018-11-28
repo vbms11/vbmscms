@@ -1,0 +1,367 @@
+<!--
+    "name"          : null,
+    "value"         : null,
+    "label"         : null,
+    "description"   : null,
+    "validator"     : null,
+    "maxLength"     : null,
+    "minLength"     : null,
+    "required"      : null,
+    "styleClass"    : null,
+    "typeName"      : null,
+    "inputName"     : null
+};
+
+var FormObject = {
+    
+    name : null, 
+    description : null,
+    feilds : null
+-->
+<mapping>
+    
+    <defaultTablePrefix>t_</defaultTablePrefix>
+    
+    <default>
+        <column>
+            <name>id</name>
+            <type>int</type>
+            <length>20</length>
+            <increment>1</increment>
+            <index>primary</index>
+        </column>
+        <column>
+            <name>publicid</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>40</length> <!-- [09] -->
+            <index>uniqu</index>
+        </column>
+        <column>
+            <name>privateid</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>40</length> <!-- [09] -->
+            <index>uniqu</index>
+        </column>
+        <column>
+            <name>createdate</name> <!-- [az] -->
+            <type>datetime</type> <!-- varchar, int, blob, bool, date, time, datetime, timestamp, double, char -->
+            <default></default>
+        </column>
+        <column>
+            <name>modifydate</name> <!-- [az] -->
+            <type>datetime</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <null>1</null>
+        </column>
+    </default>
+    
+    <table>
+        <name>session</name>
+        <column>
+            <name></name> <!-- [az] -->
+            <type></type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length></length> <!-- [09] -->
+            <null></null> <!-- 0,1 -->
+            <increment></increment> <!-- 0,1 -->
+            <index></index> <!-- primary,uniqu -->
+        </column>
+    </table>
+    
+    <table>
+        <name>user</name>
+        <column>
+            <name>person</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>company</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>email</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>confirmed</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>active</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>blocked</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>lastlogin</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>registered</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>session</name> <!-- [az] -->
+        </column>
+    </table>
+    
+    <table>
+        <name>condition</name>
+        <column>
+            <name></name> <!-- [az] -->
+            <type></type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length></length> <!-- [09] -->
+            <null></null> <!-- 0,1 -->
+            <increment></increment> <!-- 0,1 -->
+            <index></index> <!-- primary,uniqu -->
+        </column>
+    </table>
+    
+    <table>
+        <name>action</name>
+        <column>
+            <name></name> <!-- [az] -->
+            <type></type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length></length> <!-- [09] -->
+            <null></null> <!-- 0,1 -->
+            <increment></increment> <!-- 0,1 -->
+            <index></index> <!-- primary,uniqu -->
+            <relation>
+                <table>condition</table>
+                <type>n-n</type>
+            </relation>
+        </column>
+    </table>
+    
+    <table>
+        <name>task</name>
+        <column>
+            <name>name</name>
+            <type>varchar</type>
+            <length>100</length>
+        </column>
+        <column>
+            <name>frequency</name>
+            <type>varchar</type>
+            <length>100</length>
+        </column>
+        <column>
+            <name>conditions</name>
+            <relation>
+                <table>condition</table>
+                <type>n-n</type>
+            </relation>
+        </column>
+        <column>
+            <name>actions</name>
+            <relation>
+                <table>action</table>
+                <type>n-n</type>
+            </relation>
+        </column>
+    </table>
+    
+    <!-- default model -->
+    
+    <table>
+        <name>company</name>
+        <column>
+            <name></name> <!-- [az] -->
+            <type></type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length></length> <!-- [09] -->
+            <null></null> <!-- 0,1 -->
+            <increment></increment> <!-- 0,1 -->
+            <index></index> <!-- primary,uniqu -->
+        </column>
+    </table>
+    
+    <table>
+        <name>product</name>
+        <column>
+            <name></name> <!-- [az] -->
+            <type></type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length></length> <!-- [09] -->
+            <null></null> <!-- 0,1 -->
+            <increment></increment> <!-- 0,1 -->
+            <index></index> <!-- primary,uniqu -->
+        </column>
+    </table>
+    
+    <table>
+        <name>productoffer</name>
+        <column>
+            <name>product</name> <!-- [az] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+        <column>
+            <name>company</name> <!-- [az] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+        <column>
+            <name>amount</name> <!-- [az] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+        <column>
+            <name>price</name> <!-- [az] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+        <column>
+            <name>location</name> <!-- [az] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+    </table>
+    
+    <table>
+        <name>email</name>
+        <column>
+            <name>email</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>300</length> <!-- [09] -->
+            <null>0</null> <!-- 0,1 -->
+            <index>uniqu</index>
+        </column>
+        <column>
+            <name>opened</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+        <column>
+            <name>answered</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+        <column>
+            <name>error</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+    </table>
+    
+    <table>
+        <name>address</name>
+        <column>
+            <name>id</name> <!-- [az] -->
+            <type>int</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>20</length> <!-- [09] -->
+            <increment>1</increment>
+            <index>primary</index>
+        </column>
+        <column>
+            <name>address</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>300</length> <!-- [09] -->
+            <null>0</null> <!-- 0,1 -->
+            <index>uniqu</index>
+        </column>
+        <column>
+            <name>postcode</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+        <column>
+            <name>country</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+        <column>
+            <name>region</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+        <column>
+            <name>state</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+        <column>
+            <name>city</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+        <column>
+            <name>place</name> <!-- [az] -->
+            <type>bool</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <default>0</default>
+        </column>
+    </table>
+    
+    <table>
+        <name>person</name>
+        <column>
+            <name>firstname</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length> <!-- [09] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+        <column>
+            <name>lastname</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length>
+            <null>0</null>
+        </column>
+        <column>
+            <name>middelnames</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length>
+            <null>1</null>
+        </column>
+        <column>
+            <name>birthdate</name> <!-- [az] -->
+            <type>date</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <null>1</null>
+        </column>
+    </table>
+    
+    <table>
+        <name>person</name>
+        <column>
+            <name>company</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length> <!-- [09] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+        <column>
+            <name>person</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length>
+            <null>0</null>
+        </column>
+        <column>
+            <name>function</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length>
+            <null>1</null>
+        </column>
+        <column>
+            <name>position</name> <!-- [az] -->
+            <type>date</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <null>1</null>
+        </column>
+    </table>
+    
+    <table>
+        <name>product</name>
+        <column>
+            <name>name</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length> <!-- [09] -->
+            <null>0</null> <!-- 0,1 -->
+        </column>
+        <column>
+            <name>description</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length>
+            <null>0</null>
+        </column>
+        <column>
+            <name>files</name> <!-- [az] -->
+            <type>varchar</type> <!-- varchar, int, blob, bool, date, time, timestamp, double, char -->
+            <length>100</length>
+            <null>1</null>
+        </column>
+        <column>
+            <name>productoffer</name> <!-- [az] -->
+        </column>
+        <column>
+            <name>productgroup</name> <!-- [az] -->
+        </column>
+    </table>
+    
+    productgroup, 
+    
+    companyproduct, 
+    
+    productcontract, 
+</mapping>

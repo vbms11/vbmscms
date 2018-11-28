@@ -23,31 +23,31 @@ class UserWallModel {
     
     static function getUserWallEventsByUserId ($userId) {
         
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         return Database::queryAsArray("select * from t_user_wall_event where userid = '$userId' order by date desc");
     }
     
     static function getUserWallEventById ($eventId) {
         
-        $eventId = mysql_real_escape_string($eventId);
+        $eventId = Database::escape($eventId);
         return Database::queryAsObject("select * from t_user_wall_event where id = '$eventId'");
     }
     
     static function deleteWallEventImageUploadByImageId ($imageId) {
         
-        $imageId = mysql_real_escape_string($imageId);
+        $imageId = Database::escape($imageId);
         $eventObj = Database::queryAsObject("select * from t_user_wall_event where typeid = '$imageId' and type = '".self::type_image."'");
         self::deleteWallEventById($eventObj->id);
     }
     
     static function createUserWallEvent ($userId, $type, $typeId = null) {
         
-        $userId = mysql_real_escape_string($userId);
-        $type = mysql_real_escape_string($type);
+        $userId = Database::escape($userId);
+        $type = Database::escape($type);
         if ($typeId == null) {
             $typeId = "null";
         } else {
-            $typeId = "'".mysql_real_escape_string($typeId)."'";
+            $typeId = "'".Database::escape($typeId)."'";
         }
         Database::query("insert into t_user_wall_event (userid,type,typeid) values('$userId','$type',$typeId);");
         $result = Database::queryAsObject("select last_insert_id() as newid from t_user_wall_event");
@@ -143,7 +143,7 @@ class UserWallModel {
         
         $ids = array();
         foreach ($eventIds as $eventId) {
-            $ids = "id = ".mysql_real_escape_string($eventId);
+            $ids = "id = ".Database::escape($eventId);
         }
         $idsSql = implode(" or ", $ids);
         return Database::queryAsObject("select * from t_user_wall_post where $idsSql order by date asc");
@@ -151,21 +151,21 @@ class UserWallModel {
     
     static function getUserWallPostsByEventId ($eventId) {
         
-        $eventId = mysql_real_escape_string($eventId);
+        $eventId = Database::escape($eventId);
         return Database::queryAsArray("select * from t_user_wall_post where eventid = '$eventId' order by date asc");
     }
     
     static function getUserWallImageEventByImageId ($imageId) {
         
-        $imageId = mysql_real_escape_string($imageId);
+        $imageId = Database::escape($imageId);
         return Database::queryAsObject("select * from t_user_wall_event where type = '".self::type_image."' and typeid = '$imageId'");
     }
     
     static function createUserWallPost ($srcUserId, $comment, $eventId) {
         
-        $srcUserId = mysql_real_escape_string($srcUserId);
-        $comment = mysql_real_escape_string($comment);
-        $eventIdSql = mysql_real_escape_string($eventId);
+        $srcUserId = Database::escape($srcUserId);
+        $comment = Database::escape($comment);
+        $eventIdSql = Database::escape($eventId);
         Database::query("insert into t_user_wall_post (srcuserid,comment,date,eventid)
             values ('$srcUserId','$comment',now(),'$eventIdSql')");
         $newId = Database::queryAsObject("select last_insert_id() as id from t_user_wall_post");
@@ -174,14 +174,14 @@ class UserWallModel {
     
     static function updateUserPost ($postId, $comment) {
         
-        $postId = mysql_real_escape_string($postId);
-        $comment = mysql_real_escape_string($comment);
+        $postId = Database::escape($postId);
+        $comment = Database::escape($comment);
         Database::query("update t_user_wall_post set comment = '$comment' where id = '$postId'");
     }
     
     static function deleteWallEventById ($eventId) {
         
-        $eventId = mysql_real_escape_string($eventId);
+        $eventId = Database::escape($eventId);
         Database::query("delete from t_user_wall_event where id = '$eventId'");
         Database::query("delete from t_user_wall_post where eventid = '$eventId'");
     }
@@ -190,7 +190,7 @@ class UserWallModel {
         
         $post = self::getUserWallPostById($postId);
         
-        $postId = mysql_real_escape_string($postId);
+        $postId = Database::escape($postId);
         Database::query("delete from t_user_wall_post where id = '$postId'");
         
         $event = self::getUserWallEventById($post->eventid);

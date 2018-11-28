@@ -7,7 +7,7 @@ class SocialNotificationsModel {
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         }
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         
         $result = Database::queryAsObject("select * from t_social_notifications where siteid = '$siteId'");
         if (empty($result)) {
@@ -20,21 +20,21 @@ class SocialNotificationsModel {
     
     static function create ($messageReceived,$messageReceivedTitle,$friendRequest,$friendRequestTitle,$friendConfirmed,$friendConfirmedTitle,$wallPost,$wallPostTitle,$wallReply,$wallReplyTitle,$senderEmail,$siteId = null) {
         
-        $messageReceived = mysql_real_escape_string($messageReceived);
-        $friendRequest = mysql_real_escape_string($friendRequest);
-        $friendConfirmed = mysql_real_escape_string($friendConfirmed);
-        $wallPost = mysql_real_escape_string($wallPost);
-        $wallReply = mysql_real_escape_string($wallReply);
-        $messageReceivedTitle = mysql_real_escape_string($messageReceivedTitle);
-        $friendRequestTitle = mysql_real_escape_string($friendRequestTitle);
-        $friendConfirmedTitle = mysql_real_escape_string($friendConfirmedTitle);
-        $wallPostTitle = mysql_real_escape_string($wallPostTitle);
-        $wallReplyTitle = mysql_real_escape_string($wallReplyTitle);
-        $senderEmail = mysql_real_escape_string($senderEmail);
+        $messageReceived = Database::escape($messageReceived);
+        $friendRequest = Database::escape($friendRequest);
+        $friendConfirmed = Database::escape($friendConfirmed);
+        $wallPost = Database::escape($wallPost);
+        $wallReply = Database::escape($wallReply);
+        $messageReceivedTitle = Database::escape($messageReceivedTitle);
+        $friendRequestTitle = Database::escape($friendRequestTitle);
+        $friendConfirmedTitle = Database::escape($friendConfirmedTitle);
+        $wallPostTitle = Database::escape($wallPostTitle);
+        $wallReplyTitle = Database::escape($wallReplyTitle);
+        $senderEmail = Database::escape($senderEmail);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         }
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         
         Database::query("insert into t_social_notifications 
             (message_received,message_received_title,friend_request,friend_request_title,friend_confirmed,friend_confirmed_title,wall_post,wall_post_title,wall_reply,wall_reply_title,sender_email,siteid) 
@@ -42,21 +42,21 @@ class SocialNotificationsModel {
     }
     
     static function update ($messageReceived,$messageReceivedTitle,$friendRequest,$friendRequestTitle,$friendConfirmed,$friendConfirmedTitle,$wallPost,$wallPostTitle,$wallReply,$wallReplyTitle,$senderEmail,$siteId = null) {
-        $messageReceived = mysql_real_escape_string($messageReceived);
-        $friendRequest = mysql_real_escape_string($friendRequest);
-        $friendConfirmed = mysql_real_escape_string($friendConfirmed);
-        $wallPost = mysql_real_escape_string($wallPost);
-        $wallReply = mysql_real_escape_string($wallReply);
-        $messageReceivedTitle = mysql_real_escape_string($messageReceivedTitle);
-        $friendRequestTitle = mysql_real_escape_string($friendRequestTitle);
-        $friendConfirmedTitle = mysql_real_escape_string($friendConfirmedTitle);
-        $wallPostTitle = mysql_real_escape_string($wallPostTitle);
-        $wallReplyTitle = mysql_real_escape_string($wallReplyTitle);
-        $senderEmail = mysql_real_escape_string($senderEmail);
+        $messageReceived = Database::escape($messageReceived);
+        $friendRequest = Database::escape($friendRequest);
+        $friendConfirmed = Database::escape($friendConfirmed);
+        $wallPost = Database::escape($wallPost);
+        $wallReply = Database::escape($wallReply);
+        $messageReceivedTitle = Database::escape($messageReceivedTitle);
+        $friendRequestTitle = Database::escape($friendRequestTitle);
+        $friendConfirmedTitle = Database::escape($friendConfirmedTitle);
+        $wallPostTitle = Database::escape($wallPostTitle);
+        $wallReplyTitle = Database::escape($wallReplyTitle);
+        $senderEmail = Database::escape($senderEmail);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         }
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         
         Database::query("update t_social_notifications set
             message_received = '$messageReceived',
@@ -78,7 +78,7 @@ class SocialNotificationsModel {
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         }
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         
         Database::query("delete from t_social_notifications where siteid = '$siteId'");
     }

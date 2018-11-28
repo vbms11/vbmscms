@@ -157,7 +157,7 @@ class UserGalleryModule extends XModule {
     
     function onView () {
         
-        switch ($this->getAction()) {
+        switch (parent::getAction()) {
             case "edit":
                 if (Context::hasRole("gallery.edit")) {
                     $this->printEditView();

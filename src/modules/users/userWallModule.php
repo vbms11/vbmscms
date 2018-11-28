@@ -337,11 +337,17 @@ class UserWallModule extends XModule {
 		
         $userId = $this->getModeUserId();
 	
+        $currentUserProfileImage = null;
+        if (Context::isLoggedIn()) {
+            $currentUserProfileImage = UsersModel::getUserImageSmallUrl(Context::getUserId());
+        }
+        
         foreach ($wallEventPosts as $wallPostReply) {
 
             $replyUser = UsersModel::getUser($wallPostReply->srcuserid);
             $replyUserName = htmlentities($replyUser->firstname." ".$replyUser->lastname, ENT_QUOTES);
             $replyUserImage = UsersModel::getUserImageSmallUrl($replyUser->id);
+            
             ?>
             <div class="userWallPostReply">
                 <div class="userWallPostImage">

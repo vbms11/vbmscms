@@ -1,0 +1,79 @@
+
+.fileSystemListDirectoryPanel {
+    
+}
+
+.fs_list_grid {
+}
+
+.fs_actions {
+    
+}
+
+.fs_actions a {
+    text-align: left;
+}
+
+.fs_file {
+    float: left;
+    width: 60px;
+    height: 30px;
+}
+
+.fs_directory {
+    float: left;
+    width: 60px;
+    height: 30px;
+}
+
+/* display as grid */
+
+.fs_display_grid .fs_extImage {
+    float: left;
+    max-width: 30px;
+    max-height: 30px;
+}
+
+.fs_display_grid .fs_name {
+    margin-left: 35px;
+}
+
+.fs_display_grid .fs_size {
+    margin-left: 35px;
+}
+
+.fs_display_grid .fs_date {
+    margin-left: 35px;
+}
+
+.fs_display_grid .fs_options {
+    margin-left: 35px;
+}
+
+/* display as table style */
+
+.fs_display_table .fs_extImage {
+    max-width: 30px;
+    max-height: 30px;
+}
+
+.fs_display_table .fs_name {
+    white-space: nowrap;
+}
+
+.fs_display_table .fs_size {
+    
+}
+
+.fs_display_table .fs_date {
+    
+}
+
+.fs_display_table .fs_options {
+    
+}
+
+
+
+
+

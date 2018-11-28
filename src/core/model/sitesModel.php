@@ -3,7 +3,7 @@
 class SiteModel {
     
     static function getSite ($siteId) {
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         return Database::queryAsObject("select * from t_site where id = '$siteId'");
     }
     
@@ -12,7 +12,7 @@ class SiteModel {
     }
     
     static function getSiteDomains ($site) {
-        $site = mysql_real_escape_string($site);
+        $site = Database::escape($site);
         return Database::queryAsObject("select d.url, s.* from t_site s join t_domain as d on s.id = d.siteid where d.id = '$site'");
     }
     
@@ -29,23 +29,23 @@ class SiteModel {
         $site = self::getSite($siteId);
         PiwikModel::deleteSite($site->piwikid);
         
-        $siteId = mysql_real_escape_string($siteId);
+        $siteId = Database::escape($siteId);
         
         Database::query("delete from t_site where id = '$siteId'");
         
     }
     
     static function createSite ($name, $cmsCustomerId, $description, $domain = null, $trackerScript = '', $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = '') {
-	$name = mysql_real_escape_string($name);
-        $description = mysql_real_escape_string($description);
-        $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
-        $trackerScript = mysql_real_escape_string($trackerScript);
-        $facebookAppId = mysql_real_escape_string($facebookAppId);
-        $facebookSecret = mysql_real_escape_string($facebookSecret);
-        $twitterKey = mysql_real_escape_string($twitterKey);
-        $twitterSecret = mysql_real_escape_string($twitterSecret);
-	$googleClientId = mysql_real_escape_string($googleClientId);
-	$googleClientSecret = mysql_real_escape_string($googleClientSecret);
+	$name = Database::escape($name);
+        $description = Database::escape($description);
+        $cmsCustomerId = Database::escape($cmsCustomerId);
+        $trackerScript = Database::escape($trackerScript);
+        $facebookAppId = Database::escape($facebookAppId);
+        $facebookSecret = Database::escape($facebookSecret);
+        $twitterKey = Database::escape($twitterKey);
+        $twitterSecret = Database::escape($twitterSecret);
+	$googleClientId = Database::escape($googleClientId);
+	$googleClientSecret = Database::escape($googleClientSecret);
         // 
         if (empty($domain)) {
             $defaultDomain = DomainsModel::getSubDomainUrl($name);
@@ -66,16 +66,16 @@ class SiteModel {
     }
     
     static function updateSite ($siteId, $name, $description, $trackerScript, $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = '') {
-        $siteId = mysql_real_escape_string($siteId);
-        $name = mysql_real_escape_string($name);
-        $description = mysql_real_escape_string($description);
-        $trackerScript = mysql_real_escape_string($trackerScript);
-        $facebookAppId = mysql_real_escape_string($facebookAppId);
-        $facebookSecret = mysql_real_escape_string($facebookSecret);
-        $googleClientId = mysql_real_escape_string($googleClientId);
-        $googleClientSecret = mysql_real_escape_string($googleClientSecret);
-        $twitterKey = mysql_real_escape_string($twitterKey);
-        $twitterSecret = mysql_real_escape_string($twitterSecret);
+        $siteId = Database::escape($siteId);
+        $name = Database::escape($name);
+        $description = Database::escape($description);
+        $trackerScript = Database::escape($trackerScript);
+        $facebookAppId = Database::escape($facebookAppId);
+        $facebookSecret = Database::escape($facebookSecret);
+        $googleClientId = Database::escape($googleClientId);
+        $googleClientSecret = Database::escape($googleClientSecret);
+        $twitterKey = Database::escape($twitterKey);
+        $twitterSecret = Database::escape($twitterSecret);
         Database::query("update t_site set 
             name = '$name', 
             description = '$description', 
@@ -90,7 +90,7 @@ class SiteModel {
     }
     
     static function byCmscustomerid ($cmsCustomerId) {
-        $cmsCustomerId = mysql_real_escape_string($cmsCustomerId);
+        $cmsCustomerId = Database::escape($cmsCustomerId);
         return Database::queryAsArray("select * from t_site where cmscustomerid = '$cmsCustomerId'");
     }
     

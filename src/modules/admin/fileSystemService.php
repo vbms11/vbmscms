@@ -78,6 +78,17 @@ class FileSystemService extends XModule {
                     );
                 }
                 break;
+            case "company":
+                if (Context::hasRole("filesystem.company")) {
+                    $opts = array (
+                        'driver'        => 'LocalFileSystem', 
+                        'path'          => ResourcesModel::getResourcePath("company/".Common::hash($_GET['id'],false,false)),    // path to root directory
+                        'URL'           => ResourcesModel::createResourceLink("company/".Common::hash($_GET['id'],false,false)), // root directory URL
+                        'alias'         => 'Company Files', 
+                        'accessControl' => 'fileSystemServiceAccessControl'
+                    );
+                }
+                break;
         }
         
         if ($opts != null) {
@@ -98,7 +109,7 @@ class FileSystemService extends XModule {
     }
     
     function getRoles () {
-        return array("filesystem.all","filesystem.user","filesystem.www");
+        return array("filesystem.all","filesystem.user","filesystem.www","filesystem.www");
     }
     
 }

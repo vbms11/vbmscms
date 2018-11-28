@@ -50,8 +50,8 @@ class SystemService extends XModule {
             case "tasks":
                 break;
             case "track":
-                $clientIp = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
-                $href = mysql_real_escape_string($_GET['href']);
+                $clientIp = Database::escape($_SERVER['REMOTE_ADDR']);
+                $href = Database::escape($_GET['href']);
                 $obj = Database::queryAsObject("select 1 as exists from t_track where clientip = '$clientIp' and href = '$href'");
                 if ($obj == null || $obj->exists != "1") {
                     Database::query("insert into t_track (clientip,href) values('$clientIp','$href')");

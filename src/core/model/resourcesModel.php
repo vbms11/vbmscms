@@ -78,7 +78,14 @@ class ResourcesModel {
         // start download
     }
     
-    static function uploadResource ($postName, $path, $allowedTypes = array("jpg","jpeg","gif","png"),$maxFileSize=5242880) {
+    static function uploadResource ($postName, $path, $allowedTypes = null, $maxFileSize = null) {
+        
+        if ($allowedTypes == null) {
+            $allowedTypes = Common::getAllowedImageFormats();
+        }
+        if ($maxFileSize == null) {
+            $maxFileSize = Common::getMaximumUploadSize();
+        }
         
         $allowedTypes = implode("|", $allowedTypes);
         $rEFileTypes = "/^\.($allowedTypes){1}$/i";
@@ -104,6 +111,30 @@ class ResourcesModel {
             echo "Error uploading file sorry<br/>";
         }
         return $imageName;
+    }
+    
+    static function listResources ($path=null, $recrusive=false) {
+  
+        $result = array();
+        $resourcePath = ResourcesModel::getBasePath().$GLOBALS['resourcePath'];
+        if ($path != null) {
+            $resourcePath .= $path.'/';
+        }
+        $cdir = scandir($resourcePath);
+        foreach ($cdir as $key => $value) {
+            if (!in_array($value,array(".",".."))) {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
+                    if ($recrusive) {
+                        $result[$value] = listResources($path.DIRECTORY_SEPARATOR.$value);
+                    } else {
+                        $result []= $value;
+                    }
+                } else {
+                    $result []= $value;
+                }
+            }
+        }
+        return $result;
     }
 }
 

@@ -13,44 +13,44 @@ class EventsModel {
     }
     
     static function createEvent ($name, $type, $userId, $date, $description,$houres=null,$minutes=null) {
-        $name = mysql_real_escape_string($name);
-        $date = mysql_real_escape_string($date);
-        $type = mysql_real_escape_string($type);
-        $userId = mysql_real_escape_string($userId);
-        $description = mysql_real_escape_string($description);
-        $houres = $houres == null ? "" : mysql_real_escape_string($houres);
-        $minutes = $minutes == null ? "" : mysql_real_escape_string($minutes);
+        $name = Database::escape($name);
+        $date = Database::escape($date);
+        $type = Database::escape($type);
+        $userId = Database::escape($userId);
+        $description = Database::escape($description);
+        $houres = $houres == null ? "" : Database::escape($houres);
+        $minutes = $minutes == null ? "" : Database::escape($minutes);
         Database::query("insert into t_event (name,type,userid,date,description,houres,minutes) 
                 values('$name','$type','$userId','$date','$description','$houres','$minutes')");
     }
     
     static function saveEvent ($id, $name, $type, $date, $description,$houres=null,$minutes=null) {
-        $id = mysql_real_escape_string($id);
-        $name = mysql_real_escape_string($name);
-        $date = mysql_real_escape_string($date);
-        $type = mysql_real_escape_string($type);
-        $description = mysql_real_escape_string($description);
-        $houres = $houres == null ? "" : mysql_real_escape_string($houres);
-        $minutes = $minutes == null ? "" : mysql_real_escape_string($minutes);
+        $id = Database::escape($id);
+        $name = Database::escape($name);
+        $date = Database::escape($date);
+        $type = Database::escape($type);
+        $description = Database::escape($description);
+        $houres = $houres == null ? "" : Database::escape($houres);
+        $minutes = $minutes == null ? "" : Database::escape($minutes);
         Database::query("update t_event set name = '$name', type = '$type', date = '$date', description = '$description', houres = '$houres', minutes = '$minutes' where id = '$id'");
     }
     
     static function getEvent ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         return Database::queryAsObject("select * from t_event where id = '$id'");
     }
     
     static function deleteEvent ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::query("delete from t_event where id = '$id'");
     }
     
     static function getEvents ($fromDate,$cntFuture,$cntPast,$eventType=null) {
         $events = array();
-        $fromDate = mysql_real_escape_string($fromDate);
+        $fromDate = Database::escape($fromDate);
         $type = "";
         if (!Common::isEmpty($eventType)) {
-            $eventType = mysql_real_escape_string($eventType);
+            $eventType = Database::escape($eventType);
             $type = "and type = '$eventType'";
         }
         $resultPast = Database::queryAsArray("select * from t_event where date < '$fromDate' $type order by date desc");
@@ -82,43 +82,39 @@ class EventsModel {
     }
     
     static function getEventsInRange ($fromDate,$toDate=null) {
-        $fromDate = mysql_real_escape_string($fromDate);
+        $fromDate = Database::escape($fromDate);
         if ($toDate != null) {
-            $toDate = mysql_real_escape_string($toDate);
-            $result = Database::query("select * from t_event where date >= '$fromDate' and date <= '$toDate'");
+            $toDate = Database::escape($toDate);
+            $result = Database::queryAsArray("select * from t_event where date >= '$fromDate' and date <= '$toDate'");
         } else {
-            $result = Database::query("select * from t_event where date >= '$fromDate' and date <= DATE_ADD('$fromDate',INTERVAL 10 DAY)");
+            $result = Database::queryAsArray("select * from t_event where date >= '$fromDate' and date <= DATE_ADD('$fromDate',INTERVAL 10 DAY)");
         }
-        $events = array();
-        while ($event = mysql_fetch_object($result)) {
-            $events[] = $event;
-        }
-        return $events;
+        return $result;
     }
     
     static function getEventsInMonth ($year,$month,$user=null) {
-        $year = mysql_real_escape_string($year);
-        $month = mysql_real_escape_string($month);
+        $year = Database::escape($year);
+        $month = Database::escape($month);
         $userCondition = "";
         if ($user != null) {
-            $user = mysql_real_escape_string($user);
+            $user = Database::escape($user);
             $userCondition = " and userid = '$user' "; 
         }
         return Database::queryAsArray("select * from t_event where year(date) = '$year' and month(date) = '$month' $userCondition");
     }
     
     static function deleteUserEvent ($userId,$type=null) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         $typeSelect = "";
         if (!Common::isEmpty($type)) {
-            $type = mysql_real_escape_string($type);
+            $type = Database::escape($type);
             $typeSelect = "and type = '$type'";
         }
         Database::query("delete from t_event where userid = '$userId' $typeSelect");
     }
     
     static function addUserEvents ($userId) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         // remove old events
         EventsModel::deleteUserEvent($userId, EventsModel::$birthday);
         // add new events

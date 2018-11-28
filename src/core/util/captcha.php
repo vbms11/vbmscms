@@ -119,13 +119,13 @@ class Captcha {
     }
     
     static function createAnswer ($anserLen) {
-	$chars = array("A","C","D","E","F","G","H","K","L","M","N","P","R","T","U","V","W","X","Y","Z","2","3","4","6","7","9");
-	$charsCount = count($chars);
-	$answer = "";
-	for ($i=0; $i<$anserLen; $i++) {
-		$answer .= $chars[Common::rand() % $charsCount];
-	}
-	return $answer;
+    	$chars = array("A","C","D","E","F","G","H","K","L","M","N","P","R","T","U","V","W","X","Y","Z","2","3","4","6","7","9");
+    	$charsCount = count($chars);
+    	$answer = "";
+    	for ($i=0; $i<$anserLen; $i++) {
+    		$answer .= $chars[Common::rand() % $charsCount];
+    	}
+    	return $answer;
     }
     
     static function getPosOnBorder ($f,$width,$height) {
@@ -162,6 +162,58 @@ class Captcha {
         }
 		unset($_SESSION['captcha.'.$inputName]);
         return $valid;
+    }
+    
+    static function drawGradientText ($image, $text, $fontSize, $direction, $startColor, $endColor) {
+        
+        $textImageSize = 
+        
+        $factor = sqrt($width*$width+$height*$height);
+        $directionNorm = [1/$factor*$direction[0],1/$factor*$direction[1]];
+        
+        // make gradient
+        $startPos = [0,0];
+        if ($directionNorm[0] == 0) {
+            $startPos[0] = 0;
+            $endPos[0] = 0;
+        } if ($directionNorm[0] > 0) {
+            $startPos[0] = 0;
+            $endPos[0] = $textImageSize;
+        } else if ($directionNorm[0] < 0) {
+            $startPos[0] = [$textImageSize,0];
+        }
+        if ($direction[1] == 0) {
+            $startPos[1] = 0;
+            $endPos[1] = 0;
+        } else if ($directionNorm[1] > 0) {
+            $startPos[1];
+            $endPos[1] = 0;
+        } else if ($directionNorm[1] > 0) {
+            $startPos[1] = $textImageSize;
+        }
+        
+        $startPos = [];
+        $endPos = [];
+        
+        $pixelColor;
+        for ($y=0; $y<$fontSize; $y++) {
+            for ($x=0; $x<$fontSize; $x++) {
+                
+            }
+        }
+        
+        // write character
+        $char = Common::randHash(1);
+        $fakeColor = imagecolorallocate ($img, $fakeColor_r-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset), $fakeColor_g-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset), $fakeColor_b-($fakecoloroffset/2)+(Common::rand()%$fakecoloroffset));
+        imagestring($img, $font, Common::rand()%$width-3, Common::rand()%$height-5, strtoupper("$char"), $fakeColor);
+        
+        // cut out character fron gradient
+        
+        // write to transparent image
+        $im = imagecreatetruecolor(55, 30);
+        $red = imagecolorallocate($im, 255, 0, 0);
+        $black = imagecolorallocate($im, 0, 0, 0);
+        imagecolortransparent($im, $black);
     }
 }
 

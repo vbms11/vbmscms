@@ -9,84 +9,62 @@ class ForumPageModel {
     }
 
     static function viewTopic ($topicId) {
-        $topicId = mysql_real_escape_string($topicId);
+        $topicId = Database::escape($topicId);
         Database::query("update t_forum_topic set views = views + 1 where id = '$topicId'");
     }
 
     static function viewThread ($threadId) {
-        $threadId = mysql_real_escape_string($threadId);
+        $threadId = Database::escape($threadId);
         Database::query("update t_forum_thread set views = views + 1 where id = '$threadId'");
     }
     
     static function viewPm ($pmId) {
-        $pmId = mysql_real_escape_string($pmId);
+        $pmId = Database::escape($pmId);
         Database::query("update t_user_message set opened = '1' where id = '$pmId'");
     }
 
     static function getThread ($threadId) {
-        $threadId = mysql_real_escape_string($threadId);
-        $result = Database::query("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where t.id = '$threadId'");
-        return mysql_fetch_object($result);
+        $threadId = Database::escape($threadId);
+        return Database::queryAsObject("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where t.id = '$threadId'");
     }
 
     static function getTopic ($topicId) {
-        $topicId = mysql_real_escape_string($topicId);
-        $result = Database::query("select t.*, u.username as username from t_forum_topic t left join t_user u on u.id = t.userid where t.id = '$topicId'");
-        return mysql_fetch_object($result);
+        $topicId = Database::escape($topicId);
+        return Database::queryAsObject("select t.*, u.username as username from t_forum_topic t left join t_user u on u.id = t.userid where t.id = '$topicId'");
     }
 
     static function getPost ($postId) {
-        $postId = mysql_real_escape_string($postId);
-        $result = Database::query("select t.*, u.username as username from t_forum_post t left join t_user u on u.id = t.userid where t.id = '$postId'");
-        return mysql_fetch_object($result);
+        $postId = Database::escape($postId);
+        return Database::queryAsObject("select t.*, u.username as username from t_forum_post t left join t_user u on u.id = t.userid where t.id = '$postId'");
     }
     
     static function getPm ($pmId) {
-        $pmId = mysql_real_escape_string($pmId);
-        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.id = '$pmId'");
-        return mysql_fetch_object($result);
+        $pmId = Database::escape($pmId);
+        return Database::queryAsObject("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.id = '$pmId'");
     }
 
     static function getThreads ($parentTopic) {
-        $parentTopic = mysql_real_escape_string($parentTopic);
-        $result = Database::query("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where parent = '$parentTopic'");
-        $threads = array();
-        $obj;
-        while (($obj = mysql_fetch_object($result))) {
-            $threads[] = $obj;
-        }
-        return $threads;
+        $parentTopic = Database::escape($parentTopic);
+        return Database::queryAsArray("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where parent = '$parentTopic'");
     }
 
     static function getTopics ($parentTopic) {
-        $parentTopic = mysql_real_escape_string($parentTopic);
-        $result = Database::query("select t.*, u.username as username from t_forum_topic t left join t_user u on t.userid = u.id where parent = '$parentTopic'");
-        $topics = array(); $obj;
-        while (($obj = mysql_fetch_object($result)))
-            $topics[] = $obj;
-        return $topics;
+        $parentTopic = Database::escape($parentTopic);
+        return Database::queryAsArray("select t.*, u.username as username from t_forum_topic t left join t_user u on t.userid = u.id where parent = '$parentTopic'");
     }
 
     static function getPosts ($threadId) {
-        $threadId = mysql_real_escape_string($threadId);
-        $result = Database::query("select p.*, u.username as username from t_forum_post p left join t_user u on u.id = p.userid where threadid = '$threadId'");
-        $posts = array(); $obj;
-        while (($obj = mysql_fetch_object($result)))
-            $posts[] = $obj;
-        return $posts;
+        $threadId = Database::escape($threadId);
+        return Database::queryAsArray("select p.*, u.username as username from t_forum_post p left join t_user u on u.id = p.userid where threadid = '$threadId'");
     }
     
     static function getPms ($userId) {
-        $userId = mysql_real_escape_string($userId);
-        $result = Database::query("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.dstuser = '$userId'");
-        $pms = array();
-        while ($obj = mysql_fetch_object($result))
-            $pms[] = $obj;
-        return $pms;
+        $userId = Database::escape($userId);
+        return Database::queryAsArray("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.dstuser = '$userId'");
     }
     
     static function getUserTotalPosts ($userId) {
-    	$userId = mysql_real_escape_string($userId);
+    	$userId = Database::escape($userId);
     	$result = Database::queryAsObject("select sum(amount) as sum from(
 			SELECT count(*) as amount FROM t_forum_thread as t where t.userid = '$userId'
 		    union
@@ -96,21 +74,20 @@ class ForumPageModel {
     }
 
     static function getForumPage ($pageId) {
-        $pageId = mysql_real_escape_string($pageId);
-        $result = Database::query("select * from forum_page where pageid = '$pageId'");
-        $obj = mysql_fetch_object($result);
-        if ($obj == null) {
-            Database::query("insert into forum_page topic = $topicId");
-            $this->getForumPage($pageId);
+        $pageId = Database::escape($pageId);
+        $result = Database::queryAsObject("select * from forum_page where pageid = '$pageId'");
+        if ($result == null) {
+            // Database::query("insert into forum_page topic = $topicId");
+            // $this->getForumPage($pageId);
         }
-        return $obj;
+        // return $obj;
     }
 
     static function saveTopic ($parentTopic, $topicId, $topicName, $userId) {
-        $parentTopic = mysql_real_escape_string($parentTopic);
-        $topicName = mysql_real_escape_string($topicName);
-        $topicId = mysql_real_escape_string($topicId);
-        $userId = mysql_real_escape_string($userId);
+        $parentTopic = Database::escape($parentTopic);
+        $topicName = Database::escape($topicName);
+        $topicId = Database::escape($topicId);
+        $userId = Database::escape($userId);
         if (Common::isEmpty($topicId)) {
             Database::query("insert into t_forum_topic (parent,name,createdate,userid) values ('$parentTopic','$topicName',now(),'$userId')");
         } else {
@@ -119,10 +96,10 @@ class ForumPageModel {
     }
 
     static function saveThread ($parentTopic, $threadId, $threadTitel, $threadMessage) {
-        $parentTopic = mysql_real_escape_string($parentTopic);
-        $threadId = mysql_real_escape_string($threadId);
-        $threadTitel = mysql_real_escape_string($threadTitel);
-        $threadMessage = mysql_real_escape_string($threadMessage);
+        $parentTopic = Database::escape($parentTopic);
+        $threadId = Database::escape($threadId);
+        $threadTitel = Database::escape($threadTitel);
+        $threadMessage = Database::escape($threadMessage);
         $userId = Context::getUserId();
         if (Common::isEmpty($threadId)) {
             Database::query("insert into t_forum_thread (parent,name,message,createdate,userid) values ('$parentTopic','$threadTitel','$threadMessage',now(),$userId)");
@@ -132,10 +109,10 @@ class ForumPageModel {
     }
 
     static function savePost ($threadId, $postId, $postMessage, $userId) {
-        $threadId = mysql_real_escape_string($threadId);
-        $postId = mysql_real_escape_string($postId);
-        $postMessage = mysql_real_escape_string($postMessage);
-        $userId = mysql_real_escape_string($userId);
+        $threadId = Database::escape($threadId);
+        $postId = Database::escape($postId);
+        $postMessage = Database::escape($postMessage);
+        $userId = Database::escape($userId);
         if (Common::isEmpty($postId)) {
             Database::query("insert into t_forum_post (threadid,message,userid,createdate) values ('$threadId','$postMessage','$userId',now())");
         } else {
@@ -144,32 +121,32 @@ class ForumPageModel {
     }
     
     static function savePm ($srcUserId, $dstUserId, $title, $message) {
-        $srcUserId = mysql_real_escape_string($srcUserId);
-        $dstUserId = mysql_real_escape_string($dstUserId);
-        $message = mysql_real_escape_string($message);
-        $title = mysql_real_escape_string($title);
+        $srcUserId = Database::escape($srcUserId);
+        $dstUserId = Database::escape($dstUserId);
+        $message = Database::escape($message);
+        $title = Database::escape($title);
         Database::query("insert into t_user_message (srcuser,dstuser,subject,message,senddate) values ('$srcUserId','$dstUserId','$title','$message',now())");
         $result = Database::queryAsObject("select last_insert_id() as newid from t_user_message");
         return $result->newid;
     }
 
     static function deleteTopic ($topicId) {
-        $topicId = mysql_real_escape_string($topicId);
+        $topicId = Database::escape($topicId);
         Database::query("delete from t_forum_topic where id = '$topicId'");
     }
 
     static function deleteThread ($threadId) {
-        $threadId = mysql_real_escape_string($threadId);
+        $threadId = Database::escape($threadId);
         Database::query("delete from t_forum_thread where id = '$threadId'");
     }
 
     static function deletePost ($postId) {
-        $postId = mysql_real_escape_string($postId);
+        $postId = Database::escape($postId);
         Database::query("delete from t_forum_thread where id = '$postId'");
     }
 
     static function deletePm ($pmId) {
-        $pmId = mysql_real_escape_string($pmId);
+        $pmId = Database::escape($pmId);
         Database::query("delete from t_user_message where id = '$pmId'");
     }
     
@@ -177,7 +154,7 @@ class ForumPageModel {
         
         $errors = array();
         
-        $subject = mysql_real_escape_string($subject);
+        $subject = Database::escape($subject);
         if (strlen($subject) == 0) {
             $errors["subject"] = "This feild cannot be empty!";
         }
@@ -185,7 +162,7 @@ class ForumPageModel {
             $errors["subject"] = "Maximum 100 characters!";
         }
         
-        $message = mysql_real_escape_string($message);
+        $message = Database::escape($message);
         if (strlen($message) == 0) {
             $errors["message"] = "This feild cannot be empty!";
         }

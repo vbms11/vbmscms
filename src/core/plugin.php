@@ -131,8 +131,33 @@ abstract class XModule implements IModule, ITranslatable {
         }
         return null;
     }
-    function link ($params = null, $xhtml = true, $sessionKeysOnUrl = false) {
-        return NavigationModel::createModuleLink($this->moduleId,$params,$xhtml,$sessionKeysOnUrl);
+    function link ($moduleId = null, $params = null, $xhtml = true, $sessionKeysOnUrl = false) {
+        // return NavigationModel::createModuleLink($this->moduleId,$params,$xhtml,$sessionKeysOnUrl);
+        if (is_array($moduleId)) {
+            $params = $moduleId;
+            $xhtml = $params;
+            $sessionKeysOnUrl = $xhtml;
+            $moduleId = null;
+        }
+        if ($moduleId == null) {
+            //if (empty($this->sysname)) {
+                $moduleId = $this->moduleId;
+            //} else {
+            //    $moduleId = $this->sysname;
+            //}
+        }
+        if (!is_numeric($moduleId)) {
+            if (Context::isAjaxRequest()) {
+                return NavigationModel::createStaticPageLink($moduleId, $params, $xhtml, $sessionKeysOnUrl);
+            } else {
+                return NavigationModel::createStaticPageLink($moduleId, $params, $xhtml, $sessionKeysOnUrl);
+            }
+        }
+        if (Context::isAjaxRequest()) {
+            return NavigationModel::createModuleLink($moduleId,$params,$xhtml,$sessionKeysOnUrl);
+        } else {
+            return NavigationModel::createModuleLink($moduleId,$params,$xhtml,$sessionKeysOnUrl);
+        }
     }
     function ajaxLink ($params = null, $xhtml = false) {
         return NavigationModel::createModuleAjaxLink($this->moduleId,$params,$xhtml);
@@ -145,18 +170,25 @@ abstract class XModule implements IModule, ITranslatable {
             $params = $moduleId;
             $moduleId = null;
         }
+        if ($moduleId == null) {
+            //if (empty($this->sysname)) {
+                $moduleId = $this->moduleId;
+            //} else {
+            //    $moduleId = $this->sysname;
+            //}
+        }
         if (!is_numeric($moduleId)) {
-        	if (Context::isAjaxRequest()) {
-        		NavigationModel::redirectAjaxStaticModule($moduleId, $params);
-        	} else {
-        		NavigationModel::redirectStaticModule($moduleId, $params);
-        	}
-        	break;
+            if (Context::isAjaxRequest()) {
+                NavigationModel::redirectAjaxStaticModule($moduleId, $params);
+            } else {
+                NavigationModel::redirectStaticModule($moduleId, $params);
+            }
+            return;
         }
         if (Context::isAjaxRequest()) {
-        	NavigationModel::redirectAjaxModule($moduleId == null ? $this->moduleId : $moduleId, $params);
+            NavigationModel::redirectAjaxModule($moduleId, $params);
         } else {
-        	NavigationModel::redirectModule($moduleId == null ? $this->moduleId : $moduleId, $params);
+            NavigationModel::redirectModule($moduleId, $params);
         }
     }
     function focus () {
@@ -356,7 +388,7 @@ abstract class XTemplate extends TemplateRenderer {
             } else if (strpos($path, "https://") === 0) {
                 $retPaths[] = $path;
             } else {
-                $retPaths[] = $this->path."/".$path;
+                $retPaths[] = $this->path.$path;
             }
         }
         return $retPaths;

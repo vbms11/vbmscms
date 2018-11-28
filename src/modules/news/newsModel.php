@@ -4,7 +4,7 @@ class NewsModel {
     
     static function getPublisher ($name) {
         
-        $name = mysql_real_escape_string($name);
+        $name = Database::escape($name);
         
         $result = Database::queryAsObject("select * from t_news_publisher where name = '$name'");
         
@@ -20,11 +20,11 @@ class NewsModel {
     
     static function createNews ($content, $url, $title, $publisher, $imageUrl, $thumbUrl) {
         
-        $content = mysql_real_escape_string($content);
-        $url = mysql_real_escape_string($url);
-        $title = mysql_real_escape_string($title);
-        $imageUrl = mysql_real_escape_string($imageUrl);
-        $thumbUrl = mysql_real_escape_string($thumbUrl);
+        $content = Database::escape($content);
+        $url = Database::escape($url);
+        $title = Database::escape($title);
+        $imageUrl = Database::escape($imageUrl);
+        $thumbUrl = Database::escape($thumbUrl);
         
         $publisher = self::getPublisher($publisher);
         
@@ -36,7 +36,7 @@ class NewsModel {
     
     static function getNews ($id) {
         
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         
         return Database::queryAsObject("select * from t_news where id = '$id'");
     }
@@ -50,7 +50,7 @@ class NewsModel {
     
     static function deleteNews ($id) {
         
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         
         Database::query("delete from t_news where id = '$id'");
     }

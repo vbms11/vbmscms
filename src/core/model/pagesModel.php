@@ -11,31 +11,30 @@ class PagesModel {
         if (Context::isAdminMode() == "adminPages") {
             $pageId = $_SESSION['adminPageId'];
         }
-        $pageId = mysql_real_escape_string($pageId);
+        $pageId = Database::escape($pageId);
         Database::query("update t_page set modifydate = now() where id = '$pageId'");
     }
     
     static function getPageNameInMenu ($pageId, $lang) {
-        $pageId = mysql_real_escape_string($pageId);
-        $lang = mysql_real_escape_string($lang);
+        $pageId = Database::escape($pageId);
+        $lang = Database::escape($lang);
         $query = "select c.value as name from t_page p
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
             where p.id = '$pageId'";
-        $result = Database::query($query);
-        $obj = mysql_fetch_object($result);
+        $obj = Database::queryAsObject($query);
         if ($obj == null)
             return null;
         return $obj->name;
     }
 
     static function getPageIdFromModuleId ($moduleId) {
-        $moduleId = mysql_real_escape_string($moduleId);
+        $moduleId = Database::escape($moduleId);
         $result = Database::queryAsObject("select pageid from t_templatearea where instanceid = '$moduleId'");
         return $result->pageid;
     }
     
     static function getWelcomePage ($lang) {
-        $lang = mysql_real_escape_string($lang);
+        $lang = Database::escape($lang);
         $siteId = Context::getSiteId();
         if ($siteId != null) {
             $endQuery = "(siteid = '$siteId' or siteid is null) order by p.siteid desc";
@@ -67,8 +66,8 @@ class PagesModel {
     }
     
     static function getPageByCode ($code, $lang) {
-        $code = mysql_real_escape_string($code);
-        $lang = mysql_real_escape_string($lang);
+        $code = Database::escape($code);
+        $lang = Database::escape($lang);
         $siteId = Context::getSiteId();
         $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
@@ -95,8 +94,8 @@ class PagesModel {
      * returns a page object of the default page
      */
     static function getStaticPage ($_name,$_lang) {
-        $name = mysql_real_escape_string($_name);
-        $lang = mysql_real_escape_string($_lang);
+        $name = Database::escape($_name);
+        $lang = Database::escape($_lang);
         $query = "select p.id, p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id 
@@ -110,17 +109,21 @@ class PagesModel {
             if (empty($site)) {
                 $site->siteid = 1;
             }
-            $template = TemplateModel::getMainTemplate($site->siteid);
-            $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
-            foreach (RolesModel::getCustomRoles() as $roleId => $role) {
-                RolesModel::savePageRole($pageId, $roleId);
-            }
-            $page = PagesModel::getPageTemplate($pageId, $_lang);
-            $templateAreas = TemplateModel::getAreaNames($page);
             $moduleTypeId = ModuleModel::getModuleByName($_name);
-            $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id);
-            Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");
-            return PagesModel::getStaticPage($_name,$_lang);
+            if (!empty($moduleTypeId)) {
+                $template = TemplateModel::getMainTemplate($site->siteid);
+                $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
+                foreach (RolesModel::getCustomRoles() as $roleId => $role) {
+                    RolesModel::savePageRole($pageId, $roleId);
+                }
+                $page = PagesModel::getPageTemplate($pageId, $_lang);
+                $templateAreas = TemplateModel::getAreaNames($page);
+                $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id);
+                Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");
+                return PagesModel::getStaticPage($_name,$_lang);
+            } else {
+                return null;
+            }
         }
         
         $pageObj = self::ensureAdminTemplate($pageObj);
@@ -132,7 +135,7 @@ class PagesModel {
      * returns a page object of the default page
      */
     static function getTemplatePreviewPage ($templateId) {
-        $templateId = mysql_real_escape_string($templateId);
+        $templateId = Database::escape($templateId);
         return Database::queryAsObject("select '0' as codeid, '' as code, t.css, t.html, t.js, '0' as id, '0' as type, '0' as namecode, '' as name, '0' as welcome, '' as title, '' as keywords, t.id as template, t.template as templateinclude, t.interface as interface, '' as description, '' as pagetrackerscript 
             from  t_template t
             where t.id = '$templateId'");
@@ -156,8 +159,8 @@ class PagesModel {
     }
     
     static function getPageTemplate ($id, $lang) {
-        $id = mysql_real_escape_string($id);
-        $lang = mysql_real_escape_string($lang);
+        $id = Database::escape($id);
+        $lang = Database::escape($lang);
         $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
@@ -167,14 +170,14 @@ class PagesModel {
     }
     
     static function setPageTemplate ($pageId, $templateId) {
-        $pageId = mysql_real_escape_string($pageId);
-        $templateId = mysql_real_escape_string($templateId);
+        $pageId = Database::escape($pageId);
+        $templateId = Database::escape($templateId);
         Database::query("update t_page set template = '$templateId' where id = '$pageId'");
     }
     
     static function getPage ($id, $lang, $roles=true, $checkName=null, $ensureAdminTemplate = true) {
-        $id = mysql_real_escape_string($id);
-        $lang = mysql_real_escape_string($lang);
+        $id = Database::escape($id);
+        $lang = Database::escape($lang);
         $siteId = Context::getSiteId();
         $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
@@ -183,7 +186,7 @@ class PagesModel {
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
             where ";
         if ($checkName != null) {
-            $checkName = mysql_real_escape_string($checkName);
+            $checkName = Database::escape($checkName);
             $query .= "c.value = '$checkName' ";
         } else {
             $query .= "p.id = '$id'";
@@ -210,8 +213,8 @@ class PagesModel {
 
     static function getPageByModuleId ($id, $lang) {
         
-        $id = mysql_real_escape_string($id);
-        $lang = mysql_real_escape_string($lang);
+        $id = Database::escape($id);
+        $lang = Database::escape($lang);
         $siteId = Context::getSiteId();
         $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
@@ -225,14 +228,14 @@ class PagesModel {
     }
 
     static function createPage ($name,$type,$lang,$welcome,$title,$keywords,$template,$areas,$description,$code="") {
-        $type = mysql_real_escape_string($type);
-        $lang = mysql_real_escape_string($lang);
-        $welcome = mysql_real_escape_string($welcome);
-        $title = mysql_real_escape_string($title);
-        $keywords = mysql_real_escape_string($keywords);
-        $template = mysql_real_escape_string($template);
-        $description = mysql_real_escape_string($description);
-        $code = mysql_real_escape_string($code);
+        $type = Database::escape($type);
+        $lang = Database::escape($lang);
+        $welcome = Database::escape($welcome);
+        $title = Database::escape($title);
+        $keywords = Database::escape($keywords);
+        $template = Database::escape($template);
+        $description = Database::escape($description);
+        $code = Database::escape($code);
         $site = DomainsModel::getCurrentSite();
         if (empty($site)) {
             $siteId = 1;
@@ -244,20 +247,20 @@ class PagesModel {
         $namecode = $codeModel->createCode($lang,$name);
         // create page
         Database::query("insert into t_page(namecode,type,title,keywords,template,description,siteid,code) values('$namecode','$type','$title','$keywords','$template','$description','$siteId','$code')");
-        $result = Database::query("select last_insert_id() as max from t_page");
-        $pageId = mysql_fetch_object($result)->max;
+        $result = Database::queryAsObject("select last_insert_id() as max from t_page");
+        $pageId = $result->max;
         PagesModel::setWelcome($pageId, $welcome);
         // create template areas
         return $pageId;
     }
 
     static function updatePage ($id,$name,$type,$lang,$welcome,$title,$keywords,$description,$template) {
-        $name = mysql_real_escape_string($name);
-        $id = mysql_real_escape_string($id);
-        $title = mysql_real_escape_string($title);
-        $keywords = mysql_real_escape_string($keywords);
-        $type = mysql_real_escape_string($type);
-        $description = mysql_real_escape_string($description);
+        $name = Database::escape($name);
+        $id = Database::escape($id);
+        $title = Database::escape($title);
+        $keywords = Database::escape($keywords);
+        $type = Database::escape($type);
+        $description = Database::escape($description);
         
         // set page name
         $code = PagesModel::getPage($id,$lang);
@@ -270,7 +273,7 @@ class PagesModel {
         // dont save template if null
         $templateSql = "";
         if ($template != null) {
-            $template = mysql_real_escape_string($template);
+            $template = Database::escape($template);
             $templateSql = ", template = '$template'";
         }
         
@@ -281,7 +284,7 @@ class PagesModel {
     }
     
     static function deletePage ($pageId) {
-        $pageId = mysql_real_escape_string($pageId);
+        $pageId = Database::escape($pageId);
         // delete from menu
         Database::query("delete from t_menu where page = '".$pageId."'");
         // delete page
@@ -293,7 +296,7 @@ class PagesModel {
     static function setWelcome ($id,$welcome) {
         if ($welcome == '1') {
             $siteId = DomainsModel::getCurrentSite()->siteid;
-            $id = mysql_real_escape_string($id);
+            $id = Database::escape($id);
             Database::query("update t_page set welcome = '0' where siteid = '$siteId'");
             Database::query("update t_page set welcome = '1' where siteid = '$siteId' and id = '$id'");
         }

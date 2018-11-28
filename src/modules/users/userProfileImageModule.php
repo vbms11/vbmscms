@@ -144,7 +144,7 @@ class UserProfileImageModule extends XModule {
         $user = $this->getUserBySelectedMode();
         $gallery = GalleryModel::getUserGallery($user->id);
         $categorys = GalleryModel::getCategorys($gallery->rootcategory);
-        $categorys[] = GalleryModel::getCategory($gallery->rootcategory);
+        //$categorys[] = GalleryModel::getCategory($gallery->rootcategory);
         
         ?>
         <div class="panel userImageSelectPanel">
@@ -153,16 +153,18 @@ class UserProfileImageModule extends XModule {
             <div class="userImageSelectPanelItems">
                 <?php
                 $hasImages = false;
-                foreach ($categorys as $category) {
-                    $images = GalleryModel::getImages($category->id);
-                    foreach ($images as $image) {
-                        $hasImages = true;
-                        ?>
-                        <div class="userImageSelectImage" id="profileImage_<?php echo $image->id; ?>">
-                            <img width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
-                        </div>
-                        <?php
-                    }   
+                if (!empty($categorys)) {
+                    foreach ($categorys as $category) {
+                        $images = GalleryModel::getImages($category->id);
+                        foreach ($images as $image) {
+                            $hasImages = true;
+                            ?>
+                            <div class="userImageSelectImage" id="profileImage_<?php echo $image->id; ?>">
+                                <img width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
+                            </div>
+                            <?php
+                        }   
+                    }
                 }
                 if (!$hasImages) {
                     ?>

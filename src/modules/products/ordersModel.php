@@ -8,7 +8,7 @@ class OrdersModel {
     
     static function getOrder ($orderId) {
         if (Context::isLoggedIn()) {
-            $orderId = mysql_real_escape_string($orderId);
+            $orderId = Database::escape($orderId);
             return Database::queryAsObject("select o.*
                     from t_order o
                     where o.id = '$orderId'");
@@ -48,7 +48,7 @@ class OrdersModel {
                         $order->price = $product->price;
                         $order->status = 0;
                         $order->img = $product->img;
-                        $orders[mysql_real_escape_string($productId)] = $order;
+                        $orders[Database::escape($productId)] = $order;
                         unset($order);
                     }
                 }
@@ -66,7 +66,7 @@ class OrdersModel {
             return $orders;
         }
         self::createOrdersFromSession();
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         $query = "
                 select p.img, p.price, p.shipping, op.*, c.value as titel, o.orderform, o.status as orderstatus, o.objectid, o.id as orderid, o.roleid, o.distributorid
                 from t_order_product op
@@ -75,14 +75,14 @@ class OrdersModel {
                 join t_code c on c.code = p.titelcode
                 where o.userid = '$userId'";
         if ($orderForm != null) {
-            $orderForm = mysql_real_escape_string($orderForm);
+            $orderForm = Database::escape($orderForm);
             $query .= " and orderform = '$orderForm' ";
         }
         return Database::queryAsArray($query);
     }
     
     static function getOrdersByDistributor ($userId,$tableId=null) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         $query = "select op.*, c.value as titel, o.orderform, o.objectid, o.roleid, o.distributorid
             from t_order_product op 
             left join t_order o on op.orderid = o.id
@@ -90,50 +90,50 @@ class OrdersModel {
             join t_code c on c.code = p.titelcode
             where o.distributorid = '$userId'";
         if ($tableId != null) {
-            $tableId = mysql_real_escape_string($tableId);
+            $tableId = Database::escape($tableId);
             $query .= " and orderform = '$tableId'"; 
         }
         return Database::queryAsArray($query);
     }
     
     static function getOrdersByStatus ($status,$orderForm=null,$userId=null) {
-        $status = mysql_real_escape_string($status);
+        $status = Database::escape($status);
         $query = "select * 
                   from t_order o 
                   where o.status = '$status' ";
         if ($orderForm != null) {
-            $orderForm = mysql_real_escape_string($orderForm);
+            $orderForm = Database::escape($orderForm);
             $query .= "and orderform = '$orderForm' ";
         }
         if ($userId != null) { 
-            $userId = mysql_real_escape_string($userId);
+            $userId = Database::escape($userId);
             $query .= "and userid = '$userId' ";
         }
         return Database::queryAsArray($query);
     }
     
     static function setOrderStatus ($orderId, $status) {
-        $orderId = mysql_real_escape_string($orderId);
-        $status = mysql_real_escape_string($status);
+        $orderId = Database::escape($orderId);
+        $status = Database::escape($status);
         Database::query("update t_order set status = '$status' where id = '$orderId'");
     }
     
     static function setOrderProductStatus ($productId, $status) {
-        $productId = mysql_real_escape_string($productId);
-        $status = mysql_real_escape_string($status);
+        $productId = Database::escape($productId);
+        $status = Database::escape($status);
         Database::query("update t_order_product set status = '$status' where id = '$productId'");
     }
     
     static function getOrderAttribs ($orderForm,$userId,$roleId=null,$distributorId=null) {
-        $orderForm = mysql_real_escape_string($orderForm);
-        $userId = mysql_real_escape_string($userId);
+        $orderForm = Database::escape($orderForm);
+        $userId = Database::escape($userId);
         $query = "select * from t_order where orderform = '$orderForm' and userid = '$userId' and status = '0' ";
         if ($roleId != null) {
-            $roleId = mysql_real_escape_string($roleId);
+            $roleId = Database::escape($roleId);
             $query .= " and roleid = '$roleId'";
         }
         if ($distributorId != null) {
-            $distributorId = mysql_real_escape_string($distributorId);
+            $distributorId = Database::escape($distributorId);
             $query .= " and distributorid = '$distributorId'";
         }
         return Database::queryAsObject($query);
@@ -152,7 +152,7 @@ class OrdersModel {
         if (Context::isLoggedIn()) {
             //
             self::createOrdersFromSession();
-            $orderId = mysql_real_escape_string($orderId);
+            $orderId = Database::escape($orderId);
             return Database::queryAsArray("
                     select op.*, c.value as titel, p.price
                     from t_order_product op
@@ -175,7 +175,7 @@ class OrdersModel {
                     $order->productid = $productId;
                     $order->quantity = $quantity->quantity;
                     $order->status = 0;
-                    $orders[mysql_real_escape_string($productId)] = $order;
+                    $orders[Database::escape($productId)] = $order;
                     unset($order);
                 }
                 // get translations for product names
@@ -198,8 +198,8 @@ class OrdersModel {
     }
     
     static function setObjectId ($orderId,$objectId) {
-        $orderId = mysql_real_escape_string($orderId);
-        $objectId = mysql_real_escape_string($objectId);
+        $orderId = Database::escape($orderId);
+        $objectId = Database::escape($objectId);
         Database::query("
                 update t_order set
                 objectid = '$objectId' 
@@ -242,7 +242,7 @@ class OrdersModel {
             
         } else {
 
-            $userId = mysql_real_escape_string($userId);
+            $userId = Database::escape($userId);
             // $orderFormObj = VirtualDataModel::getTable($orderForm);
             // $orderFormId = $orderFormObj->id;
             $orderFormId = $orderForm;
@@ -259,10 +259,10 @@ class OrdersModel {
                 // create new order
 
                 // $objectId = DynamicDataView::createObject($orderForm);
-                $roleId = mysql_real_escape_string($roleId);
+                $roleId = Database::escape($roleId);
                 $distributor = "null";
                 if ($distributorId != null) {
-                    $distributor = "'".mysql_real_escape_string($distributorId)."'";
+                    $distributor = "'".Database::escape($distributorId)."'";
                 }
 
                 Database::query("insert into t_order (userid,orderdate,orderform,roleid,distributorid) values('$userId',now(),'$orderFormId','$roleId',$distributor)");
@@ -280,9 +280,9 @@ class OrdersModel {
     
     static function addProductToOrder ($productId,$quantity,$orderId) {
         if (Context::isLoggedIn()) {
-            $productId = mysql_real_escape_string($productId);
-            $quantity = mysql_real_escape_string($quantity);
-            $orderId = mysql_real_escape_string($orderId);
+            $productId = Database::escape($productId);
+            $quantity = Database::escape($quantity);
+            $orderId = Database::escape($orderId);
             Database::query("insert into t_order_product (productid,orderid,quantity) values('$productId','$orderId','$quantity')");
             $productId = Database::queryAsObject("select last_insert_id() as newid from t_order_product");
             return $productId->newid;
@@ -294,10 +294,10 @@ class OrdersModel {
     static function updateQuantitys ($orderId,$quantitys) {
         if (Context::isLoggedIn()) {
             // update quantities in database if logged in
-            $orderId = mysql_real_escape_string($orderId);
+            $orderId = Database::escape($orderId);
             foreach ($quantitys as $key => $value) {
-                $key = mysql_real_escape_string($key);
-                $value = mysql_real_escape_string($value);
+                $key = Database::escape($key);
+                $value = Database::escape($value);
                 Database::query("update t_order_product set
                         quantity = '$value'
                         where productid = '$key' and orderid = '$orderId'");
@@ -316,7 +316,7 @@ class OrdersModel {
     
     static function deleteOrder ($orderId) {
         if (Context::isLoggedIn()) {
-            $orderId = mysql_real_escape_string($orderId);
+            $orderId = Database::escape($orderId);
             Database::query("delete from t_order_product where orderid = '$orderId'");
             Database::query("delete from t_order where id = '$orderId'");
         } else {
@@ -328,9 +328,9 @@ class OrdersModel {
     
     static function addOrderProduct ($orderId,$productId,$quantity) {
         if (Context::isLoggedIn()) {
-            $orderId = mysql_real_escape_string($orderId);
-            $productId = mysql_real_escape_string($productId);
-            $quantity = mysql_real_escape_string($productId);
+            $orderId = Database::escape($orderId);
+            $productId = Database::escape($productId);
+            $quantity = Database::escape($productId);
             Database::query("insert into t_order_product orderid = '$orderId', productid = '$productId', quantity = '$quantity'");
         } else {
             $_SESSION["orders.tmp"][$orderId]->products[$productId]->quantity = $quantity;
@@ -339,8 +339,8 @@ class OrdersModel {
     
     static function deleteOrderProduct ($orderId,$productId) {
         if (Context::isLoggedIn()) {
-            $orderId = mysql_real_escape_string($orderId);
-            $productId = mysql_real_escape_string($productId);
+            $orderId = Database::escape($orderId);
+            $productId = Database::escape($productId);
             Database::query("delete from t_order_product where orderid = '$orderId' and productid = '$productId'");
         } else {
             // update quantities in session if not logged in
@@ -358,19 +358,19 @@ class OrdersModel {
      */
 
     static function addOrderAttribute ($name,$value,$orderId) {
-        $name = mysql_real_escape_string($name);
-        $value = mysql_real_escape_string($value);
-        $orderId = mysql_real_escape_string($orderId);
+        $name = Database::escape($name);
+        $value = Database::escape($value);
+        $orderId = Database::escape($orderId);
         Database::query("insert into t_order_attribute (name,value,orderid) values ('$name','$value','$orderId')");
     }
 
     static function removeOrderAttribute ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::query("delete from t_order_attribute where id = '$id'");
     }
 
     static function getOrderAttributes ($orderId) {
-        $orderId = mysql_real_escape_string($orderId);
+        $orderId = Database::escape($orderId);
         return Database::queryAsArray("select * from t_order_attribute where orderid = '$orderId' order by id asc", "id");
     }
 

@@ -86,12 +86,12 @@ class UserAddressModel {
         $y = (cos(deg2rad($coordinates->x)) * cos(deg2rad($coordinates->y))) * $radiusOfEarthKM;
         $z = sin(deg2rad($coordinates->y)) * $radiusOfEarthKM;
         
-        $x = mysql_real_escape_string($x);
-        $y = mysql_real_escape_string($y);
-        $z = mysql_real_escape_string($z);
-        $latitude = mysql_real_escape_string($coordinates->x);
-        $longditude = mysql_real_escape_string($coordinates->y);
-        $addressId = mysql_real_escape_string($addressId);
+        $x = Database::escape($x);
+        $y = Database::escape($y);
+        $z = Database::escape($z);
+        $latitude = Database::escape($coordinates->x);
+        $longditude = Database::escape($coordinates->y);
+        $addressId = Database::escape($addressId);
         
         Database::query("update t_user_address set
             latitude = '$latitude', 
@@ -103,29 +103,29 @@ class UserAddressModel {
     }
     
     static function getUserAddress ($addressId) {
-        $addressId = mysql_real_escape_string($addressId);
+        $addressId = Database::escape($addressId);
         return Database::queryAsObject("select * from t_user_address where id = '$addressId'");
     }
     
     static function getUserAddressByUserId ($userId) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         return Database::queryAsObject("select * from t_user_address where userid = '$userId'");
     }
     
     static function createUserAddress ($userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode, $x, $y) {
-        $userId = mysql_real_escape_string($userId);
-        $continent = mysql_real_escape_string($continent);
-        $continentId = mysql_real_escape_string($continentId);
-        $country = mysql_real_escape_string($country);
-        $countryId = mysql_real_escape_string($countryId);
-        $state = mysql_real_escape_string($state);
-        $stateId = mysql_real_escape_string($stateId);
-        $region = mysql_real_escape_string($region);
-        $regionId = mysql_real_escape_string($regionId);
-        $city = mysql_real_escape_string($city);
-        $cityId = mysql_real_escape_string($cityId);
-        $address = mysql_real_escape_string($address);
-        $postcode = mysql_real_escape_string($postcode);
+        $userId = Database::escape($userId);
+        $continent = Database::escape($continent);
+        $continentId = Database::escape($continentId);
+        $country = Database::escape($country);
+        $countryId = Database::escape($countryId);
+        $state = Database::escape($state);
+        $stateId = Database::escape($stateId);
+        $region = Database::escape($region);
+        $regionId = Database::escape($regionId);
+        $city = Database::escape($city);
+        $cityId = Database::escape($cityId);
+        $address = Database::escape($address);
+        $postcode = Database::escape($postcode);
         Database::query("insert into t_user_address (userid,continent,continentid,country,countryid,state,stateid,region,regionid,city,cityid,address,postcode) 
             values ('$userId', '$continent', '$continentId', '$country', '$countryId', '$state', '$stateId', '$region', '$regionId', '$city', '$cityId', '$address', '$postcode')");
         $userAddressId = Database::queryAsObject("select last_insert_id() as newid from t_user_address");
@@ -134,20 +134,20 @@ class UserAddressModel {
     }
     
     static function updateUserAddress ($userAddressId, $userId, $continent, $continentId, $country, $countryId, $state, $stateId, $region, $regionId, $city, $cityId, $address, $postcode, $x, $y) {
-        $userAddressId = mysql_real_escape_string($userAddressId);
-        $userId = mysql_real_escape_string($userId);
-        $continent = mysql_real_escape_string($continent);
-        $continentId = mysql_real_escape_string($continentId);
-        $country = mysql_real_escape_string($country);
-        $countryId = mysql_real_escape_string($countryId);
-        $state = mysql_real_escape_string($state);
-        $stateId = mysql_real_escape_string($stateId);
-        $region = mysql_real_escape_string($region);
-        $regionId = mysql_real_escape_string($regionId);
-        $city = mysql_real_escape_string($city);
-        $cityId = mysql_real_escape_string($cityId);
-        $address = mysql_real_escape_string($address);
-        $postcode = mysql_real_escape_string($postcode);
+        $userAddressId = Database::escape($userAddressId);
+        $userId = Database::escape($userId);
+        $continent = Database::escape($continent);
+        $continentId = Database::escape($continentId);
+        $country = Database::escape($country);
+        $countryId = Database::escape($countryId);
+        $state = Database::escape($state);
+        $stateId = Database::escape($stateId);
+        $region = Database::escape($region);
+        $regionId = Database::escape($regionId);
+        $city = Database::escape($city);
+        $cityId = Database::escape($cityId);
+        $address = Database::escape($address);
+        $postcode = Database::escape($postcode);
         Database::query("update t_user_address set
             userid = '$userId',
             continent = '$continent',
@@ -167,7 +167,7 @@ class UserAddressModel {
     }
     
     static function deleteUserAddress ($userAddressId) {
-        $userAddressId = mysql_real_escape_string($userAddressId);
+        $userAddressId = Database::escape($userAddressId);
         Database::query("delete from t_user_address where id = '$userAddressId'");
     }
 }

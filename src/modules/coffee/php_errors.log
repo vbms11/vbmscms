@@ -1,0 +1,180 @@
+[16-Feb-2016 15:44:39 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 16
+[16-Feb-2016 15:46:00 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 16
+[16-Feb-2016 15:46:22 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 16
+[16-Feb-2016 15:48:03 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 14
+[16-Feb-2016 15:48:24 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 16
+[16-Feb-2016 15:48:42 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 18
+[16-Feb-2016 15:49:40 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 15
+[16-Feb-2016 15:50:52 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 15
+[16-Feb-2016 15:51:03 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 15
+[16-Feb-2016 15:51:53 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 8
+[16-Feb-2016 15:51:53 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 8
+[16-Feb-2016 15:51:53 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 8
+[16-Feb-2016 15:51:53 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 8
+[16-Feb-2016 15:52:12 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 9
+[16-Feb-2016 15:52:12 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 9
+[16-Feb-2016 15:52:12 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 9
+[16-Feb-2016 15:52:12 UTC] PHP Notice:  Undefined variable: physical_path in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 9
+[16-Feb-2016 16:01:52 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 24
+[16-Feb-2016 16:02:11 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 25
+[16-Feb-2016 16:02:49 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 26
+[16-Feb-2016 16:03:10 UTC] PHP Fatal error:  Call to undefined function loadRequirements() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 26
+[16-Feb-2016 16:04:27 UTC] PHP Warning:  include_once(/server/core/coffeeDevice.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 18
+[16-Feb-2016 16:04:27 UTC] PHP Warning:  include_once(): Failed opening '/server/core/coffeeDevice.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 18
+[16-Feb-2016 16:04:27 UTC] PHP Fatal error:  Class 'CoffeeDevice' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 20
+[16-Feb-2016 16:04:45 UTC] PHP Warning:  include_once(/server/core/coffeeDevice.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 19
+[16-Feb-2016 16:04:45 UTC] PHP Warning:  include_once(): Failed opening '/server/core/coffeeDevice.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 19
+[16-Feb-2016 16:04:45 UTC] PHP Fatal error:  Class 'CoffeeDevice' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 21
+[16-Feb-2016 16:05:22 UTC] PHP Warning:  include_once(/server/core/coffeeDevice.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 20
+[16-Feb-2016 16:05:22 UTC] PHP Warning:  include_once(): Failed opening '/server/core/coffeeDevice.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 20
+[16-Feb-2016 16:05:22 UTC] PHP Fatal error:  Class 'CoffeeDevice' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 22
+[16-Feb-2016 16:07:54 UTC] PHP Parse error:  syntax error, unexpected '*' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/index.php on line 23
+[16-Feb-2016 16:11:42 UTC] PHP Parse error:  syntax error, unexpected '*' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/index.php on line 21
+[16-Feb-2016 16:12:28 UTC] PHP Parse error:  syntax error, unexpected '*' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/index.php on line 21
+[19-Feb-2016 10:42:39 UTC] PHP Fatal error:  Class 'Request' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/index.php on line 5
+[19-Feb-2016 10:44:14 UTC] PHP Fatal error:  Class 'Session' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/request.php on line 107
+[19-Feb-2016 10:46:46 UTC] PHP Fatal error:  Class 'Session' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/request.php on line 107
+[19-Feb-2016 10:46:55 UTC] PHP Fatal error:  Class 'Session' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/request.php on line 107
+[22-Feb-2016 14:55:03 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:00:12 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:00:28 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:01:19 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:01:43 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:02:13 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:02:58 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:03:29 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:04:05 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:30:56 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 15:31:04 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 16:09:32 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 7
+[22-Feb-2016 16:18:11 UTC] PHP Parse error:  syntax error, unexpected '__constructor' (T_STRING), expecting variable (T_VARIABLE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 23
+[22-Feb-2016 16:19:26 UTC] PHP Fatal error:  Class 'SettingType' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 3
+[22-Feb-2016 16:19:54 UTC] PHP Fatal error:  Class 'DBObject' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 3
+[22-Feb-2016 16:21:31 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 8
+[22-Feb-2016 16:21:31 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 13
+[26-Feb-2016 09:56:43 UTC] PHP Warning:  The magic method __get() must have public visibility and cannot be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 8
+[26-Feb-2016 09:56:43 UTC] PHP Fatal error:  Method Config::__get() must take exactly 1 argument in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 13
+[26-Feb-2016 10:10:02 UTC] PHP Fatal error:  Cannot redeclare Session::$key_sessionId in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 6
+[26-Feb-2016 10:16:29 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 100
+[26-Feb-2016 10:19:03 UTC] PHP Fatal error:  Class 'DBObject' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 3
+[26-Feb-2016 10:26:42 UTC] PHP Fatal error:  Abstract function DbDataSource::connect() cannot contain body in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 11
+[27-Feb-2016 16:58:28 UTC] PHP Parse error:  syntax error, unexpected '$defaultDataSource' (T_VARIABLE), expecting identifier (T_STRING) or class (T_CLASS) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/db.php on line 7
+[28-Feb-2016 11:11:47 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/db.php on line 26
+[28-Feb-2016 11:27:47 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/db.php on line 26
+[28-Feb-2016 11:29:44 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/db.php on line 26
+[28-Feb-2016 11:33:16 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/db.php on line 26
+[28-Feb-2016 11:35:30 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[28-Feb-2016 11:35:30 UTC] PHP Fatal error:  Abstract function DbDataSource::isConnected() cannot contain body in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 22
+[28-Feb-2016 11:40:46 UTC] PHP Fatal error:  Abstract function DbDataSource::isConnected() cannot contain body in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 22
+[28-Feb-2016 11:45:21 UTC] PHP Fatal error:  Class CsvDataSource contains 7 abstract methods and must therefore be declared abstract or implement the remaining methods (DbDataSource::connect, DbDataSource::escapeMethod, DbDataSource::query, ...) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 56
+[28-Feb-2016 15:37:52 UTC] PHP Fatal error:  Class CsvDataSource contains 7 abstract methods and must therefore be declared abstract or implement the remaining methods (DbDataSource::connect, DbDataSource::escapeMethod, DbDataSource::query, ...) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 56
+[28-Feb-2016 15:54:04 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 15:55:03 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 15:59:20 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 16:02:07 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 16:02:38 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 16:06:09 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 16:09:40 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 16:11:37 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 16:13:45 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 17:07:17 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 17:23:20 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbDataSource.php on line 128
+[28-Feb-2016 17:27:12 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 100
+[28-Feb-2016 17:37:30 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 100
+[29-Feb-2016 10:19:57 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[29-Feb-2016 10:19:57 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 100
+[29-Feb-2016 10:29:13 UTC] PHP Fatal error:  Cannot redeclare Session::startSession() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 130
+[29-Feb-2016 10:29:13 UTC] PHP Fatal error:  Cannot redeclare Session::startSession() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 130
+[29-Feb-2016 11:27:04 UTC] PHP Fatal error:  Cannot redeclare Session::startSession() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 147
+[29-Feb-2016 11:27:21 UTC] PHP Fatal error:  Cannot redeclare Session::startSession() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 147
+[29-Feb-2016 11:38:21 UTC] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 165
+[01-Mar-2016 13:57:25 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[01-Mar-2016 13:57:25 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 165
+[01-Mar-2016 17:03:47 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[01-Mar-2016 17:03:47 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 186
+[01-Mar-2016 17:04:00 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 186
+[01-Mar-2016 17:25:37 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 14
+[01-Mar-2016 17:26:55 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 14
+[01-Mar-2016 17:27:31 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 14
+[01-Mar-2016 17:27:47 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 14
+[01-Mar-2016 17:27:51 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 14
+[01-Mar-2016 17:28:52 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 186
+[01-Mar-2016 17:29:17 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 14
+[01-Mar-2016 17:29:42 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 14
+[01-Mar-2016 17:31:47 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 186
+[01-Mar-2016 17:31:59 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/util/common.php on line 15
+[01-Mar-2016 17:32:11 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 186
+[01-Mar-2016 17:32:23 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 186
+[01-Mar-2016 17:33:14 UTC] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/session.php on line 185
+[01-Mar-2016 17:37:51 UTC] PHP Parse error:  syntax error, unexpected '[' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/ui/ui.php on line 22
+[01-Mar-2016 17:46:23 UTC] PHP Fatal error:  Class 'Controller' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/controller/userController.php on line 3
+[01-Mar-2016 17:46:26 UTC] PHP Fatal error:  Class 'Controller' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/controller/userController.php on line 3
+[01-Mar-2016 17:54:44 UTC] PHP Parse error:  syntax error, unexpected ',', expecting function (T_FUNCTION) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/ui/ui.php on line 321
+[01-Mar-2016 17:56:19 UTC] PHP Parse error:  syntax error, unexpected ',', expecting function (T_FUNCTION) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/ui/ui.php on line 321
+[01-Mar-2016 17:57:10 UTC] PHP Parse error:  syntax error, unexpected ',', expecting function (T_FUNCTION) in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/ui/ui.php on line 321
+[01-Mar-2016 17:57:40 UTC] PHP Fatal error:  Call to undefined method Request::useSession() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/request.php on line 34
+[01-Mar-2016 17:58:16 UTC] PHP Fatal error:  Call to undefined method Request::useSession() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/request.php on line 34
+[01-Mar-2016 17:58:38 UTC] PHP Fatal error:  Call to undefined method Request::useSession() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/request.php on line 34
+[01-Mar-2016 18:00:35 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[01-Mar-2016 18:00:52 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[01-Mar-2016 18:02:41 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[01-Mar-2016 18:03:08 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[01-Mar-2016 18:03:19 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[01-Mar-2016 18:03:30 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[01-Mar-2016 18:04:12 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:21:46 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[02-Mar-2016 10:21:46 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:25:35 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:25:41 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:26:07 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:26:51 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:27:29 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:28:45 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:29:53 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:30:47 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:40:30 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:43:04 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 10:44:03 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 14:41:49 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[02-Mar-2016 14:41:49 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 14:42:30 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 51
+[02-Mar-2016 14:49:32 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 55
+[02-Mar-2016 14:53:04 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 57
+[02-Mar-2016 14:57:23 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 57
+[02-Mar-2016 14:58:40 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 57
+[02-Mar-2016 14:58:43 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 57
+[02-Mar-2016 15:01:46 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 61
+[02-Mar-2016 15:07:18 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 62
+[02-Mar-2016 15:08:59 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 62
+[02-Mar-2016 15:14:05 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 62
+[02-Mar-2016 15:14:51 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 62
+[02-Mar-2016 15:15:35 UTC] PHP Fatal error:  Access to undeclared static property: Config::$attribute in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/configLoader.php on line 62
+[02-Mar-2016 15:17:10 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 54
+[02-Mar-2016 15:17:45 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 54
+[02-Mar-2016 15:17:54 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 54
+[02-Mar-2016 15:18:15 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 54
+[02-Mar-2016 15:22:52 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 54
+[02-Mar-2016 15:53:05 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[02-Mar-2016 15:53:05 UTC] PHP Fatal error:  Using $this when not in object context in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 54
+[02-Mar-2016 15:53:36 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:10:01 UTC] PHP Fatal error:  Class 'Translations' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/coffeeDevice.php on line 58
+[02-Mar-2016 16:18:15 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:18:52 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:19:16 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:21:57 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:41:47 UTC] PHP Warning:  The magic method __callStatic() must have public visibility and be static in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/model/dbObject.php on line 31
+[02-Mar-2016 16:41:47 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:45:00 UTC] PHP Fatal error:  Call to undefined function UPPER() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/factory/controllerFactory.php on line 10
+[02-Mar-2016 16:47:22 UTC] PHP Fatal error:  Call to undefined function charat() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/factory/controllerFactory.php on line 10
+[02-Mar-2016 16:49:27 UTC] PHP Fatal error:  Call to undefined function touppercase() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/factory/controllerFactory.php on line 10
+[02-Mar-2016 16:52:11 UTC] PHP Fatal error:  Call to undefined function uppercase() in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/factory/controllerFactory.php on line 10
+[02-Mar-2016 16:52:46 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:53:25 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 16:56:48 UTC] PHP Notice:  Undefined variable: requirement in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 20
+[02-Mar-2016 16:56:48 UTC] PHP Warning:  include_once(/home/ubuntu/workspace/vbmscms/src/modules/coffee/src): failed to open stream: Not a directory in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 20
+[02-Mar-2016 16:56:48 UTC] PHP Warning:  include_once(): Failed opening '/home/ubuntu/workspace/vbmscms/src/modules/coffee/src/' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 20
+[02-Mar-2016 16:56:48 UTC] PHP Fatal error:  Class 'CoffeeDevice' not found in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/includes.php on line 21
+[02-Mar-2016 16:57:54 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 17:00:29 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 17:00:56 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45
+[02-Mar-2016 17:07:25 UTC] PHP Notice:  Use of undefined constant Device - assumed 'Device' in /home/ubuntu/workspace/vbmscms/src/modules/coffee/src/server/core/errorHandler.php on line 45

@@ -40,9 +40,9 @@ class LanguagesModel {
     }
 
     static function saveLanguage ($id,$flag,$active) {
-        $id = mysql_real_escape_string($id);
-        $flag = mysql_real_escape_string($flag);
-        $active = mysql_real_escape_string($active);
+        $id = Database::escape($id);
+        $flag = Database::escape($flag);
+        $active = Database::escape($active);
         return Database::query("update t_language set flag = '$flag', active = '$active' where id = '$id'");
     }
 	
@@ -54,7 +54,7 @@ class LanguagesModel {
 		if (isset(self::$siteLanguages[$siteId])) {
 			return self::$siteLanguages[$siteId];
 		}
-		$_siteId = mysql_real_escape_string($siteId);
+		$_siteId = Database::escape($siteId);
 		self::$siteLanguages[$siteId] = Database::queryAsArray(
 			"select sl.* from t_site_language sl
 			join t_language l on sl.languageid = l.id

@@ -1,0 +1,56 @@
+
+/* template */
+
+.serveyEditor {
+    position: relative;
+}
+.serveyEditor .right {
+    position: absolute;
+    width: 150px;
+    height: 100%;
+}
+.serveyEditor .rightSplitter {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    width: 3px;
+    right: 153px;
+    background: silver;
+}
+.serveyEditor .left {
+    position: absolute;
+    width: 200px;
+    height: 100%;
+}
+.serveyEditor .leftSplitter {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    width: 3px;
+    left: 200px;
+    background: silver;
+}
+.serveyEditor .center {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 203px;
+    right: 153;
+}
+.clear {
+    clear: both;
+}
+
+/* condition */
+
+/* task */
+
+/* action */
+
+/* form */
+
+
+
+
+
+

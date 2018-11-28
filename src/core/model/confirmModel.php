@@ -19,15 +19,15 @@ class ConfirmModel {
     }
 
     static function registerConfirmationAction ($hash, $moduleId, $args, $expireDays) {
-        $hash = mysql_real_escape_string($hash);
-        $moduleId = mysql_real_escape_string($moduleId);
-        $expireDays = mysql_real_escape_string($expireDays);
-        $args = mysql_real_escape_string(serialize($args));
+        $hash = Database::escape($hash);
+        $moduleId = Database::escape($moduleId);
+        $expireDays = Database::escape($expireDays);
+        $args = Database::escape(serialize($args));
         Database::query("insert into t_confirm(hash,moduleid,expiredate,args) values('$hash','$moduleId','now()+days('$expireDays')','$args')");
     }
 
 	function getConfirm ($hash) {
-		$hash = mysql_real_escape_string($hash);
+		$hash = Database::escape($hash);
 		$confirm = Database::queryAsObject("select * from t_confirm where hash = 'hash'");
 		$confirm->args = unserialize($confirm->args);
 		return $confirm;
@@ -38,8 +38,7 @@ class ConfirmModel {
     }
 
     static function invokeConfirmationAction ($hash) {
-        $result = Database::query("select * from t_confirm where hash ='$hash'");
-        $obj = mysql_fetch_object($result);
+        $obj = Database::queryAsObject("select * from t_confirm where hash ='$hash'");
         if ($obj != null) {
             Database::query("delete from t_confirm where hash = '$hash'");
             NavigationModel::redirect($obj->url);
@@ -50,8 +49,8 @@ class ConfirmModel {
     static function makeConfirmationHash () {
         while (true) {
             $hash = Common::randHash();
-            $result = Database::query("select hash from t_confirm where hash = '$hash'");
-            if (mysql_fetch_object($result) == null)
+            $result = Database::queryAsObject("select hash from t_confirm where hash = '$hash'");
+            if ($result == null)
                 return $hash;
         }
     }

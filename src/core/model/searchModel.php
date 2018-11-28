@@ -69,7 +69,7 @@ class SearchModel {
     }
 
     static function makeSearchSql ($searchText,$feildName) {
-        $searchText = mysql_real_escape_string(strtolower($searchText));
+        $searchText = Database::escape(strtolower($searchText));
         $searchWords = explode(" ",$searchText);
         $sql = "";
         foreach ($searchWords as $searchWord) {

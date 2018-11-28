@@ -34,12 +34,12 @@ class PinboardModel {
 			$userId = Context::getUserId();
 		}
 		
-		$name = mysql_real_escape_string($name);
-		$description = mysql_real_escape_string($description);
-		$userId = mysql_real_escape_string($userId);
-		$iconId = mysql_real_escape_string($iconId);
-		$lat = mysql_real_escape_string($lat);
-		$lng = mysql_real_escape_string($lng);
+		$name = Database::escape($name);
+		$description = Database::escape($description);
+		$userId = Database::escape($userId);
+		$iconId = Database::escape($iconId);
+		$lat = Database::escape($lat);
+		$lng = Database::escape($lng);
 		
 		Database::query("insert into t_pinboard (name, description, userid, iconid, lat, lng, createdate, updatedate)
 			values ('$name', '$description', '$userId', '$iconId', '$lat', '$lng', now(), now())");
@@ -50,9 +50,9 @@ class PinboardModel {
 	
 	static function setPinboardLocation ($id, $lat, $lng) {
 		
-		$id = mysql_real_escape_string($id);
-		$lat = mysql_real_escape_string($lat);
-		$lng = mysql_real_escape_string($lng);
+		$id = Database::escape($id);
+		$lat = Database::escape($lat);
+		$lng = Database::escape($lng);
 		
 		Database::query("update t_pinboard set
 			lat = '$lat',
@@ -62,10 +62,10 @@ class PinboardModel {
 	
 	static function savePinboard ($id, $name, $description, $iconId) {
 		
-		$id = mysql_real_escape_string($id);
-		$name = mysql_real_escape_string($name);
-		$description = mysql_real_escape_string($description);
-		$iconId = mysql_real_escape_string($iconId);
+		$id = Database::escape($id);
+		$name = Database::escape($name);
+		$description = Database::escape($description);
+		$iconId = Database::escape($iconId);
 		
 		Database::query("update t_pinboard set
 			name = '$name',
@@ -77,17 +77,17 @@ class PinboardModel {
 	
 	static function getPinboard ($id) {
 		
-		$id = mysql_real_escape_string($id);
+		$id = Database::escape($id);
 		
 		return Database::queryAsObject("select * from t_pinboard where id = '$id'");
 	}
 	
 	static function getPinbords ($minLng, $minLat, $maxLng, $maxLat, $max=100) {
 		
-		$minLng = mysql_real_escape_string($minLng);
-		$minLat = mysql_real_escape_string($minLat);
-		$maxLng = mysql_real_escape_string($maxLng);
-		$maxLat = mysql_real_escape_string($maxLat);
+		$minLng = Database::escape($minLng);
+		$minLat = Database::escape($minLat);
+		$maxLng = Database::escape($maxLng);
+		$maxLat = Database::escape($maxLat);
 		$max = (int) $max;
 		
 		return Database::queryAsArray("select p.*, i.iconfile, i.width, i.height from t_pinboard p 
@@ -116,13 +116,13 @@ class PinboardModel {
 	
 	static function createNote ($message, $pinboardId, $type, $typeId, $userId, $x, $y) {
 		
-		$message = mysql_real_escape_string($message);
-		$pinboardId = mysql_real_escape_string($pinboardId);
-		$type = mysql_real_escape_string($type);
-		$typeId = mysql_real_escape_string($typeId);
-		$userId = mysql_real_escape_string($userId);
-		$x = mysql_real_escape_string($x);
-		$y = mysql_real_escape_string($y);
+		$message = Database::escape($message);
+		$pinboardId = Database::escape($pinboardId);
+		$type = Database::escape($type);
+		$typeId = Database::escape($typeId);
+		$userId = Database::escape($userId);
+		$x = Database::escape($x);
+		$y = Database::escape($y);
 		
 		Database::query("insert into t_pinboard_note (message, pinboardid, type, typeid, userid, x, y, createdate)
 			values ('$message', '$pinboardId', '$type', '$typeId', '$userId', '$x', '$y', now())");
@@ -133,9 +133,9 @@ class PinboardModel {
 	
 	static function setNotePosition ($noteId, $x, $y) {
 		
-		$noteId = mysql_real_escape_string($noteId);
-		$x = mysql_real_escape_string($x);
-		$y = mysql_real_escape_string($y);
+		$noteId = Database::escape($noteId);
+		$x = Database::escape($x);
+		$y = Database::escape($y);
 		
 		Database::query("update t_pinboard_note set 
 			x = '$x', 
@@ -145,8 +145,8 @@ class PinboardModel {
 	
 	static function saveNote ($noteId, $message) {
 		
-		$noteId = mysql_real_escape_string($noteId);
-		$message = mysql_real_escape_string($message);
+		$noteId = Database::escape($noteId);
+		$message = Database::escape($message);
 		
 		Database::query("update t_pinboard_note set 
 			message = '$message' 
@@ -155,7 +155,7 @@ class PinboardModel {
 	
 	static function getNotes ($pinboardId, $max=100) {
 		
-		$pinboardId = mysql_real_escape_string($pinboardId);
+		$pinboardId = Database::escape($pinboardId);
 		$max = (int) $max;
 		
 		return Database::queryAsArray("select * from t_pinboard_note where pinboardid = '$pinboardId' limit $max");
@@ -163,14 +163,14 @@ class PinboardModel {
 	
 	static function getNote ($id) {
 	
-		$id = mysql_real_escape_string($id);
+		$id = Database::escape($id);
 	
 		return Database::queryAsObject("select * from t_pinboard_note where id = '$id'");
 	}
 	
 	static function deleteNote ($noteId) {
 		
-		$noteId = mysql_real_escape_string($noteId);
+		$noteId = Database::escape($noteId);
 		
 		Database::query("delete from t_pinboard_note where id = '$noteId'");
 	}

@@ -17,9 +17,7 @@ class UserProfileModule extends XModule {
         switch (parent::getAction()) {
             case "save":
                 if (Context::hasRole("user.profile.edit")) {
-                    parent::param("mode",$_POST["mode"]);
-                    parent::param("userAttribs",$_POST["userAttribs"]);
-                    parent::param("profileTemplate",$_POST["profileTemplate"]);
+                    parent::param("mode",parent::post("mode"));
                 }
                 parent::blur();
                 parent::redirect();
@@ -144,10 +142,24 @@ class UserProfileModule extends XModule {
                         </a>
                     </div>
                     <div>
+                        <a href="<?php echo NavigationModel::createStaticPageLink('userFiles', array('userId' => $userId), true, false); ?>">
+                            <?php echo parent::getTranslation("userProfile.files"); ?>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="<?php echo NavigationModel::createStaticPageLink('userCompany', array('userId' => $userId), true, false); ?>">
+                            <?php echo parent::getTranslation("userProfile.companys"); ?>
+                        </a>
+                    </div>
+                    
+                        
+                    <?php /*
+                    <div>
                         <a href="<?php echo NavigationModel::createStaticPageLink('userGallery', array('userId' => $userId), true, false); ?>">
                             <?php echo parent::getTranslation("userProfile.gallery"); ?>
                         </a>
                     </div>
+                     */ ?>
                     <?php
                     
                     if ($userId == Context::getUserId()) {

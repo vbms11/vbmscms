@@ -137,36 +137,36 @@ abstract class XDataModel {
     public static $dm_validator_email = 5;
     
     
-    abstract static function install ();
+    abstract function install ();
     
     // tables
-    abstract static function createTable ($tableName);
-    abstract static function deleteTable ($tableName);
-    abstract static function getTables ();
-    abstract static function getTable ($tableName);
+    abstract function createTable ($tableName);
+    abstract function deleteTable ($tableName);
+    abstract function getTables ();
+    abstract function getTable ($tableName);
     
     // columns
-    abstract static function addColumn ($tableName, $columnName, $editType, $validator=null, $position=null);
-    abstract static function deleteColumn ($tableName, $columnName);
-    abstract static function updateColumn ($tableName, $columnName, $editType, $validator=null, $position=null);
-    abstract static function getColumns ($tableName);
-    abstract static function hasColumn ($tableName, $columnName);
+    abstract function addColumn ($tableName, $columnName, $editType, $validator=null, $position=null);
+    abstract function deleteColumn ($tableName, $columnName);
+    abstract function updateColumn ($tableName, $columnName, $editType, $validator=null, $position=null);
+    abstract function getColumns ($tableName);
+    abstract function hasColumn ($tableName, $columnName);
     
     // row operations
-    abstract static function insertRow ($tableName, $rowNamesValues);
-    abstract static function deleteRow ($tableName, $objectId);
-    abstract static function updateRow ($tableName, $objectId, $rowNamesValues);
-    abstract static function getAllRows ($tableName);
-    abstract static function getAllRowsAsArray ($tableName);
-    abstract static function getRowByObjectId ($tableName, $objectId);
-    abstract static function getRowByObjectIdAsArray ($tableName, $objectId);
+    abstract function insertRow ($tableName, $rowNamesValues);
+    abstract function deleteRow ($tableName, $objectId);
+    abstract function updateRow ($tableName, $objectId, $rowNamesValues);
+    abstract function getAllRows ($tableName);
+    abstract function getAllRowsAsArray ($tableName);
+    abstract function getRowByObjectId ($tableName, $objectId);
+    abstract function getRowByObjectIdAsArray ($tableName, $objectId);
     
     // search operations
-    abstract static function getResults ($query);
-    abstract static function getResultsAsArray ($query);
+    abstract function getResults ($query);
+    abstract function getResultsAsArray ($query);
     
     // unique values
-    abstract static function getColumnValues ($tableName,$columnName);
+    abstract function getColumnValues ($tableName,$columnName);
 }
 
 require_once('core/ddm/mysqlDataModel.php');

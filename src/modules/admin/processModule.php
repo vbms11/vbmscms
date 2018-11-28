@@ -172,6 +172,23 @@ class ProcessModule extends XModule {
           	    break;
       	    case "reportPlacePicture":
       	        break;
+      	    case "reportPlaceCompanies":
+      	        
+      	        $placeId = ; // google places id
+      	        break;
+      	    case "reportCompanies":
+      	        
+      	        break;
+      	    case "sendAdvertEmails":
+      	        $limit = 30;
+      	        $productCode = parent::get("productCode");
+      	        $product = ProductModel::getByCode($productCode);
+      	        foreach (PersonModel::byRole("advert") as $persons => $person) {
+      	            $formBuilder = FormBuilderModule::getAsHtml($_GET["form"]);
+      	        }
+      	        $companies = CompanyModel::getByCode($productCode, $limit);
+      	        EmailTaskModel::set($productCode);
+      	        break;
           	case "getPlaceWikiTasks":
           	
           		$info = array();
@@ -326,6 +343,22 @@ class ProcessModule extends XModule {
     		    	</div>
     		    	<h3><?php echo parent::getTranslation("process.collectGeodata.title"); ?></h3>
     		    	<p><?php echo parent::getTranslation("process.collectGeodata.description"); ?></p>
+    	    	</div>
+	    	
+    	    	<div class="processItem">
+    		    	<div class="processEdit">
+    		    		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"geodata")); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
+    		    	</div>
+    		    	<h3><?php echo parent::getTranslation("process.collectCompanies.title"); ?></h3>
+    		    	<p><?php echo parent::getTranslation("process.collectCompanies.description"); ?></p>
+    	    	</div>
+	    	
+    	    	<div class="processItem">
+    		    	<div class="processEdit">
+    		    		<a class="jquiButton" href="<?php echo parent::link(array("action"=>"geodata")); ?>"><?php echo parent::getTranslation("common.edit"); ?></a>
+    		    	</div>
+    		    	<h3><?php echo parent::getTranslation("process.sendAdvertEmails.title"); ?></h3>
+    		    	<p><?php echo parent::getTranslation("process.sendAdvertEmails.description"); ?></p>
     	    	</div>
     	    	
     	    	<div class="processItem">

@@ -28,7 +28,7 @@ class UserInfoModule extends XModule {
             	
             	$userId = $this->getModeUserId();
             	
-	            	if (Context::hasRole("user.profile.owner") && $userId == Context::getUserId()) {
+                if (Context::hasRole("user.profile.owner") && $userId == Context::getUserId()) {
 	            	
 	            	$messages = UsersModel::validateUserInfo(parent::post("orientation"), parent::post("religion"), parent::post("ethnicity"), parent::post("about"), parent::post("relationship"), parent::post("bodyheight"), parent::post("haircolor"), parent::post("eyecolor"), parent::post("weight"));
 	            	if (empty($messages)) {
@@ -203,7 +203,7 @@ class UserInfoModule extends XModule {
 	                    ?>
 	                </td><td>
 	                    <?php 
-	                    InputFeilds::printSelect(parent::alias("relationship"), parent::post("relationship") == null ? $user->relationship : parent::post("relationship")); 
+	                    InputFeilds::printSelect(parent::alias("relationship"), parent::post("relationship") == null ? $user->relationship : parent::post("relationship"), UsersModel::$relationship);
 	                    $message = parent::getMessage("relationship");
 	                    if (!empty($message)) {
 	                        echo '<span class="validateTips">'.$message.'</span>';

@@ -131,9 +131,9 @@ class SlideshowView extends XModule {
             ?>
         </div>
         <script>
-        jQuery(function($){
+        jQuery(function(){
             
-            $.supersized({
+            jQuery.supersized({
                 slide_interval   : 10000,    // Length between transitions
                 transition       : 1,       	
                 transition_speed : 1000,     // Speed of transition

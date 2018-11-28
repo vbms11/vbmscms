@@ -24,12 +24,12 @@ class UsersModel {
     	2 => "assian",
     	3 => "arrabic"
     );
-    
-    $relationship = array(
+    */
+    static $relationship = array(
     	0 => "single",
     	1 => "relationship"
     );
-    
+    /*
     $haircolor = array(
     	0 => "Brown",
     	1 => "Blond",
@@ -56,7 +56,7 @@ class UsersModel {
         }
         
         // $coordinates = UserAddressModel::getCoordinatesFromAddress($countryName." ".$place);
-	$coordinates = null;
+	$coordinates = new stdClass();
 	$coordinates->x = $x;
 	$coordinates->y = $y;
 	
@@ -69,10 +69,10 @@ class UsersModel {
         $y = (cos(deg2rad($coordinates->x)) * cos(deg2rad($coordinates->y))) * $radiusOfEarthKM;
         $z = sin(deg2rad($coordinates->y)) * $radiusOfEarthKM;
         
-        $x = mysql_real_escape_string($x);
-        $y = mysql_real_escape_string($y);
-        $z = mysql_real_escape_string($z);
-	$gender = mysql_real_escape_string($gender);
+        $x = Database::escape($x);
+        $y = Database::escape($y);
+        $z = Database::escape($z);
+	$gender = Database::escape($gender);
         
 	$query = "select 
             u.*, 
@@ -112,17 +112,17 @@ class UsersModel {
     }
     
     static function updateLoginDate ($userId) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         Database::query("update t_user set logindate = now() where id = '$userId'");
     }
     
     static function login ($username, $password, $siteId = null) {
-        $username = mysql_real_escape_string($username);
+        $username = Database::escape($username);
         $password = md5($password);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
             join t_user u on su.userid = u.id 
@@ -138,11 +138,11 @@ class UsersModel {
     }
     
     static function loginWithEmail ($email, $siteId = null) {
-        $email = mysql_real_escape_string($email);
+        $email = Database::escape($email);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
             join t_user u on su.userid = u.id 
@@ -158,11 +158,11 @@ class UsersModel {
     }
     
     static function loginWithFacebookId ($facebookId, $siteId = null) {
-        $facebookId = mysql_real_escape_string($facebookId);
+        $facebookId = Database::escape($facebookId);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         $userObj = Database::queryAsObject("select u.* from t_site_users su 
             join t_user u on su.userid = u.id 
@@ -178,13 +178,13 @@ class UsersModel {
     }
     
     static function setFacebookId ($userId, $facebookId) {
-        $userId = mysql_real_escape_string($userId);
-        $facebookId = mysql_real_escape_string($facebookId);
+        $userId = Database::escape($userId);
+        $facebookId = Database::escape($facebookId);
         Database::query("update t_user set facebook_uid = '$facebookId' where id = '$userId'");
     }
     
     static function loginWithKey ($key) {
-        $key = mysql_real_escape_string($key);
+        $key = Database::escape($key);
         $userObj = Database::queryAsObject("select * from t_user where authkey = '$key' and active = '1'") or die (mysql_error());
         // validate login
         if ($userObj != null) {
@@ -211,28 +211,28 @@ class UsersModel {
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         return Database::queryAsArray("select u.* from t_site_users su join t_user u on su.userid = u.id $condition");
     }
 
     static function getUser ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         return Database::queryAsObject("select u.*, year(now()) - year(u.birthdate) as age from t_user u where u.id = '$id'");
     }
     
     static function getUserByUserName ($username, $siteId = null) {
-        $username = mysql_real_escape_string($username);
+        $username = Database::escape($username);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         return Database::query("select u.* from t_site_users join t_user u on su.userid = u.id where username = '$username'");
     }
     
     static function getUserByObjectId ($objectId) {
-        $objectId = mysql_real_escape_string($objectId);
+        $objectId = Database::escape($objectId);
         return Database::queryAsObject("select * from t_user where objectid = '$objectId'");
     }
     
@@ -240,66 +240,66 @@ class UsersModel {
         $customRoles = array();
         if (is_array($customRole)) {
             foreach ($customRole as $role) {
-                $customRoles[] = mysql_real_escape_string($role);
+                $customRoles[] = Database::escape($role);
             }
         } else {
-            $customRoles[] = mysql_real_escape_string($customRole);
+            $customRoles[] = Database::escape($customRole);
         }
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         $sqlCustomRoles = "in ('".implode("','",$customRoles)."')";
         return Database::queryAsArray("select u.* from t_site_users su join t_user u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id $sqlCustomRoles");
     }
     
     static function getUsersByCustomRoleId ($customRole, $siteId = null) {
-        $customRole = mysql_real_escape_string($customRole);
+        $customRole = Database::escape($customRole);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         return Database::queryAsArray("select u.* from t_site_users su join t_user u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
     }
     
     static function getUsersEmailsByCustomRoleId ($customRole, $siteId = null) {
-        $customRole = mysql_real_escape_string($customRole);
+        $customRole = Database::escape($customRole);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         $result = Database::queryAsArray("select email as email from t_site_users su join t_user u on su.userid = u.id join t_roles r on r.userid = u.id join t_roles_custom c on c.id = r.roleid where c.id = '$customRole'");
         return Common::toMap($result, "email", "email");
     }
     
     static function getUserEmailById ($userId) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         $userEmail = Database::queryAsObject("select email as email from t_user where id = '$userId'");
         return $userEmail->email;
     }
     
     static function setUserActiveFlag ($id,$flag) {
-        $id = mysql_real_escape_string($id);
-        $flag = mysql_real_escape_string($flag);
+        $id = Database::escape($id);
+        $flag = Database::escape($flag);
         Database::query("update t_user set active = '$flag' where id = '$id'");
     }
 
     static function getUserByEmail ($email, $siteId = null) {
-        $email = mysql_real_escape_string($email);
+        $email = Database::escape($email);
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         return Database::queryAsObject("select u.* from t_site_users su join t_user u on su.userid = u.id where email = '$email'");
     }
     
     static function setUserImage ($userId, $imageId) {
-        $userId = mysql_real_escape_string($userId);
-        $imageId = mysql_real_escape_string($imageId);
+        $userId = Database::escape($userId);
+        $imageId = Database::escape($imageId);
         Database::query("update t_user set 
             image = '$imageId', 
             imagex = null,
@@ -310,11 +310,11 @@ class UsersModel {
     }
     
     static function setUserImageCrop ($userId, $x, $y, $w, $h) {
-        $userId = mysql_real_escape_string($userId);
-        $x = mysql_real_escape_string($x);
-        $y = mysql_real_escape_string($y);
-        $w = mysql_real_escape_string($w);
-        $h = mysql_real_escape_string($h);
+        $userId = Database::escape($userId);
+        $x = Database::escape($x);
+        $y = Database::escape($y);
+        $w = Database::escape($w);
+        $h = Database::escape($h);
         Database::query("update t_user set 
             imagex = '$x',
             imagey = '$y',
@@ -404,24 +404,24 @@ class UsersModel {
             $validate["gender"] = "invalid value!";
         }
         if ($id == null) {
-            $_email = mysql_real_escape_string($email);
+            $_email = Database::escape($email);
             $result = Database::queryAsObject("select 1 as emailexists from t_user where email = '$_email'");
             if ($result != null) {
                 $validate["email"] = "Email already registered by another user!";
             }
-            $_username = mysql_real_escape_string($username);
+            $_username = Database::escape($username);
             $result = Database::queryAsObject("select 1 as usernameexists from t_user where username = '$_username'");
             if ($result != null) {
                 $validate["username"] = "Username already registered by another user!";
             }
         } else {
-            $_id = mysql_real_escape_string($id);
-            $_email = mysql_real_escape_string($email);
+            $_id = Database::escape($id);
+            $_email = Database::escape($email);
             $result = Database::queryAsObject("select 1 as emailexists from t_user where email = '$_email' and id != '$id'");
             if ($result != null) {
                 $validate["email"] = "Email already registered by another user!";
             }
-            $_username = mysql_real_escape_string($username);
+            $_username = Database::escape($username);
             $result = Database::queryAsObject("select 1 as usernameexists from t_user where username = '$_username' and id != '$id'");
             if ($result != null) {
                 $validate["username"] = "Username already registered by another user!";
@@ -431,21 +431,21 @@ class UsersModel {
     }
     
     static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate = null, $gender = "1", $profileImage = null, $siteId = null) {
-        $username = mysql_real_escape_string($username);
-        $firstName = mysql_real_escape_string($firstName);
-        $lastName = mysql_real_escape_string($lastName);
-        $email = mysql_real_escape_string($email);
-        $birthDate = mysql_real_escape_string($birthDate);
-        $gender = mysql_real_escape_string($gender);
+        $username = Database::escape($username);
+        $firstName = Database::escape($firstName);
+        $lastName = Database::escape($lastName);
+        $email = Database::escape($email);
+        $birthDate = Database::escape($birthDate);
+        $gender = Database::escape($gender);
         if ($profileImage == null) {
             $profileImage = "null";
         } else {
-            $profileImage = "'".mysql_real_escape_string($profileImage)."'";
+            $profileImage = "'".Database::escape($profileImage)."'";
         }
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         } else {
-            $siteId = mysql_real_escape_string($siteId);
+            $siteId = Database::escape($siteId);
         }
         if ($id == null) {
             // create user objectid
@@ -464,10 +464,10 @@ class UsersModel {
                 UsersModel::setPassword($id, $password);
             }
         } else {
-            $id = mysql_real_escape_string($id);
+            $id = Database::escape($id);
             $registerDateSql = "";
             if ($registerDate != null)
-                $registerDateSql = ", registerdate = STR_TO_DATE('".mysql_real_escape_string($registerDate)."','%d/%m/%Y')";
+                $registerDateSql = ", registerdate = STR_TO_DATE('".Database::escape($registerDate)."','%d/%m/%Y')";
             Database::query("update t_user set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y'), gender = '$gender' $registerDateSql where id = '$id'");
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
@@ -483,15 +483,15 @@ class UsersModel {
     
     //TODO add lastonline,profileviews, orientation,religion,ethnicity,about,relationship, bodyheight, haircolor, eyecolor, weight
     static function saveUserInfo ($orientation, $religion, $ethnicity, $about, $relationship, $bodyheight, $haircolor, $eyecolor, $weight) {
-    	$orientation = mysql_real_escape_string($orientation);
-    	$religion = mysql_real_escape_string($religion);
-    	$ethnicity = mysql_real_escape_string($ethnicity);
-    	$about = mysql_real_escape_string($about);
-    	$relationship = mysql_real_escape_string($relationship);
-    	$bodyheight = mysql_real_escape_string($bodyheight);
-    	$haircolor = mysql_real_escape_string($haircolor);
-    	$eyecolor = mysql_real_escape_string($eyecolor);
-    	$weight = mysql_real_escape_string($weight);
+    	$orientation = Database::escape($orientation);
+    	$religion = Database::escape($religion);
+    	$ethnicity = Database::escape($ethnicity);
+    	$about = Database::escape($about);
+    	$relationship = Database::escape($relationship);
+    	$bodyheight = Database::escape($bodyheight);
+    	$haircolor = Database::escape($haircolor);
+    	$eyecolor = Database::escape($eyecolor);
+    	$weight = Database::escape($weight);
     	Database::query("update t_user set 
     		orientation = '$orientation', 
     		religion = '$religion' ,
@@ -506,13 +506,13 @@ class UsersModel {
     }
     
     static function setUserObjectId ($id, $objectId) {
-        $id = mysql_real_escape_string($id);
-        $objectId = mysql_real_escape_string($objectId);
+        $id = Database::escape($id);
+        $objectId = Database::escape($objectId);
         Database::query("update t_user set objectid = '$objectId' where id = '$id'");
     }
 
     static function setPassword ($userId,$password,$oldPassword = null) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         $password = md5($password);
         if ($oldPassword != null) {
             $oldPassword = md5($oldPassword);
@@ -522,23 +522,38 @@ class UsersModel {
 
     static function deleteUser ($userId) {
         RolesModel::deleteRoles($userId);
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         Database::query("delete from t_site_users where userid = '$userId'");
         Database::query("delete from t_user where id = '$userId'");
     }
     
     static function refreshUserAuthKey ($userId) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         $authKey = Common::randHash(40,false);
         Database::query("update t_user set authkey = '$authKey' where id = '$userId'");
     }
     
     static function getUserAuthKey ($userId) {
-        $userId = mysql_real_escape_string($userId);
+        $userId = Database::escape($userId);
         $result = Database::queryAsObject("select authkey from t_user where id = '$userId'");
         return $result->authkey;
     } 
     
+    static function setupUserDirectoy ($userId) {
+        $user = self::getUser($userId);
+        $directoryId = null;
+        if (!empty($user)) {
+            if (empty($user->directoryid)) {
+                $directoryId = FileSystemModel::createDirectory("user_".$userId);
+                $userId = Database::escape($userId);
+                $directoryId = Database::escape($directoryId);
+                Database::query("update t_user set directoryid = '$directoryId' where id = '$userId'");
+            } else {
+                $directoryId = $user->directoryid;
+            }
+        }
+        return $directoryId;
+    }
 }
 
 ?>

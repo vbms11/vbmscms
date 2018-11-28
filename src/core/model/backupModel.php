@@ -3,42 +3,46 @@
 class BackupModel {
     
     static function getBackup ($id) {
-        $id = mysql_real_escape_string($id);
-        $result = Database::query("select * from t_backup where id = '$id'");
-        return mysql_fetch_object($result);
+        $id = Database::escape($id);
+        return Database::queryAsObject("select * from t_backup where id = '$id'");
     }
     
     static function getBackups () {
-        $result = Database::query("select * from t_backup");
-        $backups = array();
-        while ($obj = mysql_fetch_object($result)) {
-            $backups[] = $obj;
-        }
-        return $backups;
+        return Database::queryAsArray("select * from t_backup");
+    }
+    
+    static function getBackupFiles () {
+        return ResourcesModel::listResources("backup");
     }
     
     static function deleteBackup ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::query("delete from t_backup where id = '$id'");
     }
     
     static function addBackup ($name,$date=null) {
         $dateSql = "now()";
         if ($date != null) {
-            $dateSql = "'".  mysql_real_escape_string($date)."'";
+            $dateSql = "'".  Database::escape($date)."'";
         }
-        $name = mysql_real_escape_string($name);
+        $name = Database::escape($name);
         Database::query("insert into t_backup (name,date) values ('$name',$dateSql)");
     }
     
     static function loadBackup ($id) {
         
-        $backups = BackupModel::getBackups();
         $backup = BackupModel::getBackup($id);
         if ($backup != null) {
-            
             $path = ResourcesModel::getResourcePath("backup");
-            $sqls = file_get_contents($path.$backup->name);
+            self::loadBackupFile($path.$backup->name);
+        }
+    }
+    
+    static function loadBackupFile ($file) {
+        
+        if (file_exists($file)) {
+            
+            $sqls = file_get_contents($file);
             $sqls = explode(";",$sqls);
             
             // run restore sqls
@@ -86,7 +90,7 @@ class BackupModel {
                     $return.= 'INSERT INTO '.$table.' VALUES(';
                     for($j=0; $j<$num_fields; $j++) 
                     {
-                        $row[$j] = mysql_real_escape_string($row[$j]);
+                        $row[$j] = Database::escape($row[$j]);
                         if (isset($row[$j])) {
                             $return.= '0x';
                             $return.= Common::isEmpty(bin2hex($row[$j])) ? "0" : bin2hex($row[$j]);

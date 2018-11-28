@@ -3,8 +3,8 @@
 class ProductsPageModel {
 
     static function setPosition ($id, $position) {
-        $id = mysql_real_escape_string($id);
-        $position = mysql_real_escape_string($position);
+        $id = Database::escape($id);
+        $position = Database::escape($position);
         $result = Database::query("update t_product set position = '$position' where id = '$id'");
     }
 
@@ -82,8 +82,8 @@ class ProductsPageModel {
     }
 
     static function getProducts ($groupId, $lang=null) {
-        $groupId = mysql_real_escape_string($groupId);
-        $lang = mysql_real_escape_string($lang == null ? Context::getLang() : $lang);
+        $groupId = Database::escape($groupId);
+        $lang = Database::escape($lang == null ? Context::getLang() : $lang);
         return Database::queryAsArray("select c1.value as titel, c2.value as text, c3.value as shortext, p.* from t_product p
                                         left join t_code c1 on p.titelcode = c1.code and c1.lang = '$lang'
                                         left join t_code c2 on p.textcode = c2.code and c2.lang = '$lang'
@@ -92,7 +92,7 @@ class ProductsPageModel {
     }
     
     function getAllProducts ($lang=null) {
-        $lang = mysql_real_escape_string($lang == null ? Context::getLang() : $lang);
+        $lang = Database::escape($lang == null ? Context::getLang() : $lang);
         return Database::queryAsArray("select c1.value as titel, c2.value as text, c3.value as shortext, p.* from t_product p
                                         left join t_code c1 on p.titelcode = c1.code and c1.lang = '$lang'
                                         left join t_code c2 on p.textcode = c2.code and c2.lang = '$lang'
@@ -101,17 +101,16 @@ class ProductsPageModel {
     }
 
     static function getProduct ($id, $lang=null) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         if ($lang == null) {
             $lang = Context::getLang();
         }
-        $lang = mysql_real_escape_string($lang);
-        $result = Database::query("select c1.value as titel, c2.value as text, c3.value as shorttext, p.* from t_product p
+        $lang = Database::escape($lang);
+        return Database::queryAsObject("select c1.value as titel, c2.value as text, c3.value as shorttext, p.* from t_product p
                                     left join t_code c1 on p.titelcode = c1.code and c1.lang = '$lang'
                                     left join t_code c2 on p.textcode = c2.code and c2.lang = '$lang'
                                     left join t_code c3 on p.shorttextcode = c3.code and c3.lang = '$lang'
                                     where p.id = '$id'");
-        return mysql_fetch_object($result);
     }
 
     static function createProduct ($groupId,$img,$shortText,$text,$name,$quantity,$price,$shipping,$weight,$minimumAmount,$galleryId,$lang) {
@@ -122,14 +121,14 @@ class ProductsPageModel {
         //
         $position = ProductsPageModel::getNextPosition();
         //
-        $groupId = mysql_real_escape_string($groupId);
-        $img = mysql_real_escape_string($img);
-        $quantity = mysql_real_escape_string($quantity);
-        $price = mysql_real_escape_string($price);
-        $shipping = mysql_real_escape_string($shipping);
-        $weight = mysql_real_escape_string($weight);
-        $minimumAmount = mysql_real_escape_string($minimumAmount);
-        $galleryId = mysql_real_escape_string($galleryId);
+        $groupId = Database::escape($groupId);
+        $img = Database::escape($img);
+        $quantity = Database::escape($quantity);
+        $price = Database::escape($price);
+        $shipping = Database::escape($shipping);
+        $weight = Database::escape($weight);
+        $minimumAmount = Database::escape($minimumAmount);
+        $galleryId = Database::escape($galleryId);
         Database::query("insert into t_product(img,shorttextcode,textcode,titelcode,groupid,position,quantity,price,shipping,weight,minimum,galleryid)
             values('$img','$shortTextCode','$textCode','$titelCode','$groupId','$position','$quantity','$price','$shipping','$weight','$minimumAmount','$galleryId')");
         $newId = Database::query("select last_insert_id() as newid from t_product");
@@ -143,13 +142,13 @@ class ProductsPageModel {
         CodeModel::setCode($product->textcode, $lang, $text);
         CodeModel::setCode($product->titelcode, $lang, $name);
         //
-        $id = mysql_real_escape_string($id);
-        $groupId = mysql_real_escape_string($groupId);
-        $img = mysql_real_escape_string($img);
-        $quantity = mysql_real_escape_string($quantity);
-        $price = mysql_real_escape_string($price);
-        $minimumAmount = mysql_real_escape_string($minimumAmount);
-        $galleryId = mysql_real_escape_string($galleryId);
+        $id = Database::escape($id);
+        $groupId = Database::escape($groupId);
+        $img = Database::escape($img);
+        $quantity = Database::escape($quantity);
+        $price = Database::escape($price);
+        $minimumAmount = Database::escape($minimumAmount);
+        $galleryId = Database::escape($galleryId);
         Database::query("update t_product set 
             img = '$img', quantity = '$quantity', price = '$price', minimum = '$minimumAmount', groupid = '$groupId',
             shipping = '$shipping', weight = '$weight', galleryid = '$galleryId' where id = '$id'");
@@ -162,27 +161,27 @@ class ProductsPageModel {
         CodeModel::deleteCode($product->textcode);
         CodeModel::deleteCode($product->titelcode);
         // 
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         Database::query("delete from t_product where id = '$id'");
     }
 
     static function getNextPosition () {
-        $result = Database::query("select max(position) as max from t_product");
-        return mysql_fetch_object($result)->max + 1;
+        $result = Database::queryAsObject("select max(position) as max from t_product");
+        return $result->max + 1;
     }
 
     /* product groups */
 
     static function getGroup ($id) {
-        $id = mysql_real_escape_string($id);
-        $lang = mysql_real_escape_string(Context::getLang());
+        $id = Database::escape($id);
+        $lang = Database::escape(Context::getLang());
         return Database::queryAsObject("select c.value as name, g.* from t_product_group g left join t_code c on c.code = g.namecode and c.lang = '$lang' where g.id = '$id'");
     }
 
     static function createGroup ($name, $group = null) {
         $parentSql = "null";
         if ($parent != null) {
-            $parentSql = "'".mysql_real_escape_string($parent)."'";
+            $parentSql = "'".Database::escape($parent)."'";
         }
         $nameCode = CodeModel::createCode(Context::getLang(), $name);
         Database::query("insert into t_product_group(namecode,parent) values('$nameCode',$parentSql)");
@@ -191,10 +190,10 @@ class ProductsPageModel {
     }
 
     static function updateGroup ($id, $name, $parent = null) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         $parentSql = "null";
         if ($parent != null) {
-            $parentSql = "'".mysql_real_escape_string($parent)."'";
+            $parentSql = "'".Database::escape($parent)."'";
         }
         $obj = Database::queryAsObject("select namecode from t_product_group where id = '$id'");
         CodeModel::setCode($obj->namecode,Context::getLang(), $name);
@@ -205,23 +204,23 @@ class ProductsPageModel {
         if (empty($siteId)) {
             $siteId = Context::getSiteId();
         }
-        $lang = mysql_real_escape_string(Context::getLang());
+        $lang = Database::escape(Context::getLang());
         if ($parent == null) {
             return Database::queryAsArray("select c.value as name, g.* from t_product_group g left join t_code c on c.code = g.namecode and c.lang = '$lang'");
         }
-        $parent = mysql_real_escape_string($parent);
+        $parent = Database::escape($parent);
         return Database::queryAsArray("select c.value as name, g.* from t_product_group g left join t_code c on c.code = g.namecode and c.lang = '$lang' where g.parent = '$parent'");
     }
 
     static function deleteGroup ($id) {
-        $id = mysql_real_escape_string($id);
+        $id = Database::escape($id);
         // delete the products
         Database::query("delete from t_product_group where id = '$id'");
     }
 
     static function setModuleProductGroup ($moduleId, $groupId) {
-        $moduleId = mysql_real_escape_string($moduleId);
-        $groupId = mysql_real_escape_string($groupId);
+        $moduleId = Database::escape($moduleId);
+        $groupId = Database::escape($groupId);
         $obj = Database::queryAsObject("select * from t_product_group_module where moduleid = '$moduleId'");
         if ($obj != null) {
             Database::query("update t_product_group_module set groupid = '$groupId' where moduleid = '$moduleId'");

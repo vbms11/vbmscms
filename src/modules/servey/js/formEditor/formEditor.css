@@ -1,0 +1,107 @@
+
+/* parts of the form items */
+
+.formItemPanel {
+	min-height:20px;
+	border: 1px solid transparent;
+	margin: 0px 0px 5px 0px
+}
+.formItemTools {
+	float:right;
+	width:20px;
+}
+.formItemDescription {
+	color:grey;
+}
+.formItemLabel {
+	font-weight: bold;	
+}
+.formItemInput {
+}
+.formItemMessage {
+}
+
+.formItemPanel textarea,
+.formItemPanel input {
+	width:100%;
+}
+
+/* form item types */
+
+.formItemTypeCheckbox {
+}
+.formItemTypeCheckbox .formItemInput, .formItemTypeCheckbox .formItemLabel {
+    display: inline;
+}
+.formItemTypeCheckbox input[type=checkbox] {
+    margin-left: 20px;
+    width: 1%;
+}
+
+
+
+/* form editor layout */
+
+div.formEditOptions {
+    width: 275px;
+    min-height: 200px;
+}
+
+div.formEdit_center {
+    min-height: 200px;
+}
+
+td.formEditOptions {
+    width: 1%;
+    vertical-align: top;
+}
+
+td.formEdit_center {
+    width: 99%;
+    vertical-align: top;
+}
+
+#tab_feilds div div {
+    margin-bottom: 5px;
+}
+
+.ui-state-highlight {
+    height:25px;
+}
+
+#formEdit_tabsLeft {
+}
+
+#formEdit_tabsCenter {
+}
+
+.formItemDrag {
+    width: 100%;
+}
+.formPanel, .tabs_margin, .tab_options_margin {
+    min-height: 400px;
+}
+
+.formItemSelected {
+	border: 1px dashed blue;
+}
+
+/* attributes */
+
+.formEditorAttribsTable {
+	width:100%;	
+}
+.formEditorAttribsTable tr td {
+    white-space:nowrap;
+    width:99%;
+}
+.formEditorAttribsTable tr td:first-child {
+    width:1%;
+}
+.formEditorAttribsTable input, .formEditorAttribsTable select {
+    width: 100%;
+} 
+
+
+
+

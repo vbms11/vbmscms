@@ -15,18 +15,18 @@ class CodeModel {
     static public $translations = array();
     
     static function getNextCodeId () {
-        $result = Database::query("select max(code) as max from t_code");
-        return mysql_fetch_object($result)->max + 1;
+        $result = Database::queryAsObject("select max(code) as max from t_code");
+        return $result->max + 1;
     }
 
     static function deleteCode ($code) {
-        $code = mysql_real_escape_string($code);
+        $code = Database::escape($code);
         Database::query("delete from t_code where code = '$code'");
     }
 
     static function createCode ($lang,$value) {
-        $lang = mysql_real_escape_string($lang);
-        $value = mysql_real_escape_string($value);
+        $lang = Database::escape($lang);
+        $value = Database::escape($value);
         $code = CodeModel::getNextCodeId();
         $result = Database::query("insert into t_code(code,value,lang) values('$code','$value','$lang')");
         CodeModel::setCachedCode($code, $lang, $value);
@@ -34,18 +34,18 @@ class CodeModel {
     }
 
     static function addToCode ($code,$lang,$value) {
-        $lang = mysql_real_escape_string($lang);
-        $value = mysql_real_escape_string($value);
-        $code = mysql_real_escape_string($code);
+        $lang = Database::escape($lang);
+        $value = Database::escape($value);
+        $code = Database::escape($code);
         Database::query("insert into t_code(code,value,lang) values('$code','$value','$lang')");
         CodeModel::setCachedCode($code, $lang, $value);
         return $code;
     }
 
     static function updateCode ($code, $lang, $value) {
-        $lang = mysql_real_escape_string($lang);
-        $value = mysql_real_escape_string($value);
-        $code = mysql_real_escape_string($code);
+        $lang = Database::escape($lang);
+        $value = Database::escape($value);
+        $code = Database::escape($code);
         Database::query("update t_code set value = '$value' where code = '$code' and lang = '$lang'");
         CodeModel::setCachedCode($code, $lang, $value);
     }
@@ -61,8 +61,8 @@ class CodeModel {
     static function doseCodeExist ($code,$lang) {
         if (CodeModel::getCachedCode($code, $lang) != null)
             return true;
-        $lang = mysql_real_escape_string($lang);
-        $code = mysql_real_escape_string($code);
+        $lang = Database::escape($lang);
+        $code = Database::escape($code);
         $result = Database::queryAsObject("select 1 as res from t_code where code = '$code' and lang = '$lang'");
         if ($result != null && $result->res == "1") {
             return true;
@@ -74,8 +74,8 @@ class CodeModel {
         $val = CodeModel::getCachedCode($code,$lang);
         if ($val != null)
             return $val;
-        $lang = mysql_real_escape_string($lang);
-        $code = mysql_real_escape_string($code);
+        $lang = Database::escape($lang);
+        $code = Database::escape($code);
         $obj = Database::queryAsObject("select value from t_code where code = '$code' and lang = '$lang'");
         if ($obj != null)
             $val = $obj->value;
@@ -105,7 +105,7 @@ class CodeModel {
         if ($lang == null) {
             $lang = Context::getLang();
         }
-        $lang = mysql_real_escape_string($lang);
+        $lang = Database::escape($lang);
         $strKey = "";
         $isFirst = true;
         if (is_array($key)) {

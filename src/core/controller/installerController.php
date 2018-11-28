@@ -16,48 +16,50 @@ class InstallerController {
         
         $config  = '<?php'.PHP_EOL;
         // database config
-        $config .= '$GLOBALS[\'dbName\'] = \''.$database.'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'dbHost\'] = \''.$hostname.'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'dbUser\'] = \''.$username.'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'dbPass\'] = \''.$password.'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'dbTablePrefix\'] = \'t_\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'cmsDbDateFormat\'] = \'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'cmsUiDateFormat\'] = \'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'dbName\'] = \''.$database.'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'dbHost\'] = \''.$hostname.'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'dbUser\'] = \''.$username.'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'dbPass\'] = \''.$password.'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'dbTablePrefix\'] = \'t_\';'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsDbDateFormat\'] = \'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsUiDateFormat\'] = \'\';'.PHP_EOL;
 
         // session config
-        $config .= '$GLOBALS[\'cmsSessionExpireTime\'] = 60;'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsSessionExpireTime\'] = 60;'.PHP_EOL;
 
         // resource config
-        $config .= '$GLOBALS[\'resourcePath\'] = \'files\';'.PHP_EOL;
+        $config .= '$CONFIG[\'resourcePath\'] = \'files\';'.PHP_EOL;
 
         // cms info
-        $config .= '$GLOBALS[\'cmsName\'] = \'vbmscms\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'cmsVersion\'] = \'0.5\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'cmsLicese\'] = \'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'cmsSecureLink\'] = true;'.PHP_EOL;
-        $config .= '$GLOBALS[\'cmsMainDomain\'] = \''.DomainsModel::getDomainName().'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsName\'] = \'vbmscms\';'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsVersion\'] = \'0.5\';'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsLicese\'] = \'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsSecureLink\'] = true;'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsMainDomain\'] = \''.DomainsModel::getDomainName().'\';'.PHP_EOL;
         
         // crypto configs
-        $config .= '$GLOBALS[\'serverSecret\'] = \'';
+        $config .= '$CONFIG[\'serverSecret\'] = \'';
         $config .= self::generateServerSecret();
         $config .= '\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'serverPublicKey\'] = \'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'serverPrivateKey\'] = \'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'serverPublicKey\'] = \'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'serverPrivateKey\'] = \'\';'.PHP_EOL;
 
         // shop config
-        $config .= '$GLOBALS[\'currencySymbol\'] = \'&euro;\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'weightUnit\'] = \'kg\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'weightInGram\'] = \'1000\';'.PHP_EOL;
+        $config .= '$CONFIG[\'currencySymbol\'] = \'&euro;\';'.PHP_EOL;
+        $config .= '$CONFIG[\'weightUnit\'] = \'kg\';'.PHP_EOL;
+        $config .= '$CONFIG[\'weightInGram\'] = \'1000\';'.PHP_EOL;
 
-        $config .= '$GLOBALS[\'seoUrl\'] = false;'.PHP_EOL;
-        $config .= '$GLOBALS[\'piwikUsername\'] = \''.$piwikUsername.'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'piwikPassword\'] = \''.$piwikPassword.'\';'.PHP_EOL;
-        $config .= '$GLOBALS[\'cmsAdminEmail\'] = \'silkyfx@hotmail.de\';'.PHP_EOL;
+        $config .= '$CONFIG[\'seoUrl\'] = false;'.PHP_EOL;
+        $config .= '$CONFIG[\'piwikUsername\'] = \''.$piwikUsername.'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'piwikPassword\'] = \''.$piwikPassword.'\';'.PHP_EOL;
+        $config .= '$CONFIG[\'cmsAdminEmail\'] = \''.$email.'\';'.PHP_EOL;
         
         $config .= "?>";
 
         // write config file
         file_put_contents("config.php",$config);
+        
+        include_once("config.php");
         
         // write piwik config file
         $piwikConfig = '; <?php exit; ?> DO NOT REMOVE THIS LINE
@@ -123,7 +125,7 @@ PluginsInstalled[] = "SegmentEditor"';
     }
 
     static function generateServerSecret () {
-            $GLOBALS['serverSecret'] = "";
+            $CONFIG['serverSecret'] = "";
             return Common::randHash(128);
     }
 
