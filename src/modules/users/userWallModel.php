@@ -50,7 +50,7 @@ class UserWallModel {
             $typeId = "'".Database::escape($typeId)."'";
         }
         Database::query("insert into t_user_wall_event (userid,type,typeid) values('$userId','$type',$typeId);");
-        $result = Database::queryAsObject("select last_insert_id() as newid from t_user_wall_event");
+        $result = Database::queryAsObject("select max(id) as newid from t_user_wall_event");
         return $result->newid;
     }
     
@@ -168,7 +168,7 @@ class UserWallModel {
         $eventIdSql = Database::escape($eventId);
         Database::query("insert into t_user_wall_post (srcuserid,comment,date,eventid)
             values ('$srcUserId','$comment',now(),'$eventIdSql')");
-        $newId = Database::queryAsObject("select last_insert_id() as id from t_user_wall_post");
+        $newId = Database::queryAsObject("select max(id) as id from t_user_wall_post");
         return $newId->id;
     }
     

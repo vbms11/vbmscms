@@ -267,7 +267,7 @@ class OrdersModel {
 
                 Database::query("insert into t_order (userid,orderdate,orderform,roleid,distributorid) values('$userId',now(),'$orderFormId','$roleId',$distributor)");
                 // add order products
-                $obj = Database::queryAsObject("select last_insert_id() as orderid from t_order");
+                $obj = Database::queryAsObject("select max(id) as orderid from t_order");
                 $orderId = $obj->orderid;
             }
             // add products to order
@@ -284,7 +284,7 @@ class OrdersModel {
             $quantity = Database::escape($quantity);
             $orderId = Database::escape($orderId);
             Database::query("insert into t_order_product (productid,orderid,quantity) values('$productId','$orderId','$quantity')");
-            $productId = Database::queryAsObject("select last_insert_id() as newid from t_order_product");
+            $productId = Database::queryAsObject("select max(id) as newid from t_order_product");
             return $productId->newid;
         } else {
             $_SESSION["orders.tmp"][$orderId]->products[$productId]->quantity = $quantity;

@@ -15,7 +15,7 @@ class NewsletterModel {
         $name = Database::escape($name);
         $text = Database::escape($text);
         Database::query("insert into t_newsletter(name,text) values('$name','$text')");
-        $obj = Database::queryAsObject("select last_insert_id() as newid from t_newsletter");
+        $obj = Database::queryAsObject("select max(id) as newid from t_newsletter");
         return $obj->newid;
     }
 

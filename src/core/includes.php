@@ -5,7 +5,7 @@ if (!defined("vbmscms_allowAccess") || vbmscms_allowAccess != true) {
     die("direct access not allowed!");
 }
 
-@set_magic_quotes_runtime(0);
+// @set_magic_quotes_runtime(0);
 
 include_once 'core/config.class.php';
 
@@ -29,7 +29,6 @@ require_once 'core/model/galleryModel.php';
 require_once 'core/model/socialNotificationsModel.php';
 require_once 'core/model/countriesModel.php';
 require_once 'core/model/rolesModel.php';
-include_once 'core/model/piwikModel.php';
 include_once 'core/model/sitesModel.php';
 include_once 'core/model/cmsVersionModel.php';
 include_once 'core/model/cmsCustomerModel.php';

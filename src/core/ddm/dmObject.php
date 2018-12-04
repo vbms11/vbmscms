@@ -6,7 +6,7 @@ class DmObject {
     public $columnNames;
     public $autoColumns;
     
-    function DmObject ($tableName,$columnNames,$autoColumns = null) {
+    function __construct ($tableName,$columnNames,$autoColumns = null) {
         
         $this->tableName = $tableName;
         $this->columnNames = $columnNames;
@@ -42,7 +42,7 @@ class DmObject {
         // run the query return result
         // echo $insertQuery;
         Database::query($insertQuery);
-        $obj = Database::queryAsObject("select last_insert_id() as max from ".$this->tableName);
+        $obj = Database::queryAsObject("select max(id) as max from ".$this->tableName);
         return $obj->max;
     }
     

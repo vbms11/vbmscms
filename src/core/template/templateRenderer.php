@@ -116,11 +116,12 @@ class TemplateRenderer extends BaseRenderer {
 
     /**
      * renders a module by module type, template area name and static (false = new module instance per page)
-     * @param type $moduleType
-     * @param type $areaName
-     * @param type $static
-     * @param type $pageId
-     * @param type $targetOnly
+     * @param String $moduleType
+     * @param String $areaName
+     * @param Boolean $static
+     * @param Integer $pageId
+     * @param Boolean $targetOnly
+     * @param Boolean $contextMenu
      */
     function renderModule ($moduleType, $areaName = null, $static = false, $pageId = null, $targetOnly = false, $contextMenu = false) {
         if (empty($pageId)) {
@@ -232,20 +233,6 @@ class TemplateRenderer extends BaseRenderer {
         }
         
 ?>
-<!-- Piwik -->
-<script type="text/javascript"> 
-  var _paq = _paq || [];
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="<?php echo NavigationModel::getSitePath(); ?>/modules/statistics/piwik/";
-    _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', <?php echo $site->piwikid; ?>]);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
-    g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<!-- End Piwik Code -->
 <!-- facebook -->
 <script id="facebook-jssdk" type="text/javascript" src="//connect.facebook.net/en_US/all.js#xfbml=1&amp;appId=<?php echo Context::getSite()->facebookappid; ?>"></script>
 <?php /*
@@ -369,11 +356,7 @@ class TemplateRenderer extends BaseRenderer {
             }
         }
         
-	echo '<noscript><p><img src="modules/statistics/piwik/piwik.php?idsite=';
-	echo Context::getSite()->piwikid;
-	echo '" style="border:0" alt="" /></p></noscript>';
         echo '</body>'.PHP_EOL.'</html>'.PHP_EOL;
-        
     }
 
 }

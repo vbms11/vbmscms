@@ -167,7 +167,7 @@ class GalleryModel {
             $parent = "'".Database::escape($parent)."'";
         }
         Database::query("INSERT INTO t_gallery_category(title,image,parent,orderkey,description) VALUES('$title','$image',$parent,'$nextOrderKey','$description');");
-        $result = Database::queryAsObject("SELECT LAST_INSERT_ID() as lastid");
+        $result = Database::queryAsObject("SELECT max(id) as lastid");
         return $result->lastid;
     }
     
@@ -230,7 +230,7 @@ class GalleryModel {
         $description = Database::escape($description);
         $orderKey = GalleryModel::getNextImageOrderKey();
         Database::query("insert into t_gallery_image (image,categoryid,orderkey,title,description) values('$imageName','$categoryId','$orderKey','$title','$description')");
-        $newObj = Database::queryAsObject("select last_insert_id() as newid from t_gallery_image");
+        $newObj = Database::queryAsObject("select max(id) as newid from t_gallery_image");
         return $newObj->newid;
     }
     

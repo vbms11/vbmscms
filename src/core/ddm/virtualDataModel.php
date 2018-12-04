@@ -10,7 +10,7 @@ class VirtualDataModel extends XDataModel   {
     function createTable ($tableName) {
         $tableName = Database::escape($tableName);
         Database::query("insert into t_vdb_table (name) values ('$tableName')");
-        $ret = Database::queryAsObject("select last_insert_id() as newid from t_vdb_table");
+        $ret = Database::queryAsObject("select max(id) as newid from t_vdb_table");
         return $ret->newid;
     }
     function deleteTable ($tableName) {
@@ -136,7 +136,7 @@ class VirtualDataModel extends XDataModel   {
         $tableId = $table->id;
         // create the object
         Database::query("insert into t_vdb_object(tableid) values ('$tableId')");
-        $lastInsert = Database::queryAsObject("select last_insert_id() as objectid from t_vdb_object");
+        $lastInsert = Database::queryAsObject("select max(id) as objectid from t_vdb_object");
         $objectId = $lastInsert->objectid;
         
         $columns = VirtualDataModel::getColumns($tableName);
@@ -197,7 +197,7 @@ class VirtualDataModel extends XDataModel   {
         foreach ($ar_rowNamesValues as $rowNamesValues) {
         
             Database::query("insert into t_vdb_object(tableid) values ('$tableId')");
-            $lastInsert = Database::queryAsObject("select last_insert_id() as objectid from t_vdb_object");
+            $lastInsert = Database::queryAsObject("select max(id) as objectid from t_vdb_object");
             $objectId = $lastInsert->objectid;
             $first = true;
             foreach ($rowNamesValues as $columnName => $columnValue) {

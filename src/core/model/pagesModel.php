@@ -143,7 +143,7 @@ class PagesModel {
     
     /**
      * 
-     * @param type $pageObj
+     * @param Object $pageObj
      */
     static function ensureAdminTemplate ($pageObj) {
         
@@ -247,7 +247,7 @@ class PagesModel {
         $namecode = $codeModel->createCode($lang,$name);
         // create page
         Database::query("insert into t_page(namecode,type,title,keywords,template,description,siteid,code) values('$namecode','$type','$title','$keywords','$template','$description','$siteId','$code')");
-        $result = Database::queryAsObject("select last_insert_id() as max from t_page");
+        $result = Database::queryAsObject("select max(id) as max from t_page");
         $pageId = $result->max;
         PagesModel::setWelcome($pageId, $welcome);
         // create template areas

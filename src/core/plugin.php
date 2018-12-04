@@ -146,6 +146,9 @@ abstract class XModule implements IModule, ITranslatable {
             //    $moduleId = $this->sysname;
             //}
         }
+        if ($moduleId == null) {
+            NavigationModel::createWelcomePageLink($xhtml);
+        }
         if (!is_numeric($moduleId)) {
             if (Context::isAjaxRequest()) {
                 return NavigationModel::createStaticPageLink($moduleId, $params, $xhtml, $sessionKeysOnUrl);
@@ -423,7 +426,7 @@ class Dependency {
     public $name;
     public $scripts;
     public $stlyes;
-    function Dependency ($name,$scripts,$styles) {
+    function __construct ($name,$scripts,$styles) {
     	$this->name = $name;
         $this->scripts = $scripts;
         $this->styles = $styles;

@@ -64,8 +64,6 @@ class AdminTranslationsModule extends XModule {
     }
     
     /**
-     * 
-     * @param type $pageId
      */
     function printMainView () {
 

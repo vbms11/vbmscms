@@ -30,7 +30,7 @@ class NewsModel {
         
         Database::query("insert into t_news (content,url,title,publisherid,imageurl,thumburl) values ('$content', '$url', '$title', '{$publisher->id}', '$imageUrl', '$thumbUrl')");
         
-        $result = Database::queryAsObject("select last_insert_id() as lastid from t_news");
+        $result = Database::queryAsObject("select max(id) as lastid from t_news");
         return $result->newid;
     }
     

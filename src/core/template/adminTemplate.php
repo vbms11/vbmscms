@@ -88,8 +88,8 @@ class AdminTemplate extends XTemplate {
         
     /**
      * renders the main template area
-     * @param type $pageId
-     * @param type $teplateArea
+     * @param Integer $pageId
+     * @param String $teplateArea
      */
     function renderMainTemplateArea ($teplateArea, $pageId=null) {
         $focusedModuleId = Context::getFocusedArea();
@@ -144,8 +144,8 @@ class AdminTemplate extends XTemplate {
     
     /**
      * 
-     * @param type $teplateArea
-     * @param type $pageId
+     * @param String $teplateArea
+     * @param Integer $pageId
      */
     function renderTemplateArea ($teplateArea, $pageId = null) {
         

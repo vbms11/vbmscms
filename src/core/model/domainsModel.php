@@ -22,7 +22,7 @@ class DomainsModel {
     static function getDomainSite ($domain) {
         $cleanDomain = self::cleanDomainName($domain);
         $sqlDomain = Database::escape($cleanDomain);
-        return Database::queryAsObject("select d.url, d.siteid, s.cmscustomerid, s.piwikid, s.sitetrackerscript, d.domaintrackerscript, s.facebookappid, s.facebooksecret, s.googleclientid, s.googleclientsecret, s.twitterkey, s.twittersecret
+        return Database::queryAsObject("select d.url, d.siteid, s.cmscustomerid, s.sitetrackerscript, d.domaintrackerscript, s.facebookappid, s.facebooksecret, s.googleclientid, s.googleclientsecret, s.twitterkey, s.twittersecret
             from t_domain d 
             join t_site s on s.id = d.siteid 
             where d.url = '$sqlDomain'");
@@ -58,12 +58,11 @@ class DomainsModel {
         }
         $cleanUrl = self::cleanDomainName($url);
         $site = SiteModel::getSite($siteId);
-        PiwikModel::addDomain($site->piwikid, $cleanUrl);
         $sqlUrl = Database::escape($cleanUrl);
         $siteId = Database::escape($siteId);
         $domainTrackerScript = Database::escape($domainTrackerScript);
         Database::query("insert into t_domain (url,siteid,domaintrackerscript) values ('$sqlUrl','$siteId','$domainTrackerScript')");
-        $result = Database::queryAsObject("select last_insert_id() as id from t_domain");
+        $result = Database::queryAsObject("select max(id) as id from t_domain");
         return $result->id;
     }
     
@@ -74,8 +73,6 @@ class DomainsModel {
         $sqlUrl = Database::escape($cleanUrl);
         $originalUrl = self::getDomain($domainId);
         $site = SiteModel::getSite($siteId);
-        PiwikModel::removeDomain($site->piwikid, $originalUrl->url);
-        PiwikModel::addDomain($site->piwikid, $cleanUrl);
         $siteId = Database::escape($siteId);
         Database::query("update t_domain set
             url = '$sqlUrl',
@@ -84,9 +81,6 @@ class DomainsModel {
     }
     
     static function deleteDomain ($id) {
-        $domain = self::getDomain($id);
-        $site = SiteModel::getSite($domain->siteid);
-        PiwikModel::removeDomain($site->piwikid, $domain->url);
         $id = Database::escape($id);
         Database::query("delete from t_domain where id = '$id'");
     }

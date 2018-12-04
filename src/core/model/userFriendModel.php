@@ -65,7 +65,7 @@ class UserFriendModel {
         $srcUserId = Database::escape($srcUserId);
         $dstUserId = Database::escape($dstUserId);
         Database::query("insert into t_user_friend (srcuserid,dstuserid,confirmed,createdate) values('$srcUserId','$dstUserId',0,now())");
-        $result = Database::queryAsObject("select last_insert_id() as id from t_user_friend");
+        $result = Database::queryAsObject("select max(id) as id from t_user_friend");
         return $result->id;
     }
     

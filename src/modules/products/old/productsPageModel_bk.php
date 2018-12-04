@@ -96,7 +96,7 @@ class ProductsPageModel {
         $price = Database::escape($price);
         $position = ProductsPageModel::getNextPosition();
         Database::query("insert into t_product(img,text,titel,pageid,lang,position,quantity,price,minimum) values('$img','$text','$name','$pageId','$lang','$position','$quantity','$price','$minimumAmount')");
-        $newId = Database::query("select last_insert_id() as newid from t_product");
+        $newId = Database::query("select max(id) as newid from t_product");
         return $newId->newid;
     }
 

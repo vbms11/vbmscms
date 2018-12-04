@@ -17,7 +17,7 @@ class MenuModel {
         $cssstyle = Database::escape($cssstyle);
         if ($id == null) {
             Database::query("insert into t_menu_style(name,cssclass,cssstyle) values('$name','$cssname','$cssstyle')");
-            $result = Database::queryAsObject("select last_insert_id() as lastid from t_menu_style");
+            $result = Database::queryAsObject("select max(id) as lastid from t_menu_style");
             return $result->lastid;
         } else {
             $id = Database::escape($id);
@@ -49,7 +49,7 @@ class MenuModel {
         $siteId = Database::escape(Context::getSiteId());
         if ($id == null) {
             Database::query("insert into t_menu_instance(name,siteid) values('$name','$siteId')");
-            $result = Database::queryAsObject("select last_insert_id() as lastid from t_menu_instance");
+            $result = Database::queryAsObject("select max(id) as lastid from t_menu_instance");
             return $result->lastid;
         } else {
             $id = Database::escape($id);

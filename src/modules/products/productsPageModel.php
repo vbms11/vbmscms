@@ -131,7 +131,7 @@ class ProductsPageModel {
         $galleryId = Database::escape($galleryId);
         Database::query("insert into t_product(img,shorttextcode,textcode,titelcode,groupid,position,quantity,price,shipping,weight,minimum,galleryid)
             values('$img','$shortTextCode','$textCode','$titelCode','$groupId','$position','$quantity','$price','$shipping','$weight','$minimumAmount','$galleryId')");
-        $newId = Database::query("select last_insert_id() as newid from t_product");
+        $newId = Database::query("select max(id) as newid from t_product");
         return $newId->newid;
     }
 
@@ -185,7 +185,7 @@ class ProductsPageModel {
         }
         $nameCode = CodeModel::createCode(Context::getLang(), $name);
         Database::query("insert into t_product_group(namecode,parent) values('$nameCode',$parentSql)");
-        $obj = Database::queryAsObject("select last_insert_id() as newid");
+        $obj = Database::queryAsObject("select max(id) as newid");
         return $obj->newid;
     }
 

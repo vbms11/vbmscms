@@ -662,7 +662,7 @@ class DynamicDataView {
             case "importInvoke":
                 
                 // read the column configs
-                $columns = ExtDataModel::getColumns($tableId);
+                $columns = VirtualDataModel::getColumns($tableId);
                 $columnsByName = array();
                 foreach ($columns as $column) {
                     $column->column = $_POST['column_'.$column->name];

@@ -20,7 +20,7 @@ class ResourcesModel {
     }
     
     static function getResourcePath ($path = null, $name = null) {
-        $resourcePath = ResourcesModel::getBasePath().$GLOBALS['resourcePath'];
+        $resourcePath = ResourcesModel::getBasePath().Config::getResourcePath();
         if ($path != null)
             $resourcePath .= $path.'/';
         if (!file_exists($resourcePath))
@@ -37,7 +37,7 @@ class ResourcesModel {
     static function createResourceLink ($resourceName=null,$fileName=null) {
         //if (!is_dir($resourceName))
         //    mkdir($resourceName);
-        $link = ResourcesModel::getWebPath().$GLOBALS['resourcePath'];
+        $link = ResourcesModel::getWebPath().Config::getResourcePath();
         if ($resourceName != null) {
             $link .= $resourceName.'/';
         }
@@ -116,7 +116,7 @@ class ResourcesModel {
     static function listResources ($path=null, $recrusive=false) {
   
         $result = array();
-        $resourcePath = ResourcesModel::getBasePath().$GLOBALS['resourcePath'];
+        $resourcePath = ResourcesModel::getBasePath().Config::getResourcePath();
         if ($path != null) {
             $resourcePath .= $path.'/';
         }

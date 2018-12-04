@@ -84,7 +84,7 @@ class RolesModel {
         $name = Database::escape($name);
         $system = Database::escape($system);
         Database::query("insert into t_roles_custom (name,system) values ('$name','$system')");
-        $newRole = Database::queryAsObject("select last_insert_id() as newid from t_roles_custom");
+        $newRole = Database::queryAsObject("select max(id) as newid from t_roles_custom");
         return $newRole->newid;
     }
     

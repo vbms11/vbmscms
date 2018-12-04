@@ -18,7 +18,7 @@ class CompanyModel {
         
         $name = Database::escape($name);
         Database::query("insert into t_company (name,deleted,registerdate) values ('$name',0,now())");
-        $obj = Database::queryAsObject("select last_insert_id() as newid from t_company");
+        $obj = Database::queryAsObject("select max(id) as newid from t_company");
         return $obj->newid;
     }
     
@@ -50,7 +50,7 @@ class CompanyModel {
         $userId = Database::escape($userId);
         $role = Database::escape($role);
         Database::query("insert into t_company_user (companyid, userid, role) values('$companyId','$userId','$role')");
-        $obj = Database::queryAsObject("select last_insert_id() as newid from t_company_user");
+        $obj = Database::queryAsObject("select max(id) as newid from t_company_user");
         return $obj->newid;
     }
     

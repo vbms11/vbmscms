@@ -15,11 +15,10 @@ class EditableTemplate extends XTemplate {
     
     /**
      * 
-     * @param type $html
-     * @return type
+     * @param String $html
      */
     function setData ($html) {
-        return $this->templateParser->setTemplate($html);
+        $this->templateParser->setTemplate($html);
     }
     
     /**

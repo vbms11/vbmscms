@@ -17,7 +17,7 @@ class SiteModel {
     }
     
     static function getCurrentSite () {
-	return Context::getSiteId();
+	   return Context::getSiteId();
     }
     
     static function getSiteName () {
@@ -26,9 +26,6 @@ class SiteModel {
     
     static function deleteSite ($siteId) {
         
-        $site = self::getSite($siteId);
-        PiwikModel::deleteSite($site->piwikid);
-        
         $siteId = Database::escape($siteId);
         
         Database::query("delete from t_site where id = '$siteId'");
@@ -36,7 +33,7 @@ class SiteModel {
     }
     
     static function createSite ($name, $cmsCustomerId, $description, $domain = null, $trackerScript = '', $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = '') {
-	$name = Database::escape($name);
+        $name = Database::escape($name);
         $description = Database::escape($description);
         $cmsCustomerId = Database::escape($cmsCustomerId);
         $trackerScript = Database::escape($trackerScript);
@@ -44,21 +41,17 @@ class SiteModel {
         $facebookSecret = Database::escape($facebookSecret);
         $twitterKey = Database::escape($twitterKey);
         $twitterSecret = Database::escape($twitterSecret);
-	$googleClientId = Database::escape($googleClientId);
-	$googleClientSecret = Database::escape($googleClientSecret);
+        $googleClientId = Database::escape($googleClientId);
+        $googleClientSecret = Database::escape($googleClientSecret);
         // 
         if (empty($domain)) {
             $defaultDomain = DomainsModel::getSubDomainUrl($name);
         } else {
             $defaultDomain = $domain;
         }
-        $piwikSiteId = PiwikModel::createSite($name, $defaultDomain);
-        $piwikUser = PiwikModel::getCmsCustomerUserName($cmsCustomerId);
-        $userSites = PiwikModel::getUserSites($piwikUser);
-        PiwikModel::setUserSites($piwikUser, $userSites);
         
-        Database::query("insert into t_site (name,cmscustomerid,description,piwikid,sitetrackerscript,facebookappid,facebooksecret,twitterkey,twittersecret,googleclientid,googleclientsecret) values ('$name','$cmsCustomerId','$description','$piwikSiteId','$trackerScript','$facebookAppId','$facebookSecret','$twitterKey','$twitterSecret','$googleClientId','$googleClientSecret')");
-	$result = Database::queryAsObject("select last_insert_id() as newid from t_site");
+        Database::query("insert into t_site (name,cmscustomerid,description,sitetrackerscript,facebookappid,facebooksecret,twitterkey,twittersecret,googleclientid,googleclientsecret) values ('$name','$cmsCustomerId','$description','$trackerScript','$facebookAppId','$facebookSecret','$twitterKey','$twitterSecret','$googleClientId','$googleClientSecret')");
+        $result = Database::queryAsObject("select max(id) as newid from t_site");
         
         DomainsModel::createDomain($defaultDomain, $result->newid);
         

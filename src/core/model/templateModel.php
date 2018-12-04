@@ -280,7 +280,7 @@ class TemplateModel {
         $js = Database::escape($js);
         $css = Database::escape($css);
         Database::query("insert into t_template(template,name,interface,html,js,css) values('$include','$name','$interface','$html','$js','$css')");
-        $newId = Database::queryAsObject("select last_insert_id() as newid from t_template");
+        $newId = Database::queryAsObject("select max(id) as newid from t_template");
         return $newId->newid;
     }
     

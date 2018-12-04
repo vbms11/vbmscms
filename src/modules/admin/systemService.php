@@ -57,9 +57,6 @@ class SystemService extends XModule {
                     Database::query("insert into t_track (clientip,href) values('$clientIp','$href')");
                 }
                 break;
-            case "installProgress":
-				echo isset($_SESSION['installProgress']) ? $_SESSION['installProgress'] : "";
-                break;
             default:
                 break;
         }

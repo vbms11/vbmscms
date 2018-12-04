@@ -24,7 +24,7 @@ class InstallView extends XModule {
                         NavigationModel::redirect("?action=dbConfig&session=nodb",false);
                     } else {
                         //NavigationModel::redirect("?action=printInstallingView&session=nodb",false);
-                        NavigationModel::redirect("?action=install&session=nodb",false);
+                        NavigationModel::redirect("?action=selectSetup&session=nodb",false);
                     }
                 }
                 break;
@@ -39,22 +39,129 @@ class InstallView extends XModule {
                 $_SESSION['gender'] = $_POST['gender'];
                 NavigationModel::redirect("?action=dbConfig&session=nodb",false);
                 break;
+            case "setSetup":
+                if (isset($_POST["setup"])) {
+                    if (isset($_SESSION["setups"][$_POST["setup"]])) {
+                        $_SESSION["setup"] = $_SESSION["setups"][$_POST["setup"]];
+                        $_SESSION["siteName"] = $_POST["siteName"];
+                        $_SESSION["siteDescription"] = $_POST["siteDescription"];
+                        unset($_SESSION["setups"]);
+                        $_SESSION["installStatus"] = "buildConfig";
+                        NavigationModel::redirect("?action=printInstallingView&session=nodb",false);
+                    }
+                }
+                
+                break;
+            
             case "install":
+                
+                $status = array();
+                
+                switch ($_SESSION["installStatus"]) {
+                    
+                    case "buildConfig":
+                        
+                        try {
+                            InstallerController::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
+                            $status = array(
+                                "status" => "ok",
+                                "message" => "config files written.",
+                                "progress" => 20
+                            );
+                            $_SESSION["installStatus"] = "installModel";
+                        } catch (Exception $e) {
+                            $status = array(
+                                "status" => "error",
+                                "message" => "could not write config files."
+                            );
+                        }
+                        Context::setReturnValue(json_encode($status));
+                        break;
+                        
+                    case "installModel":
+                        
+                        try {
+                            InstallerController::installModel($_SESSION["setup"]);
+                            $status = array(
+                                "status" => "ok",
+                                "message" => "database setup installed.",
+                                "progress" => 40
+                            );
+                            $_SESSION["installStatus"] = "createInintialSite";
+                        } catch (Exception $e) {
+                            $status = array(
+                                "status" => "error",
+                                "message" => "could not install database."
+                            );
+                        }
+                        Context::setReturnValue(json_encode($status));
+                        break;
+                        
+                    case "createInintialSite":
+                        
+                        try {
+                            
+                            $_SESSION["site"] = InstallerController::createInitialSite($_SESSION["siteName"], $_SESSION["siteDescription"]);
+                            $status = array(
+                                "status" => "ok",
+                                "message" => "initial site created.",
+                                "progress" => 60
+                            );
+                            $_SESSION["installStatus"] = "createInintialUser";
+                        } catch (Exception $e) {
+                            $status = array(
+                                "status" => "error",
+                                "message" => "could not create initial site."
+                            );
+                        }
+                        Context::setReturnValue(json_encode($status));
+                        break;
+                        
+                    case "createInintialUser":
+                        
+                        try {
+                            
+                            InstallerController::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate'], $_SESSION['gender'], $_SESSION["site"]["cmsCustomer"], $_SESSION["site"]["siteId"]);
+                            $status = array(
+                                "status" => "ok",
+                                "message" => "initial user created.",
+                                "progress" => 80
+                            );
+                            $_SESSION["installStatus"] = "gotoApplication";
+                        } catch (Exception $e) {
+                            $status = array(
+                                "status" => "error",
+                                "message" => "could not create initial user."
+                            );
+                        }
+                        Context::setReturnValue(json_encode($status));
+                        break;
+                        
+                    case "gotoApplication":
+                        
+                        $status = array(
+                            "status" => "finnished",
+                            "message" => "install complete.",
+                            "progress" => 100
+                        );
+                        unset($_SESSION["installStatus"]);
+                        InstallerController::createInstalledLockFile();
+                        Context::setReturnValue(json_encode($status));
+                        break;
+                } 
+                /*
                 // create config file
-                echo "build config<br/>";
                 InstallerController::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
                 // install datamodel
                 echo "install model<br/>";
+                
                 InstallerController::installModel();
                 // create initial user
                 echo "create initial user<br/>";
                 InstallerController::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate'], $_SESSION['gender']);
                 // redirect to startpage
                 NavigationModel::redirect("?session=nodb",false);
-                break;
-            case "progress":
-                echo $_SESSION['installProgress'];
-                return false;
+                */
                 break;
         }
         return true;
@@ -71,6 +178,9 @@ class InstallView extends XModule {
                 break;
             case "printInstallingView":
                 $this->printInstallingView();
+                break;
+            case "selectSetup":
+                $this->printSelectSetupView();
                 break;
             default:
                 if (!Config::getInstalled()) {
@@ -89,21 +199,94 @@ class InstallView extends XModule {
             <p>The cms is installing the datamodel, This may take several minutes.</p>
             <hr/>
             <div id="progressbar"></div>
+            <div id="messages"></div>
             <script>
             $("#progressbar").progressbar({
-                value: 100
+                value: 0
             });
-            function gotoLogin (data) {
-                callUrl("");
+            function tryStep () {
+				window.setTimeout(function(){
+					$.getJSON("?action=install&session=nodb&<?php echo session_name()."=".session_id(); ?>", function(response) {
+						switch (response["status"]) {
+    						case "ok":
+    							$("#messages").append($("<div>",{"class":"ok"}).text(response["message"]));
+    							$("#progressbar").progressbar({
+    				                value: response["progress"]
+    				            });
+    							tryStep();
+    							break;
+    						case "error":
+    							$("#messages").append($("<div>",{"class":"error"}).text(response["message"]));
+    							$("#progressbar").progressbar("option", "disabled", true);
+    							break;
+    						case "finnished":
+    							callUrl("<?php echo parent::link(); ?>");
+    							break;
+						}
+					});
+				},1000);
             }
-            $.ajax({
-                "url": "?action=install&<?php echo session_name()."=".session_id(); ?>",
-                "context": document.body,
-                "success": function(data){
-                    gotoLogin(data);
-                }
-            });
+            tryStep();
             </script>
+        </div>
+        <?php
+    }
+    
+    function printSelectSetupView () {
+        
+        $setups = array();
+        if ($handle = opendir('core/model/install/setups')) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") {
+                    $setups []= $entry;
+                }
+            }
+        }
+        
+        $_SESSION["setups"] = $setups;
+        
+        ?>
+        <div class="panel installPanel">
+            <h2>Select Setup</h2>
+            <p>Please select the setup type that you would like to install.</p>
+            <form method="post" action="?action=setSetup&session=nodb">
+                <div class="table">
+                	<div>
+                		<div>
+                			<label for="siteName">Name</label>
+                		</div>
+                		<div>
+                			<input type="text" name="siteName" class="expand" value="" placeholder="Name of the website">
+                		</div>
+                	</div>
+                	<div>
+                		<div>                
+                            <label for="siteDescription">Description</label>
+                        </div>
+                		<div>
+                		    <textarea name="siteDescription" class="expand" placeholder="Description of the website" cols="3" rows="3"></textarea>
+                		</div>
+                	</div>
+                	<div>
+                		<div>
+                			<label for="setup">Setups</label>
+                    	</div>
+                		<div>
+                			<select name="setup" class="expand">
+                            	<?php
+                            	foreach ($setups as $pos => $setup) {
+                            	    ?><option value="<?php echo $pos; ?>"<?php if ($pos == 0) echo " selected"; ?>><?php echo substr($setup, 0, -4); ?></option><?php
+                            	}
+                            	?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="alignRight">
+                    <button type="submit" class="jquiButton btnInstallNext">Load Setup</button>
+                </div>
+            </form>
         </div>
         <?php
     }
@@ -122,7 +305,7 @@ class InstallView extends XModule {
             <div class="divTable">
                 <?php
                 foreach ($backups as $backup) {
-                    $fullPath = ResourceModel::resourcePath("backup", $backup);
+                    $fullPath = ResourcesModel::resourcePath("backup", $backup);
                     ?>
                     <div>
                         <div>

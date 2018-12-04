@@ -128,7 +128,7 @@ class UserAddressModel {
         $postcode = Database::escape($postcode);
         Database::query("insert into t_user_address (userid,continent,continentid,country,countryid,state,stateid,region,regionid,city,cityid,address,postcode) 
             values ('$userId', '$continent', '$continentId', '$country', '$countryId', '$state', '$stateId', '$region', '$regionId', '$city', '$cityId', '$address', '$postcode')");
-        $userAddressId = Database::queryAsObject("select last_insert_id() as newid from t_user_address");
+        $userAddressId = Database::queryAsObject("select max(id) as newid from t_user_address");
         self::updateCoordinates($userAddressId->newid, $x, $y);
         return $userAddressId->newid;
     }

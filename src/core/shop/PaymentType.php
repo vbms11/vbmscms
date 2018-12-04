@@ -29,7 +29,7 @@ interface PaymentMethod {
     function validateTransaction ($transaction) ;
 }
 
-class PaymentTypePaypall implements PaymentType {
+class PaymentTypePaypall implements PaymentMethod {
 
     function display ($transaction) {
         ?>

@@ -19,13 +19,16 @@ class Database {
     }
     
     static function getDataSource ($dataSourceName = null) {
+        /*
         if ($dataSourceName == null) {
             $dataSourceName = self::$defaultDataSourceName;
         }
         if (isset(self::$dataSource[$dataSourceName])) {
             self::$dataSource[$dataSourceName] = DataSourceFactory::getDataSource($dataSourceName);
         }
-        return self::$dataSource[$dataSourceName];
+        throw Exception("no datasource exists with that name");
+        */
+        return DataSourceFactory::getDataSource($dataSourceName);
     }
     
     static function escape ($vars) {
@@ -100,7 +103,7 @@ class Database {
     }
 
     static function getLastInsertId ($tableName) {
-        $lastInsertId = Database::getDataSource()->query("select last_insert_id() as id from 0x".bin2hex($tableName));
+        $lastInsertId = Database::getDataSource()->query("select max(id) as id from 0x".bin2hex($tableName));
         return $lastInsertId->id;
     }
 }
@@ -337,7 +340,7 @@ class SqliteDataSource implements IDataSource {
     
     function connect () {
         try {
-            $this->database = new SQLiteDatabase('myDatabase.sqlite', 0666, $this->error);
+            $this->database = new SqliteDataSource('myDatabase.sqlite', 0666, $this->error);
             $this->connected = true;
         } catch(Exception $e) {
             $this->connected = false;
@@ -359,13 +362,14 @@ class DataSourceFactory {
         if ($dataSource->isAvalible() && $dataSource->connect()) {
             return $dataSource;
         }
-        return $dataSource;
+        throw Exception("datasource not avalible or cannot connect");
     }
     
     static function getDataSource ($dataSourceName = null) {
         if ($dataSourceName == null) {
             return self::getDefaultDataSource();
         }
+        return self::getDefaultDataSource();
     }
 }
 

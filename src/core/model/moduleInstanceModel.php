@@ -25,7 +25,7 @@ class ModuleInstanceModel {
         $moduleId = Database::escape($moduleId);
         
         Database::query("insert into t_module_instance(moduleid) values('$moduleId')");
-        $lastIdObj = Database::queryAsObject("select last_insert_id() as id from t_module_instance");
+        $lastIdObj = Database::queryAsObject("select max(id) as id from t_module_instance");
         
         return $lastIdObj->id;
     }

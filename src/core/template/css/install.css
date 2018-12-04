@@ -64,3 +64,13 @@ body {
     height: 40px;
     width: 192px;
 }
+#messages {
+	border 1px solid silver;
+	margin 10px;
+}
+#messages div.ok {
+	color: green;
+}
+#messages div.error {
+	color: red;
+}

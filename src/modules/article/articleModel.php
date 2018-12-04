@@ -26,7 +26,7 @@ class ArticleModel {
 				(name, description, content, createdate, modifydate, userid, siteid)
 				values('$name', '$description', '$content', now(), now(), '$userid', '$siteid')");
 		
-		$lastInsert = Database::query("select last_insert_id() as id from t_article");
+		$lastInsert = Database::query("select max(id) as id from t_article");
 	}
 	
 	function saveArticle ($id, $name, $description, $content, $userId = null, $siteId = null) {

@@ -17,22 +17,23 @@ class Common {
     }
 
     static function hash ($input,$raw=false,$salt=true) {
-        return md5($input.($salt ? $GLOBALS['serverSecret'] : "").sha1($input.($salt ? $GLOBALS['serverSecret'] : "")),$raw);
+        return md5($input.($salt ? Config::getServerSecret() : "").sha1($input.($salt ? Config::getServerSecret() : "")),$raw);
     }
 
     static function randHash ($len = 32,$base64 = true) {
         global $baseRand;
+        $secret = isset($CONFIG['serverSecret']) ? $CONFIG['serverSecret'] : Common::rand();
         if ($baseRand == null) {
-            $baseRand = sha1(microtime().Common::rand().$GLOBALS['serverSecret'], true);
-            $baseRand .= $baseRand.hash('whirlpool',$baseRand.$GLOBALS['serverSecret'],true);
+            $baseRand = sha1(microtime().Common::rand().$secret, true);
+            $baseRand .= $baseRand.hash('whirlpool',$baseRand.$secret,true);
         }
         $baseRandPos = 0;
         $hash = "";
         $baseRandLen = strlen($baseRand);
-        $lastRand = Common::hash(microtime().Common::rand().$GLOBALS['serverSecret']);
+        $lastRand = Common::hash(microtime().Common::rand().$secret,false,false);
         for ($i=0;$i<=ceil($len/6);$i++) {
-            $rand = sha1($baseRand.microtime().Common::rand().$GLOBALS['serverSecret'].$hash.$lastRand,true);
-            $rand .= md5($baseRand.Common::rand().$GLOBALS['serverSecret'].$lastRand.$hash,true);
+            $rand = sha1($baseRand.microtime().Common::rand().$secret.$hash.$lastRand,true);
+            $rand .= md5($baseRand.Common::rand().$secret.$lastRand.$hash,true);
             if ($base64 == false) {
                 $hash.= substr(bin2hex($rand),0,10);
             } else {

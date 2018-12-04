@@ -62,7 +62,7 @@ class FileSystemModel {
         $publicId = Database::escape($publicId);
         
         Database::query("insert into t_fs_file (name, pid, parent, createdate, modifydate) values('$name', '$publicId', '$parent', now(), now())");
-        $result = Database::queryAsObject("select last_insert_id() as newid from t_fs_file");
+        $result = Database::queryAsObject("select max(id) as newid from t_fs_file");
         
         return $result->newid;
     }
@@ -96,7 +96,7 @@ class FileSystemModel {
         $publicId = Database::escape($publicId);
         
         Database::query("insert into t_fs_directory (name, pid, parent, path, createdate) values('$name', '$publicId', $parentId, '$path', now())");
-        $result = Database::queryAsObject("select last_insert_id() as newid from t_fs_directory");
+        $result = Database::queryAsObject("select max(id) as newid from t_fs_directory");
         
         return $result->newid;
     }

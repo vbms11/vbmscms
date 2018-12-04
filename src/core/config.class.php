@@ -6,24 +6,34 @@ class Config {
     static $config = null;
     
     static function __callStatic ($name, $args) {
+        
         if (stripos($name, "get") === 0) {
-            $name = strstr($name, 3);
-            $name = substr_replace($name, strtolower(strstr($name, 0,1)), 0, 1);
-            echo $name;
-            if (isset(self::$config[$name])) {
-                return self::$config[$name];
-                echo self::$config[$name];
-                exit;
+            
+            $name = substr($name, 3);
+            $lower = strtolower(substr($name, 0, 1));
+            
+            $nameLower = substr_replace($name, $lower, 0, 1);
+            //echo $name;
+            if (isset(self::$config[$nameLower])) {
+                return self::$config[$nameLower];
+                //echo self::$config[$name];
+                //exit;
+            } else {
+                throw new Exception("no config attribute named: $nameLower");
             }
         }
-        return self::$name();
+        //return self::$name();
     }
     
     static function load () {
-        if (include_once('config.php')) {
+        
+        if (is_file('config.php')) {
+            include_once('config.php');
             if (isset($CONFIG)) {
                 self::$config = $CONFIG;
-                self::$installed = true;
+                if (file_exists("install/locks/installed")) {
+                    self::$installed = true;
+                }
             }
         }
     }

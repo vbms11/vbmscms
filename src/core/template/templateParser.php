@@ -42,8 +42,7 @@ class TemplateParser {
     
     /**
      * 
-     * @param type $name
-     * @return type
+     * @param String $name
      */
     function renderValue ($name) {
         $valid = (preg_match("[a-z0-9\.\-\>]", $name) === 1);
@@ -99,7 +98,7 @@ class TemplateParser {
     
     /**
      * 
-     * @param type $html
+     * @param String $html
      */
     function setTemplate ($html) {
         // parse the template to find parts and areas
@@ -186,7 +185,7 @@ class TemplateParser {
     
     /**
      * handels a module tag in the template
-     * @param type $moduleName
+     * @param Object $module
      */
     function renderModule ($module) {
         switch ($module->scope) {
@@ -275,8 +274,8 @@ class TemplateParser {
     
     /**
      * adds an object to get values from
-     * @param type $name
-     * @param type $value
+     * @param String $name
+     * @param String $value
      */
     function addObject ($name, $value) {
         $this->objects[$name] = $value;

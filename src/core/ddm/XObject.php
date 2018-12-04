@@ -110,7 +110,7 @@ abstract class XOjbect {
         $query .= ')';
         Database::query($query);
         // update the id feild value
-        $lastInsertId = Database::queryAsObject('select last_insert_id() as lastid from '.Config::getTablePrifix().self::getTableName());
+        $lastInsertId = Database::queryAsObject('select max(id) as lastid from '.Config::getTablePrifix().self::getTableName());
         self::setFeildValue(self::getIdFeild(),$lastInsertId->lastid);
         return $this;
     }

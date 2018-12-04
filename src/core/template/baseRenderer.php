@@ -33,7 +33,7 @@ abstract class BaseRenderer {
     
     /**
      * get all modules on page
-     * @return type
+     * @return array
      */
     function getPageModules () {
         if (empty($this->modules)) {
@@ -44,7 +44,7 @@ abstract class BaseRenderer {
     
     /**
      * 
-     * @param type $instanceParams
+     * @param array $instanceParams
      */
     function setModuleParams ($instanceParams) {
         foreach ($instanceParams as $instanceId => $params) {
@@ -55,7 +55,7 @@ abstract class BaseRenderer {
     
     /**
      * add module
-     * @param type $module
+     * @param Object $module
      */
     function addModule ($module) {
         if (empty($this->modules)) {
@@ -69,7 +69,7 @@ abstract class BaseRenderer {
     
     /**
      * remove module by module id
-     * @param type $moduleId
+     * @param Integer $moduleId
      */
     function removeModule ($moduleId) {
         foreach ($this->getPageModules() as $modules) {
@@ -81,8 +81,8 @@ abstract class BaseRenderer {
     
     /**
      * get module by area name
-     * @param type $areaName
-     * @return type
+     * @param String $areaName
+     * @return array
      */
     function getModules ($areaName = null) {
         $modules = $this->getPageModules();
@@ -97,7 +97,7 @@ abstract class BaseRenderer {
     
     /**
      * get module by module id
-     * @param type $id
+     * @param Integer $id
      * @return null
      */
     function getModule ($id) {
@@ -138,11 +138,11 @@ abstract class BaseRenderer {
     
     /**
      * returns translations for a given code
-     * @param type $key
-     * @param type $replace
-     * @param type $escape
-     * @param type $lang
-     * @return type
+     * @param String $key
+     * @param array $replace
+     * @param Boolean $escape
+     * @param String $lang
+     * @return String
      */
     static function getTranslation ($key,$replace=null,$escape=true,$lang=null) {
         return TranslationsModel::getTranslation($key,$lang,$escape,$replace);

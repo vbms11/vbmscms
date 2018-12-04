@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `t_backup` (
 
 CREATE TABLE IF NOT EXISTS `t_cms_customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userid` int(11) NOT NULL,
+  `userid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -3279,7 +3279,6 @@ CREATE TABLE IF NOT EXISTS `t_site` (
   `description` blob NOT NULL,
   `sitetrackerscript` blob,
   `cmscustomerid` int(11) DEFAULT NULL,
-  `piwikid` int(11) NOT NULL,
   `facebookappid` blob NOT NULL,
   `facebooksecret` blob NOT NULL,
   `googleclientid` blob NOT NULL,

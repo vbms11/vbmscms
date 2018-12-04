@@ -42,7 +42,7 @@ class ModuleModel {
         $interface = Database::escape($interface);
         $inmenu = Database::escape($inmenu);
         Database::query("insert into t_module(name,description,include,interface,inmenu) values ('$name','$description','$include','$interface','$inmenu')");
-        $newObj = Database::query("select last_insert_id() as lastid from t_module");
+        $newObj = Database::query("select max(id) as lastid from t_module");
         return $newObj->lastid;
     }
     
@@ -63,9 +63,9 @@ class ModuleModel {
     
     /**
      * get a module object by module db object
-     * @param type $moduleObj
-     * @param type $params
-     * @return type
+     * @param Object $moduleObj
+     * @param array $params
+     * @return Object
      */
     static function getModuleClass ($moduleObj, $params = true) {
         if (empty($moduleObj) || empty($moduleObj->include) || empty($moduleObj->interface)) {
@@ -101,8 +101,8 @@ class ModuleModel {
     
     /**
      * 
-     * @param type $moduleIds int or array
-     * @return type
+     * @param array $moduleIds int or array
+     * @return array
      */
     static function getModulesParams ($moduleIds) {
         

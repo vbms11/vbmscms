@@ -44,7 +44,7 @@ class PinboardModel {
 		Database::query("insert into t_pinboard (name, description, userid, iconid, lat, lng, createdate, updatedate)
 			values ('$name', '$description', '$userId', '$iconId', '$lat', '$lng', now(), now())");
 		
-		$result = Database::queryAsObject("select last_insert_id() as newid from t_pinboard");
+		$result = Database::queryAsObject("select max(id) as newid from t_pinboard");
 		return $result->newid;
 	}
 	
@@ -127,7 +127,7 @@ class PinboardModel {
 		Database::query("insert into t_pinboard_note (message, pinboardid, type, typeid, userid, x, y, createdate)
 			values ('$message', '$pinboardId', '$type', '$typeId', '$userId', '$x', '$y', now())");
 		
-		$result = Database::queryAsObject("select last_insert_id() as newid from t_pinboard_note");
+		$result = Database::queryAsObject("select max(id) as newid from t_pinboard_note");
 		return $result->newid;
 	}
 	

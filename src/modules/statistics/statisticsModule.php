@@ -21,16 +21,6 @@ class StatisticsModule extends XModule {
     }
     
     function renderMainView() {
-        $statisticsUrl = "modules/statistics/piwik/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&date=today";
-        $customer = CmsCustomerModel::getCurrentCmsCustomer();
-        $piwikUserName = PiwikModel::getCmsCustomerUserName($customer->id);
-        $piwikAuthToken = PiwikModel::getAdminAuthToken($piwikUserName,md5(Common::hash($piwikUserName)));
-        $site = SiteModel::getSite(Context::getSiteId());
-        $period = parent::get('adminStatisticMode');
-        if (empty($period)) {
-            $period = "week";
-        }
-        $statisticsUrl .= "&idSite=".$site->piwikid."&token_auth=".$piwikAuthToken."&period=".$period;
         ?>
         <div class="panel adminStatisticsPanel">
             <div class="adminStatisticsTabs">
@@ -38,25 +28,12 @@ class StatisticsModule extends XModule {
                     <li><a href="#statisticsTab"><?php echo parent::getTranslation("admin.statistics.tab.label"); ?></a></li>
                 </ul>
                 <div id="statisticsTab">
-                    <iframe id="statisticsIFrame" style="width:100%; overflow:hidden; border:0px none;" src="<?php echo $statisticsUrl; ?>" ></iframe>
+                    
                 </div>
             </div>
         </div>
         <script type="text/javascript">
         $(".adminStatisticsTabs").tabs();
-        function autoIframe(frameId) {
-            try {
-               frame = document.getElementById(frameId);
-               innerDoc = (frame.contentDocument) ? frame.contentDocument : frame.contentWindow.document;
-               $("#"+frameId).css({height:innerDoc.body.scrollHeight});
-            }
-            catch(err) {
-            }
-         }
-         function resizeStatisticsIFrame () {
-             autoIframe("statisticsIFrame");
-         }
-         window.setInterval("resizeStatisticsIFrame()",1000);
         </script>
         <?php
     }

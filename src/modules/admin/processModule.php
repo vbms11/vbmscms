@@ -30,7 +30,7 @@ class ProcessModule extends XModule {
                 }
                 break;
           	case "collectGeodataPoll":
-          		
+          		/*
           		$info = array();
           		
           		// collect continents
@@ -43,14 +43,17 @@ class ProcessModule extends XModule {
           			
           			// get continents that need collecting
           			$targetContinent = null;
-          			foreach ($continents => $continent) {
+          			foreach ($continents as $id => $continent) {
           				if ($continent->collected == false) {
           					$targetContinent = $continent;
           				}
           			}
+          		}
           			
-          			if ($targetContinent == null) {
-          				
+      			if ($targetContinent == null) {
+      			    $continentsCount = CountriesModel::updateContinentList();
+      			    $info["continents"] = $continentsCount;
+      			    
           				// collect countries
           				
           				$countries = CountriesModel::getCountries();
@@ -61,7 +64,7 @@ class ProcessModule extends XModule {
           			
           			// get countries that need collecting
           			$targetContinent = null;
-          			foreach ($continents => $continent) {
+          			foreach ($continents as $id => $continent) {
           				if ($continent->collected == false) {
           					$targetContinent = $continent;
           				}
@@ -85,12 +88,12 @@ class ProcessModule extends XModule {
           		// regions
           		
           		break;
-          		
+          		*/
           	case "getPlaceGeonameTasks":
           		
           		$info = array();
           		
-          		$places = CountriesModel::getPlacesThatNeedUpdating(10,parent::post("type"));
+          		$places = CountryModel::getPlacesThatNeedUpdating(10,parent::post("type"));
           		if (empty($places)) {
           			$info["status"] = "stop";
           		} else {
@@ -112,7 +115,7 @@ class ProcessModule extends XModule {
           		if (!empty($geonameId) && !empty($data)) {
           			
           			// save the data
-          			$rowsAffected = CountriesModel::updatePlace($type, $geonameId, $data);
+          			//$rowsAffected = CountriesModel::updatePlace($type, $geonameId, $data);
           			$info["status"] = "continue";
           			$info["updated"] = $rowsAffected;
           			
@@ -126,7 +129,7 @@ class ProcessModule extends XModule {
           		
           		$info = array();
           		
-          		$places = CountriesModel::getPlacesThatNeedNewsUpdating(10);
+          		//$places = CountriesModel::getPlacesThatNeedNewsUpdating(10);
           		if (empty($places)) {
           			$info["status"] = "stop";
           		} else {
@@ -150,7 +153,7 @@ class ProcessModule extends XModule {
           			    // Sat, 04 Apr 2015 11:28:28 -0700
           			    // date_parse_from_format("D, d M Y H:i:s O", $news["publishedDate"]);
           			    $date = date_parse_from_format("D, d M Y H:i:s O", $news["publishedDate"]);
-          			    $dateStr = {$date[]}/{$date[]}/{$date[]} {$date[]}:{$date[]}:{$date[]}
+          			    //$dateStr = {$date[]}/{$date[]}/{$date[]} {$date[]}:{$date[]}:{$date[]}
           			    STR_TO_DATE('11:59:59', '%m/%d/%Y %h:%i:%s'); 
           			    
           			    NewsModel::createNews($news["content"], $news["unescapedUrl"], $news["titleNoFormatting"], $news["publisher"], $news["image"]["url"], $news["image"]["tbUrl"], $date);
@@ -168,18 +171,19 @@ class ProcessModule extends XModule {
           		Context::setReturnValue(json_encode($info));
   		        
   		        break;
-          	case "getPlacePictureTasks"
+          	case "getPlacePictureTasks"::
           	    break;
       	    case "reportPlacePicture":
       	        break;
       	    case "reportPlaceCompanies":
       	        
-      	        $placeId = ; // google places id
+      	        $placeId = null; // google places id
       	        break;
       	    case "reportCompanies":
       	        
       	        break;
       	    case "sendAdvertEmails":
+      	        /*
       	        $limit = 30;
       	        $productCode = parent::get("productCode");
       	        $product = ProductModel::getByCode($productCode);
@@ -189,11 +193,12 @@ class ProcessModule extends XModule {
       	        $companies = CompanyModel::getByCode($productCode, $limit);
       	        EmailTaskModel::set($productCode);
       	        break;
+      	        */
           	case "getPlaceWikiTasks":
           	
           		$info = array();
           		
-          		$places = CountriesModel::getPlacesThatNeedWikiUpdating(10);
+          		$places = CountryModel::getPlacesThatNeedWikiUpdating(10);
           		if (empty($places)) {
           			$info["status"] = "stop";
           		} else {
@@ -219,7 +224,7 @@ class ProcessModule extends XModule {
           	    
           	    // get places
           	    if (parent::param("crawlPlacesInGeoname")) {
-          	        if (CountriesModel::hasPlacesThatNeedUpdating()) {
+          	        if (CountryModel::hasPlacesThatNeedUpdating()) {
           	            $result["processes"][] = array("name"=>"crawlPlaces", "url"=>parent::getResourcePath("js/crawlPlaces.js"));
           	        }
           	    }

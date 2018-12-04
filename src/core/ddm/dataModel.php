@@ -19,7 +19,7 @@ class DMCriteria {
     public $columnName;
     public $operand;
     public $value;
-    function DMCriteria ($value, $operand, $columnName = null) {
+    function __construct ($value, $operand, $columnName = null) {
         $this->operand = $operand;
         $this->value = $value;
         $this->columnName = $columnName;
@@ -83,7 +83,7 @@ class DMQuery {
     public $orderColumn;
     public $criteria;
     public $table;
-    function DMQuery ($table,$criteria,$orderColumn = null,$orderDirection = null) {
+    function __construct ($table,$criteria,$orderColumn = null,$orderDirection = null) {
         $this->table = $table;
         $this->criteria = $criteria;
         $this->orderColumn = $orderColumn;

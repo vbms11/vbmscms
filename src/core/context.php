@@ -267,7 +267,7 @@ class Context {
     
     /**
      * 
-     * @param type $templateObj
+     * @param TemplateRenderer $templateObj
      */
     static function setRenderer ($templateObj) {
         $_REQUEST["req.renderer"] = $templateObj;

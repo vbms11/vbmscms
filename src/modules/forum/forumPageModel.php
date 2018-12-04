@@ -126,7 +126,7 @@ class ForumPageModel {
         $message = Database::escape($message);
         $title = Database::escape($title);
         Database::query("insert into t_user_message (srcuser,dstuser,subject,message,senddate) values ('$srcUserId','$dstUserId','$title','$message',now())");
-        $result = Database::queryAsObject("select last_insert_id() as newid from t_user_message");
+        $result = Database::queryAsObject("select max(id) as newid from t_user_message");
         return $result->newid;
     }
 

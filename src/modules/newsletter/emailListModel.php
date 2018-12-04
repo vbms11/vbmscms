@@ -36,7 +36,7 @@ class EmailListModel {
     static function insertEmail ($email) {
         $email = Database::escape($email);
         Database::query("insert into t_email (email) values('$email')");
-        $obj = Database::queryAsObject("select last_insert_id() as newid from t_email");
+        $obj = Database::queryAsObject("select max(id) as newid from t_email");
         return $obj->newid;
     }
     

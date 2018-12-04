@@ -14,7 +14,7 @@ class ModuleController {
     
     /**
      * renders a module by db object
-     * @param type $moduleObj database module object
+     * @param Object $moduleObj database module object
      */
     static function renderModule ($moduleObj) {
         
@@ -23,8 +23,8 @@ class ModuleController {
     
     /**
      * renders a module object
-     * @param type $moduleObject
-     * @param type $contextMenu
+     * @param Object $moduleObject
+     * @param Boolean $contextMenu
      */
     static function renderModuleObject ($moduleObject, $contextMenu = true, $multiModuleContextMenu = true) {
         
@@ -44,7 +44,7 @@ class ModuleController {
         
     /**
      * renders a modules context menu
-     * @param type $moduleClass
+     * @param Object $moduleClass
      */
     static function renderContextMenu ($moduleClass, $multiModuleContextMenu = true) {
 
@@ -149,7 +149,7 @@ class ModuleController {
                     Context::setReturnValue("");
                     break;
                 case "logdata":
-                    LogDataModel::logThis($_GET['data']);
+                    Log::info($_GET['data']);
                 default:
             }
         }
@@ -178,7 +178,7 @@ class ModuleController {
     
     /**
      * process a module by id
-     * @param type $moduleId
+     * @param Integer $moduleId
      */
     static function processModule ($moduleId) {
         
@@ -192,7 +192,7 @@ class ModuleController {
     
     /**
      * process a module by module object
-     * @param type $moduleObject
+     * @param Object $moduleObject
      */
     static function processModuleObject ($moduleObject) {
         
