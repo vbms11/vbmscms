@@ -6,7 +6,7 @@ class Captcha {
 		if (isset($_SESSION['captcha.'.$inputName])) {
             return $_SESSION['captcha.'.$inputName];
         }
-		$captcha;
+		$captcha = new stdClass();
 		$captcha->answer = Captcha::createAnswer(7);
 		$captcha->key = Common::hash(strtolower($captcha->answer));
 		$captcha->inputName = "captcha_".Common::rand();

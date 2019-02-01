@@ -5,6 +5,8 @@ class Config {
     static $installed = false;
     static $config = null;
     
+    const installedLockFileName = "files/install/installed";
+    
     static function __callStatic ($name, $args) {
         
         if (stripos($name, "get") === 0) {
@@ -31,16 +33,28 @@ class Config {
             include_once('config.php');
             if (isset($CONFIG)) {
                 self::$config = $CONFIG;
-                if (file_exists("install/locks/installed")) {
+                if (file_exists(self::installedLockFileName)) {
                     self::$installed = true;
                 }
             }
         }
     }
     
+    static function deleteInstalledLockFile () {
+        if (is_file(self::installedLockFileName)) {
+            unlink(self::installedLockFileName);
+            self::$installed = false;
+        }
+    }
+    
     static function getInstalled () {
         
         return self::$installed;
+    }
+    
+    static function createInstalledLockFile () {
+        
+        file_put_contents(self::installedLockFileName, "");
     }
     
     static function getDbInstalled () {

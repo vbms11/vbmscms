@@ -112,11 +112,6 @@ class InstallerController {
         // set cms customer userid
         CmsCustomerModel::setCmsCustomerUserId($cmsCustomerId, $initialUserId);
     }
-    
-    static function createInstalledLockFile () {
-        
-        file_put_contents("install/locks/installed", "");
-    }
 
 }
 

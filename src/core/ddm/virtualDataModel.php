@@ -2,47 +2,47 @@
 
 class VirtualDataModel extends XDataModel   {
     
-    function install () {
+    static function install () {
         
     }
     
     // tables
-    function createTable ($tableName) {
+    static function createTable ($tableName) {
         $tableName = Database::escape($tableName);
         Database::query("insert into t_vdb_table (name) values ('$tableName')");
-        $ret = Database::queryAsObject("select max(id) as newid from t_vdb_table");
+        $ret = Database::queryAsObject("select last_insert_id() as newid from t_vdb_table");
         return $ret->newid;
     }
-    function deleteTable ($tableName) {
+    static function deleteTable ($tableName) {
         $tableName = Database::escape($tableName);
         Database::query("delete from t_vdb_table where name = '$tableName'");
     }
-    function deleteTableById ($tableId) {
+    static function deleteTableById ($tableId) {
         $tableId = Database::escape($tableId);
         Database::query("delete from t_vdb_table where id = '$tableId'");
     }
-    function getTables () {
+    static function getTables () {
         return Database::queryAsArray("select * from t_vdb_table where system = '0' order by name asc");
     }
-    function getSystemTables () {
+    static function getSystemTables () {
         return Database::queryAsArray("select * from t_vdb_table order by name asc");
     }
-    function getTable ($tableName) {
+    static function getTable ($tableName) {
         $tableName = Database::escape($tableName);
         return Database::queryAsObject("select * from t_vdb_table where name = '$tableName'");
     }
-    function getTableById ($tableName) {
+    static function getTableById ($tableName) {
         $tableName = Database::escape($tableName);
         return Database::queryAsObject("select * from t_vdb_table where id = '$tableName'");
     }
     
     // columns
-    function addColumn ($tableName, $columnName, $editType, $validator = '', $position=null, $label = "", $description = "", $minLength = '', $maxLength = '', $required = "0", $value = "") {
+    static function addColumn ($tableName, $columnName, $editType, $validator = '', $position=null, $label = "", $description = "", $minLength = '', $maxLength = '', $required = "0", $value = "") {
         
         $tableName = Database::escape($tableName);
         $columnName = Database::escape($columnName);
         $editType = Database::escape($editType);
-        $label = Database::escape($label); 
+        $label = Database::escape($label);
         $description = Database::escape($description);
         $required = Database::escape($required);
         $value = Database::escape($value);
@@ -54,11 +54,11 @@ class VirtualDataModel extends XDataModel   {
         } else {
             $position = VirtualDataModel::getNexColumnPosition($tableName);
         }
-        Database::query("insert into t_vdb_column 
-            (tableid,name,edittype,position,label,description,required,minlength,maxlength,value,validator) 
+        Database::query("insert into t_vdb_column
+            (tableid,name,edittype,position,label,description,required,minlength,maxlength,value,validator)
             values ((select id from t_vdb_table where name = '$tableName'),'$columnName','$editType','$position','$label','$description','$required','$minLength','$maxLength','$value','$validator')");
     }
-    function deleteColumn ($tableName, $columnName) {
+    static function deleteColumn ($tableName, $columnName) {
         
         $tableName = Database::escape($tableName);
         $columnName = Database::escape($columnName);
@@ -68,7 +68,7 @@ class VirtualDataModel extends XDataModel   {
         Database::query("delete from t_vdb_column where tableid = (select t.id from t_vdb_table t where t.name = '$tableName') and name = '$columnName'") or die(mysql_error());
         
     }
-    function updateColumn ($id, $columnName, $editType, $validator=null, $position=null, $description="", $required="0", $label = "",  $minLength = null, $maxLength = null, $value = "") {
+    static function updateColumn ($id, $columnName, $editType, $validator=null, $position=null, $description="", $required="0", $label = "",  $minLength = null, $maxLength = null, $value = "") {
         
         $columnName = Database::escape($columnName);
         $editType = Database::escape($editType);
@@ -82,61 +82,61 @@ class VirtualDataModel extends XDataModel   {
         $validator = Database::escape($validator);
         Database::query("update t_vdb_column set name = '$columnName', edittype = '$editType', description = '$description', required = '$required', label = '$label', value = '$value', minlength = '$minLength', maxlength = '$maxLength', validator = '$validator' where id = '$id'");
     }
-    function getColumns ($tableName) {
+    static function getColumns ($tableName) {
         $tableName = Database::escape($tableName);
         return Database::queryAsArray("
-                select c.*, rt.physical as refcolphysical, rt.id as refcoltableid, rc.name as refcolname, rc.objectidcolumn as refcolobjectid, rt.name as reftablename, rcoc.name as refcolobjectidname  
-                from t_vdb_column c 
-                left join t_vdb_column rc on rc.id = c.refcolumn 
-                left join t_vdb_table rt on rt.id = rc.tableid 
-                left join t_vdb_column rcoc on rcoc.id = c.objectidcolumn 
+                select c.*, rt.physical as refcolphysical, rt.id as refcoltableid, rc.name as refcolname, rc.objectidcolumn as refcolobjectid, rt.name as reftablename, rcoc.name as refcolobjectidname
+                from t_vdb_column c
+                left join t_vdb_column rc on rc.id = c.refcolumn
+                left join t_vdb_table rt on rt.id = rc.tableid
+                left join t_vdb_column rcoc on rcoc.id = c.objectidcolumn
                 where c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName') order by c.position");
     }
-    function getColumn ($tableName,$columnName) {
+    static function getColumn ($tableName,$columnName) {
         $tableName = Database::escape($tableName);
         $columnName = Database::escape($columnName);
         return Database::queryAsObject("select c.* from t_vdb_column c where c.name = '$columnName' and c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName')");
     }
-    function getColumnById ($columnId) {
+    static function getColumnById ($columnId) {
         $columnId = Database::escape($columnId);
         return Database::queryAsObject("select c.* from t_vdb_column c where c.id = '$columnId'");
     }
-    function hasColumn ($tableName, $columnName) {
+    static function hasColumn ($tableName, $columnName) {
         $tableName = Database::escape($tableName);
         $columnName = Database::escape($columnName);
         $obj = Database::queryAsObject("select 1 from t_vdb_column c where c.name = '$columnName' and c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName')");
         return $obj != null ? true : false;
     }
     
-    function loadRefTable ($tableName,$objectId = null) {
+    static function loadRefTable ($tableName,$objectId = null) {
         $columns = VirtualDataModel::getColumns($tableName);
         foreach ($columns as $column) {
             if ($objectId == null) {
                 // load all results
             } else {
                 // load single result
-		
+                
                 if ($column->refcolumn != null && $column->refcolphysical == "1") {
-                   $refTableName = $column->reftablename;
-                   $dmObject = new DmObject($refTableName,array($column->refcolname,$column->refcolobjectidname));
-                   $result = $dmObject->getByColumn($column->refcolobjectidname, $objectId);
-		   $result = $result[0];
-		   $refColName = $column->refcolname;
-                   $rowNamesValues[$refColName] = $result->$refColName;
-                   VirtualDataModel::updateRow($tableName, $objectId, $rowNamesValues);
+                    $refTableName = $column->reftablename;
+                    $dmObject = new DmObject($refTableName,array($column->refcolname,$column->refcolobjectidname));
+                    $result = $dmObject->getByColumn($column->refcolobjectidname, $objectId);
+                    $result = $result[0];
+                    $refColName = $column->refcolname;
+                    $rowNamesValues[$refColName] = $result->$refColName;
+                    VirtualDataModel::updateRow($tableName, $objectId, $rowNamesValues);
                 }
             }
         }
     }
     
     // row operations
-    function insertRow ($tableName, $rowNamesValues, $createRef=true) {
+    static function insertRow ($tableName, $rowNamesValues, $createRef=true) {
         // get the table id
         $table = VirtualDataModel::getTable($tableName);
         $tableId = $table->id;
         // create the object
         Database::query("insert into t_vdb_object(tableid) values ('$tableId')");
-        $lastInsert = Database::queryAsObject("select max(id) as objectid from t_vdb_object");
+        $lastInsert = Database::queryAsObject("select last_insert_id() as objectid from t_vdb_object");
         $objectId = $lastInsert->objectid;
         
         $columns = VirtualDataModel::getColumns($tableName);
@@ -151,11 +151,11 @@ class VirtualDataModel extends XDataModel   {
                 $columnValue = Database::escape($rowNamesValues[$column->name]);
                 // sql for physical db
                 if ($column->refcolumn != null && $column->refcolphysical == "1") {
-                   $refColumns[$column->refcolname] = $columnValue;
-                   $refTableName = $column->reftablename;
-                   if ($column->refcolobjectidname != null) {
-                       $refObjectId = $column->refcolobjectidname;
-                   }
+                    $refColumns[$column->refcolname] = $columnValue;
+                    $refTableName = $column->reftablename;
+                    if ($column->refcolobjectidname != null) {
+                        $refObjectId = $column->refcolobjectidname;
+                    }
                 }
                 // sql for virtual db
                 $insertSql .= $first ? "" : ", ";
@@ -180,7 +180,7 @@ class VirtualDataModel extends XDataModel   {
         //echo $insertSql;
         return $objectId;
     }
-    function insertRows ($tableName, $ar_rowNamesValues) {
+    static function insertRows ($tableName, $ar_rowNamesValues) {
         // get the table id
         $table = VirtualDataModel::getTable($tableName);
         $columnId = $column->id;
@@ -195,9 +195,9 @@ class VirtualDataModel extends XDataModel   {
         
         // create the object
         foreach ($ar_rowNamesValues as $rowNamesValues) {
-        
+            
             Database::query("insert into t_vdb_object(tableid) values ('$tableId')");
-            $lastInsert = Database::queryAsObject("select max(id) as objectid from t_vdb_object");
+            $lastInsert = Database::queryAsObject("select last_insert_id() as objectid from t_vdb_object");
             $objectId = $lastInsert->objectid;
             $first = true;
             foreach ($rowNamesValues as $columnName => $columnValue) {
@@ -214,19 +214,19 @@ class VirtualDataModel extends XDataModel   {
         Database::query("insert into t_vdb_value (objectid,columnid,value) values $insertValuesSql");
         return $objectId;
     }
-    function deleteRow ($tableName, $objectId) {
+    static function deleteRow ($tableName, $objectId) {
         $tableName = Database::escape($tableName);
         $objectId = Database::escape($objectId);
         Database::query("delete from t_vdb_value where objectid = '$objectId'");
         Database::query("delete from t_vdb_object where id = '$objectId'");
     }
-    function setRowViewed ($tableName, $objectId, $viewed = '1') {
+    static function setRowViewed ($tableName, $objectId, $viewed = '1') {
         $tableName = Database::escape($tableName);
         $objectId = Database::escape($objectId);
         $viewed = Database::escape($viewed);
         Database::query("update t_vdb_object set viewed = '$viewed' where id = '$objectId'");
     }
-    function updateRow ($tableName, $objectId, $rowNamesValues) {
+    static function updateRow ($tableName, $objectId, $rowNamesValues) {
         $objectId = Database::escape($objectId);
         $table = VirtualDataModel::getTable($tableName);
         $tableId = $table->id;
@@ -252,13 +252,13 @@ class VirtualDataModel extends XDataModel   {
             }
         }
     }
-    function getAllRows ($tableName) {
+    static function getAllRows ($tableName) {
         $tableName = Database::escape($tableName);
         $result = Database::queryAsArray(
-                "select v.value, c.name, v.objectid 
-                from t_vdb_value v 
-                join t_vdb_column c on v.columnid = c.id 
-                where c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName') 
+            "select v.value, c.name, v.objectid
+                from t_vdb_value v
+                join t_vdb_column c on v.columnid = c.id
+                where c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName')
                 order by v.objectid");
         $ret = array(); $row; $lastObjectId = null;
         if (count($result) > 0) {
@@ -275,16 +275,16 @@ class VirtualDataModel extends XDataModel   {
         }
         return $ret;
     }
-    function getCountViewed ($viewed) {
+    static function getCountViewed ($viewed) {
         $viewed = Database::escape($viewed);
         $result = Database::queryAsObject(
-            "SELECT count(o.id) as count 
+            "SELECT count(o.id) as count
             FROM t_vdb_object o
             join t_vdb_table t on o.tableid = t.id
             WHERE o.viewed = '$viewed' and t.system = '0'");
         return $result->count;
     }
-    function getRowsViewed ($tableName,$viewed) {
+    static function getRowsViewed ($tableName,$viewed) {
         $viewed = Database::escape($viewed);
         $tableName = Database::escape($tableName);
         $result = Database::queryAsArray(
@@ -312,15 +312,15 @@ class VirtualDataModel extends XDataModel   {
             $ret[] = $row;
         }
         return $ret;
-
+        
     }
-    function getAllRowsAsArray ($tableName) {
+    static function getAllRowsAsArray ($tableName) {
         $tableName = Database::escape($tableName);
         $result = Database::queryAsArray(
-                "select v.value, c.name, v.objectid
-                from t_vdb_value v 
-                join t_vdb_column c on v.columnid = c.id 
-                where c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName') 
+            "select v.value, c.name, v.objectid
+                from t_vdb_value v
+                join t_vdb_column c on v.columnid = c.id
+                where c.tableid = (select t.id from t_vdb_table t where t.name = '$tableName')
                 order by v.objectid");
         $ret = array(); $row = array(); $lastObjectId = null;
         if (count($result) > 0) {
@@ -339,7 +339,7 @@ class VirtualDataModel extends XDataModel   {
         }
         return $ret;
     }
-    function getRowByObjectId ($tableName, $objectId) {
+    static function getRowByObjectId ($tableName, $objectId) {
         if (is_array($objectId)) {
             foreach ($objectId as $key => $id) {
                 $objectId[$key] = Database::escape($id);
@@ -356,7 +356,7 @@ class VirtualDataModel extends XDataModel   {
         }
         return $row;
     }
-    function getRowByObjectIdAsArray ($tableName, $objectId) {
+    static function getRowByObjectIdAsArray ($tableName, $objectId) {
         
         if (is_array($objectId)) {
             foreach ($objectId as $key => $id) {
@@ -385,7 +385,7 @@ class VirtualDataModel extends XDataModel   {
     }
     
     // search operations
-    function getResults ($query) {
+    static function getResults ($query) {
         $ret = array();
         // get ids of columns
         $objectIds = VirtualDataModel::parseCriteria($query->getTable(),$query->getCriteria());
@@ -395,7 +395,7 @@ class VirtualDataModel extends XDataModel   {
         }
         return $ret;
     }
-    function getResultsAsArray ($query) {
+    static function getResultsAsArray ($query) {
         $ret = array();
         // get ids of columns
         $objectIds = VirtualDataModel::parseCriteria($query->getTable(),$query->getCriteria());
@@ -407,7 +407,7 @@ class VirtualDataModel extends XDataModel   {
     }
     
     // search
-    function search ($tableName, $namesValues) {
+    static function search ($tableName, $namesValues) {
         $result = array(); $criterion = array();
         foreach ($namesValues as $columnName => $value) {
             $criterion[] = DMCriteria::like($value, $columnName);
@@ -420,7 +420,7 @@ class VirtualDataModel extends XDataModel   {
     }
     
     // find
-    function find ($tableName, $columnNamesValues) {
+    static function find ($tableName, $columnNamesValues) {
         $criteria = array();
         foreach ($columnNamesValues as $name => $value) {
             $criteria[] = DMCriteria::equals($value, $name);
@@ -430,17 +430,17 @@ class VirtualDataModel extends XDataModel   {
     }
     
     // unique values
-    function getColumnValues ($tableName,$columnName) {
+    static function getColumnValues ($tableName,$columnName) {
         $tableName = Database::escape($tableName);
         $columnName = Database::escape($columnName);
-        $values = Database::queryAsArray("select distinct v.value as colval from t_vdb_column as c 
-                 left join t_vdb_value as v on c.id = v.columnid 
+        $values = Database::queryAsArray("select distinct v.value as colval from t_vdb_column as c
+                 left join t_vdb_value as v on c.id = v.columnid
                  where c.name = '$columnName' and c.tableid = (select t.id from t_vdb_table where t.name = '$tableName')");
         return $values;
     }
     
     // extra methods
-    function getRowByObjectIds ($tableName, $objectIds) {
+    static function getRowByObjectIds ($tableName, $objectIds) {
         $condition = "('".implode("','", $objectIds)."')";
         $results = Database::queryAsArray("select v.value, c.name, v.objectid from t_vdb_value v join t_vdb_column c on v.columnid = c.id where v.objectid in $condition order by v.objectid");
         $ret = array(); $row; $lastObjectId = null;
@@ -459,7 +459,7 @@ class VirtualDataModel extends XDataModel   {
         }
         return $ret;
     }
-    function parseCriteria ($tableName,$criteria) {
+    static function parseCriteria ($tableName,$criteria) {
         $hitObjectIds = null;
         switch ($criteria->operand) {
             case DMCriteria::$dm_and:
@@ -502,29 +502,29 @@ class VirtualDataModel extends XDataModel   {
                     $hitObjectIds[] = $objectId->objectid;
                 }
                 break;
-            
+                
         }
         return $hitObjectIds;
     }
-    function getObjectId ($table,$feild,$operand,$value) {
+    static function getObjectId ($table,$feild,$operand,$value) {
         $table = Database::escape($table);
         $feild = Database::escape($feild);
         $value = Database::escape($value);
-        $selectObjectsSql = "select o.id as objectid from t_vdb_object o 
-         join t_vdb_table t on t.id = o.tableid and t.name = '$table' 
-         join t_vdb_value v on o.id = v.objectid and '$value' $operand v.value 
+        $selectObjectsSql = "select o.id as objectid from t_vdb_object o
+         join t_vdb_table t on t.id = o.tableid and t.name = '$table'
+         join t_vdb_value v on o.id = v.objectid and '$value' $operand v.value
          join t_vdb_column c on c.id = v.columnid and c.name = '$feild'";
         return Database::queryAsArray($selectObjectsSql);
     }
-
-    function getNexColumnPosition ($tableId) {
+    
+    static function getNexColumnPosition ($tableId) {
         $tableId = Database::escape($tableId);
         $result = Database::query("select max(position) as nextposition from t_vdb_column where tableid = (select id from t_vdb_table where name = '$tableId')");
         $obj = mysql_fetch_object($result);
         return $obj->nextposition + 1;
     }
     
-    function setColumnPosition ($columnId,$position) {
+    static function setColumnPosition ($columnId,$position) {
         $columnId = Database::escape($columnId);
         $position = Database::escape($position);
         Database::query("update t_vdb_column set position = '$position' where id = '$columnId'");

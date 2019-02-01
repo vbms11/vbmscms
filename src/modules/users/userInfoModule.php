@@ -152,7 +152,13 @@ class UserInfoModule extends XModule {
 					Age: <?php echo $user->age; ?>
 				</div>
 				<div class="userInfoRow">
-					Location: <?php echo $userAddress->city.", ".$userAddress->country; ?>
+					Location: <?php 
+					if ($userAddress == null) {
+					    echo "(none)";
+					} else {
+					    echo $userAddress->city.", ".$userAddress->country;
+					}
+					?>
 				</div>
 				<div class="userInfoRow">
 					About: <?php echo $user->about; ?>

@@ -57,11 +57,14 @@ class InstallView extends XModule {
                 
                 $status = array();
                 
+                Config::deleteInstalledLockFile();
+                
                 switch ($_SESSION["installStatus"]) {
                     
                     case "buildConfig":
                         
                         try {
+                            $_SESSION["installStatus"] = "wait";
                             InstallerController::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
                             $status = array(
                                 "status" => "ok",
@@ -81,6 +84,7 @@ class InstallView extends XModule {
                     case "installModel":
                         
                         try {
+                            $_SESSION["installStatus"] = "wait";
                             InstallerController::installModel($_SESSION["setup"]);
                             $status = array(
                                 "status" => "ok",
@@ -100,7 +104,7 @@ class InstallView extends XModule {
                     case "createInintialSite":
                         
                         try {
-                            
+                            $_SESSION["installStatus"] = "wait";
                             $_SESSION["site"] = InstallerController::createInitialSite($_SESSION["siteName"], $_SESSION["siteDescription"]);
                             $status = array(
                                 "status" => "ok",
@@ -120,7 +124,7 @@ class InstallView extends XModule {
                     case "createInintialUser":
                         
                         try {
-                            
+                            $_SESSION["installStatus"] = "wait";
                             InstallerController::createInitialUser($_SESSION['username'], $_SESSION['firstname'], $_SESSION['lastname'], $_SESSION['password'], $_SESSION['email'], $_SESSION['birthdate'], $_SESSION['gender'], $_SESSION["site"]["cmsCustomer"], $_SESSION["site"]["siteId"]);
                             $status = array(
                                 "status" => "ok",
@@ -145,10 +149,17 @@ class InstallView extends XModule {
                             "progress" => 100
                         );
                         unset($_SESSION["installStatus"]);
-                        InstallerController::createInstalledLockFile();
+                        Config::createInstalledLockFile();
                         Context::setReturnValue(json_encode($status));
                         break;
-                } 
+                    case "wait":
+                        // when a step is already being taken
+                        $status = array(
+                            "status" => "wait"
+                        );
+                        Context::setReturnValue(json_encode($status));
+                        break;
+                }
                 /*
                 // create config file
                 InstallerController::buildConfig($_SESSION['hostname'],$_SESSION['dbusername'],$_SESSION['dbpassword'],$_SESSION['database'],$_SESSION['email']);
@@ -222,6 +233,8 @@ class InstallView extends XModule {
     						case "finnished":
     							callUrl("<?php echo parent::link(); ?>");
     							break;
+    						case "wait":
+        						break;
 						}
 					});
 				},1000);
@@ -253,6 +266,20 @@ class InstallView extends XModule {
                 <div class="table">
                 	<div>
                 		<div>
+                			<label for="setup">Setups</label>
+                    	</div>
+                		<div>
+                			<select name="setup" class="expand">
+                            	<?php
+                            	foreach ($setups as $pos => $setup) {
+                            	    ?><option value="<?php echo $pos; ?>"<?php if ($pos == 0) echo " selected"; ?>><?php echo substr($setup, 0, -4); ?></option><?php
+                            	}
+                            	?>
+                            </select>
+                        </div>
+                    </div>
+                	<div>
+                		<div>
                 			<label for="siteName">Name</label>
                 		</div>
                 		<div>
@@ -267,20 +294,6 @@ class InstallView extends XModule {
                 		    <textarea name="siteDescription" class="expand" placeholder="Description of the website" cols="3" rows="3"></textarea>
                 		</div>
                 	</div>
-                	<div>
-                		<div>
-                			<label for="setup">Setups</label>
-                    	</div>
-                		<div>
-                			<select name="setup" class="expand">
-                            	<?php
-                            	foreach ($setups as $pos => $setup) {
-                            	    ?><option value="<?php echo $pos; ?>"<?php if ($pos == 0) echo " selected"; ?>><?php echo substr($setup, 0, -4); ?></option><?php
-                            	}
-                            	?>
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 <hr/>
                 <div class="alignRight">

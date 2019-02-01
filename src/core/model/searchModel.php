@@ -11,7 +11,7 @@ class SearchResult {
     public $params;
     public $text;
     public $title;
-    function SearchResult ($pageId="", $text="", $title="") {
+    function __construct ($pageId="", $text="", $title="") {
         $this->pageId = $pageId;
         $this->text = $text;
         $this->title = $title;

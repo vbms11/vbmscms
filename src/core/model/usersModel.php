@@ -451,8 +451,7 @@ class UsersModel {
             // create user objectid
             //$objectId = DynamicDataView::createObject("userAttribs",false);
             // create user
-            Database::query("insert into t_user (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender)
-                values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),null,$profileImage,'$gender')");
+            Database::query("insert into t_user (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender,active) values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),null,$profileImage,'$gender',1)");
             $result = Database::queryAsObject("select max(id) as id from t_user");
             $id = $result->id;
             // set user authkey

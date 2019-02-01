@@ -27,20 +27,6 @@ margin-left: 400px;
     z-index: 20;
 border: 0px 1px 1px 1px solid silver;
 }
-.mapHolder {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	z-index: 15;
-}
-.gMapHolder {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
-	z-index: 10;
-}
 .centerHolder {
 	position: absolute;
 	top: 40px;
