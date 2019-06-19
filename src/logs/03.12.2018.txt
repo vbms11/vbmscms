@@ -1,2 +1,0 @@
-[03/12/2018 12:26:34]	::1	[info]  secure request c:  url: 
-[03/12/2018 12:26:34]	::1	[info]  secure request c:  url: 

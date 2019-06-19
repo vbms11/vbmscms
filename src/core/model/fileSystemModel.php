@@ -248,10 +248,10 @@ class FileSystemModel {
     }
     
     static function escapeFileName ($name) {
-        return preg_replace("/[a-zA-Z-09\-\.\ ]{".self::minFileNameLength.",".self::maxFileNameLength."}/","_",$name);
+        return preg_replace("/[a-zA-Z-09\-\.\ ]{".self::$minFileNameLength.",".self::$maxFileNameLength."}/","_",$name);
     }
     
     static function escapeFolderName ($name) {
-        return preg_replace("/[a-zA-Z-09\-\.\ ]{".self::minFolderNameLength.",".self::maxFolderNameLength."}/","_",$name);
+        return preg_replace("/[a-zA-Z-09\-\.\ ]{".self::$minFolderNameLength.",".self::$maxFolderNameLength."}/","_",$name);
     }
 }

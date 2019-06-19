@@ -148,7 +148,7 @@ class TemplateModel {
             return null;
         }
         $instanceId = ModuleInstanceModel::createModuleInstance($module->id);
-        Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$areaName','$instanceId','','')");
+        Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$areaName','$instanceId')");
         return $instanceId;
     }
 
@@ -172,7 +172,7 @@ class TemplateModel {
             from t_templatearea a
             join t_module_instance mi on a.instanceid = mi.id 
             join t_module m on m.id = mi.moduleid
-            where a.id = '$moduleId'");
+            where mi.id = '$moduleId'");
         return $result;
     }
 
@@ -188,6 +188,9 @@ class TemplateModel {
             TemplateModel::shiftTemplateModulesDown($pageId, $area, $position);
             $result = Database::queryAsObject("select min(position)-1 as max from t_templatearea where name = '$area' and pageid = '$pageId'");
             $position = $result->max;
+            if ($position == null) {
+                $position = 0;
+            }
         } else {
             $result = Database::queryAsObject("select max(position)+1 as max from t_templatearea where name = '$area' and pageid = '$pageId'");
             $position = $result->max;

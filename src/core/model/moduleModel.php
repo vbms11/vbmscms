@@ -70,7 +70,10 @@ class ModuleModel {
     static function getModuleClass ($moduleObj, $params = true) {
         if (empty($moduleObj) || empty($moduleObj->include) || empty($moduleObj->interface)) {
             echo "error loading module object<br/>";
+            echo "module:<br>";
             print_r($moduleObj);
+            echo "stacktrace<br/>";
+            echo Common::getBacktrace();
             exit;
         }
         // get the module instance

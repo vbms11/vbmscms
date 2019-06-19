@@ -135,12 +135,12 @@ class Session {
     static function endSession ($sessionId) {
         
         // end database session
-	    SessionModel::endSession($sessionId);
+	SessionModel::endSession($sessionId);
         // end php session
         session_unset();
         session_destroy();
         session_write_close();
-        session_regenerate_id(true);
+        //session_regenerate_id();
     }
     
     static function isValid ($sessionId, $sessionKey) {

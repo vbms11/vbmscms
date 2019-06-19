@@ -57,6 +57,8 @@ class InstallView extends XModule {
                 
                 $status = array();
                 
+                Config::deleteInstalledLockFile();
+                
                 switch ($_SESSION["installStatus"]) {
                     
                     case "buildConfig":
@@ -83,7 +85,7 @@ class InstallView extends XModule {
                         
                         try {
                             $_SESSION["installStatus"] = "wait";
-                            InstallerController::installModel($_SESSION["setup"]);
+                            InstallerController::installModel($_SESSION["setup"]->filename);
                             $status = array(
                                 "status" => "ok",
                                 "message" => "database setup installed.",
@@ -147,7 +149,7 @@ class InstallView extends XModule {
                             "progress" => 100
                         );
                         unset($_SESSION["installStatus"]);
-                        InstallerController::confirmInstall();
+                        Config::createInstalledLockFile();
                         Context::setReturnValue(json_encode($status));
                         break;
                     case "wait":
@@ -192,7 +194,6 @@ class InstallView extends XModule {
                 $this->printSelectSetupView();
                 break;
             default:
-                unset($_SESSION['installMsg']);
                 if (!Config::getInstalled()) {
                     $this->printWelcomeView();
                 } else if (Config::getDbInstalled()) {
@@ -246,14 +247,7 @@ class InstallView extends XModule {
     
     function printSelectSetupView () {
         
-        $setups = array();
-        if ($handle = opendir('core/model/install/setups')) {
-            while (false !== ($entry = readdir($handle))) {
-                if ($entry != "." && $entry != "..") {
-                    $setups []= $entry;
-                }
-            }
-        }
+        $setups = InstallerController::getInstallTypes();
         
         $_SESSION["setups"] = $setups;
         
@@ -268,13 +262,25 @@ class InstallView extends XModule {
                 			<label for="setup">Setups</label>
                     	</div>
                 		<div>
-                			<select name="setup" class="expand">
+                			<select id="setup" name="setup" class="expand">
                             	<?php
                             	foreach ($setups as $pos => $setup) {
-                            	    ?><option value="<?php echo $pos; ?>"<?php if ($pos == 0) echo " selected"; ?>><?php echo substr($setup, 0, -4); ?></option><?php
+                            	    ?><option value="<?php echo $pos; ?>"<?php if ($pos == 0) echo " selected"; ?>><?php echo htmlentities($setup->name); ?></option><?php
                             	}
                             	?>
                             </select>
+                        </div>
+                    </div>
+                	<div>
+                		<div>
+                			<label for="setup">Description</label>
+                    	</div>
+                		<div id="descriptions">
+                			<?php
+                        	foreach ($setups as $pos => $setup) {
+                        	    ?><span class="<?php if ($pos != 0) { echo "hide"; } ?>" id="setupTypeDescription_<?php echo $pos; ?>"><?php echo htmlentities($setup->description); ?></span><?php
+                        	}
+                        	?>
                         </div>
                     </div>
                 	<div>
@@ -299,6 +305,12 @@ class InstallView extends XModule {
                     <button type="submit" class="jquiButton btnInstallNext">Load Setup</button>
                 </div>
             </form>
+            <script>
+            $("#setup").change(function () {
+                $("#descriptions span").hide();
+				$("#setupTypeDescription_"+$("#setup option [selected]").value).show();
+            });
+            </script>
         </div>
         <?php
     }

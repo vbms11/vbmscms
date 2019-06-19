@@ -65,7 +65,7 @@ class PageConfigModule extends AdminPagesBaseModule {
             <div class="pageConfigPanel">
                 <h3><a href="#pageConfigPanelSection1"><?php echo parent::getTranslation("pageConfig.label.configPage"); ?></a></h3>
                 <div id="pageConfigPanelSection1">
-                    <?php $this->printPageSettingsView($page) ?>
+                    <?php $this->printPageSettingsView($page); ?>
                 </div>
             </div>
         </div>

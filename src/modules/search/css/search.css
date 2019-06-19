@@ -1,7 +1,5 @@
 
 .searchBoxPanel {
-    float: right;
-    border: 1px 0px 1px 1px solid silver;
     background-image: url(../img/menu_grad.png);
     background-color: white;
 }
@@ -10,7 +8,7 @@
     color: #000000;
     border: 0px none;
     height: 18px;
-    float: right;
+    width: 100%;
 }
 
 .searchButton {

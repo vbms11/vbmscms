@@ -4,73 +4,131 @@ require_once('core/plugin.php');
 
 class InstallerController {
     
+    static $installTypesPath = "core/model/install/setups";
+    
     static function createInstaller () {
         
     }
     
-    static function buildConfig ($hostname,$username,$password,$database,$email) {
+    static function deleteInstallType ($filename) {
         
-        $config  = '<?php'.PHP_EOL;
+        $types = self::getInstallTypes();
+        foreach ($types as $type) {
+            if ($type->filename == $filename) {
+                unlink(self::$installTypesPath."/".$filename);
+            }
+        }
+    }
+    
+    static function createInstallType ($filename, $name, $description) {
+        
+        $content = "<installType>".PHP_EOL;
+        $content .= "<name>".htmlentities($name)."</name>".PHP_EOL;
+        $content .= "<description>".htmlentities($description)."</description>".PHP_EOL;
+        $content .= "<sql>".htmlentities(BackupModel::getDatabaseSql(true))."</sql>";
+        $content .= "</installType>";
+        
+        $handle = fopen(self::$installTypesPath."/".$filename,'w+');
+        fwrite($handle,$content);
+        fclose($handle);
+    }
+    
+    static function doseInstallTypeFileExist ($filename) {
+        
+        return is_file(self::$installTypesPath."/".$filename);
+    }
+    
+    static function getInstallTypes () {
+        
+        $setups = array();
+        if ($handle = opendir(self::$installTypesPath)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") {
+                    if (!Common::endsWith($entry, ".xml")) {
+                        continue;
+                    }
+                    $setups []= self::getInstallType($entry);
+                }
+            }
+        }
+        return $setups;
+    }
+    
+    static function getInstallType ($filename) {
+        
+        $doc = new DOMDocument();
+        $doc->loadXML(self::$installTypesPath."/".$filename);
+        $setup = stdClass;
+        $setup->name = html_entity_decode($doc->getElementsByTagName("name")[0]->nodeValue);
+        $setup->description = html_entity_decode($doc->getElementsByTagName("description")[0]->nodeValue);
+        $setup->sql = html_entity_decode($doc->getElementsByTagName("sql")[0]->nodeValue);
+        $setup->filename = $filename;
+        return $setup;
+    }
+    
+    static function confirmInstall () {
+        
+        self::buildConfig(null,null,null,null,null,true);
+    }
+    
+    static function buildConfig ($hostname=null,$username=null,$password=null,$database=null,$email=null,$installed=false) {
+        
+        $content  = '<?php'.PHP_EOL;
         // database config
-        $config .= '$CONFIG[\'dbName\'] = \''.$database.'\';'.PHP_EOL;
-        $config .= '$CONFIG[\'dbHost\'] = \''.$hostname.'\';'.PHP_EOL;
-        $config .= '$CONFIG[\'dbUser\'] = \''.$username.'\';'.PHP_EOL;
-        $config .= '$CONFIG[\'dbPass\'] = \''.$password.'\';'.PHP_EOL;
-        $config .= '$CONFIG[\'dbTablePrefix\'] = \'t_\';'.PHP_EOL;
-        $config .= '$CONFIG[\'cmsDbDateFormat\'] = \'\';'.PHP_EOL;
-        $config .= '$CONFIG[\'cmsUiDateFormat\'] = \'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'dbName\'] = \''.($installed ? Config::getDBName() : $database).'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'dbHost\'] = \''.($installed ? Config::getDBHost() : $hostname).'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'dbUser\'] = \''.($installed ? Config::getDBUser() : $username).'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'dbPass\'] = \''.($installed ? Config::getDBPassword() : $password).'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'dbTablePrefix\'] = \'t_\';'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsDbDateFormat\'] = \'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsUiDateFormat\'] = \'\';'.PHP_EOL;
 
         // session config
-        $config .= '$CONFIG[\'cmsSessionExpireTime\'] = 60;'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsSessionExpireTime\'] = 60;'.PHP_EOL;
 
         // resource config
-        $config .= '$CONFIG[\'resourcePath\'] = \'files/\';'.PHP_EOL;
+        $content .= '$CONFIG[\'resourcePath\'] = \'files/\';'.PHP_EOL;
 
         // cms info
-        $config .= '$CONFIG[\'cmsName\'] = \'vbmscms\';'.PHP_EOL;
-        $config .= '$CONFIG[\'cmsVersion\'] = \'0.5\';'.PHP_EOL;
-        $config .= '$CONFIG[\'cmsLicese\'] = \'\';'.PHP_EOL;
-        $config .= '$CONFIG[\'cmsSecureLink\'] = true;'.PHP_EOL;
-        $config .= '$CONFIG[\'cmsMainDomain\'] = \''.DomainsModel::getDomainName().'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsName\'] = \'vbmscms\';'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsVersion\'] = \'0.5\';'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsLicese\'] = \'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsSecureLink\'] = true;'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsMainDomain\'] = \''.DomainsModel::getDomainName().'\';'.PHP_EOL;
         
         // crypto configs
-        $config .= '$CONFIG[\'serverSecret\'] = \'';
-        $config .= self::generateServerSecret();
-        $config .= '\';'.PHP_EOL;
-        $config .= '$CONFIG[\'serverPublicKey\'] = \'\';'.PHP_EOL;
-        $config .= '$CONFIG[\'serverPrivateKey\'] = \'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'serverSecret\'] = \''.($installed ? Config::getServerSecret() : self::generateServerSecret()).'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'serverPublicKey\'] = \'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'serverPrivateKey\'] = \'\';'.PHP_EOL;
         
         // log config
-        $config .= '$CONFIG[\'queryLog\'] = false;'.PHP_EOL;
+        $content .= '$CONFIG[\'queryLog\'] = false;'.PHP_EOL;
         
         // shop config
-        $config .= '$CONFIG[\'currencySymbol\'] = \'&euro;\';'.PHP_EOL;
-        $config .= '$CONFIG[\'weightUnit\'] = \'kg\';'.PHP_EOL;
-        $config .= '$CONFIG[\'weightInGram\'] = \'1000\';'.PHP_EOL;
+        $content .= '$CONFIG[\'currencySymbol\'] = \'&euro;\';'.PHP_EOL;
+        $content .= '$CONFIG[\'weightUnit\'] = \'kg\';'.PHP_EOL;
+        $content .= '$CONFIG[\'weightInGram\'] = \'1000\';'.PHP_EOL;
 
-        $config .= '$CONFIG[\'seoUrl\'] = false;'.PHP_EOL;
-        $config .= '$CONFIG[\'cmsAdminEmail\'] = \''.$email.'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'seoUrl\'] = false;'.PHP_EOL;
+        $content .= '$CONFIG[\'cmsAdminEmail\'] = \''.($installed ? Config::getCmsAdminEmail() : $email).'\';'.PHP_EOL;
+        $content .= '$CONFIG[\'installed\'] = '.($installed ? 'true' : 'false').';'.PHP_EOL;
         
-        $config .= "?>";
+        $content .= "?>";
 
         // write config file
-        file_put_contents("config.php",$config);
+        file_put_contents("config.php",$content);
     }
 
     static function generateServerSecret () {
         return Common::randHash(128);
     }
 
-    static function installModel ($setup) {
-
-        // installs the datamodel
-        self::executeSqlFile("core/model/install/setups/$setup");
+    static function installModel ($filename) {
         
-    }
-    
-    static function executeSqlFile ($filename) {
-        $sqlFileContent = file_get_contents($filename);
-        $sqlFileParts = explode(";",$sqlFileContent);
+        $setup = file_get_contents(self::$installTypesPath."/".$filename);
+        
+        // installs the datamodel
+        $sqlFileParts = explode(";",$setup);
         $parts = count($sqlFileParts) - 2;
         for ($i=1; $i<$parts; $i++) {
             Database::query($sqlFileParts[$i]);
@@ -78,7 +136,7 @@ class InstallerController {
     }
     
     static function createInitialSite ($name, $description) {
-        
+         
         // register cms customer
         $initialCustomerId = CmsCustomerModel::createCmsCustomer();
         

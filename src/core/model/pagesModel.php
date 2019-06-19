@@ -218,7 +218,7 @@ class PagesModel {
         $siteId = Context::getSiteId();
         $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
-            left join t_templatearea a on a.id = '$id'
+            left join t_templatearea a on a.instanceid = '$id'
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -277,7 +277,7 @@ class PagesModel {
             $templateSql = ", template = '$template'";
         }
         
-        $query = "update t_page set title = '$title', keywords = '$keywords', description = '$description', type = '$type' $templateSql where id = '$id'";
+        $query = "update t_page set title = '$title', keywords = '$keywords', description = '$description' $templateSql where id = '$id'";
         Database::query($query);
         PagesModel::setWelcome($id,$welcome);
            

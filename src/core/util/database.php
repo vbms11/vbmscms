@@ -3,8 +3,8 @@
 class Database {
     
     private static $error = null;
-    private static $dataSource = null;
-    private static $defaultDataSourceName = null;
+    private static $dataSource = array();
+    private static $defaultDataSourceName = "mysqli";
     
     static function getError () {
         return Database::getDataSource()->getError();
@@ -19,16 +19,19 @@ class Database {
     }
     
     static function getDataSource ($dataSourceName = null) {
-        /*
+        
         if ($dataSourceName == null) {
             $dataSourceName = self::$defaultDataSourceName;
         }
         if (isset(self::$dataSource[$dataSourceName])) {
-            self::$dataSource[$dataSourceName] = DataSourceFactory::getDataSource($dataSourceName);
+            return self::$dataSource[$dataSourceName];
         }
-        throw Exception("no datasource exists with that name");
-        */
-        return DataSourceFactory::getDataSource($dataSourceName);
+        $newDataSource = DataSourceFactory::getDataSource($dataSourceName);
+        if ($newDataSource == null) {
+            throw Exception("no datasource exists with that name");
+        }
+        self::$dataSource[$dataSourceName] = $newDataSource;
+        return self::$dataSource[$dataSourceName];
     }
     
     static function escape ($vars) {
@@ -106,6 +109,13 @@ class Database {
         $lastInsertId = Database::getDataSource()->query("select max(id) as id from 0x".bin2hex($tableName));
         return $lastInsertId->id;
     }
+    
+    static function close () {
+        foreach (self::$dataSource as $name => $dataSource) {
+            $dataSource->close();
+        }
+        self::$dataSource = array();
+    }
 }
 
 interface IDataSource {
@@ -121,6 +131,7 @@ interface IDataSource {
     function isConnected ();
     function getTableNames ();    
     function getTableFeilds ($tableName);
+    function close ();
 }
 
 class MysqlDataSource implements IDataSource {
@@ -195,6 +206,10 @@ class MysqlDataSource implements IDataSource {
     
     function isConnected () {
         return $this->connected;
+    }
+    
+    function close () {
+        mysql_close();
     }
 }
 
@@ -284,6 +299,10 @@ class MysqliDataSource implements IDataSource {
     function isConnected () {
         return $this->connected;
     }
+    
+    function close () {
+        mysqli_close($this->getDbLink());
+    }
 }
 
 
@@ -350,6 +369,10 @@ class SqliteDataSource implements IDataSource {
     
     function isConnected() {
         return $this->connected;
+    }
+    
+    function close () {
+        
     }
 }
 

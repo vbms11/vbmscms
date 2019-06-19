@@ -330,6 +330,7 @@ class Context {
         
         TranslationsModel::maintainTrnaslationsFile();
         Log::writeLogFile();
+        Database::close();
     }
     
     // is the module currently being rendered or processed 

@@ -25,7 +25,7 @@ class AdminPagesBaseModule extends XModule {
         if (empty($_GET['id'])) {
             if (empty($_GET['parent']))
                 $_GET['parent'] = null;
-            $newPageId = PagesModel::createPage($_POST['pagename'], "", Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['template'],null,$_POST['pagedescription']);
+            $newPageId = PagesModel::createPage($_POST['pagename'], 0, Context::getLang(),isset($_POST['welcome']) ? "1" : "0",$_POST['pagetitle'],$_POST['pagekeywords'],$_POST['template'],null,$_POST['pagedescription']);
             MenuModel::createPageInMenu($newPageId, $_GET["menu"], $_GET["parent"], Context::getLang());
             MenuModel::setPageActivateInMenu($newPageId, $_POST['active'], Context::getLang());
             $_GET['id'] = $newPageId;

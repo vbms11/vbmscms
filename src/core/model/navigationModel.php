@@ -7,7 +7,7 @@
 
 class NavigationModel {
     
-    static $secureLink = true;
+    static $secureLink = false;
 
     // saves next actions in nav.nextAction
 
@@ -94,14 +94,14 @@ class NavigationModel {
     }
 
     static function redirectModule ($moduleId,$params=null) {
-        NavigationModel::redirect(NavigationModel::createModuleLink($moduleId, $params, false, false, false));
+        NavigationModel::redirect(NavigationModel::createModuleLink($moduleId, $params, false, false));
     }
     
     static function redirectStaticModule ($name,$params=null) {
         NavigationModel::redirect(NavigationModel::createStaticPageLink($name, $params, false, false));
     }
 
-    static function redirect ($url=null,$secure=true) {
+    static function redirect ($url=null,$secure=false) {
         if ($url == null) {
             // redirect to welcome page
             $url = "?".NavigationModel::addSessionKeys($xhtml);

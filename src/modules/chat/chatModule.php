@@ -79,7 +79,7 @@ class ChatModule extends XModule {
         if ($user != null) {
             ?>
             <div class="panel chatPanel">
-                <iframe id="chatIframe" src="modules/chat/chat/index.php?authkey=<?php echo $user->authkey; ?>"></iframe>
+                
             </div>
             <?php
         }

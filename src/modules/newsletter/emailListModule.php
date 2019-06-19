@@ -82,7 +82,7 @@ class EmailListModule extends XModule {
                 </td></tr></table>
                 <hr/>
                 <div class="alignRight">
-                    <button type="sumit" class="jquiButton"><?php echo parent::getTranslation("emailList.form.button"); ?></button>
+                    <button type="submit" class="jquiButton"><?php echo parent::getTranslation("emailList.form.button"); ?></button>
                 </div>
             </form>
         </div>

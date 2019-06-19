@@ -266,10 +266,7 @@ class RegisterModule extends XModule {
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.firstname"); ?></td>
                     <td><input name="firstName" type="text" <?php if (isset($_SESSION['register.user']) && parent::get("type") == "facebook") { echo 'disabled="true"'; } ?> value="<?php echo $firstName; ?>" /><?php
-                    $message = parent::getMessage("firstname");
-                    if (!empty($message)) {
-                        echo '<span class="validateTips">'.$message.'</span>';
-                    }
+                    
                     ?></td>
                 </tr><tr>
                     <td><?php echo parent::getTranslation("register.lastname"); ?></td>

@@ -6,6 +6,18 @@ $baseRand;
 
 class Common {
     
+    static function endsWith ($string, $test) {
+        $strlen = strlen($string);
+        $testlen = strlen($test);
+        if ($testlen > $strlen) {
+            return false;
+        }
+        if ($testlen == 0) {
+            return true;
+        }
+        return (substr($string, -$testlen) === $test);
+    }
+    
     static function isEmpty ($var) {
         if (empty($var)) {
             return true;
@@ -130,13 +142,13 @@ class Common {
         return array(1=>"Januar",2=>"Februar",3=>"M&auml;rz",4=>"April",5=>"Mai",6=>"Juni",7=>"Juli",8=>"August",9=>"September",10=>"Oktober",11=>"November",12=>"Dezember");
     }
     
-    static function getBacktrace($ignore = 2) {
+    static function getBacktrace($ignore = 1) {
         $trace = '';
         foreach (debug_backtrace() as $k => $v) {
             if ($k < $ignore) {
                 continue;
             }
-            //$trace .= '#' . ($k - $ignore) . ' ' . $v['file'] . '(' . $v['line'] . '): ' . (isset($v['class']) ? get_class($v['class']) . '->' : '') . $v['function'] . '(' . implode(', ', $v['args']) . ')' . PHP_EOL;
+            $trace .= '#' . ($k - $ignore) . ' ' . $v['file'] . '(' . $v['line'] . '): ' . (isset($v['class']) ? $v['class'] . '->' : '') . $v['function'] . '<br/>';
         }
         return $trace;
     }

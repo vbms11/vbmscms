@@ -42,7 +42,7 @@ class SearchBoxModule extends XModule {
             <form method="post" id="searchForm" name="searchForm" action="<?php echo NavigationModel::createStaticPageLink("search"); ?>">
                 <table cellpadding="0"><tr><td class="contract searchButton">
                     <a href="" onclick="$('#searchForm').submit(); return false;"><?php echo parent::getTranslation("search.button"); ?></a>
-                </td><td>
+                </td><td class="expand">
                     <input class="searchFeild" type="text" name="searchText" />
                 </td></tr></table>
             </form>

@@ -2,14 +2,14 @@
 
 class UrlParser {
 	
-	$selectionSubDomain
-	$domain
-	$requestType
-	$language
-	$pageId
-	$moduleId
-	$code
-	$staticName
+    $selectionSubDomain;
+    $domain;
+    $requestType;
+    $language;
+    $pageId;
+    $moduleId;
+    $code;
+    $staticName;
 	
 	function parse () {
 		

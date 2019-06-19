@@ -64,7 +64,7 @@ class ConfigureTablesView extends XModule {
             $valueNameArray = Common::toMap($tables, "name", "name");
             
             ?>
-            <table width="100%" style="white-space: nowrap;"><tr><td>
+            <table style="white-space: nowrap;"><tr><td>
                 <button id="newTable">New Table</button>
             </td><td>
                 Select Table: 
@@ -87,8 +87,7 @@ class ConfigureTablesView extends XModule {
                 </fieldset>
                 </form>
             </div>
-
-            
+			
             <?php
             DynamicDataView::configureObject($selectedTable, parent::link(), parent::link(array("action"=>"config")));
             ?>
