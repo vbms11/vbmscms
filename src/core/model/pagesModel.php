@@ -30,7 +30,7 @@ class PagesModel {
     static function getPageIdFromModuleId ($moduleId) {
         $moduleId = Database::escape($moduleId);
         $result = Database::queryAsObject("select pageid from t_templatearea where instanceid = '$moduleId'");
-        return $result->pageid;
+        return $result == null ? null : $result->pageid;
     }
     
     static function getWelcomePage ($lang) {

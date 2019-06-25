@@ -176,6 +176,16 @@ class TemplateModel {
         return $result;
     }
 
+    static function getTemplateAreaModule ($includeId) {
+        $includeId = Database::escape($includeId);
+        $result = Database::queryAsObject("select mi.id, a.id as includeid, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname, m.name as modulename
+            from t_templatearea a
+            join t_module_instance mi on a.instanceid = mi.id 
+            join t_module m on m.id = mi.moduleid
+            where a.id = '$includeId'");
+        return $result;
+    }
+
     static function shiftTemplateModulesDown ($pageId,$area,$fromPosition) {
         $pageId = Database::escape($pageId);
         $area = Database::escape($area);
@@ -203,31 +213,31 @@ class TemplateModel {
         return $instanceId;
     }
 
-    static function moveTemplateModuleUp ($pageId, $moduleId) {
+    static function moveTemplateModuleUp ($pageId, $moduleIncludeId) {
         $pageId = Database::escape($pageId);
-        $moduleId = Database::escape($moduleId);
-        $moduleObj = TemplateModel::getTemplateModule($moduleId);
+        $moduleIncludeId = Database::escape($moduleIncludeId);
+        $moduleObj = TemplateModel::getTemplateAreaModule($moduleIncludeId);
         $area = $moduleObj->name;
         $modulePosition = $moduleObj->position;
         $result = Database::queryAsObject("select max(position) as max from t_templatearea where position < '$modulePosition' and name = '$area' and pageid = '$pageId'");
         if ($result != null) {
             $newPosition = $result->max;
             Database::query("update t_templatearea set position = '$modulePosition' where pageid = '$pageId' and name = '$area' and position = '$newPosition'");
-            Database::query("update t_templatearea set position = '$newPosition' where id = '$moduleId'");
+            Database::query("update t_templatearea set position = '$newPosition' where id = '$moduleIncludeId'");
         }
     }
 
-    static function moveTemplateModuleDown ($pageId, $moduleId) {
+    static function moveTemplateModuleDown ($pageId, $moduleIncludeId) {
         $pageId = Database::escape($pageId);
-        $moduleId = Database::escape($moduleId);
-        $moduleObj = TemplateModel::getTemplateModule($moduleId);
+        $moduleIncludeId = Database::escape($moduleIncludeId);
+        $moduleObj = TemplateModel::getTemplateAreaModule($moduleIncludeId);
         $area = $moduleObj->name;
         $modulePosition = $moduleObj->position;
         $result = Database::queryAsObject("select min(position) as max from t_templatearea where position > '$modulePosition' and name = '$area' and pageid = '$pageId'");
         if ($result != null && $result->max != 0) {
             $newPosition = $result->max;
             Database::query("update t_templatearea set position = '$modulePosition' where pageid = '$pageId' and name = '$area' and position = '$newPosition'");
-            Database::query("update t_templatearea set position = '$newPosition' where id = '$moduleId'");
+            Database::query("update t_templatearea set position = '$newPosition' where id = '$moduleIncludeId'");
         }
     }
 

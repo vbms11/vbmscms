@@ -15,7 +15,7 @@ class SearchResult {
         $this->pageId = $pageId;
         $this->text = $text;
         $this->title = $title;
-        $this->type = type_page;
+        $this->type = self::type_page;
     }
     static function pageResult ($pageId, $text, $title) {
         $var = new SearchResult();
