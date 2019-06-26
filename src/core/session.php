@@ -64,7 +64,7 @@ class Session {
             // if session invalid destroy session
             if ($sessionValid == false) {
                 
-                Session::endSession($sessionId);
+                Session::endSession("s",$sessionId);
             }
         }
         
@@ -132,15 +132,17 @@ class Session {
         return session_start();
     }
 
-    static function endSession ($sessionId) {
+    static function endSession ($sessionName, $sessionId) {
         
         // end database session
 	SessionModel::endSession($sessionId);
         // end php session
-        session_unset();
-        session_destroy();
-        session_write_close();
-        //session_regenerate_id();
+        if (self::startSession($sessionName, $sessionId)) {
+            session_unset();
+            session_destroy();
+            session_write_close();
+            session_regenerate_id();
+        }
     }
     
     static function isValid ($sessionId, $sessionKey) {

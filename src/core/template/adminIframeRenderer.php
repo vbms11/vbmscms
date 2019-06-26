@@ -17,7 +17,7 @@ class AdminIframeRenderer extends XTemplate {
     function render () {
       	
     	$href = NavigationModel::getSitePath()."/".NavigationModel::createPageLink(Context::getPage()->id);
-    	
+    	$adminPageId = $_GET["adminPageId"];
     	?>
     	<div class="ui-widget-header adminHeaderDiv">
 			<div class="adminHeaderModesDiv">

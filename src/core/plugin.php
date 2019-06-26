@@ -168,6 +168,9 @@ abstract class XModule implements IModule, ITranslatable {
     function staticLink ($moduleName, $params = null, $xhtml = true) {
         return NavigationModel::createStaticPageLink($moduleName,$params,$xhtml);
     }
+    function moduleInstanceStaticLink ($moduleName, $params = null, $xhtml = true) {
+        return NavigationModel::createModuleInstanceStaticPageLink($this->moduleId,$moduleName,$params,$xhtml);
+    }
     function redirect ($moduleId = null, $params = null) {
         if (is_array($moduleId)) {
             $params = $moduleId;

@@ -33,6 +33,10 @@ class NavigationController {
             $page = PagesModel::getStaticPage($_GET['static'], Context::getLang());
             Context::setModuleId($page->codeid);
             NavigationModel::addToHistory();
+        } else if (isset($_GET['moduleStatic'])) {
+            $page = PagesModel::getModuleInstanceStaticPage($_GET['static'], $_GET["parentModuleId"], $_GET["templateId"], Context::getLang());
+            Context::setModuleId($page->codeid);
+            NavigationModel::addToHistory();
         } else if (isset($_GET['service'])) {
             Context::setService($_GET['service']);
         } else if (isset($_GET['templatePreview'])) {
