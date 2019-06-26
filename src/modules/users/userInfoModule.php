@@ -34,6 +34,7 @@ class UserInfoModule extends XModule {
 	            	if (empty($messages)) {
 	            		UsersModel::saveUserInfo($userId, parent::post("orientation"), parent::post("religion"), parent::post("ethnicity"), parent::post("about"), parent::post("relationship"), parent::post("bodyheight"), parent::post("haircolor"), parent::post("eyecolor"), parent::post("weight"));
 	            	}
+	            	parent::blur();
 	            	break;
             	}
             	parent::redirect(array("action" => "editInfo"));

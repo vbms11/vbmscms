@@ -203,6 +203,11 @@ class NavigationModel {
         $link = "?static=$name".NavigationModel::buildParams($params,$xhtml).(!NavigationModel::$secureLink ? NavigationModel::addSessionKeys($xhtml) : "");
         return NavigationModel::$secureLink && $secure ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
+    static function createModuleInstanceStaticPageLink ($moduleId,$name,$params=null,$xhtml=true,$secure=true) {
+        $templateId = Context::getPage()->template;
+        $link = "?moduleStatic=$name&parentModuleId=$moduleId&templateId=$templateId".NavigationModel::buildParams($params,$xhtml).(!NavigationModel::$secureLink ? NavigationModel::addSessionKeys($xhtml) : "");
+        return NavigationModel::$secureLink && $secure ? NavigationModel::registerSecureLink($link,$xhtml):$link;
+    }
     
     static function addSessionKeys ($xhtml=true,$onUrl=false) {
         $keys = array();

@@ -96,11 +96,11 @@ class PagesModel {
     static function getStaticPage ($_name,$_lang) {
         $name = Database::escape($_name);
         $lang = Database::escape($_lang);
-        $query = "select p.id, p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript, p.parentmoduleinstanceid  
             from t_page p
             left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
-            where p.code = '$name'";
+            where p.code = '$name' and p.parentmoduleinstanceid is null";
         $pageObj = Database::queryAsObject($query);
         
         // create page if it dose not exist
@@ -109,8 +109,10 @@ class PagesModel {
             if (empty($site)) {
                 $site->siteid = 1;
             }
+            // check if module with that static name exists
             $moduleTypeId = ModuleModel::getModuleByName($_name);
             if (!empty($moduleTypeId)) {
+                // create that modules page
                 $template = TemplateModel::getMainTemplate($site->siteid);
                 $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
                 foreach (RolesModel::getCustomRoles() as $roleId => $role) {
@@ -121,6 +123,52 @@ class PagesModel {
                 $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id);
                 Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");
                 return PagesModel::getStaticPage($_name,$_lang);
+            } else {
+                return null;
+            }
+        }
+        
+        $pageObj = self::ensureAdminTemplate($pageObj);
+        
+        return $pageObj;
+    }
+    
+    /**
+     * returns a page object with the specified template for a module id
+     */
+    static function getModuleInstanceStaticPage ($_name, $_parentModuleInstanceId, $_templateId, $_lang) {
+        $name = Database::escape($_name);
+        $lang = Database::escape($_lang);
+        $parentModuleInstanceId = Database::escape($_parentModuleInstanceId);
+        $templateId = Database::escape($_templateId);
+        $query = "select p.id, p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+            from t_page p
+            left join t_template t on p.template = t.id 
+            left join t_code as c on p.namecode = c.code and c.lang = '$lang'
+            where p.code = '$name' and p.parentmoduleinstanceid = '$parentModuleInstanceId'";
+        $pageObj = Database::queryAsObject($query);
+        
+        // create page if it dose not exist
+        if (empty($pageObj)) {
+            $site = DomainsModel::getCurrentSite();
+            if (empty($site)) {
+                $site->siteid = 1;
+            }
+            // check if module with that static name exists
+            $moduleTypeId = ModuleModel::getModuleByName($_name);
+            if (!empty($moduleTypeId)) {
+                // create that modules page
+                $template = TemplateModel::getTemplate($_templateId);
+                $pageId = PagesModel::createPage($_name, 0, $_lang, 0, $_name, $_name, $template->id, 0, $_name, $_name);
+                foreach (RolesModel::getCustomRoles() as $roleId => $role) {
+                    RolesModel::savePageRole($pageId, $roleId);
+                }
+                // insert the static module into the page
+                $page = PagesModel::getPageTemplate($pageId, $_lang);
+                $templateAreas = TemplateModel::getAreaNames($page);
+                $moduleId = TemplateModel::insertTemplateModule($pageId, $templateAreas[0], $moduleTypeId->id);
+                Database::query("update t_page set codeid = '$moduleId' where id = '$pageId'");
+                return PagesModel::getModuleInstanceStaticPage($_name, $_parentModuleInstanceId, $_templateId, $_lang);
             } else {
                 return null;
             }
@@ -227,7 +275,7 @@ class PagesModel {
         return self::ensureAdminTemplate($result);
     }
 
-    static function createPage ($name,$type,$lang,$welcome,$title,$keywords,$template,$areas,$description,$code="") {
+    static function createPage ($name,$type,$lang,$welcome,$title,$keywords,$template,$areas,$description,$code="",$parentModuleInstanceId=null) {
         $type = Database::escape($type);
         $lang = Database::escape($lang);
         $welcome = Database::escape($welcome);
@@ -237,6 +285,7 @@ class PagesModel {
         $description = Database::escape($description);
         $code = Database::escape($code);
         $site = DomainsModel::getCurrentSite();
+        $parentModuleInstanceId = $parentModuleInstanceId == null ? "null" : "'".Database::escape($parentModuleInstanceId)."'";
         if (empty($site)) {
             $siteId = 1;
         } else {
@@ -246,7 +295,7 @@ class PagesModel {
         $codeModel = new CodeModel();
         $namecode = $codeModel->createCode($lang,$name);
         // create page
-        Database::query("insert into t_page(namecode,type,title,keywords,template,description,siteid,code) values('$namecode','$type','$title','$keywords','$template','$description','$siteId','$code')");
+        Database::query("insert into t_page(namecode,type,title,keywords,template,description,siteid,code,parentmoduleinstanceid) values('$namecode','$type','$title','$keywords','$template','$description','$siteId','$code',$parentModuleInstanceId)");
         $result = Database::queryAsObject("select max(id) as max from t_page");
         $pageId = $result->max;
         PagesModel::setWelcome($pageId, $welcome);
