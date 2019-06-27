@@ -137,11 +137,11 @@ class Session {
         // end database session
 	SessionModel::endSession($sessionId);
         // end php session
-        if (self::startSession($sessionName, $sessionId)) {
+        if (session_status() == PHP_SESSION_ACTIVE) {
             session_unset();
             session_destroy();
             session_write_close();
-            session_regenerate_id();
+            //session_regenerate_id();
         }
     }
     

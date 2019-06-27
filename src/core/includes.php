@@ -11,23 +11,23 @@ include_once 'core/config.class.php';
 
 Config::load();
 
-include_once 'core/selection.php';
-include_once 'core/template/templateParser.php';
-include_once 'core/template/baseRenderer.php';
-include_once 'core/template/ajaxRenderer.php';
-include_once 'core/template/vcmsRenderer.php';
-include_once 'core/template/templateRenderer.php';
-include_once 'core/template/adminIframeRenderer.php';
-include_once 'core/template/editableTemplate.php';
-include_once 'core/template/editableTemplatePreview.php';
+require_once 'core/selection.php';
+require_once 'core/template/templateParser.php';
+require_once 'core/template/baseRenderer.php';
+require_once 'core/template/ajaxRenderer.php';
+require_once 'core/template/vcmsRenderer.php';
+require_once 'core/template/templateRenderer.php';
+require_once 'core/template/adminIframeRenderer.php';
+require_once 'core/template/editableTemplate.php';
+require_once 'core/template/editableTemplatePreview.php';
 
-include_once 'core/util/common.php';
-include_once 'resource/js/valums-file-uploader/server/php.php';
+require_once 'core/util/countries.php';
+require_once 'core/util/common.php';
+require_once 'resource/js/valums-file-uploader/server/php.php';
 
 require_once 'core/model/iconModel.php';
 require_once 'core/model/galleryModel.php';
 require_once 'core/model/socialNotificationsModel.php';
-require_once 'core/model/countriesModel.php';
 require_once 'core/model/rolesModel.php';
 include_once 'core/model/sitesModel.php';
 include_once 'core/model/cmsVersionModel.php';

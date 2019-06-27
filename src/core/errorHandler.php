@@ -29,4 +29,8 @@ function fatal_error_handler () {
 // set_error_handler("error_handler");
 // register_shutdown_function('fatal_error_handler');
 
-?>
+function printStackTrace ($e) {
+    
+}
+
+// set_exception_handler($exception_handler)

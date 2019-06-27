@@ -43,7 +43,7 @@ try {
 		}
 	
 	} catch (Exception $e) {
-		echo 'Error on line '.$e->getLine().' in '.$e->getFile() .': <b>'.$e->getMessage().'</b>';
+            echo 'Error on line '.$e->getLine().' in '.$e->getFile() .': <b>'.$e->getMessage().'</b>';
 	}
 	
 	// end the request context

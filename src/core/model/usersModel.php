@@ -47,15 +47,12 @@ class UsersModel {
     	4 => "Yellow"
     );
     */
-    static function search ($ageMin, $ageMax, $countryGeonameId, $place, $distance, $gender, $x, $y) {
+    static function search ($ageMin, $ageMax, $country, $place, $distance, $gender, $address) {
         
-        $country = CountryModel::getCountryByGeonameId($countryGeonameId);
-        $countryName = "";
-        if (isset($country->name)) {
-            $countryName = $country->name;
-        }
+        $countryName = Countries::getCountry($country);
         
-        // $coordinates = UserAddressModel::getCoordinatesFromAddress($countryName." ".$place);
+        
+        $coordinates = UserAddressModel::getCoordinatesFromAddress($countryName." ".$place);
 	$coordinates = new stdClass();
 	$coordinates->x = $x;
 	$coordinates->y = $y;
@@ -430,13 +427,12 @@ class UsersModel {
         return $validate;
     }
     
-    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate = null, $gender = "1", $profileImage = null, $siteId = null) {
+    static function saveUser ($id, $username, $firstName, $lastName, $password, $email, $birthDate, $registerDate = null, $gender = null, $profileImage = null, $siteId = null) {
         $username = Database::escape($username);
         $firstName = Database::escape($firstName);
         $lastName = Database::escape($lastName);
         $email = Database::escape($email);
         $birthDate = Database::escape($birthDate);
-        $gender = Database::escape($gender);
         if ($profileImage == null) {
             $profileImage = "null";
         } else {
@@ -447,11 +443,15 @@ class UsersModel {
         } else {
             $siteId = Database::escape($siteId);
         }
+        $strGender = "null";
+        if ($gender != null) {
+            $gender = "'".Database::escape($gender)."'";
+        }
         if ($id == null) {
             // create user objectid
             //$objectId = DynamicDataView::createObject("userAttribs",false);
             // create user
-            Database::query("insert into t_user (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender,active) values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),null,$profileImage,'$gender',1)");
+            Database::query("insert into t_user (username,firstname,lastname,email,birthdate,registerdate,objectid,image,gender,active) values ('$username','$firstName','$lastName','$email',STR_TO_DATE('$birthDate','%d/%m/%Y'),now(),null,$profileImage,$strGender,1)");
             $result = Database::queryAsObject("select max(id) as id from t_user");
             $id = $result->id;
             // set user authkey
@@ -465,9 +465,10 @@ class UsersModel {
         } else {
             $id = Database::escape($id);
             $registerDateSql = "";
-            if ($registerDate != null)
+            if ($registerDate != null) {
                 $registerDateSql = ", registerdate = STR_TO_DATE('".Database::escape($registerDate)."','%d/%m/%Y')";
-            Database::query("update t_user set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y'), gender = '$gender' $registerDateSql where id = '$id'");
+            }
+            Database::query("update t_user set username = '$username', email = '$email', birthdate = STR_TO_DATE('$birthDate','%d/%m/%Y'), gender = $gender $registerDateSql where id = '$id'");
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
         return $id;
