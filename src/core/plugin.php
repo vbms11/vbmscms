@@ -40,9 +40,24 @@ interface IModule {
     function getRoles ();
 
     /**
-     * returns search results for given text
+     * imports data for this module on a site
      */
-    function search ($searchText, $lang);
+    //function import ($siteId, $tableNameTableData);
+
+    /**
+     * returns the tables data that this site uses
+     */
+    //function export ($siteId);
+
+    /**
+     * imports the module instance
+     */
+    //function importInstance ($tableOldIdNewId);
+
+    /**
+     * exports the module instance
+     */
+    //function exportInsatnce ($siteId);
 }
 
 interface ITranslatable {
@@ -165,10 +180,10 @@ abstract class XModule implements IModule, ITranslatable {
     function ajaxLink ($params = null, $xhtml = false) {
         return NavigationModel::createModuleAjaxLink($this->moduleId,$params,$xhtml);
     }
-    function staticLink ($moduleName, $params = null, $xhtml = true) {
+    function staticLink ($moduleName, $params = null, $xhtml = false) {
         return NavigationModel::createStaticPageLink($moduleName,$params,$xhtml);
     }
-    function moduleInstanceStaticLink ($moduleName, $params = null, $xhtml = true) {
+    function moduleInstanceStaticLink ($moduleName, $params = null, $xhtml = false) {
         return NavigationModel::createModuleInstanceStaticPageLink($this->moduleId,$moduleName,$params,$xhtml);
     }
     function redirect ($moduleId = null, $params = null) {
@@ -326,6 +341,46 @@ abstract class XModule implements IModule, ITranslatable {
             return $messages[$key];
         }
         return null;
+    }
+    
+    
+    /**
+     * imports data for this module on a site
+     */
+    function import ($siteId, $tableNameTableData) {
+        
+    }
+
+    /**
+     * returns the tables data that this site uses
+     */
+    function export ($siteId, &$moduleNode) {
+        /*
+        
+        
+         */
+        //$this->getTables();
+        
+    }
+
+    /**
+     * imports the module instance
+     */
+    function importInstance ($tableOldIdNewId, &$moduleNode) {
+        foreach ($moduleNode->childNodes as $node) {
+            $this->param($node->nodeName, $node->nodeValue);
+        }  
+    }
+
+    /**
+     * exports the module instance
+     */
+    function exportInsatnce ($siteId, &$moduleNode) {
+        foreach ($this->getParams() as $key => $value) {
+            $element = $moduleNode->ownerDocument->createElement('param');
+            $element->setAttribute($key,$value);
+            $moduleNode->appendChild($element);
+        }
     }
 }
 

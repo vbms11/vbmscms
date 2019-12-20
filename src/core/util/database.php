@@ -37,8 +37,6 @@ class Database {
         $error = $dataSource->getError();
         if ($error != null) {
             throw new Exception("error: $error");
-        } else {
-            self::$error = null;
         }
         return $result;
     }
@@ -82,10 +80,7 @@ class Database {
     }
     
     static function close () {
-        foreach (self::$dataSource as $name => $dataSource) {
-            $dataSource->close();
-        }
-        self::$dataSource = array();
+        self::getDataSource()->close();
     }
 }
 
@@ -189,7 +184,7 @@ class DataSourceFactory {
             return self::$dataSources[$dataSourceName];
         }
         if ($dataSourceName == null) {
-            self::$dataSources[$dataSourceName] = &self::getDefaultDataSource();
+            self::$dataSources[$dataSourceName] = self::getDefaultDataSource();
             return self::$dataSources[$dataSourceName];
         }
         return self::getDefaultDataSource();

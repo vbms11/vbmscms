@@ -195,7 +195,30 @@ class RolesModel {
         $pageId = Database::escape($pageId);
         return Database::queryAsArray("select pr.*, rc.name from t_page_roles pr left join t_roles_custom rc on pr.roleid = rc.id where pr.pageid = '$pageId'");
     }
+    
+    // roles rights
+    
+    static function getRoleRights ($customRoleId) {
+        $customRoleId = Database::escape($customRoleId);
+        return Database::queryAsArray("select * from t_roles_rights where customroleid = '$customRoleId'");
+    }
 
+    static function deleteRoleRights ($customRoleId) {
+        $customRoleId = Database::escape($customRoleId);
+        Database::query("delete from t_roles_rights where customroleid = '$customRoleId'");
+    }
+
+    static function createRoleRights ($customRoleId,$customRoleRightId) {
+        if (is_array($customRoleRightId)) {
+            foreach ($customRoleRightId as $roleRight) {
+                self::createRoleRights($customRoleId, $roleRight);
+            }
+        } else {
+            $customRoleId = Database::escape($customRoleId);
+            $customRoleRightId = Database::escape($customRoleRightId);
+            Database::query("insert into t_roles_rights (customroleid,customrolerightid) values ('$customRoleId', '$customRoleRightId')");
+        }
+    }
 }
 
 ?>

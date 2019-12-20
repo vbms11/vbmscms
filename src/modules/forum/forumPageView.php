@@ -21,88 +21,125 @@ class ForumPageView extends XModule {
 
     function onProcess () {
 
-        $this->getRequestVars();
-        
         switch (parent::getAction()) {
+            case "update":
+                if (Context::hasRole("forum.admin")) {
+                    parent::param("forumId", parent::post("selectedForum"));
+                    parent::blur();
+                    parent::redirect();
+                }
+                break;
+            case "edit":
+                if (Context::hasRole("forum.admin")) {
+                    parent::focus();
+                }
+                break;
             case "deleteThread":
             	if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
-	            	ForumPageModel::deleteThread(parent::get("thread"));
-	                parent::blur();
-	                parent::redirect();
+                    ForumPageModel::deleteThread(parent::get("thread"));
+                    parent::blur();
+                    parent::redirect();
             	}
                 break;
             case "deletePost":
             	if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
-	                ForumPageModel::deletePost(parent::get("post"));
-	                parent::blur();
-	                parent::redirect();
+                    ForumPageModel::deletePost(parent::get("post"));
+                    parent::blur();
+                    parent::redirect();
                 }
                 break;
             case "deleteTopic":
                 if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
-		            ForumPageModel::deleteTopic(parent::get("topic"));
-	                parent::blur();
-	                parent::redirect();
+                    ForumPageModel::deleteTopic(parent::get("topic"));
+                    parent::blur();
+                    parent::redirect();
+                }
+                break;
+            case "deleteForum":
+                if (Context::hasRole("forum.admin")) {
+                    ForumPageModel::deleteForum(parent::get("forumId"));
+                    //parent::blur();
+                    //parent::redirect();
                 }
                 break;
             case "saveThread":
-            	if (Context::hasRole("forum.admin") || Context::hasRole("forum.moderator")) {
-			        $validationMessages = ForumPageModel::validateThread(parent::get("topic"), parent::get("thread"), parent::post("threadTitel"), parent::post("threadMessage"));
-	                if (empty($validationMessages)) {
-	                	ForumPageModel::saveThread($this->topic, $this->thread, $this->threadTitel, $this->threadMessage);
-		                parent::blur();
-		                parent::redirect();
-	                } else {
-	                	parent::setMessages($validationMessages);
-	                }
+            	if (Context::hasRole("forum.thread.create")) {
+                    $validationMessages = ForumPageModel::validateThread(parent::get("topic"), parent::get("thread"), parent::post("threadTitel"), parent::post("threadMessage"));
+                    if (empty($validationMessages)) {
+                        ForumPageModel::saveThread(parent::get("topic"), parent::get("thread"), parent::post("threadTitel"), parent::post("threadMessage"));
+                        parent::blur();
+                        parent::redirect();
+                    } else {
+                        parent::setMessages($validationMessages);
+                    }
                 }
                 break;
             case "savePost":
-				if (Captcha::validate("captcha")) {
-					ForumPageModel::savePost($this->thread, $this->post, $this->postMessage, Context::getUserId());
-		                	parent::blur();
-		                	parent::redirect();
-				} else {
-					parent::redirect(array("action"=>"captchaWrong"));
-				}
+                if (Context::hasRole("forum.thread.post")) {
+                    if (Captcha::validate("captcha")) {
+                        ForumPageModel::savePost(parent::get("thread"), parent::get("post"), parent::post("postMessage"), Context::getUserId());
+                        parent::blur();
+                        parent::redirect();
+                    } else {
+                        parent::redirect(array("action"=>"captchaWrong"));
+                    }
+                }
                 break;
             case "saveTopic":
-                ForumPageModel::saveTopic($this->parent, $this->topic, $this->topicName, Context::getUserId());
-                parent::blur();
-                parent::redirect();
+                if (Context::hasRole("forum.topic.create")) {
+                    ForumPageModel::saveTopic(parent::get("parent"), parent::get("topic"), parent::post("topicName"), Context::getUserId());
+                    parent::blur();
+                    parent::redirect();
+                }
+                break;
+            case "saveForum":
+                if (Context::hasRole("forum.admin")) {
+                    ForumPageModel::saveForum(parent::get("id"), parent::post("forumName"), Context::getSiteId());
+                    //parent::blur();
+                    //parent::redirect();
+                }
+                break;
+            case "createForum":
+                if (Context::hasRole("forum.admin")) {
+                    parent::focus();
+                }
                 break;
             case "createThread":
-                Context::hasRole(array("forum.thread.create"));
-                parent::focus();
+                if (Context::hasRole("forum.thread.create")) {
+                    parent::focus();
+                }
                 break;
             case "createPost":
-                Context::hasRole(array("forum.thread.post"));
-                parent::focus();
+                if (Context::hasRole("forum.thread.post")) {
+                    parent::focus();
+                }
                 break;
             case "createTopic":
-                Context::hasRole(array("forum.topic.create"));
-                parent::focus();
+                if (Context::hasRole("forum.topic.create")) {
+                    parent::focus();
+                }
                 break;
             case "viewThread":
-                Context::hasRole(array("forum.view"));
-                if (!isset($_SESSION['forum.views']) || !is_array($_SESSION['forum.views'])) {
-                    $_SESSION['forum.views'] = array();
-                }    
-                if (!array_key_exists($this->thread."thr", $_SESSION['forum.views'])) {
-                    ForumPageModel::viewThread($this->thread);
-                    $_SESSION['forum.views'][$this->thread."thr"] = '';
+                if (Context::hasRole("forum.view")) {
+                    if (!isset($_SESSION['forum.views']) || !is_array($_SESSION['forum.views'])) {
+                        $_SESSION['forum.views'] = array();
+                    }    
+                    if (!array_key_exists(parent::get("thread")."thr", $_SESSION['forum.views'])) {
+                        ForumPageModel::viewThread(parent::get("thread"));
+                        $_SESSION['forum.views'][parent::get("thread")."thr"] = '';
+                    }
                 }
                 break;
             case "viewTopic":
-                Context::hasRole(array("forum.view"));
-                if (!isset($_SESSION['forum.views']) || !is_array($_SESSION['forum.views'])) {
-                    $_SESSION['forum.views'] = array();
-                }    
-                if (!array_key_exists($this->topic."_top", $_SESSION['forum.views'])) {
-                    ForumPageModel::viewTopic($this->topic);
-                    $_SESSION['forum.views'][$this->topic."_top"] = '';
+                if (Context::hasRole("forum.view")) {
+                    if (!isset($_SESSION['forum.views']) || !is_array($_SESSION['forum.views'])) {
+                        $_SESSION['forum.views'] = array();
+                    }    
+                    if (!array_key_exists(parent::get("topic")."_top", $_SESSION['forum.views'])) {
+                        ForumPageModel::viewTopic(parent::get("topic"));
+                        $_SESSION['forum.views'][parent::get("topic")."_top"] = '';
+                    }
                 }
-                
                 break;
             case "viewUser":
             	NavigationModel::redirectStaticModule("userProfile", array("userId"=>parent::get("user")));
@@ -115,27 +152,31 @@ class ForumPageView extends XModule {
      */
     function onView () {
 
-        $this->getRequestVars();
-
-        switch ($this->action) {
+        switch (parent::getAction()) {
+            case "newForum":
+            case "saveForum":
+            case "deleteForum":
+            case "edit":
+                $this->printEditView();
+                break;
             case "createThread":
                 if (Context::hasRole(array("forum.thread.create"))) {
-                    $this->printCreateThreadView(parent::getId(), $this->parent, $this->thread);
+                    $this->printCreateThreadView(parent::getId(), parent::get("parent"), parent::get("thread"));
                 }
                 break;
             case "createPost":
                 if (Context::hasRole(array("forum.thread.post"))) {
-                    $this->printCreateReplyView(parent::getId(), $this->thread, $this->post);
+                    $this->printCreateReplyView(parent::getId(), parent::get("thread"), parent::get("post"));
                 }
                 break;
             case "createTopic":
                 if (Context::hasRole(array("forum.topic.create"))) {
-                    $this->printCreateTopicView(parent::getId(), $this->topic, $this->parent);
+                    $this->printCreateTopicView(parent::getId(), parent::get("topic"), parent::get("parent"));
                 }
                 break;
             case "viewThread":
                 if (Context::hasRole(array("forum.view"))) {
-                    $this->printViewThread(parent::getId(), $this->topic, $this->thread);
+                    $this->printViewThread(parent::getId(), parent::get("topic"), parent::get("thread"));
                 }
                 break;
 		    case "captchaWrong":
@@ -143,7 +184,7 @@ class ForumPageView extends XModule {
 			break;
             default:
                 if (Context::hasRole(array("forum.view"))) {
-                    $this->printMainView(parent::getId(),$this->topic);
+                    $this->printMainView(parent::get("topic"));
                 }
         }
     }
@@ -161,36 +202,135 @@ class ForumPageView extends XModule {
     function getStyles () {
         return array("css/forum.css");
     }
-
-
-    function getRequestVars () {
-        if (isset($_GET['action'])) $this->action = $_GET['action'];
-        if (isset($_GET['thread'])) $this->thread = $_GET['thread'];
-        if (isset($_GET['topic'])) $this->topic = $_GET['topic'];
-        if (isset($_GET['post'])) $this->post = $_GET['post'];
-        if (isset($_GET['topic'])) $this->topic = $_GET['topic'];
-        if (isset($_GET['parent'])) $this->parent = $_GET['parent'];
-        if (isset($_POST['postMessage'])) $this->postMessage = $_POST['postMessage'];
-        if (isset($_POST['threadMessage'])) $this->threadMessage = $_POST['threadMessage'];
-        if (isset($_POST['threadTitel'])) $this->threadTitel = $_POST['threadTitel'];
-        if (isset($_POST['threadPost'])) $this->threadPost = $_POST['threadPost'];
-        if (isset($_POST['topicName'])) $this->topicName = $_POST['topicName'];
+    
+    function printEditView () {
+        
+        $forums = ForumPageModel::getForums(Context::getSiteId());
+        
+        ?>
+        <div class="panel">
+            <form method="post" id="editForumForm" action="<?php echo parent::link(array("action"=>"update")) ?>">
+                <table><tr>
+                    <td class="nowrap">
+                        Select Forum: 
+                    </td>
+                    <?php
+                    if (count($forums) > 0) {
+                        ?>
+                        <td class="expand">
+                            <?php InputFeilds::printSelect("selectedForum", parent::param("selectedForum"), Common::toMap($forums,"id","name")); ?>
+                        </td>
+                        <?php
+                    }
+                    ?>
+                    <td>
+                        <button id="btn_newForum">New</button>
+                    </td>
+                    <?php
+                    if (count($forums) > 0) {
+                        ?>
+                        <td>
+                            <button id="btn_editForum">Edit</button>
+                        </td><td>
+                            <button id="btn_deleteForum">Delete</button>
+                        </td>
+                        <?php
+                    }
+                    ?>
+                    </tr></table>
+            </form>
+            
+            
+            <div id="new-forum-dialog" title="New Forum">
+                <form method="post" id="new-forum-dialog-form" action="<?php echo parent::link(array("action"=>"saveForum")); ?>">
+                    <table class="formTable"><tr>
+                        <td><?php echo parent::getTranslation("forum.edit.new.label"); ?></td>
+                        <td>
+                            <?php
+                            InputFeilds::printTextFeild("forumName");
+                            ?>
+                        </td>
+                    </tr></table>
+                </form>
+            </div>
+            
+            <div id="edit-forum-dialog" title="Edit Forum Name">
+                <form method="post" id="edit-forum-dialog-form" action="<?php echo parent::link(array("action"=>"saveForum")); ?>">
+                    <table class="formTable"><tr>
+                        <td><?php echo parent::getTranslation("forum.edit.new.label"); ?></td>
+                        <td>
+                            <?php
+                            InputFeilds::printTextFeild("forumName");
+                            ?>
+                        </td>
+                    </tr></table>
+                </form>
+            </div>
+            
+            <script type="text/javascript">
+                $("#btn_newForum").button().click(function () {
+                    $("#new-forum-dialog").dialog("open");
+                });
+                $("#btn_editForum").button().click(function () {
+                    $("#selectedForum option:selected").each(function() {
+                        $("#edit-forum-dialog #forumName").val($(this).text());
+                        var action = $("#edit-forum-dialog-form").attr("action")
+                        action += "&id=" + $("#selectedForum").val();
+                        $("#edit-forum-dialog-form").attr({"action":action});
+                    }
+                    $("#edit-forum-dialog").dialog("open");
+                });
+                $("#btn_deleteForum").button().click(function () {
+                    doIfConfirm('<?php echo parent::getTranslation("forum.delete.confirm") ?>',
+                        '<?php echo parent::link(array("action"=>"deleteForum")); ?>',{"id":$("#selectedForum").val()});
+                });
+                $("#new-forum-dialog").dialog({
+                    autoOpen: false, height: 300, width: 350, modal: true,
+                    buttons: {
+                        "Save": function() {
+                            $("#new-forum-dialog-form").submit();
+                        },
+                        "Cancel": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $("#edit-forum-dialog").dialog({
+                    autoOpen: false, height: 300, width: 350, modal: true,
+                    buttons: {
+                        "Save": function() {
+                            $("#edit-forum-dialog-form").submit();
+                        },
+                        "Cancel": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            </script>
+        </div>
+        <?php
     }
-
 
     function printCaptchaWrongView () {
     	?>
         <div class="panel forumPanel">
-		<h3>Sorry you entered the security code wrong!</h3>
+            <h3>Sorry you entered the security code wrong!</h3>
 	</div>	
 	<?php
     }
 
-    function printMainView ($pageId,$parentTopic) {
-
-        $topics = ForumPageModel::getTopics($parentTopic);
-        $threads = ForumPageModel::getThreads($parentTopic);
-
+    function printMainView ($parentTopic) {
+        
+        $topics;
+        $threads;
+        if ($parentTopic == null) {
+            $topics = ForumPageModel::getTopicsByForum(parent::param("forumId"));
+            $threads = ForumPageModel::getThreadsByForum(parent::param("forumId"));
+        } else {
+            $topics = ForumPageModel::getTopics($parentTopic);
+            $threads = ForumPageModel::getThreads($parentTopic);
+        }
+        
         # if this topic has threads display them
         
         ?>
@@ -209,14 +349,11 @@ class ForumPageView extends XModule {
 	
             <table cellspacing="0" cellpadding="0" border="0" class="expand forum_table">
                 <thead><tr>
-                    <td>&nbsp;</td><td class="expand">
-                        &nbsp;
-                    </td><td style="white-space:nowrap;">
-                        views |
-                    </td><td class="expand">
-                        &nbsp;replies
-                    </td></tr>
-                </thead>
+                    <td></td>
+                    <td class="expand"></td>
+                    <td style="white-space:nowrap;">views |</td>
+                    <td class="expand">replies</td>
+                </tr></thead>
                 <tbody>
                     <?php
                     foreach ($threads as $thread) {
@@ -293,10 +430,10 @@ class ForumPageView extends XModule {
                 </a>
 			</div>
 			<div class="forum_info_name">
-				<?php echo $user->username." (".$user->age.")"; ?>
+				<?php echo htmlspecialchars($user->username." (".$user->age.")"); ?>
 			</div>
 			<div class="forum_info_location">
-				<?php echo $userAddress->country." ".$userAddress->city ?>
+				<?php echo htmlspecialchars($userAddress->country." ".$userAddress->city); ?>
 			</div>
 			<div class="forum_info_posts">
 				<?php echo ForumPageModel::getUserTotalPosts($user->id); ?>

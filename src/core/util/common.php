@@ -195,8 +195,8 @@ class InputFeilds {
         ?><input type="checkbox" value="1" <?php if ($checked) echo "checked=\"true\""; ?> name="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
     }
     
-    static function printTextFeild ($name,$value="",$class=null) {
-        ?><input type="text" value="<?php echo htmlentities($value,ENT_QUOTES); ?>" name="<?php echo Common::htmlEscape($name); ?>" id="<?php echo Common::htmlEscape($name); ?>" <?php if ($class != null) echo "class='$class'"; ?> /><?php
+    static function printTextFeild ($name,$value="",$class=null, $placeholder=null) {
+    ?><input type="text" value="<?php echo htmlentities($value,ENT_QUOTES); ?>" name="<?php echo Common::htmlEscape($name); ?>" id="<?php echo Common::htmlEscape($name); ?>"<?php if ($class != null) { echo " class='$class'"; } if ($placeholder != null) { echo " placeholder='$placeholder'"; } ?>  /><?php
     }
     
     static function printPasswordFeild ($name,$value="",$class=null) {
@@ -281,21 +281,25 @@ class InputFeilds {
     
     static function printMultiSelect ($name,$options,$selection,$styled=true) {
         
-        Context::addRequiredStyle("resource/js/multiselect/css/ui.multiselect.css");
-        Context::addRequiredScript("resource/js/multiselect/js/plugins/localisation/jquery.localisation-min.js");
-        Context::addRequiredScript("resource/js/multiselect/js/plugins/scrollTo/jquery.scrollTo-min.js");
-        Context::addRequiredScript("resource/js/multiselect/js/ui.multiselect.js");
-        
         echo "<select class='multiselect' multiple='multiple' id='$name' name='".$name."[]'>";
+        foreach ($selection as $value) {
+            if (isset($options[$value])) {
+                echo "<option value='".$value."' selected='true'>".$options[$value]."</option>";
+            }
+        }
         foreach ($options as $key => $valueName) {
-            echo "<option value='".$key."'";
-            if (!Common::isEmpty($selection) && array_key_exists($key, $selection))
-                echo " selected=true";
-            echo ">".$valueName."</option>";
+            $selected = false;
+            if (!in_array($key, $selection)) {
+                echo "<option value='".$key."'>".$valueName."</option>";
+            }
         }
         echo "</select>";
         
         if ($styled) {
+            Context::addRequiredStyle("resource/js/multiselect/css/ui.multiselect.css");
+            Context::addRequiredScript("resource/js/multiselect/js/plugins/localisation/jquery.localisation-min.js");
+            Context::addRequiredScript("resource/js/multiselect/js/plugins/scrollTo/jquery.scrollTo-min.js");
+            Context::addRequiredScript("resource/js/multiselect/js/ui.multiselect.js");
             ?>
             <script type="text/javascript">
             $(function(){

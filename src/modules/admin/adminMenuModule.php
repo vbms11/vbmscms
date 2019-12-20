@@ -163,7 +163,7 @@ class AdminMenuModule extends XModule {
         foreach ($menu as $page) {
             $liClass = isset($page->children) && count($page->children) > 0 ? "jstree-open " : "";
             $aClass = "";
-            if ($page->page->id == $_SESSION['adminPageId'] && !isset($_GET['adminMenuId'])) {
+            if (isset($_SESSION['adminPageId']) && $page->page->id == $_SESSION['adminPageId'] && !isset($_GET['adminMenuId'])) {
                  $aClass = "jstree-clicked";
             }
             ?>

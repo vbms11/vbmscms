@@ -97,6 +97,7 @@ class FileSystemService extends XModule {
                     $opts
                 )
             ); 
+            error_reporting(E_ERROR);
             $connector = new elFinderConnector(new elFinder($opts));
             $connector->run();
         }

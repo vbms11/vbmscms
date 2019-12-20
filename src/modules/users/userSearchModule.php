@@ -60,11 +60,7 @@ class UserSearchModule extends UserSearchBaseModule {
     
     function printSearchView () {
         
-        $countryOptions = array();
-        $countires = CountryModel::getCountries();
-        foreach ($countires as $country) {
-            $countryOptions[$country->geonameid] = htmlentities($country->name,ENT_QUOTES);
-        }
+        $countries = Countries::getCountries();
         
         $ageOptions = array();
         for ($i=16; $i<100; $i++) {
@@ -110,15 +106,10 @@ class UserSearchModule extends UserSearchBaseModule {
                     $countryId = parent::get('country');
                     echo "<select name='country'>";
                     if (empty($countryId)) {
-                        echo "<option style='display:none;' selected='selected' value=''>(Please Select)</option>";
+                        echo "<option disabled='true' selected='selected' value=''>(Please Select)</option>";
                     }
-                    foreach ($countryOptions as $key => $valueNames) {
-                        if (!empty($countryId) && $key == $countryId) {
-                            echo "<option value='".Common::htmlEscape($key)."' selected='selected'>".Common::htmlEscape($valueNames)."</option>";
-                        } else {
-                            echo "<option value='".Common::htmlEscape($key)."'>".Common::htmlEscape($valueNames)."</option>";
-                        }
-                        
+                    foreach ($countries as $key => $valueNames) {
+                        echo "<option value='".Common::htmlEscape($key)."'".($key==$countryId ? " selected='selected'" : "").">".Common::htmlEscape($valueNames)."</option>";
                     }
                     echo "</select>";
                     ?></td>

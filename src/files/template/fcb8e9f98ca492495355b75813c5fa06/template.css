@@ -2,9 +2,8 @@ body {
 	background-color: rgb(200,200,200);
 }
 .searchHolder {
-height: 30px;
-margin-left: 400px;
-    margin-right: 200px;
+    float:right;
+    width: 205px;
 }
 .searchHolder input {
     background-color: white;

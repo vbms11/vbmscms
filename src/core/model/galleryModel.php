@@ -158,7 +158,6 @@ class GalleryModel {
 
     static function createCategory ($title, $description, $image, $parent) {
         $title = Database::escape($title);
-        $image = Database::escape($image);
         $description = Database::escape($description);
         $nextOrderKey = GalleryModel::getNextCategoryOrderKey();
         if ($parent == null) {
@@ -166,8 +165,13 @@ class GalleryModel {
         } else {
             $parent = "'".Database::escape($parent)."'";
         }
-        Database::query("INSERT INTO t_gallery_category(title,image,parent,orderkey,description) VALUES('$title','$image',$parent,'$nextOrderKey','$description');");
-        $result = Database::queryAsObject("SELECT max(id) as lastid");
+        if ($image == null) {
+            $image = "null";
+        } else {
+            $image = "'".Database::escape($image)."'";
+        }
+        Database::query("INSERT INTO t_gallery_category(title,image,parent,orderkey,description) VALUES('$title',$image,$parent,'$nextOrderKey','$description');");
+        $result = Database::queryAsObject("SELECT max(id) as lastid from t_gallery_category");
         return $result->lastid;
     }
     
@@ -209,9 +213,18 @@ class GalleryModel {
     static function deleteImage ($id) {
         $id = Database::escape($id);
         $image = self::getImage($id);
-        unlink(ResourcesModel::getResourcePath("gallery",$image->image));
-        unlink(ResourcesModel::getResourcePath("gallery/small",$image->image));
-        unlink(ResourcesModel::getResourcePath("gallery/tiny",$image->image));
+        $imageFile = ResourcesModel::getResourcePath("gallery",$image->image);
+        if (is_file($imageFile)) {
+            unlink($imageFile);
+        }
+        $imageFile = ResourcesModel::getResourcePath("gallery/small",$image->image);
+        if (is_file($imageFile)) {
+            unlink($imageFile);
+        }
+        $imageFile = ResourcesModel::getResourcePath("gallery/tiny",$image->image);
+        if (is_file($imageFile)) {
+            unlink($imageFile);
+        }
         Database::query("delete from t_gallery_image where id = '$id'");
     }
     
@@ -288,7 +301,7 @@ class GalleryModel {
         
         $imageId = null;
         $allowedExtensions = array("jpeg", "jpg", "png", "gif");
-        $sizeLimit = 5 * 1024 * 1024;
+        $sizeLimit = 128 * 1024 * 1024;
         
         $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
         $result = $uploader->handleUpload(ResourcesModel::getResourcePath("gallery/new"));

@@ -2,12 +2,12 @@
 
 class Countries {
     
-    static function getContries () {
-        return self::contries;
+    static function getCountries () {
+        return self::countries;
     }
     
     static function getCountry ($key) {
-        return in_array($key, array_keys(self::contries)) ? self::contries[$key] : null;
+        return in_array($key, array_keys(self::countries)) ? self::contries[$key] : null;
     }
     
     const countries = array(

@@ -21,6 +21,7 @@ class LoginModule extends XModule {
                 parent::param("networks", parent::post("networks") == "1" ? true : false);
                 parent::param("register", parent::post("register") == "1" ? true : false);
                 parent::param("reset", parent::post("reset") == "1" ? true : false);
+                parent::param("success", parent::post("success"));
                 parent::blur();
                 break;
 	case "register":
@@ -51,7 +52,7 @@ class LoginModule extends XModule {
                                 $gender = $user_profile['gender'] == "male" ? "1" : "0";
                                 UsersModel::saveUser($userByEmail->id, $userByEmail->username, $user_profile['first_name'], $user_profile['last_name'], null, $user_profile['email'], Common::toUiDate($userByEmail->birthdate), null, $gender);
                             }
-                            NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
+                            NavigationModel::redirectPage(parent::param("success"));
                         } else {
                             $_SESSION['register.user'] = $user_profile;
                             NavigationModel::redirectStaticModule("register",array("type"=>"facebook"));
@@ -88,7 +89,7 @@ class LoginModule extends XModule {
                             $userLogin = UsersModel::loginWithEmail($userInfo['payload']['email']);
 
                             if ($userLogin) {
-                                NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
+                                NavigationModel::redirectPage(parent::param("success"));
                             } else {
                                 $_SESSION['register.user'] = $userInfo['payload'];
                                 NavigationModel::redirectStaticModule("register",array("type"=>"google"));
@@ -106,14 +107,15 @@ class LoginModule extends XModule {
                 break;
             case "login":
                 if (UsersModel::login($_POST['username'],$_POST['password'])) {
-                    parent::focus();
+                    //parent::focus();
                     if (NavigationModel::hasNextAction()) {
                         NavigationModel::redirectNextAction();
                     } else {
-                        NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
+                        //NavigationModel::redirectStaticModule("userProfile",array("userId"=>Context::getUserId()));
+                        NavigationModel::redirectPage(parent::param("success"));
                     }
                 } else {
-                    parent::focus();
+                    //parent::focus();
                     parent::redirect(array("action"=>"bad"));
                 }
                 exit;
@@ -181,6 +183,9 @@ class LoginModule extends XModule {
             </tr><tr>
                 <td><?php echo parent::getTranslation("login.edit.reset"); ?></td>
                 <td><?php InputFeilds::printCheckbox("reset"); ?></td>
+            </tr><tr>
+                <td><?php echo parent::getTranslation("login.edit.success"); ?></td>
+                <td><?php InputFeilds::printSelect("success",parent::param("success"), Common::toMap(PagesModel::getPages(Context::getLang()), "id", "name")); ?></td>
             </tr></table>
             <hr/>
             <div class="alignRight">

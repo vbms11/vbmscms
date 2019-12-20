@@ -48,7 +48,7 @@ class GalleryView extends XModule {
             case "deleteImage":
                 if ($this->getAllowUserEdit()) {
                     if (parent::get("id")) {
-                        GalleryModel::deleteImage(parent::get("image"));
+                        GalleryModel::deleteImage(parent::get("id"));
                         PagesModel::updateModifyDate();
                     }
                     parent::redirect(array("category"=>parent::get("category")));

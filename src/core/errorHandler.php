@@ -30,7 +30,13 @@ function fatal_error_handler () {
 // register_shutdown_function('fatal_error_handler');
 
 function printStackTrace ($e) {
-    
+    echo "exception message: ".$e->getMessage()."<br/>";
+    echo "originates: ".$e->getFile()." (".$e->getLine().")<br/>";
+    $backtrace = $e->getTrace();
+    foreach ($backtrace as $key => $row) {
+        echo $row['file']." (".$row['line'].")<br/>";
+    }
+    exit;
 }
 
 // set_exception_handler($exception_handler)

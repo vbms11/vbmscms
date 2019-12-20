@@ -77,7 +77,7 @@ class qqFileUploader {
 
         if (isset($_GET['qqfile'])) {
             $this->file = new qqUploadedFileXhr();
-        } elseif (isset($_FILES['qqfile'])) {
+        } else if (isset($_FILES['qqfile'])) {
             $this->file = new qqUploadedFileForm();
         } else {
             $this->file = false; 
@@ -95,8 +95,9 @@ class qqFileUploader {
     }
     
     private function toBytes($str){
-        $val = trim($str);
-        $last = strtolower($str[strlen($str)-1]);
+        $len = strlen(trim($str))-1;
+        $val = substr($str, 0, $len);
+        $last = strtolower($str[$len]);
         switch($last) {
             case 'g': $val *= 1024;
             case 'm': $val *= 1024;
@@ -131,23 +132,26 @@ class qqFileUploader {
         $filename = $pathinfo['filename'];
         //$filename = md5(uniqid());
         $ext = $pathinfo['extension'];
-        $uploadDirectory . $filename . '.' . $ext;
+        $filePath = $uploadDirectory . $filename . '.' . $ext;
 
         if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)){
             $these = implode(', ', $this->allowedExtensions);
             return array('error' => 'File has an invalid extension, it should be one of '. $these . '.');
         }
         
-        if (!is_readable($this->file->getTempPath())) {
-            if (!chmod($this->file->getTempPath(), 0777)) {
-                return array('error' => 'Temp file is not readable.');
-            }
+        if ($this->file instanceof qqUploadedFileForm) {
+            if (!is_readable($this->file->getTempPath())) {
+                if (!chmod($this->file->getTempPath(), 0777)) {
+                    return array('error' => 'Temp file is not readable.');
+                }
+            }   
         }
         
         if(!$replaceOldFile){
             /// don't overwrite previous files that were uploaded
-            while (file_exists($uploadDirectory . $filename . '.' . $ext)) {
+            while (file_exists($filePath)) {
                 $filename .= rand(10, 99);
+                $filePath = $uploadDirectory . $filename . '.' . $ext;
             }
         } else {
             if (file_exists($filePath) && !is_writable($filePath)) {

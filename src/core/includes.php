@@ -7,63 +7,64 @@ if (!defined("vbmscms_allowAccess") || vbmscms_allowAccess != true) {
 
 // @set_magic_quotes_runtime(0);
 
-include_once 'core/config.class.php';
+include_once __DIR__.'/config.class.php';
 
 Config::load();
 
-require_once 'core/selection.php';
-require_once 'core/template/templateParser.php';
-require_once 'core/template/baseRenderer.php';
-require_once 'core/template/ajaxRenderer.php';
-require_once 'core/template/vcmsRenderer.php';
-require_once 'core/template/templateRenderer.php';
-require_once 'core/template/adminIframeRenderer.php';
-require_once 'core/template/editableTemplate.php';
-require_once 'core/template/editableTemplatePreview.php';
+require_once __DIR__.'/errorHandler.php';
+require_once __DIR__.'/selection.php';
+require_once __DIR__.'/template/templateParser.php';
+require_once __DIR__.'/template/baseRenderer.php';
+require_once __DIR__.'/template/ajaxRenderer.php';
+require_once __DIR__.'/template/vcmsRenderer.php';
+require_once __DIR__.'/template/templateRenderer.php';
+require_once __DIR__.'/template/adminIframeRenderer.php';
+require_once __DIR__.'/template/editableTemplate.php';
+require_once __DIR__.'/template/editableTemplatePreview.php';
 
-require_once 'core/util/countries.php';
-require_once 'core/util/common.php';
+require_once __DIR__.'/util/countries.php';
+require_once __DIR__.'/util/common.php';
 require_once 'resource/js/valums-file-uploader/server/php.php';
 
-require_once 'core/model/iconModel.php';
-require_once 'core/model/galleryModel.php';
-require_once 'core/model/socialNotificationsModel.php';
-require_once 'core/model/rolesModel.php';
-include_once 'core/model/sitesModel.php';
-include_once 'core/model/cmsVersionModel.php';
-include_once 'core/model/cmsCustomerModel.php';
-include_once 'core/model/resourcesModel.php';
-include_once 'core/model/translationsModel.php';
-include_once 'core/model/sessionModel.php';
-include_once 'core/model/resourcesModel.php';
-include_once 'core/model/navigationModel.php';
-include_once 'core/model/confirmModel.php';
-include_once 'core/model/domainsModel.php';
-include_once 'core/model/moduleInstanceModel.php';
-include_once 'core/model/moduleModel.php';
-include_once 'core/model/pagesModel.php';
-include_once 'core/model/templateModel.php';
-require_once 'core/model/codeModel.php';
-include_once 'core/model/menuModel.php';
-include_once 'core/model/usersModel.php';
+require_once __DIR__.'/model/iconModel.php';
+require_once __DIR__.'/model/galleryModel.php';
+require_once __DIR__.'/model/socialNotificationsModel.php';
+require_once __DIR__.'/model/rolesModel.php';
+include_once __DIR__.'/model/sitesModel.php';
+include_once __DIR__.'/model/cmsVersionModel.php';
+include_once __DIR__.'/model/cmsCustomerModel.php';
+include_once __DIR__.'/model/resourcesModel.php';
+include_once __DIR__.'/model/translationsModel.php';
+include_once __DIR__.'/model/sessionModel.php';
+include_once __DIR__.'/model/resourcesModel.php';
+include_once __DIR__.'/model/navigationModel.php';
+include_once __DIR__.'/model/confirmModel.php';
+include_once __DIR__.'/model/domainsModel.php';
+include_once __DIR__.'/model/moduleInstanceModel.php';
+include_once __DIR__.'/model/moduleModel.php';
+include_once __DIR__.'/model/pagesModel.php';
+include_once __DIR__.'/model/templateModel.php';
+require_once __DIR__.'/model/codeModel.php';
+include_once __DIR__.'/model/menuModel.php';
+include_once __DIR__.'/model/usersModel.php';
 
-include_once 'core/model/userAddressModel.php';
-include_once 'core/model/userFriendModel.php';
-include_once 'core/model/eventsModel.php';
-include_once 'core/model/languagesModel.php';
+include_once __DIR__.'/model/userAddressModel.php';
+include_once __DIR__.'/model/userFriendModel.php';
+include_once __DIR__.'/model/eventsModel.php';
+include_once __DIR__.'/model/languagesModel.php';
 
-include_once 'core/controller/installerController.php';
-include_once 'core/controller/socialController.php';
-include_once 'core/controller/navigationController.php';
-include_once 'core/controller/moduleController.php';
+include_once __DIR__.'/controller/installerController.php';
+include_once __DIR__.'/controller/socialController.php';
+include_once __DIR__.'/controller/navigationController.php';
+include_once __DIR__.'/controller/moduleController.php';
 
-include_once 'core/context.php';
-include_once 'core/session.php';
-include_once 'core/util/infoMessages.php';
-include_once 'core/util/captcha.php';
-include_once 'core/ddm/dmObject.php';
-include_once 'core/ddm/dmSerializer.php';
-include_once 'core/ddm/dataModel.php';
-include_once 'core/ddm/dataView.php';
+include_once __DIR__.'/context.php';
+include_once __DIR__.'/session.php';
+include_once __DIR__.'/util/infoMessages.php';
+include_once __DIR__.'/util/captcha.php';
+include_once __DIR__.'/ddm/dmObject.php';
+include_once __DIR__.'/ddm/dmSerializer.php';
+include_once __DIR__.'/ddm/dataModel.php';
+include_once __DIR__.'/ddm/dataView.php';
 
 ?>

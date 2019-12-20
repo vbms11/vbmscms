@@ -61,14 +61,6 @@ class CompanySearchModule extends CompanySearchBaseModule {
     
     function printSearchView () {
         
-        /*
-        $countryOptions = array();
-        $countires = CountryModel::getCountries();
-        foreach ($countires as $country) {
-            $countryOptions[$country->geonameid] = htmlentities($country->name,ENT_QUOTES);
-        }
-        */
-        
         ?>
         <div class="panel comapnySearchPanel">
             <form method="post" action="<?php echo parent::link(array("action"=>"search")); ?>" name="companySearchForm">

@@ -194,7 +194,7 @@ class NavigationModel {
         return NavigationModel::$secureLink ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }
     
-    static function createServiceLink ($service,$params=null,$xhtml=true,$secure=true) {
+    static function createServiceLink ($service,$params=null,$xhtml=false,$secure=true) {
         $link = "?service=$service".NavigationModel::buildParams($params,$xhtml).(!NavigationModel::$secureLink ? NavigationModel::addSessionKeys($xhtml) : "");
         return NavigationModel::$secureLink && $secure ? NavigationModel::registerSecureLink($link,$xhtml):$link;
     }

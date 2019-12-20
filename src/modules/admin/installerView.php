@@ -133,7 +133,8 @@ class InstallView extends XModule {
                         } catch (Exception $e) {
                             $status = array(
                                 "status" => "error",
-                                "message" => "could not create initial user."
+                                "message" => "could not create initial user.",
+                                "exception" => $e->getTraceAsString()
                             );
                         }
                         Context::setReturnValue(json_encode($status));
@@ -215,28 +216,32 @@ class InstallView extends XModule {
                 value: 0
             });
             function tryStep () {
-				window.setTimeout(function(){
-					$.getJSON("?action=install&session=nodb&<?php echo session_name()."=".session_id(); ?>", function(response) {
-						switch (response["status"]) {
-    						case "ok":
-    							$("#messages").append($("<div>",{"class":"ok"}).text(response["message"]));
-    							$("#progressbar").progressbar({
-    				                value: response["progress"]
-    				            });
-    							tryStep();
-    							break;
-    						case "error":
-    							$("#messages").append($("<div>",{"class":"error"}).text(response["message"]));
-    							$("#progressbar").progressbar("option", "disabled", true);
-    							break;
-    						case "finnished":
-    							callUrl("<?php echo parent::link(); ?>");
-    							break;
-    						case "wait":
-        						break;
-						}
-					});
-				},1000);
+                window.setTimeout(function(){
+                    $.get("?action=install&session=nodb&<?php echo session_name()."=".session_id(); ?>", function(data) {
+                        try {
+                            var response = JSON.parse(data);
+                            switch (response["status"]) {
+                                case "ok":
+                                        $("#messages").append($("<div>",{"class":"ok"}).text(response["message"]));
+                                        $("#progressbar").progressbar({value: response["progress"]});
+                                        tryStep();
+                                        break;
+                                case "error":
+                                        $("#messages").append($("<div>",{"class":"error"}).text(response["message"]));
+                                        $("#messages").append($("<div>",{"class":"error"}).text(response["exception"]));
+                                        $("#progressbar").progressbar("option", "disabled", true);
+                                        break;
+                                case "finnished":
+                                        callUrl("<?php echo parent::link(null); ?>");
+                                        break;
+                                case "wait":
+                                        break;
+                                }
+                            } catch (e) {
+                                $("#messages").append($("<div>",{"class":"error"}).html(data));
+                            }
+                        });
+                },1000);
             }
             tryStep();
             </script>

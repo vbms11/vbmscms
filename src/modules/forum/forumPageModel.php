@@ -22,7 +22,12 @@ class ForumPageModel {
         $pmId = Database::escape($pmId);
         Database::query("update t_user_message set opened = '1' where id = '$pmId'");
     }
-
+    
+    static function getForum ($forumId) {
+        $forumId = Database::escape($forumId);
+        return Database::queryAsObject("select id, name, siteid from t_forum where id = '$forumId'");
+    }
+    
     static function getThread ($threadId) {
         $threadId = Database::escape($threadId);
         return Database::queryAsObject("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where t.id = '$threadId'");
@@ -41,6 +46,11 @@ class ForumPageModel {
     static function getPm ($pmId) {
         $pmId = Database::escape($pmId);
         return Database::queryAsObject("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.id = '$pmId'");
+    }
+
+    static function getForums ($siteId) {
+        $siteId = Database::escape($siteId);
+        return Database::queryAsArray("select id, name, siteid from t_forum where siteid = '$siteId'");
     }
 
     static function getThreads ($parentTopic) {
@@ -63,6 +73,16 @@ class ForumPageModel {
         return Database::queryAsArray("select m.*, srcu.username as srcusername, dstu.username as dstusername from t_user_message as m left join t_user as srcu on srcu.id = m.srcuser left join t_user as dstu on dstu.id = m.dstuser where m.dstuser = '$userId'");
     }
     
+    static function getThreadsByForum ($forumId) {
+        $forumId = Database::escape($forumId);
+        return Database::queryAsArray("select t.*, u.username as username from t_forum_thread t left join t_user u on u.id = t.userid where parent is null and t.forumid = '$forumId'");
+    }
+
+    static function getTopicsByForum ($forumId) {
+        $forumId = Database::escape($forumId);
+        return Database::queryAsArray("select t.*, u.username as username from t_forum_topic t left join t_user u on t.userid = u.id where parent is null and t.forumid = '$forumId'");
+    }
+    
     static function getUserTotalPosts ($userId) {
     	$userId = Database::escape($userId);
     	$result = Database::queryAsObject("select sum(amount) as sum from(
@@ -73,16 +93,19 @@ class ForumPageModel {
 		return $result->sum;
     }
 
-    static function getForumPage ($pageId) {
-        $pageId = Database::escape($pageId);
-        $result = Database::queryAsObject("select * from forum_page where pageid = '$pageId'");
-        if ($result == null) {
-            // Database::query("insert into forum_page topic = $topicId");
-            // $this->getForumPage($pageId);
+    static function saveForum ($id, $name, $siteId) {
+        $id = Database::escape($id);
+        $name = Database::escape($name);
+        $siteId = Database::escape($siteId);
+        if ($id == null) {
+            Database::query("insert into t_forum (name,siteid) values ('$name','$siteId')");
+            $result = Database::queryAsObject("select max(id) as newid from t_forum");
+            return $result->newid;
+        } else {
+            Database::query("update t_forum set name = '$name' where id = '$id'");
         }
-        // return $obj;
     }
-
+    
     static function saveTopic ($parentTopic, $topicId, $topicName, $userId) {
         $parentTopic = Database::escape($parentTopic);
         $topicName = Database::escape($topicName);
@@ -101,6 +124,7 @@ class ForumPageModel {
         $threadTitel = Database::escape($threadTitel);
         $threadMessage = Database::escape($threadMessage);
         $userId = Context::getUserId();
+        Context::getSiteId();
         if (Common::isEmpty($threadId)) {
             Database::query("insert into t_forum_thread (parent,name,message,createdate,userid) values ('$parentTopic','$threadTitel','$threadMessage',now(),$userId)");
         } else {
@@ -130,6 +154,11 @@ class ForumPageModel {
         return $result->newid;
     }
 
+    static function deleteForum ($forumId) {
+        $forumId = Database::escape($forumId);
+        Database::query("delete from t_forum where id = '$forumId'");
+    }
+    
     static function deleteTopic ($topicId) {
         $topicId = Database::escape($topicId);
         Database::query("delete from t_forum_topic where id = '$topicId'");
@@ -148,6 +177,17 @@ class ForumPageModel {
     static function deletePm ($pmId) {
         $pmId = Database::escape($pmId);
         Database::query("delete from t_user_message where id = '$pmId'");
+    }
+    
+    static function validateForum ($name) {
+        $errors = array();
+        if (strlen($name) == 0) {
+            $errors["name"] = "This feild cannot be empty!";
+        }
+        if (strlen($name) > 100) {
+            $errors["subject"] = "Maximum 100 characters!";
+        }
+        return $errors;
     }
     
     static function validatePm ($subject, $message) {

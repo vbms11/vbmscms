@@ -258,6 +258,31 @@ class PagesModel {
         
 	return null;
     }
+    
+    static function getPages ($lang, $roles=true) {
+        $lang = Database::escape($lang);
+        $siteId = Database::escape(Context::getSiteId());
+        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+            from t_page p
+            left join t_template t on p.template = t.id
+            left join t_menu as m on p.id = m.page and lang = '$lang'
+            left join t_code as c on p.namecode = c.code and c.lang = '$lang'
+            where p.siteid = '$siteId'";
+        if ($roles) {
+            $query .= " and p.id in (
+                select p1.id from t_page p1 
+                inner join t_page_roles as pc on p1.id = pc.pageid and 
+                pc.roleid in (".implode(array_values(Context::getRoleGroups()),',').")
+                where p1.siteid = '$siteId'
+            )";
+        }
+        
+	if (count(Context::getRoleGroups()) > 0) {
+            return Database::queryAsArray($query);
+	}
+        
+	return null;
+    }
 
     static function getPageByModuleId ($id, $lang) {
         

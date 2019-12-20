@@ -49,6 +49,12 @@ class Session {
             // try starting session
             $sessionValid = Session::startSession("s",$sessionId);
             
+            // if session invalid destroy session
+            if ($sessionValid == false) {
+                
+                SessionModel::endSession($sessionId);
+            }
+            
             if ($sessionValid == true) {
                 
                 // start database session
@@ -59,12 +65,12 @@ class Session {
                 
                 // check if session valid
                 $sessionValid = Session::isValid($sessionId,$sessionKey);
-            }
-            
-            // if session invalid destroy session
-            if ($sessionValid == false) {
                 
-                Session::endSession("s",$sessionId);
+                // if session invalid destroy session
+                if ($sessionValid == false) {
+
+                    Session::endSession("s",$sessionId);
+                }
             }
         }
         

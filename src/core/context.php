@@ -306,8 +306,8 @@ class Context {
                 Context::addAlertNotification($lawNotification);
             }
             
-            // set the siteid
-            $_SESSION["req.site"] = self::getSite();
+            // find the site by domain
+            self::getSite();
             
             // check if admin mode
             if (isset($_GET["setAdminMode"])) {
@@ -328,9 +328,12 @@ class Context {
      */
     static function endRequest () {
         
-        TranslationsModel::maintainTrnaslationsFile();
         Log::writeLogFile();
-        Database::close();
+        
+        if (Config::getInstalled()) {
+            TranslationsModel::maintainTrnaslationsFile();
+            Database::close();
+        }
     }
     
     // is the module currently being rendered or processed 

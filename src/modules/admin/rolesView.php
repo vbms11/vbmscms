@@ -12,12 +12,19 @@ class RolesView extends XModule {
         if (Context::hasRole("admin.roles.edit")) {
             switch (parent::getAction()) {
                 case "saveRoles":
-                    $customRole = parent::get('group');
+                    $customRole = parent::get("group");
                     RolesModel::clearCustomRoles($customRole);
                     $selectedModuleRoles = parent::post("roles");
                     if (is_array($selectedModuleRoles)) {
                         RolesModel::addModuleRoleToCustomRole($selectedModuleRoles, $customRole);
                     }
+                    parent::redirect();
+                    break;
+                case "saveRoleRights":
+                    $customRole = parent::get("group");
+                    RolesModel::deleteRoleRights($customRole);
+                    $selectedModuleRoles = parent::post("customRoles");
+                    RolesModel::createRoleRights($customRole, $selectedModuleRoles);
                     parent::redirect();
                     break;
                 case "createRole":
@@ -62,9 +69,13 @@ class RolesView extends XModule {
         <div class="adminRolesTabs">
             <ul>
                 <li><a href="#adminRoles"><?php echo parent::getTranslation("admin.roles.tab"); ?></a></li>
+                <li><a href="#adminRolesRights"><?php echo parent::getTranslation("admin.roles.tab.rights"); ?></a></li>
             </ul>
             <div id="adminRoles">
                 <?php $this->printMainView(); ?>
+            </div>
+            <div id="adminRolesRights">
+                <?php $this->printRolesRightsView(); ?>
             </div>
         </div>
         <script>
@@ -78,7 +89,7 @@ class RolesView extends XModule {
         $allRoles = Common::toMap(RolesModel::getModuleRoles());
         $roleGroupIds = array_keys($roleGroups);
         $group = parent::get('group') != null ? parent::get('group') : current($roleGroupIds); 
-        $pageRoles = RolesModel::getCustomRoleModuleRoles($group);
+        $pageRoles = Common::toMap(RolesModel::getCustomRoleModuleRoles($group),"modulerole","modulerole");
         ?>
 	<div class="panel rolesPage">
             <h3><?php echo parent::getTranslation("admin.roles.title"); ?></h3>
@@ -149,6 +160,56 @@ class RolesView extends XModule {
                     callUrl(url,{"group":$("#rolename").val()});
                     e.preventDefault();
                 });
+            });
+            </script>
+        </div>
+        <?php
+    }
+    
+    function printRolesRightsView () {
+        $roleGroups = RolesModel::getCustomRoles();
+        $allRoles = Common::toMap($roleGroups,"id","name");
+        $roleGroupIds = array_keys($roleGroups);
+        $group = parent::get('group') != null ? parent::get('group') : current($roleGroupIds); 
+        $roleRights = RolesModel::getRoleRights($group);
+        $selectedRoleRights = array();
+        foreach ($roleRights as $roleRight) {
+            $selectedRoleRights []= $roleRight->customrolerightid;
+        }
+        ?>
+	<div class="panel rolesPage">
+            <h3><?php echo parent::getTranslation("admin.roles.rights.title"); ?></h3>
+            <p><?php echo parent::getTranslation("admin.roles.rights.description"); ?></p>
+            <form action="<?php echo parent::link(array("action"=>"saveRoleRights","group"=>$group)); ?>" method="post">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("admin.roles.label.roleGroup"); ?>
+                </td><td>
+                    <select id="roleRightsName">
+                            <?php
+                            foreach ($roleGroups as $roleGroup) {
+                                ?><option value="<?php echo $roleGroup->id; ?>" <?php if ($group == $roleGroup->id) echo "selected=\"true\""; ?>><?php echo $roleGroup->name; ?></option><?php
+                            }
+                            ?>
+                        </select>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("admin.roles.rights.label.roles"); ?>
+                </td><td>
+                    <?php
+                    InputFeilds::printMultiSelect("customRoles", $allRoles, $selectedRoleRights);
+                    ?>
+                </td></tr></table>
+                <hr/>
+                <div class="alignRight">
+                    <button id="saveRoleRights" type="submit"><?php echo parent::getTranslation("admin.roles.rights.button.save"); ?></button>
+                </div>
+            </form>
+            <script type="text/javascript">
+            $(function() {
+                $("#roleRightsName").change(function(){
+                    var url = "<?php echo parent::link(array(), false); ?>";
+                    callUrl(url,{"group":$(this).val()});
+                });
+                $("#saveRoleRights").button();
             });
             </script>
         </div>

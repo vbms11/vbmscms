@@ -18,6 +18,7 @@ class UserProfileModule extends XModule {
             case "save":
                 if (Context::hasRole("user.profile.edit")) {
                     parent::param("mode",parent::post("mode"));
+                    parent::param("profileOptions", parent::post("profileOptions"));
                 }
                 parent::blur();
                 parent::redirect();
@@ -79,6 +80,19 @@ class UserProfileModule extends XModule {
         return array("css/userProfile.css");
     }
     
+    function getProfileOptions () {
+        return array(
+            "wall"=>"wall",
+            "files"=>"files",
+            "companys"=>"companys",
+            "settings"=>"settings",
+            "messages"=>"messages",
+            "friendList"=>"friendList",
+            "addFriend"=>"addFriend",
+            "gallery"=>"gallery"
+        );
+    }
+    
     function printEditView () {
         ?>
         <div class="panel usersProfilePanel">
@@ -87,7 +101,16 @@ class UserProfileModule extends XModule {
                     <?php echo parent::getTranslation("users.profile.edit.mode"); ?>
                 </td><td>
                     <?php InputFeilds::printSelect("mode", parent::param("mode"), array(self::modeCurrentUser => parent::getTranslation("common.user.current"), self::modeSelectedUser => parent::getTranslation("common.user.selected"))); ?>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("users.profile.edit.options"); ?>
+                </td><td>
+                    <?php
+                    print_r(parent::param("profileOptions"));
+                    
+                    InputFeilds::printMultiSelect("profileOptions", $this->getProfileOptions(), Common::toMap(parent::param("profileOptions")));
+                    ?>
                 </td></tr></table>
+                
                 <hr/>
                 <div class="alignRight">
                     <button type="submit" class="jquiButton"><?php echo parent::getTranslation("common.save"); ?></button>
@@ -136,114 +159,137 @@ class UserProfileModule extends XModule {
                     <?php echo $username." (".$user->age.")"; ?>
                 </div>
                 <div class="userProfileMenu">
-                    <div>
-                        <a href="<?php echo NavigationModel::createStaticPageLink('userWall', array('userId' => $userId), true, false); ?>">
-                            <?php echo parent::getTranslation("userProfile.wall"); ?>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="<?php echo NavigationModel::createStaticPageLink('userFiles', array('userId' => $userId), true, false); ?>">
-                            <?php echo parent::getTranslation("userProfile.files"); ?>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="<?php echo NavigationModel::createStaticPageLink('userCompany', array('userId' => $userId), true, false); ?>">
-                            <?php echo parent::getTranslation("userProfile.companys"); ?>
-                        </a>
-                    </div>
-                    
-                        
-                    <?php /*
-                    <div>
-                        <a href="<?php echo NavigationModel::createStaticPageLink('userGallery', array('userId' => $userId), true, false); ?>">
-                            <?php echo parent::getTranslation("userProfile.gallery"); ?>
-                        </a>
-                    </div>
-                     */ ?>
                     <?php
-                    
-                    if ($userId == Context::getUserId()) {
-	                    ?>
-	                    <div>
-	                        <a href="<?php echo parent::staticLink("userSettings",array("userId"=>$userId)); ?>">
-	                            <?php echo parent::getTranslation("userProfile.userSettings"); ?>
-	                        </a>
-	                    </div>
-	                    <?php
-                    }
-                    
-                    if (Context::isLoggedIn() == false) {
-                        ?>
-                        <div>
-                            <a href="<?php echo NavigationModel::createStaticPageLink("login", null, true, false); ?>">
-                                <?php echo parent::getTranslation("userProfile.message"); ?>
-                            </a>
-                        </div>
-                        <?php
-                    } else if ($userId !== Context::getUserId()) {
-                        ?>
-                        <div>
-                            <a href="<?php echo NavigationModel::createStaticPageLink('userMessage', array('action' => 'send', 'userId' => $userId), true, false); ?>">
-                                <?php echo parent::getTranslation("userProfile.message"); ?>
-                            </a>
-                        </div>
-                        <?php
-                    } else {
-                        ?>
-                        <div>
-                            <a href="<?php echo NavigationModel::createStaticPageLink("userMessage",array("userId"=>$userId), true, false); ?>">
-                                <?php echo parent::getTranslation("userProfile.messages"); ?>
-                            </a>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                    <div>
-                        <a href="<?php echo NavigationModel::createStaticPageLink("userFriend",array("userId"=>$userId), true, false); ?>">
-                            <?php echo parent::getTranslation("userProfile.friends"); ?>
-                        </a>
-                    </div>
-                    <?php
-                    if ($userId !== Context::getUserId()) {
-                        $userFriend = UserFriendModel::getUserFriendRequest(Context::getUserId(),$userId);
-                        if (Context::isLoggedIn() == false) {
-                            ?>
-                            <div>
-                                <a href="<?php echo NavigationModel::createStaticPageLink("login", null, true, false); ?>">
-                                    <?php echo parent::getTranslation("userProfile.addFriends"); ?>
-                                </a>
-                            </div>
-                            <?php
-                        } else if (empty($userFriend)) {
-                            ?>
-                            <div>
-                                <a href="<?php echo parent::link(array("action"=>"addFriend","id"=>$userId)); ?>">
-                                    <?php echo parent::getTranslation("userProfile.addFriends"); ?>
-                                </a>
-                            </div>
-                            <?php
-                        } else if ($userFriend->confirmed == "0") {
-                            ?>
-                            <div>
-                                <a href="#">
-                                    <?php echo parent::getTranslation("userProfile.addFriendsSent"); ?>
-                                </a>
-                            </div>
-                            <?php
-                        } else if ($userFriend->confirmed == "1") {
-                            ?>
-                            <div>
-                                <a href="<?php echo parent::link(array("action"=>"removeFriend","id"=>$userFriend->id)); ?>">
-                                    <?php echo parent::getTranslation("userProfile.removeFriends"); ?>
-                                </a>
-                            </div>
-                            <?php
+                    if (parent::param("profileOptions") != null) {
+                        foreach (parent::param("profileOptions") as $option) {
+                            switch ($option) {
+                                case "wall":
+                                    ?>
+                                    <div>
+                                        <a href="<?php echo NavigationModel::createStaticPageLink('userWall', array('userId' => $userId), true, false); ?>">
+                                            <?php echo parent::getTranslation("userProfile.wall"); ?>
+                                        </a>
+                                    </div>
+                                    <?php
+                                    break;
+                                case "files":
+                                    ?>
+                                    <div>
+                                        <a href="<?php echo NavigationModel::createStaticPageLink('userFiles', array('userId' => $userId), true, false); ?>">
+                                            <?php echo parent::getTranslation("userProfile.files"); ?>
+                                        </a>
+                                    </div>
+                                    <?php
+                                    break;
+                                case "companys":
+                                    ?>
+                                    <div>
+                                        <a href="<?php echo NavigationModel::createStaticPageLink('userCompany', array('userId' => $userId), true, false); ?>">
+                                            <?php echo parent::getTranslation("userProfile.companys"); ?>
+                                        </a>
+                                    </div>
+                                    <?php
+                                    break;
+                                case "settings":
+                                    if ($userId == Context::getUserId()) {
+                                        ?>
+                                        <div>
+                                            <a href="<?php echo parent::staticLink("userSettings",array("userId"=>$userId)); ?>">
+                                                <?php echo parent::getTranslation("userProfile.userSettings"); ?>
+                                            </a>
+                                        </div>
+                                        <?php
+                                    }
+                                    break;
+                                case "messages":
+                                    if (Context::isLoggedIn() == false) {
+                                        ?>
+                                        <div>
+                                            <a href="<?php echo NavigationModel::createStaticPageLink("login", null, true, false); ?>">
+                                                <?php echo parent::getTranslation("userProfile.message"); ?>
+                                            </a>
+                                        </div>
+                                        <?php
+                                    } else if ($userId !== Context::getUserId()) {
+                                        ?>
+                                        <div>
+                                            <a href="<?php echo NavigationModel::createStaticPageLink('userMessage', array('action' => 'send', 'userId' => $userId), true, false); ?>">
+                                                <?php echo parent::getTranslation("userProfile.message"); ?>
+                                            </a>
+                                        </div>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <div>
+                                            <a href="<?php echo NavigationModel::createStaticPageLink("userMessage",array("userId"=>$userId), true, false); ?>">
+                                                <?php echo parent::getTranslation("userProfile.messages"); ?>
+                                            </a>
+                                        </div>
+                                        <?php
+                                    }
+                                    break;
+                                case "friendList":
+                                    ?>
+                                    <div>
+                                        <a href="<?php echo NavigationModel::createStaticPageLink("userFriend",array("userId"=>$userId), true, false); ?>">
+                                            <?php echo parent::getTranslation("userProfile.friends"); ?>
+                                        </a>
+                                    </div>
+                                    <?php
+                                    break;
+                                case "addFriend":
+                                    if ($userId !== Context::getUserId()) {
+                                        $userFriend = UserFriendModel::getUserFriendRequest(Context::getUserId(),$userId);
+                                        if (Context::isLoggedIn() == false) {
+                                            ?>
+                                            <div>
+                                                <a href="<?php echo NavigationModel::createStaticPageLink("login", null, true, false); ?>">
+                                                    <?php echo parent::getTranslation("userProfile.addFriends"); ?>
+                                                </a>
+                                            </div>
+                                            <?php
+                                        } else if (empty($userFriend)) {
+                                            ?>
+                                            <div>
+                                                <a href="<?php echo parent::link(array("action"=>"addFriend","id"=>$userId)); ?>">
+                                                    <?php echo parent::getTranslation("userProfile.addFriends"); ?>
+                                                </a>
+                                            </div>
+                                            <?php
+                                        } else if ($userFriend->confirmed == "0") {
+                                            ?>
+                                            <div>
+                                                <a href="#">
+                                                    <?php echo parent::getTranslation("userProfile.addFriendsSent"); ?>
+                                                </a>
+                                            </div>
+                                            <?php
+                                        } else if ($userFriend->confirmed == "1") {
+                                            ?>
+                                            <div>
+                                                <a href="<?php echo parent::link(array("action"=>"removeFriend","id"=>$userFriend->id)); ?>">
+                                                    <?php echo parent::getTranslation("userProfile.removeFriends"); ?>
+                                                </a>
+                                            </div>
+                                            <?php
+                                        }
+                                    }
+                                    break;
+                                case "gallery":
+                                    ?>
+                                    <div>
+                                        <a href="<?php echo NavigationModel::createStaticPageLink('userGallery', array('userId' => $userId), true, false); ?>">
+                                            <?php echo parent::getTranslation("userProfile.gallery"); ?>
+                                        </a>
+                                    </div>
+                                    <?php
+                                    break;
+                            }
                         }
                     }
                     ?>
                 </div>
                 <?php
-                
             }
             ?>
         </div>
