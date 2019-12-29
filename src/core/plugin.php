@@ -47,7 +47,7 @@ interface IModule {
     /**
      * returns the tables data that this site uses
      */
-    //function export ($siteId);
+    function export ($siteId);
 
     /**
      * imports the module instance
@@ -348,21 +348,19 @@ abstract class XModule implements IModule, ITranslatable {
      * imports data for this module on a site
      */
     function import ($siteId, $tableNameTableData) {
+         
         
     }
 
     /**
      * returns the tables data that this site uses
      */
-    function export ($siteId, &$moduleNode) {
-        /*
-        
-        
-         */
-        //$this->getTables();
+    function export ($siteId) {
         
     }
-
+    
+    
+    
     /**
      * imports the module instance
      */

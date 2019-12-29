@@ -22,8 +22,16 @@ require_once __DIR__.'/template/adminIframeRenderer.php';
 require_once __DIR__.'/template/editableTemplate.php';
 require_once __DIR__.'/template/editableTemplatePreview.php';
 
-require_once __DIR__.'/util/countries.php';
+require_once __DIR__.'/util/log.php';
+require_once __DIR__.'/util/http.php';
+require_once __DIR__.'/util/image.php';
+require_once __DIR__.'/util/video.php';
+require_once __DIR__.'/util/gradient.php';
+require_once __DIR__.'/util/input.php';
+require_once __DIR__.'/util/email.php';
 require_once __DIR__.'/util/common.php';
+require_once __DIR__.'/util/countries.php';
+
 require_once 'resource/js/valums-file-uploader/server/php.php';
 
 require_once __DIR__.'/model/iconModel.php';
@@ -56,6 +64,7 @@ include_once __DIR__.'/model/languagesModel.php';
 include_once __DIR__.'/controller/installerController.php';
 include_once __DIR__.'/controller/socialController.php';
 include_once __DIR__.'/controller/navigationController.php';
+include_once __DIR__.'/controller/templateController.php';
 include_once __DIR__.'/controller/moduleController.php';
 
 include_once __DIR__.'/context.php';

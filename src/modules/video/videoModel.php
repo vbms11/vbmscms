@@ -2,8 +2,25 @@
 
 class VideoModel {
     
-    static function createVideo () {
-        
+    static function createVideo ($file, $title, $description, $userId, $album) {
+        $file = Database::escape($file);
+        $title = Database::escape($title);
+        $description = Database::escape($description);
+        $userId = Database::escape($userId);
+        $album = Database::escape($album);
+        Database::query("insert into t_video (file,title,description,userid,album,uploaddate) values('$file','$title','$description','$userId','$album',now())");
+        $result = Database::queryAsObject("select max(id) as lastid from t_video");
+        return $result->lastid;
+    }
+    
+    static function getVideoByAlbum ($album) {
+        $album = Database::escape($album);
+        return Database::queryAsArray("select * from t_video where album = '$album'");
+    }
+    
+    static function getVideoByFileName ($filename) {
+        $filename = Database::escape($filename);
+        return Database::queryAsObject("select * from t_video where file='$filename'");
     }
     
     static function getVideo ($id) {
@@ -17,123 +34,59 @@ class VideoModel {
     }
     
     static function deleteVideo ($id) {
-        $video = self::getVideo($id);
-        unlink(ResourcesModel::getResourcePath("video",$video->file));
-        unlink(ResourcesModel::getResourcePath("video/poster",$video->image));
         $id = Database::escape($id);
         Database::query("delete from t_video where id = '$id'");
     }
     
-    function updateVideo ($id, $titel, $description) {
+    function updateVideo ($id, $file, $titel, $description, $album, $userId) {
         $id = Database::escape($id);
+        $file = Database::escape($file);
         $title = Database::escape($title);
         $description = Database::escape($description);
-        Database::query("update t_gallery_image set title='$title' image='$image' description='$description' where id='$id'");
-    }
-    
-    static function uploadImage ($inputName,$category) {
-        
-        $imageId = null;
-        $allowedExtensions = array("jpeg", "jpg", "png", "gif");
-        $sizeLimit = 5 * 1024 * 1024;
-        
-        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
-        $result = $uploader->handleUpload(ResourcesModel::getResourcePath("gallery/new"));
-        
-        if (isset($result['success']) && $result['success']) {
-            
-            $filename = $result['filename'];
-            $newFilename = self::getNextFilename();
-            $filePathFull = ResourcesModel::getResourcePath("gallery/new",$filename);
-            
-            self::cropImage($filePathFull,self::bigWidth,self::bigHeight,ResourcesModel::getResourcePath("gallery",$newFilename));
-            self::cropImage($filePathFull,self::smallWidth,self::smallHeight,ResourcesModel::getResourcePath("gallery/small",$newFilename));
-            self::cropImage($filePathFull,self::tinyWidth,self::tinyHeight,ResourcesModel::getResourcePath("gallery/tiny",$newFilename));
-            
-            $imageId = self::addImage($category,$newFilename,"","");
-            
-            unlink($filePathFull);
-            unset($result['filename']);
-        }
-        
-        // to pass data through iframe you will need to encode all html tags
-        echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
-        return $imageId;
-    }
-    
-    static function getNextFilename ($ext = "jpg") {
-        $filename = null;
-        do {
-            $filename = Common::randHash(32, false).".".$ext;
-            $filename = Database::escape($filename);
-            $result = Database::queryAsObject("select 1 as taken from t_gallery_image where image = '$filename'");
-        } while (!empty($result) && $result->taken == "1");
-        return $filename;
-    }
-    
-    static function renderImage ($imageId,$width,$height,$x=null,$y=null,$w=null,$h=null) {
-        
-        $image = self::getImage($imageId);
-        
-        if (!empty($image)) {
-            
-            $image = $image->image;
-            
-            $filename = $width.'_'.$height.'_'.$x.'_'.$y.'_'.$w.'_'.$h.'_'.$imageId.'.jpg';
-            $filePath = ResourcesModel::getResourcePath("gallery/crop",$filename);
-            
-            if (!is_file($filePath)) {
-                
-                $originalImage = ResourcesModel::getResourcePath("gallery",$image);
-                self::cropImage($originalImage,$width,$height,$filePath,$x,$y,$w,$h);
-            }
-            
-            // header('Content-Description: File Transfer');
-            // header('Content-Type: application/octet-stream');
-            header("Content-Type: image/jpg");
-            header('Content-Disposition: inline; filename="'.$filename.'"');
-            //header('Content-Transfer-Encoding: binary');
-            header('Connection: Keep-Alive');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            //header('Pragma: public');
-            header('Content-Length: '.filesize($filePath));
-            readfile($filePath);
-            Context::setReturnValue("");
-        }
-        
+        $album = Database::escape($album);
+        $userId = Database::escape($userId);
+        Database::query("update t_video set file='$file', title='$title', description='$description', album='$album', userid='$userId' where id='$id'");
     }
     
     /**
      * video album
      */
     
-    function createVideoAlbum ($name) {
-        
+    static function createVideoAlbum ($name, $description, $siteId=null) {
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        }
         $name = Database::escape($name);
+        $description = Database::escape($description);
         $siteId = Database::escape($siteId);
-        Database::query("insert into t_video_album (siteid, name) values ('$siteId','$name')");
+        Database::query("insert into t_video_album (siteid, name, description) values ('$siteId','$name','$description')");
     }
     
-    function listVideoAlbum ($siteId) {
-        
-        Database::escape($siteId);
+    static function updateVideoAlbum ($id, $name, $description, $siteId=null) {
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        }
+        $id = Database::escape($id);
+        $name = Database::escape($name);
+        $description = Database::escape($description);
+        Database::query("update t_video_album set name='$name', description='$description', siteid='$siteId' where id='$id'");
+    }
+    
+    static function listVideoAlbum ($siteId=null) {
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        }
+        $siteId = Database::escape($siteId);
         return Database::queryAsArray("select * from t_video_album where siteid = '$siteId'");
     }
     
-    function editVideoAlbum ($id,$name) {
-        
-        $id = Database::escape($id);
-        $name = Database::escape($name);
-        Database::query("update t_video_album set name = '$name' where id = '$id'");
+    static function deleteVideoAlbum ($albumId) {
+        $albumId = Database::escape($albumId);
+        Database::query("delete t_video_album where id = '$albumId'");
     }
     
-    function deleteVideoAlbum ($albumId) {
-        
-        $videos = self::listVideos($albumId);
-        foreach ($videos as $pos => $video) {
-            self::deleteVideo($video->id);
-        }
-        Database::query("delete t_video_album where id = '$albumId'");
+    static function getVideoAlbum ($id) {
+        $id = Database::escape($id);
+        return Database::queryAsObject("select * from t_video_album where id = '$id'");
     }
 }

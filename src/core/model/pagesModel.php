@@ -50,7 +50,7 @@ class PagesModel {
                     select p1.id from t_page p1 
                     inner join t_page_roles as pc on p1.id = pc.pageid and 
                     pc.roleid in (".implode(array_values(Context::getRoleGroups()),',').")
-                    where p1.siteid = $siteId
+                    where p1.siteid = '$siteId'
                 ) and $endQuery";
         
         $pageObj = Database::queryAsObject($query);
@@ -299,6 +299,11 @@ class PagesModel {
         $result = Database::queryAsObject($query);
         return self::ensureAdminTemplate($result);
     }
+    
+    static function getPagesBySiteId ($siteId) {
+        $siteId = Database::escape($siteId);
+        return Database::queryAsArray("select * from t_page p where p.siteid = '$siteId'");
+    }
 
     static function createPage ($name,$type,$lang,$welcome,$title,$keywords,$template,$areas,$description,$code="",$parentModuleInstanceId=null) {
         $type = Database::escape($type);
@@ -326,6 +331,24 @@ class PagesModel {
         PagesModel::setWelcome($pageId, $welcome);
         // create template areas
         return $pageId;
+    }
+    
+    static function createPageBasic ($siteId,$nameCode,$type,$welcome,$title,$keywords,$template,$description,$code,$parentModuleInstanceId) {
+        $siteId = Database::escape($siteId);
+        $nameCode = Database::escape($nameCode);
+        $type = Database::escape($type);
+        $lang = Database::escape($lang);
+        $welcome = Database::escape($welcome);
+        $title = Database::escape($title);
+        $keywords = Database::escape($keywords);
+        $template = Database::escape($template);
+        $description = Database::escape($description);
+        $code = Database::escape($code);
+        $parentModuleInstanceId = $parentModuleInstanceId == null ? "null" : "'".Database::escape($parentModuleInstanceId)."'";
+        // create page
+        Database::query("insert into t_page(welcome,namecode,type,title,keywords,template,description,siteid,code,parentmoduleinstanceid) values('$welcome','$namecode','$type','$title','$keywords','$template','$description','$siteId','$code',$parentModuleInstanceId)");
+        $result = Database::queryAsObject("select max(id) as max from t_page");
+        return $result->max;
     }
 
     static function updatePage ($id,$name,$type,$lang,$welcome,$title,$keywords,$description,$template) {
@@ -374,6 +397,21 @@ class PagesModel {
             Database::query("update t_page set welcome = '0' where siteid = '$siteId'");
             Database::query("update t_page set welcome = '1' where siteid = '$siteId' and id = '$id'");
         }
+    }
+    
+    static function setTemplateByType ($siteId, $type, $template) {
+        $siteId = Database::escape($siteId);
+        $type = Database::escape($type);
+        $template = Database::escape($template);
+        $pages = Database::queryAsArray("select p.id as id, t.type as type from t_page p join t_template t on p.template = t.id where t.type = '$type' and p.siteid = '$siteId'");
+        foreach ($pages as $p => $page) {
+            Database::query("update t_page set template = '$template' where id = '$id'");
+        }
+    }
+    
+    static function getCodesBySiteId ($siteId) {
+        $siteId = Database::escape($siteId);
+        Database::queryAsArray("select c.* from t_code c join t_page p on p.namecode = c.id and p.siteid = '$siteId'");
     }
 }
 

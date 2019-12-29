@@ -184,7 +184,7 @@ class AdminSitesModule extends XModule {
         <?php
     }
     
-    function renderCreateView () {
+    function   nmmrenderCreateView () {
         ?>
         <h3><?php echo parent::getTranslation("admin.sites.title.create"); ?></h3>
         <form method="post" action="<?php echo parent::link(array("action"=>"createSite")); ?>">

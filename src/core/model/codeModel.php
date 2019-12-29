@@ -32,6 +32,18 @@ class CodeModel {
         CodeModel::setCachedCode($code, $lang, $value);
         return $code;
     }
+    
+    static function createCodes ($values) {
+        $oldCodeNewCodes = array();
+        foreach ($values as $value) {
+            if (isset($oldCodeNewCodes[$value->code])) {
+                self::addToCode($oldCodeNewCodes[$value->code], $value->lang, $value->value);
+            } else {
+                $oldCodeNewCodes[$value->code] = self::createCode($value->lang, $value->value);
+            }
+        }
+        return $oldCodeNewCodes;
+    }
 
     static function addToCode ($code,$lang,$value) {
         $lang = Database::escape($lang);

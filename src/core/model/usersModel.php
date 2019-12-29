@@ -457,7 +457,7 @@ class UsersModel {
             // set user authkey
             self::refreshUserAuthKey($id);
             // create site user
-            Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
+            self::createSiteUser($id, $siteId);
             // set user password
             if ($password != null) {
                 UsersModel::setPassword($id, $password);
@@ -472,6 +472,18 @@ class UsersModel {
         }
         EventsModel::addUserEvents($firstName,$lastName,$id,$birthDate);
         return $id;
+    }
+    
+    static function createSiteUser ($userId, $siteId) {
+        $userId = Database::escape($userId);
+        $siteId = Database::escape($siteId);
+        Database::query("insert into t_site_users (userid,siteid) values('$userId','$siteId')");
+    }
+    
+    static function deleteSiteUser ($userId, $siteId) {
+        $userId = Database::escape($userId);
+        $siteId = Database::escape($siteId);
+        Database::query("delete t_site_users where userid = '$userId' and siteid = '$siteId'");
     }
     
     static function validateUserInfo ($orientation, $religion, $ethnicity, $about, $relationship, $bodyheight, $haircolor, $eyecolor, $weight) {

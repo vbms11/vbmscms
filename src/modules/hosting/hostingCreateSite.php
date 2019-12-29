@@ -4,16 +4,13 @@ require_once 'core/plugin.php';
 include_once 'core/model/cmsCustomerModel.php';
 include_once 'core/model/sitesModel.php';
 
-class RegisterHostingModule extends XModule {
+class HostingCreateSiteModule extends XModule {
     
     function onProcess () {
         
         if (Context::hasRole("site.edit")) {
             switch (parent::getAction()) {
                 case "update":
-                    $content = $_POST['articleContent'];
-                    WysiwygPageModel::updateWysiwygPage(parent::getId(),Context::getLang(),$content);
-                    PagesModel::updateModifyDate();
                     parent::redirect();
                     parent::blur();
                     break;
@@ -47,22 +44,11 @@ class RegisterHostingModule extends XModule {
                     parent::redirect();
                     break;
                 case "updateSite":
-                    SiteModel::updateSite(parent::get("id"), parent::post("siteName"), parent::post("siteDescription"), parent::post("siteTrackerScript"), parent::post("facebookAppId"), parent::post("facebookSecret"), parent::post("googleClientId"), parent::post("googleClientSecret"), parent::post("twitterKey"), parent::post("twitterSecret"));
-                    Context::setSite(null);
                     parent::redirect();
                     break;
                 case "deleteSite":
-                    //TODO delete all site content
-                    SiteModel::deleteSite(parent::get("id")); 
                     parent::redirect();
                     break;
-                case "viewSite":
-                	$siteId = parent::get("id");
-                	//TODO validate cmsuseid
-                	// $site = SitesModel::getSite($siteId);
-                	// if (Context::getSite()->cmscustomerid == $site->cmscustomerid)
-                	Context::setSiteId($siteId);
-                	break;
             }
         }
     }
@@ -71,20 +57,14 @@ class RegisterHostingModule extends XModule {
         
         switch (parent::getAction()) {
             
-            case "newSite":
+            case "edit":
                 if (Context::hasRole("site.edit")) {
-                    $this->renderCreateTabs();
-                }
-                break;
-            case "editSite":
-                if (Context::hasRole("site.edit")) {
-                    $site = SiteModel::getSite(parent::get("id"));
-                    $this->renderEditTabs($site);
+                    $this->renderEditView();
                 }
                 break;
             default:
                 if (Context::hasRole("site.view")) {
-                    $this->renderMainTabs();
+                    $this->renderMainView();
                 }
         }
     }
@@ -94,31 +74,7 @@ class RegisterHostingModule extends XModule {
     }
     
     function getRoles () {
-        return array("site.edit","site.view");
-    }
-    
-    function renderEditTabs ($site) {
-        ?>
-        <div class="panel adminSitesPanel">
-            <div class="adminSitesTabs">
-                <ul>
-                    <li><a href="#adminSitesTab"><?php echo parent::getTranslation("admin.sites.tab.label"); ?></a></li>
-                    <li><a href="#adminSitesEditTab"><?php echo parent::getTranslation("admin.sites.tab.edit"); ?></a></li>
-                </ul>
-                <div id="adminSitesTab">
-                    <?php $this->renderMainView(); ?>
-                </div>
-                <div id="adminSitesEditTab">
-                    <?php $this->renderEditView($site); ?>
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript">
-        $(".adminSitesTabs").tabs({
-            active : 1
-        });
-        </script>
-        <?php
+        return array("createSite.edit","createSite.view");
     }
     
     function renderEditView ($site) {

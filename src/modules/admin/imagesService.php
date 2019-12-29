@@ -16,7 +16,11 @@ class ImageGenerator extends XModule {
             case "pattern":
                 break;
             case "gradient":
-                Gradient::render($_GET['width'],$_GET['height'],$_GET['srcColor'],$_GET['dstColor'],$_GET['vertical']);
+                $vertical = true;
+                if (isset($_GET['vertical'])) {
+                    $vertical = $_GET['vertical'];
+                }
+                Gradient::render($_GET['width'],$_GET['height'],$_GET['startR'],$_GET['startG'],$_GET['startB'],$_GET['endR'],$_GET['endG'],$_GET['endB'],$vertical);
                 break;
             case "captcha":
                 Captcha::createImage($_GET['name']);

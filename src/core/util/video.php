@@ -6,18 +6,28 @@
  * and open the template in the editor.
  */
 
-class Video {
+class VideoUtil {
     
     const avi = 1;
     const flv = 2;
     const mp4 = 3;
+    const webm = 4;
     
     static function convert ($inputFile, $outputFile, $format) {
         
     }
     
-    static function extractPreviewImage ($inputFile, $time, $outputFile) {
-        
+    static function extractImage ($inputFile, $outputFile, $time="00:00:01") {
+        shell_exec("ffmpeg -ss $time -i $inputFile -vframes 1 -q:v 2 $outputFile");
+    }
+    
+    static function extractImageInterval ($inputFile, $interval, $resolutionX, $resolutionY, $outputFile) {
+        exec("ffmpeg -i $inputFile -an -r $interval -y -s ".$resolutionX."x".$resolutionY." $outputFile%d.jpg");
+    }
+    
+    static function convertMp4toWebm ($inputFile, $outputFile) {
+        $command = "ffmpeg -i $inputFile -c:v libvpx-vp9 -crf 30 -b:v 0 -b:a 128k -c:a libopus $outputFile";
+        exec($command);
     }
 }
 

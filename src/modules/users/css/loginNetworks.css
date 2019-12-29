@@ -1,0 +1,10 @@
+.loginNetworksPanel a {
+    width: 250px;
+    display: block;
+}
+.facebookLoginButton {
+    background: url('../../../?service=images&action=gradient&width=5&height=30&startR=0&startG=0&startB=255&endR=100&endG=100&endB=100') repeat-x;
+    padding: 7px;
+}
+.googleLoginButton {
+}

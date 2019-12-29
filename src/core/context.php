@@ -126,8 +126,8 @@ class Context {
     }
     
     static function reloadRoles () {
-	    Context::clearRoles();
-    	$userRoles = RolesModel::getRoles(Context::getUserId());
+        Context::clearRoles();
+    	$userRoles = RolesModel::getRoles(Context::getUserId(),Context::getSiteId());
         foreach ($userRoles as $userRole) {
             Context::addRoleGroup($userRole->customrole, $userRole->rolegroup);
             Context::addRole($userRole->customrole,$userRole->modulerole);

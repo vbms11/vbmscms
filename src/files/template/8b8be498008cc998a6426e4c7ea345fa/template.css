@@ -8,6 +8,7 @@ body {
     border: none;
     margin-left: auto;
     margin-right: auto;
+    background-color: rgb(64,64,64);
 }
 .headerContainer {
     width: 980px;
@@ -29,7 +30,6 @@ body {
 }
 .contentContainer {
     min-height: 200px;
-    background-color: rgb(64,64,64);
     background-image: url(ianus_ltile.gif);
     background-repeat: repeat-y;
 }
@@ -161,6 +161,11 @@ body {
     min-height: 20px;
     position: relative;
 }
+.contentLeftContainer .contentBody, 
+.contentRightContainer .contentBody {
+    padding: 10px 18px;
+}
+
 .contentBodyLeft {
     background-image: url(ianus_mainleft.gif);
     background-repeat: repeat-y;

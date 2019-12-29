@@ -1,0 +1,44 @@
+.templatePack {
+    
+}
+.templatePackHeader {
+    
+}
+.templatePackBody {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.templatePreviewContainer {
+    border: 1px solid silver;
+    float:left;
+}
+.templatePreviewTitle {
+    border-bottom: 1px solid silver;
+}
+.templatePreviewBody {
+    width: 200px;
+    height: 200px;
+    float: left;
+    
+}
+.templatePreviewTools {
+
+}
+.templatePreviewIframe {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 1000px;
+    height: 1000px;
+    border: 0;
+    -ms-zoom: 0.2;
+    -transform: scale(0.2);
+    -moz-transform: scale(0.2);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.2);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.2);
+    -webkit-transform-origin: 0 0;
+    z-index:1;
+}

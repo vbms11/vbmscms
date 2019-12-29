@@ -34,19 +34,9 @@ class VideoPlayerModule extends XModule {
                     $this->printEditView();
                 }
                 break;
-            case "view":
-                if (Context::hasRole("videoPlayer.view")) {
-                    $this->printVideoPlayer();
-                }
-                break;
-            case "upload":
-                if (Context::hasRole("videoPlayer.upload")) {
-                    $this->printUploadVideos();
-                }
-                break;
             default:
                 if (Context::hasRole("videoPlayer.view")) {
-                    $this->printListVideos();
+                    $this->printPlayVideo(parent::param("videoId"));
                 }
                 break;
         }
@@ -61,7 +51,7 @@ class VideoPlayerModule extends XModule {
     }
     
     function getRoles () {
-        return array("videoPlayer.edit","videoPlayer.upload","videoPlayer.view");
+        return array("videoPlayer.edit","videoPlayer.view");
     }
     
     function printEditView () {
@@ -82,50 +72,30 @@ class VideoPlayerModule extends XModule {
         <?php
     }
     
-    function printListVideos () {
+    function printPlayVideo ($videoId, $width=800, $height=500) {
         
-    }
-    
-    function printUploadVideos () {
-        ?>
-        <h1><?php echo parent::getTranslation("video.upload.title"); ?></h1>
-        <p><?php echo parent::getTranslation("video.upload.description"); ?></p>
-        <?php 
-        InputFeilds::printMultiFileUpload("videos", parent::ajaxLink(array("action"=>"uploadImage","category"=>$_GET['category'])), "");
-        ?>
-        <hr/>
-        <div class="alignRight">
-            <a href="<?php echo parent::link(array("category"=>$category)); ?>" class="jquiButton">
-                <?php echo parent::getTranslation("gallery.button.finnish"); ?>
-            </a>
-        </div>
-        <?php
-    }
-    
-    function printVideoPlayer () {
-        
-        $video = VideoModel::getVideo(parent::get("id"));
+        $video = VideoModel::getVideo($videoId);
         $user = UsersModel::getUser($video->userid);
         
         ?>
         <div class="panel videoPlayerPanel">
             <div class="videoPlayerVideo">
-                <video id="example_video_1" class="video-js" controls preload="none" width="640" height="264" poster="<?php echo $video->poster; ?>" data-setup="{}">
-                    <source src="<?php echo $video->file; ?>.mp4" type="video/mp4" />
-                    <source src="<?php echo $video->file; ?>.webm" type="video/webm" />
+                <video id="example_video_1" class="video-js" controls preload="none" width="<?php echo $width; ?>" height="<?php echo $height; ?>" poster="<?php echo ResourcesModel::createResourceLink("video/big",$video->file.".jpg"); ?>" data-setup="{}">
+                    <source src="<?php echo ResourcesModel::createResourceLink("video/mp4",$video->file); ?>.mp4" type="video/mp4" />
+                    <?php /* <source src="<?php echo $video->file; ?>.webm" type="video/webm" /> */ ?>
                 </video>
             </div>
-            <div class="videoPlayerTitel">
-                <?php echo $video->titel; ?>
-            </div>
-            <div class="videoPlayerDescription">
+            <h1 class="videoPlayerTitel">
+                <?php echo $video->title; ?>
+            </h1>
+            <p class="videoPlayerDescription">
                 <?php echo $video->description; ?>
-            </div>
+            </p>
             <div class="videoPlayerUser">
-                <?php echo $user->username; ?>
+                <?php echo parent::getTranslation("videoPlayer.username")." ".$user->username; ?>
             </div>
             <div class="videoPlayerUploadDate">
-                <?php echo $video->uploaddate; ?>
+                <?php echo parent::getTranslation("videoPlayer.uploadDate")." ".$video->uploaddate; ?>
             </div>
         </div>
         <?php    

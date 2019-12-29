@@ -58,13 +58,15 @@ class Database {
         $dataSource = Database::getDataSource();
         $result = $dataSource->query($query);
         $ret = array();
-        if ($index != null) {
-            while ($obj = $dataSource->fetchObject($result)) {
-                $ret[$obj->$index] = $obj;
-            }
-        } else {
-            while ($obj = $dataSource->fetchObject($result)) {
-                $ret[] = $obj;
+        if ($result) {
+            if ($index != null) {
+                while ($obj = $dataSource->fetchObject($result)) {
+                    $ret[$obj->$index] = $obj;
+                }
+            } else {
+                while ($obj = $dataSource->fetchObject($result)) {
+                    $ret[] = $obj;
+                }
             }
         }
         $error = $dataSource->getError();

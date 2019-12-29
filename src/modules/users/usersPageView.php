@@ -68,7 +68,7 @@ class UsersPageView extends XModule {
                     if (parent::post("userRoles") != null) {
                         RolesModel::deleteRoles(parent::get("user"));
                         foreach (parent::post("userRoles") as $role) {
-                            RolesModel::saveRole(null, $role, parent::get("user"), $role);
+                            RolesModel::saveRole(null, $role, parent::get("user"), $role, Context::getSiteId());
                         }
                     }
                     parent::redirect(array("action"=>"edit","id"=>parent::get("user")));

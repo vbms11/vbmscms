@@ -30,7 +30,13 @@ class ModuleInstanceModel {
         return $lastIdObj->id;
     }
     
+    static function addModuleInstanceParam ($instanceId, $name, $value) {
         
+        $instanceId = Database::escape($instanceId);
+        $name = Database::escape($name);
+        $value = Database::escape($value);
+        Database::query("insert into t_module_instance_params (instanceid,name,value) values('$instanceId','$name','$value')");
+    }
 }
 
 ?>

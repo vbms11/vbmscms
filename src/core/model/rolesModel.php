@@ -20,14 +20,15 @@ class RolesModel {
         return $roles;
     }
     
-    static function getRoles ($userId) {
+    static function getRoles ($userId, $siteId) {
         $userId = Database::escape($userId);
+        $siteId = Database::escape($siteId);
         $query = "
             SELECT r.userid, tc.name as rolegroup, tc.id as id, tpr.customrole, tpr.modulerole
             FROM t_module_roles tpr
             LEFT JOIN t_roles_custom tc ON tc.id = tpr.customrole
             LEFT JOIN t_roles r ON tc.id = r.roleid
-            WHERE r.userid = '$userId'";
+            WHERE r.userid = '$userId' and r.siteid = '$siteId'";
         // echo $query;
         return Database::queryAsArray($query);
     }
@@ -37,14 +38,15 @@ class RolesModel {
         Database::query("delete from t_roles where userid = '$userId'");
     }
 
-    static function saveRole ($id,$name,$userId,$roleId) {
+    static function saveRole ($id,$name,$userId,$roleId,$siteId) {
         $id = Database::escape($id);
         $name = Database::escape($name);
         $userId = Database::escape($userId);
         $roleId = Database::escape($roleId);
+        $siteId = Database::escape($siteId);
         $existsResult = Database::queryAsObject("select 1 from t_roles where id = '$id'");
         if ($existsResult == null) {
-            Database::query("insert into t_roles (name,userid,roleid) values ('$name', '$userId', '$roleId')");
+            Database::query("insert into t_roles (name,userid,roleid,siteid) values ('$name', '$userId', '$roleId','$siteId')");
         } else {
             Database::query("update t_roles set roleid = '$roleId' where id = '$id'");
         }
@@ -194,6 +196,11 @@ class RolesModel {
     static function getPageRoles ($pageId) {
         $pageId = Database::escape($pageId);
         return Database::queryAsArray("select pr.*, rc.name from t_page_roles pr left join t_roles_custom rc on pr.roleid = rc.id where pr.pageid = '$pageId'");
+    }
+    
+    static function getPageRolesBySiteId ($siteId) {
+        $siteId = Database::escape($siteId);
+        return Database::queryAsArray("select pr.id, pr.pageid, pr.roleid from t_page_roles pr join t_page p on p.id = pr.pageid where p.siteid = '$siteId'");
     }
     
     // roles rights

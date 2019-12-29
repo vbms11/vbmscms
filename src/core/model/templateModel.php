@@ -151,6 +151,15 @@ class TemplateModel {
         Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$areaName','$instanceId')");
         return $instanceId;
     }
+    
+    static function createTemplateArea ($name, $instanceId, $pageId, $position) {
+        $name = Database::escape($name);
+        $instanceId = Database::escape($instanceId);
+        $pageId = Database::escape($pageId);
+        $position = Database::escape($position);
+        Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$area','$instanceId','$pageId','$position')");
+        
+    }
 
     static function getTemplateAreas ($pageId) {
         $pageId = Database::escape($pageId);
@@ -164,6 +173,11 @@ class TemplateModel {
             $areasByName[$obj->name][] = $obj;
         }
         return $areasByName;
+    }
+    
+    static function getTemplateAreasBySiteId ($siteId) {
+        $siteId = Database::escape($siteId);
+        Database::queryAsArray("select ta.* from t_templatearea ta join t_page p on p.id = ta.pageid and p.siteid = '$siteId'");
     }
 
     static function getTemplateModule ($moduleId) {
@@ -268,7 +282,12 @@ class TemplateModel {
         Database::query("delete from t_templatearea where pageid = '$pageId'");
     }
     
-    static function saveTemplate ($id,$name,$include,$interface,$html="",$js="",$css="") {
+    static function deleteTemplateAreaById ($id) {
+        $id = Database::escape($id);
+        Database::query("delete from t_templatearea where id = '$pageId'");
+    }
+    
+    static function saveTemplate ($id,$name,$html="",$js="",$css="",$type="") {
         // save files if template is dynamic
         if (!Common::isEmpty($js) || !Common::isEmpty($css)) {
             $templatePath = "template/".Common::hash($id,false,false);
@@ -277,22 +296,21 @@ class TemplateModel {
         }
         $id = Database::escape($id);
         $name = Database::escape($name);
-        $include = Database::escape($include);
-        $interface = Database::escape($interface);
         $html = Database::escape($html);
         $js = Database::escape($js);
         $css = Database::escape($css);
-        Database::query("update t_template set template = '$include', name = '$name', interface = '$interface', html = '$html', js = '$js', css = '$css' where id = '$id'");
+        $type = Database::escape($type);
+        Database::query("update t_template set name = '$name', html = '$html', js = '$js', css = '$css', type = '$type' where id = '$id'");
     }
     
-    static function createTemplate ($name,$include,$interface,$html="",$js="",$css="") {
+    static function createTemplate ($name,$html="",$js="",$css="",$type=null,$packId=null) {
         $name = Database::escape($name);
-        $include = Database::escape($include);
-        $interface = Database::escape($interface);
         $html = Database::escape($html);
         $js = Database::escape($js);
         $css = Database::escape($css);
-        Database::query("insert into t_template(template,name,interface,html,js,css,main) values('$include','$name','$interface','$html','$js','$css',0)");
+        $type = Database::escape($type);
+        $packId = Database::escape($packId);
+        Database::query("insert into t_template(name,html,js,css,main,type,packid) values('$name','$html','$js','$css',0,'$type','$packId')");
         $newId = Database::queryAsObject("select max(id) as newid from t_template");
         return $newId->newid;
     }
@@ -348,9 +366,60 @@ class TemplateModel {
 
     static function getTemplate ($id) {
         $id = Database::escape($id);
-        return Database::queryAsObject("select id, name, template, interface, css, html, js from t_template where id = '$id'");
+        return Database::queryAsObject("select id, name, template, interface, css, html, js, packid, type from t_template where id = '$id'");
     }
     
+    static function deleteTemplatet ($id) {
+        $id = Database::escape($id);
+        Database::query("delete from t_template where id = '$id'");
+    }
+    
+    static function getTemplatesByPack ($packId) {
+        $packId = Database::escape($packId);
+        return Database::queryAsArray("select id, name, template, interface, css, html, js, packid, type from t_template where packid = '$packId'");
+    }
+    
+    static function getTemplatePack ($id) {
+        $id = Database::escape($id);
+        return Database::queryAsObject("select * t_template_pack where id = '$id'");
+    }
+    
+    static function createTemplatePack ($name, $description) {
+        
+        $name = Database::escape($name);
+        $description = Database::escape($description);
+        Database::query("insert into t_template_pack (name,description) values('$name','$description')");
+        $result = Database::queryAsObject("select max(id) as id from t_template_pack");
+        return $result->id;
+    }
+    
+    static function getTemplatePacks () {
+        
+        return Database::queryAsArray("select * from t_template_pack");
+    }
+    
+    static function deleteTemplatePack ($id) {
+        $id = Database::escape($id);
+        Database::query("delete from t_template_pack where id='$id'");
+    }
+    
+    const type_docpanel = 1;
+    const type_docpanelLeft = 2;
+    const type_docpanelRight = 3;
+    const type_stackpanel = 4;
+    const type_fullscreen = 5;
+    const type_profile = 6;
+    
+    static function getTemplateTypes () {
+        return array(
+            self::type_docpanel => "Docpanel",
+            self::type_docpanelLeft => "Content Left",
+            self::type_docpanelRight => "Content Right",
+            self::type_stackpanel => "Content center",
+            self::type_fullscreen => "Fullscreen",
+            self::type_profile => "Profile"
+        );
+    }
 }
 
 ?>

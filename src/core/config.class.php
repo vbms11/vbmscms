@@ -10,18 +10,14 @@ class Config {
             
             $name = substr($name, 3);
             $lower = strtolower(substr($name, 0, 1));
-            
             $nameLower = substr_replace($name, $lower, 0, 1);
-            //echo $name;
+            
             if (isset(self::$config[$nameLower])) {
                 return self::$config[$nameLower];
-                //echo self::$config[$name];
-                //exit;
             } else {
                 throw new Exception("no config attribute named: $nameLower");
             }
         }
-        //return self::$name();
     }
     
     static function load () {

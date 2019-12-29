@@ -15,12 +15,11 @@ class AdminTemplatesModule extends XModule {
                     break;
                 case "save":
                     $site = DomainsModel::getCurrentSite();
-                    // echo $_GET["id"]." - ".$_POST['name']." - ".$_POST['include']." - ".$_POST['interface']." - ".$_POST['html']." - ".$_POST['js']." - ".$_POST['css'];
-                    TemplateModel::saveTemplate($_GET['id'], $_POST['name'], $_POST['include'], $_POST['interface'], $_POST['html'], $_POST['js'], $_POST['css']);
+                    TemplateModel::saveTemplate(parent::get('id'), parent::post("name"), parent::post("html"), parent::post("js"), parent::post("css"), parent::post("type"), parent::get("packId"));
                     parent::redirect(array("action"=>"editTemplate","id"=>$_GET['id']));
                     break;
                 case "create":
-                    $templateId = TemplateModel::createTemplate($_POST['name'], $_POST['include'], $_POST['interface']);
+                    $templateId = TemplateModel::createTemplate(parent::post("name"), null, null, parent::post("type"), parent::get("packId"));
                     parent::redirect(array("action"=>"editTemplate","id"=>$templateId));
                     break;
                 case "remove":
@@ -28,6 +27,27 @@ class AdminTemplatesModule extends XModule {
                     TemplateModel::removeTemplate($site->siteid, $_GET['id']);
                     parent::redirect();
                     break;
+                case "createTemplatePack":
+                    //if (Context::hasRole("template.createPack")) {
+                    TemplateModel::createTemplatePack(parent::post("name"), parent::post("description"));
+                    parent::redirect();
+                    //}
+                    break;
+                case "deleteTemplatePack":
+                    TemplateModel::deleteTemplatePack(parent::get("id"));
+                    
+                case "deleteTemplatePack":
+                    TemplateController::deleteTemplatePack($packId);
+                    parent::redirect();
+                    break;
+                case "copyTemplatePack":
+                    TemplateController::copyTemplatePack(parent::post("name"),parent::post("description"),parent::get("packId"));
+                    parent::redirect();
+                    break;
+                case "switchTemplatePack":
+                    TemplateController::switchTemplatePack(parent::get("packId"),Context::getSiteId());
+                    parent::redirect();
+                break;
             }
         }
     }
@@ -39,7 +59,7 @@ class AdminTemplatesModule extends XModule {
             
             case "editTemplate":
                 if (Context::hasRole("template.edit")) {
-                    $this->renderEditTemplateView($_GET['id']);
+                    $this->renderEditTemplateView(parent::get('id'));
                 }
                 break;
             case "listInstalledTemplate":
@@ -47,12 +67,20 @@ class AdminTemplatesModule extends XModule {
                 break;
             
             case "previewInstalledTemplate":
-                $this->renderPreviewInstalledTemplateView($_GET['id']);
+                $this->renderPreviewInstalledTemplateView(parent::get('id'));
                 break;
             
             case "edit":
             case "availabel":
                 break;
+            case "renderCopyTemplatePack":
+                $this->renderCopyTemplatePack(parent::get("packId"));
+                break;
+            case "newTemplatePack":
+                $this->renderNewTemplatePack();
+                break;
+            case "newTemplate":
+                $this->renderNewTemplate(parent::get("packId"));
             default:
                 if (Context::hasRole("template.view")) {
                     $this->renderMainView();
@@ -61,7 +89,7 @@ class AdminTemplatesModule extends XModule {
     }
     
     function getStyles () {
-        return array("css/admin.css");
+        return array("css/admin.css","css/templates.css");
     }
     
     function getRoles () {
@@ -152,17 +180,13 @@ class AdminTemplatesModule extends XModule {
                     <div id="tabs-1">
                         <h3>Template Info</h3>
                         <table><tr><td>
-                            Template Name:
+                            Name:
                         </td><td>
                             <?php InputFeilds::printTextFeild("name", $template->name); ?>
                         </td></tr><tr><td>
-                             Template Path:
+                            Type:
                         </td><td>
-                            <?php InputFeilds::printTextFeild("include", $template->template); ?>
-                        </td></tr><tr><td>
-                            Template Inpterface:
-                        </td><td>
-                            <?php InputFeilds::printTextFeild("interface", $template->interface); ?>
+                            <?php InputFeilds::printSelect("type", $template->type, TemplateModel::getTemplateTypes()); ?>
                         </td></tr></table>
                     </div>
                 </div>
@@ -187,11 +211,138 @@ class AdminTemplatesModule extends XModule {
         <?php
     }
     
+    function renderNewTemplate ($packId) {
+        ?>
+        <div class="panel createTemplatePackPanel">
+            <h3><?php echo parent::getTranslation("template.create.title"); ?></h3>
+            <p><?php echo parent::getTranslation("template.create.instructions"); ?></p>
+            <form method="post" action="<?php echo parent::link(array("action"=>"create","packId"=>$packId)); ?>">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("template.create.name"); ?>
+                </td><td>
+                    <?php echo InputFeilds::printTextFeild("name"); ?>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("template.create.type"); ?>
+                </td><td>
+                    <?php echo InputFeilds::printMultiSelect("type",TemplateModel::getTemplateTypes()); ?>
+                </td></tr>
+                </table>
+                <hr/>
+                <div class="alignRight">
+                    <button class="jquiButton" type="submit"><?php echo parent::getTranslation("template.create.submit"); ?></button>
+                </div>
+            </form>
+        </div>
+        <?php
+    }
+    
+    function renderCopyTemplatePack ($packId) {
+        ?>
+        <div class="panel createTemplatePackPanel">
+            <h3><?php echo parent::getTranslation("template.copy.title"); ?></h3>
+            <p><?php echo parent::getTranslation("template.copy.instructions"); ?></p>
+            <form method="post" action="<?php echo parent::link(array("action"=>"copyTemplatePack","packId"=>$packId)); ?>">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("template.copy.name"); ?>
+                </td><td>
+                    <?php echo InputFeilds::printTextFeild("name"); ?>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("template.copy.description"); ?>
+                </td><td>
+                    <?php echo InputFeilds::printTextArea("description"); ?>
+                </td></tr>
+                </table>
+                <hr/>
+                <div class="alignRight">
+                    <button class="jquiButton" type="submit"><?php echo parent::getTranslation("template.copy.submit"); ?></button>
+                </div>
+            </form>
+        </div>
+        <?php
+    }
+    
+    function renderNewTemplatePack () {
+        ?>
+        <div class="panel createTemplatePackPanel">
+            <h3><?php echo parent::getTranslation("template.pack.title"); ?></h3>
+            <p><?php echo parent::getTranslation("template.pack.instructions"); ?></p>
+            <form method="post" action="<?php echo parent::link(array("action"=>"createTemplatePack")); ?>">
+                <table class="formTable"><tr><td>
+                    <?php echo parent::getTranslation("template.pack.name"); ?>
+                </td><td>
+                    <?php echo InputFeilds::printTextFeild("name"); ?>
+                </td></tr><tr><td>
+                    <?php echo parent::getTranslation("template.pack.description"); ?>
+                </td><td>
+                    <?php echo InputFeilds::printTextArea("description"); ?>
+                </td></tr>
+                </table>
+                <hr/>
+                <div class="alignRight">
+                    <button class="jquiButton" type="submit"><?php echo parent::getTranslation("template.pack.submit"); ?></button>
+                </div>
+            </form>
+        </div>
+        <?php
+    }
+    
     function renderMainView() {
         Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
         Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
+        $templatePacks = TemplateModel::getTemplatePacks();
         ?>
         <div class="panel templatesPanel">
+            
+            <div>
+                <h3>Template Packs:</h3>
+                <div class="templatePackToolbar">
+                    <a href="<?php echo parent::link(array("action"=>"newTemplatePack")); ?>">Create Template Pack</a>
+                </div>
+            </div>
+            <div>
+                <?php
+                foreach ($templatePacks as $pos => $templatePack) {
+                    ?>
+                    <div class="templatePack">
+                        <div class="templatePackHeader">
+                            <?php echo htmlspecialchars($templatePack->name); ?>
+                        </div>
+                        <div class="templatePackBody">
+                            <?php
+                            $templates = TemplateModel::getTemplatesByPack($templatePack->id);
+                            foreach ($templates as $tPos => $template) {
+                                $previewLink = NavigationModel::createTemplatePreviewLink($template->id);
+                                
+                                ?>
+                                <div class="templatePreviewContainer">
+                                    <div class="templatePreviewTitle">
+                                        <?php echo htmlspecialchars($template->name); ?>
+                                    </div>
+                                    <div class="templatePreviewBody">
+                                        <iframe class="templatePreviewIframe" src="<?php echo $previewLink; ?>"></iframe>
+                                    </div>
+                                    <div class="templatePreviewTools">
+                                        <a href="<?php echo parent::link(array("action"=>"editTemplate","id"=>$template->id)); ?>" ><?php echo parent::getTranslation("template.edit"); ?></a>
+                                        <a onclick='doIfConfirm("<?php echo parent::getTranslation("template.deleteConfigMessage"); ?>","<?php echo parent::link(array("action"=>"editTemplate","id"=>$template->id)); ?>");'><?php echo parent::getTranslation("template.delete"); ?></a>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                        <div class="templateSetTools">
+                            <a href="<?php echo parent::link(array("action"=>"switchTemplatePack","packId"=>$templatePack->id)); ?>">Use</a>
+                            <a href="<?php echo parent::link(array("action"=>"renderCopyTemplatePack","packId"=>$templatePack->id)); ?>">Copy</a>
+                            <a href="<?php echo parent::link(array("action"=>"createTemplate","packId"=>$templatePack->id)); ?>">Create Template</a>
+                            <a href="<?php echo parent::link(array("action"=>"deleteTemplatePack","id"=>$templatePack->id)); ?>">Detele Template Pack</a>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+            
+            
             <div>
                 <div class="adminTableToolbar">
                     <button id="btnCreateTemplate">Create</button>
@@ -224,14 +375,6 @@ class AdminTemplatesModule extends XModule {
                     Template Name:
                 </td><td>
                     <?php InputFeilds::printTextFeild("name"); ?>    
-                </td></tr><tr><td>
-                     Template Path:
-                </td><td>
-                    <?php InputFeilds::printTextFeild("include"); ?>
-                </td></tr><tr><td>
-                    Template Inpterface:
-                </td><td>
-                    <?php InputFeilds::printTextFeild("interface"); ?>
                 </td></tr></table>
             </form>
         </div>

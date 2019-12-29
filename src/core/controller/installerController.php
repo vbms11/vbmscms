@@ -164,7 +164,7 @@ class InstallerController {
         // add roles
         $customRoles = RolesModel::getCustomRoles();
         foreach ($customRoles as $customRole) {
-            RolesModel::saveRole(null, $customRole->id, $initialUserId, $customRole->id);
+            RolesModel::saveRole(null, $customRole->id, $initialUserId, $customRole->id, $siteId);
         }
         
         // set cms customer userid

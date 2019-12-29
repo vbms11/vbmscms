@@ -30,8 +30,11 @@ class MenuModel {
         Database::queryAsObject("delete from t_menu_style where id = '$id'");
     }
     
-    static function getMenuInstances () {
-        return Database::queryAsArray("select * from t_menu_instance","id");
+    static function getMenuInstances ($siteId=null) {
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        }
+        return Database::queryAsArray("select * from t_menu_instance where siteid = '$siteId'","id");
     }
     
     static function getMenuInstance ($id) {
@@ -44,9 +47,11 @@ class MenuModel {
         Database::query("delete from t_menu_instance where id = '$id'");
     }
     
-    static function saveMenuInstance ($id,$name) {
+    static function saveMenuInstance ($id,$name,$siteId=null) {
         $name = Database::escape($name);
-        $siteId = Database::escape(Context::getSiteId());
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        }
         if ($id == null) {
             Database::query("insert into t_menu_instance(name,siteid) values('$name','$siteId')");
             $result = Database::queryAsObject("select max(id) as lastid from t_menu_instance");
@@ -231,10 +236,11 @@ class MenuModel {
         return $parents;
     }
     
-    static function createPageInMenu ($pageId,$menuType,$menuParent,$lang) {
+    static function createPageInMenu ($pageId,$menuType,$menuParent,$lang,$active=0,$position=null) {
         $pageId = Database::escape($pageId);
         $menuType = Database::escape($menuType);
         $lang = Database::escape($lang);
+        $active = Database::escape($active);
         // add page to menu
         if (empty($menuParent)) {
             $parentStr = "null";
@@ -242,13 +248,10 @@ class MenuModel {
             $menuParent = Database::escape($menuParent);
             $parentStr = "'$menuParent'";
         }
-        $result = Database::queryAsArray("select 1 as doseexist from t_menu where page = '$pageId' and lang = '$lang'");
-        if (!Common::isEmpty($result)) {
-            // update t_menu
-        } else {
-            $nextPosition = MenuModel::getNextMenuPosition();
-                Database::query("insert into t_menu(page,type,active,parent,lang,position) values('$pageId','$menuType','0',$parentStr,'$lang','$nextPosition')");
+        if ($position == null) {
+            $position = MenuModel::getNextMenuPosition();
         }
+        Database::query("insert into t_menu(page,type,active,parent,lang,position) values('$pageId','$menuType','$active',$parentStr,'$lang','$nextPosition')");
     }
     
     static function updatePageInMenu ($pageId,$menuType,$menuParent,$lang) {
@@ -275,6 +278,12 @@ class MenuModel {
         $obj = Database::queryAsObject("select 1 as res from t_menu where page = '$pageId' and type = '$menuType' and lang = '$lang'");
         return ($obj != null && $obj->res == '1') ? true : false;
     }
+    
+    static function getMenus ($siteId) {
+        $siteId = Database::escape($siteId);
+        return Database::queryAsArray("select m.* from t_menu m join t_menu_instance mi on mi.id = m.type where mi.siteid = '1'");
+    }
+    
     
 }
 

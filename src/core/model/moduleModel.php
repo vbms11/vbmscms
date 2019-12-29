@@ -5,8 +5,8 @@ require_once 'core/model/moduleModel.php';
 class ModuleModel {
     
     static function getModule ($id) {
-        $aid = Database::escape($id);
-        return Database::queryAsObject("select * from t_module where id = '$aid'");
+        $id = Database::escape($id);
+        return Database::queryAsObject("select * from t_module where id = '$id'");
     }
 
     static function getModules () {
@@ -152,6 +152,15 @@ class ModuleModel {
         }
     }
     
+    static function getModuleInstancesBySiteId ($siteId) {
+        $siteId = Database::escape($siteId);
+        Database::queryAsArray("select mi.* from t_module_instance mi join t_templatearea ta on mi.id = ta.instanceid join t_page p on ta.pageid = p.id where p.siteid = '$siteId'"); 
+    }
+    
+    static function getModuleInstanceParamsBySiteId ($siteId) {
+        $siteId = Database::escape($siteId);
+        Database::queryAsArray("select mip.* from t_module_instance_params mip join t_module_instance mi on mip.instanceid = mi.id join t_templatearea ta on mi.id = ta.instanceid join t_page p on ta.pageid = p.id where p.siteid = '$siteId'");
+    }
 }
 
 ?>
