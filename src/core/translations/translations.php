@@ -602,6 +602,11 @@ $ar_translations = array(
 ,'template.copy.name'=>'dGVtcGxhdGUuY29weS5uYW1l'
 ,'template.copy.description'=>'dGVtcGxhdGUuY29weS5kZXNjcmlwdGlvbg=='
 ,'template.copy.submit'=>'dGVtcGxhdGUuY29weS5zdWJtaXQ='
+,'template.create.title'=>'dGVtcGxhdGUuY3JlYXRlLnRpdGxl'
+,'template.create.instructions'=>'dGVtcGxhdGUuY3JlYXRlLmluc3RydWN0aW9ucw=='
+,'template.create.name'=>'dGVtcGxhdGUuY3JlYXRlLm5hbWU='
+,'template.create.type'=>'dGVtcGxhdGUuY3JlYXRlLnR5cGU='
+,'template.create.submit'=>'dGVtcGxhdGUuY3JlYXRlLnN1Ym1pdA=='
 ),'de'=>array(
 'login.email'=>'R2ViZW4gc2llIGVpbmUgRW1haWxhZHJlc3NlIGVpbjo='
 ,'login.reset'=>'UGFzc3dvcnQgIFp1cnVja3NldHplbg=='
@@ -1204,6 +1209,11 @@ $ar_translations = array(
 ,'template.copy.name'=>'dGVtcGxhdGUuY29weS5uYW1l'
 ,'template.copy.description'=>'dGVtcGxhdGUuY29weS5kZXNjcmlwdGlvbg=='
 ,'template.copy.submit'=>'dGVtcGxhdGUuY29weS5zdWJtaXQ='
+,'template.create.title'=>'dGVtcGxhdGUuY3JlYXRlLnRpdGxl'
+,'template.create.instructions'=>'dGVtcGxhdGUuY3JlYXRlLmluc3RydWN0aW9ucw=='
+,'template.create.name'=>'dGVtcGxhdGUuY3JlYXRlLm5hbWU='
+,'template.create.type'=>'dGVtcGxhdGUuY3JlYXRlLnR5cGU='
+,'template.create.submit'=>'dGVtcGxhdGUuY3JlYXRlLnN1Ym1pdA=='
 ),''=>array(
 'login.email'=>'bG9naW4uZW1haWw='
 ,'login.reset'=>'bG9naW4ucmVzZXQ='
@@ -1806,5 +1816,10 @@ $ar_translations = array(
 ,'template.copy.name'=>'dGVtcGxhdGUuY29weS5uYW1l'
 ,'template.copy.description'=>'dGVtcGxhdGUuY29weS5kZXNjcmlwdGlvbg=='
 ,'template.copy.submit'=>'dGVtcGxhdGUuY29weS5zdWJtaXQ='
+,'template.create.title'=>'dGVtcGxhdGUuY3JlYXRlLnRpdGxl'
+,'template.create.instructions'=>'dGVtcGxhdGUuY3JlYXRlLmluc3RydWN0aW9ucw=='
+,'template.create.name'=>'dGVtcGxhdGUuY3JlYXRlLm5hbWU='
+,'template.create.type'=>'dGVtcGxhdGUuY3JlYXRlLnR5cGU='
+,'template.create.submit'=>'dGVtcGxhdGUuY3JlYXRlLnN1Ym1pdA=='
 )); 
 ?>

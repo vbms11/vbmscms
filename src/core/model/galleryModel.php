@@ -213,15 +213,15 @@ class GalleryModel {
     static function deleteImage ($id) {
         $id = Database::escape($id);
         $image = self::getImage($id);
-        $imageFile = ResourcesModel::getResourcePath("gallery",$image->image);
+        $imageFile = Resource::getResourcePath("gallery",$image->image);
         if (is_file($imageFile)) {
             unlink($imageFile);
         }
-        $imageFile = ResourcesModel::getResourcePath("gallery/small",$image->image);
+        $imageFile = Resource::getResourcePath("gallery/small",$image->image);
         if (is_file($imageFile)) {
             unlink($imageFile);
         }
-        $imageFile = ResourcesModel::getResourcePath("gallery/tiny",$image->image);
+        $imageFile = Resource::getResourcePath("gallery/tiny",$image->image);
         if (is_file($imageFile)) {
             unlink($imageFile);
         }
@@ -254,17 +254,17 @@ class GalleryModel {
         $sizeLimit = 128 * 1024 * 1024;
         
         $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
-        $result = $uploader->handleUpload(ResourcesModel::getResourcePath("gallery/new"));
+        $result = $uploader->handleUpload(Resource::getResourcePath("gallery/new"));
         
         if (isset($result['success']) && $result['success']) {
             
             $filename = $result['filename'];
             $newFilename = self::getNextFilename();
-            $filePathFull = ResourcesModel::getResourcePath("gallery/new",$filename);
+            $filePathFull = Resource::getResourcePath("gallery/new",$filename);
             
-            ImageUtil::crop($filePathFull,self::bigWidth,self::bigHeight,ResourcesModel::getResourcePath("gallery",$newFilename));
-            ImageUtil::crop($filePathFull,self::smallWidth,self::smallHeight,ResourcesModel::getResourcePath("gallery/small",$newFilename));
-            ImageUtil::crop($filePathFull,self::tinyWidth,self::tinyHeight,ResourcesModel::getResourcePath("gallery/tiny",$newFilename));
+            ImageUtil::crop($filePathFull,self::bigWidth,self::bigHeight,Resource::getResourcePath("gallery",$newFilename));
+            ImageUtil::crop($filePathFull,self::smallWidth,self::smallHeight,Resource::getResourcePath("gallery/small",$newFilename));
+            ImageUtil::crop($filePathFull,self::tinyWidth,self::tinyHeight,Resource::getResourcePath("gallery/tiny",$newFilename));
             
             $imageId = self::addImage($category,$newFilename,"","");
             
@@ -296,11 +296,11 @@ class GalleryModel {
             $image = $image->image;
             
             $filename = $width.'_'.$height.'_'.$x.'_'.$y.'_'.$w.'_'.$h.'_'.$imageId.'.jpg';
-            $filePath = ResourcesModel::getResourcePath("gallery/crop",$filename);
+            $filePath = Resource::getResourcePath("gallery/crop",$filename);
             
             if (!is_file($filePath)) {
                 
-                $originalImage = ResourcesModel::getResourcePath("gallery",$image);
+                $originalImage = Resource::getResourcePath("gallery",$image);
                 ImageUtil::crop($originalImage,$width,$height,$filePath,$x,$y,$w,$h);
             }
             

@@ -80,8 +80,8 @@ class VideoPlayerModule extends XModule {
         ?>
         <div class="panel videoPlayerPanel">
             <div class="videoPlayerVideo">
-                <video id="example_video_1" class="video-js" controls preload="none" width="<?php echo $width; ?>" height="<?php echo $height; ?>" poster="<?php echo ResourcesModel::createResourceLink("video/big",$video->file.".jpg"); ?>" data-setup="{}">
-                    <source src="<?php echo ResourcesModel::createResourceLink("video/mp4",$video->file); ?>.mp4" type="video/mp4" />
+                <video id="example_video_1" class="video-js" controls preload="none" width="<?php echo $width; ?>" height="<?php echo $height; ?>" poster="<?php echo Resource::createResourceLink("video/big",$video->file.".jpg"); ?>" data-setup="{}">
+                    <source src="<?php echo Resource::createResourceLink("video/mp4",$video->file); ?>.mp4" type="video/mp4" />
                     <?php /* <source src="<?php echo $video->file; ?>.webm" type="video/webm" /> */ ?>
                 </video>
             </div>

@@ -35,13 +35,17 @@ class ModuleModel {
         return array();
     }
 
-    static function createModule ($name,$description,$include,$interface,$inmenu) {
+    static function createModule ($name,$description,$include,$interface,$inmenu,$sysname,$category,$position,$static) {
         $name = Database::escape($name);
         $description = Database::escape($description);
         $include = Database::escape($include);
         $interface = Database::escape($interface);
         $inmenu = Database::escape($inmenu);
-        Database::query("insert into t_module(name,description,include,interface,inmenu) values ('$name','$description','$include','$interface','$inmenu')");
+        $sysname = Database::escape($sysname);
+        $category = Database::escape($category);
+        $position = Database::escape($position);
+        $static = Database::escape($static);
+        Database::query("insert into t_module(name,description,include,interface,inmenu,sysname,category,position,static) values ('$name','$description','$include','$interface','$inmenu','$sysname','$category','$position','$static')");
         $newObj = Database::query("select max(id) as lastid from t_module");
         return $newObj->lastid;
     }
@@ -154,12 +158,12 @@ class ModuleModel {
     
     static function getModuleInstancesBySiteId ($siteId) {
         $siteId = Database::escape($siteId);
-        Database::queryAsArray("select mi.* from t_module_instance mi join t_templatearea ta on mi.id = ta.instanceid join t_page p on ta.pageid = p.id where p.siteid = '$siteId'"); 
+        return Database::queryAsArray("select mi.* from t_module_instance mi join t_templatearea ta on mi.id = ta.instanceid join t_page p on ta.pageid = p.id where p.siteid = '$siteId'"); 
     }
     
     static function getModuleInstanceParamsBySiteId ($siteId) {
         $siteId = Database::escape($siteId);
-        Database::queryAsArray("select mip.* from t_module_instance_params mip join t_module_instance mi on mip.instanceid = mi.id join t_templatearea ta on mi.id = ta.instanceid join t_page p on ta.pageid = p.id where p.siteid = '$siteId'");
+        return Database::queryAsArray("select mip.* from t_module_instance_params mip join t_module_instance mi on mip.instanceid = mi.id join t_templatearea ta on mi.id = ta.instanceid join t_page p on ta.pageid = p.id where p.siteid = '$siteId'");
     }
 }
 

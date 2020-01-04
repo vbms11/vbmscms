@@ -100,7 +100,7 @@ class SlideshowView extends XModule {
                 if (count($images) > 0) {
                     foreach ($images as $image) {
                         ?>
-                        <img src="<?php echo ResourcesModel::createResourceLink("gallery",$image->image); ?>" alt=""/>
+                        <img src="<?php echo Resource::createResourceLink("gallery",$image->image); ?>" alt=""/>
                         <?php
                     }
                 }

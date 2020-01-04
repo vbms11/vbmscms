@@ -84,7 +84,7 @@ class ArticleModule extends XModule {
 					if (empty($image->filename)) {
 						echo "resource/img/icons/Clipboard.png";
                     } else {
-                      	echo ResourcesModel::createResourceLink("gallery/small",$category->filename);
+                      	echo Resource::createResourceLink("gallery/small",$category->filename);
                     }
                     ?>" alt=""/>
     		</div>

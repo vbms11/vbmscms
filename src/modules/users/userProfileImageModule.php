@@ -160,7 +160,7 @@ class UserProfileImageModule extends XModule {
                             $hasImages = true;
                             ?>
                             <div class="userImageSelectImage" id="profileImage_<?php echo $image->id; ?>">
-                                <img width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
+                                <img width="170" height="170" src="<?php echo Resource::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
                             </div>
                             <?php
                         }   
@@ -207,7 +207,7 @@ class UserProfileImageModule extends XModule {
         
         $user = $this->getUserBySelectedMode();
         $image = GalleryModel::getImage($user->image);
-        $imageUrl = ResourcesModel::createResourceLink("gallery",$image->image);
+        $imageUrl = Resource::createResourceLink("gallery",$image->image);
         
         ?>
         <div class="panel profileImageCropPanel">

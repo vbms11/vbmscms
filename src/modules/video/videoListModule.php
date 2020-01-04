@@ -215,7 +215,7 @@ class VideoListModule extends VideoPlayerModule {
                     <div align="center" class="videoTile <?php echo $imageCss; ?>">
                         <div class="videoGridTile shadow">
                             <a href="<?php echo parent::link(array("action"=>"playVideo","id"=>$video->id)); ?>">
-                                <img class="imageLink" width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("video/small",$video->file); ?>" alt=""/>
+                                <img class="imageLink" width="170" height="170" src="<?php echo Resource::createResourceLink("video/small",$video->file); ?>" alt=""/>
                             </a>
                         </div>
                         <?php

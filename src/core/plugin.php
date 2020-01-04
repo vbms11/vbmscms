@@ -7,17 +7,22 @@ interface IModule {
     /**
      * called when page is viewed before output stream is filled
      */
-    function process ($pageid);
+    function process ($moduleId);
 
     /**
      * called when page is viewed and html created
      */
-    function view ($pageid);
+    function view ($moduleId);
 
+    /**
+     * called when module is created
+     */
+    function create ($moduleId);
+    
     /**
      * called when page is destroyed
      */
-    function destroy ($pageid);
+    function destroy ($moduleId);
 
     /**
      * called when module is installed
@@ -48,16 +53,7 @@ interface IModule {
      * returns the tables data that this site uses
      */
     function export ($siteId);
-
-    /**
-     * imports the module instance
-     */
-    //function importInstance ($tableOldIdNewId);
-
-    /**
-     * exports the module instance
-     */
-    //function exportInsatnce ($siteId);
+    
 }
 
 interface ITranslatable {
@@ -218,6 +214,8 @@ abstract class XModule implements IModule, ITranslatable {
     function blur () {
         Context::setFocusedArea(null);
     }
+    function create ($moduleId) {
+    }
     function destroy ($moduleId) {
     }
     function install () {
@@ -286,7 +284,7 @@ abstract class XModule implements IModule, ITranslatable {
         } else if (strpos($path, "/") === 0) {
             $retPath = substr($path,1);
         } else {
-            $retPath = ResourcesModel::createModuleResourceLink($this, $path);
+            $retPath = Resource::createModuleResourceLink($this, $path);
         }
         return $retPath;
     }
@@ -359,27 +357,6 @@ abstract class XModule implements IModule, ITranslatable {
         
     }
     
-    
-    
-    /**
-     * imports the module instance
-     */
-    function importInstance ($tableOldIdNewId, &$moduleNode) {
-        foreach ($moduleNode->childNodes as $node) {
-            $this->param($node->nodeName, $node->nodeValue);
-        }  
-    }
-
-    /**
-     * exports the module instance
-     */
-    function exportInsatnce ($siteId, &$moduleNode) {
-        foreach ($this->getParams() as $key => $value) {
-            $element = $moduleNode->ownerDocument->createElement('param');
-            $element->setAttribute($key,$value);
-            $moduleNode->appendChild($element);
-        }
-    }
 }
 
 interface ITemplate {

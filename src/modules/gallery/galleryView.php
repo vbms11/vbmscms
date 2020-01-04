@@ -279,7 +279,7 @@ class GalleryView extends XModule {
                                     if (empty($category->filename)) {
                                         echo "resource/img/icons/Clipboard.png";
                                     } else {
-                                        echo ResourcesModel::createResourceLink("gallery/small",$category->filename);
+                                        echo Resource::createResourceLink("gallery/small",$category->filename);
                                     }
                                 ?>" alt=""/>
                             </a>
@@ -311,8 +311,8 @@ class GalleryView extends XModule {
                     ?>
                     <div align="center" class="galleryGrid <?php echo $imageCss; ?>">
                         <div class="galleryGridImage galleryImages shadow">
-                            <a href="<?php echo ResourcesModel::createResourceLink("gallery",$image->image); ?>">
-                                <img class="imageLink" width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
+                            <a href="<?php echo Resource::createResourceLink("gallery",$image->image); ?>">
+                                <img class="imageLink" width="170" height="170" src="<?php echo Resource::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
                             </a>
                         </div>
                         <?php

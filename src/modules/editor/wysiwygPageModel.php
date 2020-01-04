@@ -22,7 +22,12 @@ class WysiwygPageModel {
         }
         return $results;
     }
-
+    
+    static function getWysiwygPageBySiteId ($siteId) {
+        $siteId = Database::escape($siteId);
+        return Database::queryAsArray("select * from t_wysiwygpage where siteid = '$siteId'");
+    }
+    
     static function getWysiwygPage ($moduleId, $language) {
         $moduleId = Database::escape($moduleId);
         $language = Database::escape($language);
@@ -45,7 +50,8 @@ class WysiwygPageModel {
         $moduleId = Database::escape($moduleId);
  	$language = Database::escape($language);
  	$content = Database::escape($content);
- 	Database::query("insert into t_wysiwygpage(moduleid,lang,content) values('$moduleId', '$language', '$content')");
+        $siteId = Context::getSiteId();
+ 	Database::query("insert into t_wysiwygpage(moduleid,lang,content,siteid) values('$moduleId', '$language', '$content','$siteId')");
     }
 
     static function deleteWysiwygPage ($moduleId) {

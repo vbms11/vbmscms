@@ -63,7 +63,7 @@ class HostingCreateSiteModule extends XModule {
                 }
                 break;
             default:
-                if (Context::hasRole("site.view")) {
+                if (Context::hasRole("createSite.create")) {
                     $this->renderMainView();
                 }
         }
@@ -74,7 +74,7 @@ class HostingCreateSiteModule extends XModule {
     }
     
     function getRoles () {
-        return array("createSite.edit","createSite.view");
+        return array("createSite.edit","createSite.create");
     }
     
     function renderEditView ($site) {
@@ -103,53 +103,19 @@ class HostingCreateSiteModule extends XModule {
     
     function renderMainView() {
         
-            ?>
-        <h3><?php echo parent::getTranslation("admin.sites.title.create"); ?></h3>
-        <form method="post" action="<?php echo parent::link(array("action"=>"updateSite","id"=>$site->id)); ?>">
-            <table class="formTable"><tr><td>
-                <label for="siteDomain"><?php echo parent::getTranslation("registerHosting.siteName.label"); ?></label>
-            </td><td>
-                <?php InputFeilds::printTextFeild("siteDomain", "", null, parent::getTranslation("registerHosting.siteName.placehoder")); ?>
-            </td></tr>
-                <tr><td>
-                <label for="siteName"><?php echo parent::getTranslation("registerHosting.create.label.name"); ?></label>
-            </td><td>
-                <?php InputFeilds::printTextFeild("siteName", $site->name); ?>
-            </td></tr><tr><td>
-                <label for="siteDescription"><?php echo parent::getTranslation("admin.sites.label.description"); ?></label>
-            </td><td>
-                <?php InputFeilds::printTextArea("siteDescription", $site->description); ?>
-            </td></tr>
-            </table>
-            <hr/>
-            <div class="alignRight">
-                <button class="jquiButton" id="registerSite">
-                    <?php echo parent::getTranslation("admin.sites.create.save"); ?>
-                </button>
+        ?>
+        <div class="panel hostingCreateSitePanel">
+            <div class="table">
+                <div>
+                    <div>
+                        <span><?php echo $siteType->title; ?></span>
+                        <img src="<?php echo $siteType->image; ?>" alt="">
+                        <p><?php echo $siteType->description; ?></p>
+                    </div>
+                </div>
             </div>
-        </form>
-        
-        
-        
-        
-            <?php
-
-            foreach ($sites as $site) {
-                ?>
-                <tr>
-                    <td><?php echo $site->id; ?></td>
-                    <td><?php echo $site->name; ?></td>
-                    <td><a href="<?php echo parent::link(array("action"=>"viewSite","id"=>$site->id),false); ?>"><img src="resource/img/view.png" alt="" /></a></td>
-                    <td><a href="<?php echo parent::link(array("action"=>"editSite","id"=>$site->id)); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
-                    <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("admin.sites.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"deleteSite","id"=>$site->id),false); ?>');" /></td>
-                </tr> 
-                <?php
-            }
-
-            ?>
-            </tbody></table>
-            <?php
-        }
+        </div>
+        <?php
 
     }
     

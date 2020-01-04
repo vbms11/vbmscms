@@ -281,5 +281,3 @@ class TemplateParser {
         $this->objects[$name] = $value;
     }
 }
-
-?>

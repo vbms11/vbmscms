@@ -111,7 +111,7 @@ class AdminMenuModule extends XModule {
     }
     
     function printPagesMenu () {
-        $menus = MenuModel::getMenuInstances();
+        $menus = MenuModel::getMenuInstancesAssocId();
         $pages = MenuModel::getPagesInMenu(Context::getSiteId(),false);
         ?>
         <div class="adminMenuPagesDiv">

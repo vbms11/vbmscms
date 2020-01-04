@@ -124,7 +124,7 @@ class DynamicDataView {
                 case "ddmSearch":
                     break;
                 case "importConfig":
-                    $fileName = ResourcesModel::uploadResource("importFile", "import/csv", array("csv","txt"));
+                    $fileName = Resource::uploadResource("importFile", "import/csv", array("csv","txt"));
                     $_GET["filename"] = $fileName;
                     break;
                 case "exportDownload":
@@ -140,7 +140,7 @@ class DynamicDataView {
                     break;
                 case "import":
                     // parse the file
-                    $fileData = file_get_contents(ResourcesModel::getResourcePath("import/csv",$_GET['filename']));
+                    $fileData = file_get_contents(Resource::getResourcePath("import/csv",$_GET['filename']));
                     $objs = DmSerializer::deserialize($fileData, $_POST['valueSeperator'], $_POST['valueContainer']);
                     
                     // find out how to match the dataset
@@ -672,7 +672,7 @@ class DynamicDataView {
                 }
                 
                 // parse the file
-                $fileContent = file_get_contents(ResourcesModel::getResourcePath("import/csv",$_GET['filename']));
+                $fileContent = file_get_contents(Resource::getResourcePath("import/csv",$_GET['filename']));
                 $data = DmSerializer::deserialize($fileContent);
                 $physicalRow = array();
                 $virtRow = array();
@@ -711,7 +711,7 @@ class DynamicDataView {
                     $colsOptions .= "<option value='".$col->name."'>".$col->name."</option>";
                 }
                 
-                $fileContent = file_get_contents(ResourcesModel::getResourcePath("import/csv", $_GET['filename']));
+                $fileContent = file_get_contents(Resource::getResourcePath("import/csv", $_GET['filename']));
                 $data = DmSerializer::deserialize($fileContent);
                 
                 if (count($data) > 0) {

@@ -41,7 +41,7 @@ class PagesModel {
         } else {
             $endQuery = "siteid is null";
         }
-        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.path as templatepath, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page
@@ -69,7 +69,7 @@ class PagesModel {
         $code = Database::escape($code);
         $lang = Database::escape($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.path as templatepath, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
@@ -96,7 +96,7 @@ class PagesModel {
     static function getStaticPage ($_name,$_lang) {
         $name = Database::escape($_name);
         $lang = Database::escape($_lang);
-        $query = "select p.id, p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript, p.parentmoduleinstanceid  
+        $query = "select p.id, p.codeid as codeid, p.code, t.path as templatepath, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript, p.parentmoduleinstanceid  
             from t_page p
             left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -141,7 +141,7 @@ class PagesModel {
         $lang = Database::escape($_lang);
         $parentModuleInstanceId = Database::escape($_parentModuleInstanceId);
         $templateId = Database::escape($_templateId);
-        $query = "select p.id, p.codeid as codeid, p.code, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, p.code, t.path as templatepath, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id 
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -184,7 +184,7 @@ class PagesModel {
      */
     static function getTemplatePreviewPage ($templateId) {
         $templateId = Database::escape($templateId);
-        return Database::queryAsObject("select '0' as codeid, '' as code, t.css, t.html, t.js, '0' as id, '0' as type, '0' as namecode, '' as name, '0' as welcome, '' as title, '' as keywords, t.id as template, t.template as templateinclude, t.interface as interface, '' as description, '' as pagetrackerscript 
+        return Database::queryAsObject("select '0' as codeid, '' as code, t.css,  t.path as templatepath, t.html, t.js, '0' as id, '0' as type, '0' as namecode, '' as name, '0' as welcome, '' as title, '' as keywords, t.id as template, t.template as templateinclude, t.interface as interface, '' as description, '' as pagetrackerscript 
             from  t_template t
             where t.id = '$templateId'");
     }
@@ -209,7 +209,7 @@ class PagesModel {
     static function getPageTemplate ($id, $lang) {
         $id = Database::escape($id);
         $lang = Database::escape($lang);
-        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.path as templatepath, t.css, t.html, t.js, p.id, p.type, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_code as c on p.namecode = c.code and c.lang = '$lang'
@@ -227,7 +227,7 @@ class PagesModel {
         $id = Database::escape($id);
         $lang = Database::escape($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.path as templatepath, t.js, p.id, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
@@ -262,7 +262,7 @@ class PagesModel {
     static function getPages ($lang, $roles=true) {
         $lang = Database::escape($lang);
         $siteId = Database::escape(Context::getSiteId());
-        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.path as templatepath, t.css, t.html, t.js, p.type, m.parent, m.position, m.active, m.type as menuid, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.template, t.template as templateinclude, t.interface as interface, p.description, p.pagetrackerscript 
             from t_page p
             left join t_template t on p.template = t.id
             left join t_menu as m on p.id = m.page and lang = '$lang'
@@ -289,7 +289,7 @@ class PagesModel {
         $id = Database::escape($id);
         $lang = Database::escape($lang);
         $siteId = Context::getSiteId();
-        $query = "select p.id, p.codeid as codeid, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
+        $query = "select p.id, p.codeid as codeid, t.path as templatepath, t.css, t.html, t.js, p.id, p.type, m.parent, m.position, m.active, p.namecode, c.value as name, p.welcome, p.title, p.keywords, p.description, p.template, t.template as templateinclude, t.interface as interface, p.pagetrackerscript 
             from t_page p
             left join t_templatearea a on a.instanceid = '$id'
             left join t_template t on p.template = t.id
@@ -399,19 +399,19 @@ class PagesModel {
         }
     }
     
-    static function setTemplateByType ($siteId, $type, $template) {
+    static function setTemplateByType ($siteId, $template, $type) {
         $siteId = Database::escape($siteId);
         $type = Database::escape($type);
         $template = Database::escape($template);
         $pages = Database::queryAsArray("select p.id as id, t.type as type from t_page p join t_template t on p.template = t.id where t.type = '$type' and p.siteid = '$siteId'");
         foreach ($pages as $p => $page) {
-            Database::query("update t_page set template = '$template' where id = '$id'");
+            Database::query("update t_page set template = '$template' where id = '$page->id'");
         }
     }
     
     static function getCodesBySiteId ($siteId) {
         $siteId = Database::escape($siteId);
-        Database::queryAsArray("select c.* from t_code c join t_page p on p.namecode = c.id and p.siteid = '$siteId'");
+        return Database::queryAsArray("select c.* from t_code c join t_page p on p.namecode = c.id and p.siteid = '$siteId'");
     }
 }
 

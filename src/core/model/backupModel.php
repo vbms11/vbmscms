@@ -12,7 +12,7 @@ class BackupModel {
     }
     
     static function getBackupFiles () {
-        return ResourcesModel::listResources("backup");
+        return Resource::listResources("backup");
     }
     
     static function deleteBackup ($id) {
@@ -33,7 +33,7 @@ class BackupModel {
         
         $backup = BackupModel::getBackup($id);
         if ($backup != null) {
-            $path = ResourcesModel::getResourcePath("backup");
+            $path = Resource::getResourcePath("backup");
             self::loadBackupFile($path.$backup->name);
         }
     }
@@ -121,7 +121,7 @@ class BackupModel {
         $return = self::getDatabaseSql();
         
         //save file
-        $path = ResourcesModel::getResourcePath("backup");
+        $path = Resource::getResourcePath("backup");
         $filename = 'db-backup-'.time().'-'.Common::randHash(20,false).'.sql';
         $handle = fopen($path.$filename,'w+');
         fwrite($handle,$return);

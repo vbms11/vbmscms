@@ -90,6 +90,7 @@ class Session {
 	    
             // start database session
             Database::getDataSource();
+            //$DB = sdbau\getDatabaseConnection($host,$username,$password,$schema);
 	    
             // remove old sessions
             SessionModel::cleanOldSessions();

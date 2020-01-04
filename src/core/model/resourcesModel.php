@@ -2,7 +2,7 @@
 
 require_once 'core/plugin.php';
 
-class ResourcesModel {
+class Resource {
     
     static function getWebPath () {
         $host = "http://".$_SERVER['HTTP_HOST'];
@@ -20,7 +20,7 @@ class ResourcesModel {
     }
     
     static function getResourcePath ($path = null, $name = null) {
-        $resourcePath = ResourcesModel::getBasePath().Config::getResourcePath();
+        $resourcePath = Resource::getBasePath().Config::getResourcePath();
         if ($path != null)
             $resourcePath .= $path.'/';
         if (!file_exists($resourcePath))
@@ -37,7 +37,7 @@ class ResourcesModel {
     static function createResourceLink ($resourceName=null,$fileName=null) {
         //if (!is_dir($resourceName))
         //    mkdir($resourceName);
-        $link = ResourcesModel::getWebPath().Config::getResourcePath();
+        $link = Resource::getWebPath().Config::getResourcePath();
         if ($resourceName != null) {
             $link .= $resourceName.'/';
         }
@@ -48,7 +48,7 @@ class ResourcesModel {
     }
 
     static function createModuleResourceLink ($moduleObj,$fileName) {
-        return ResourcesModel::getModulePath($moduleObj).$fileName;
+        return Resource::getModulePath($moduleObj).$fileName;
     }
 
     static function createTemplateResourceLink ($fileName) {
@@ -90,7 +90,7 @@ class ResourcesModel {
         $allowedTypes = implode("|", $allowedTypes);
         $rEFileTypes = "/^\.($allowedTypes){1}$/i";
         $imageName = $_FILES[$postName]['name'];
-        $imagePath = ResourcesModel::getResourcePath($path, $imageName);
+        $imagePath = Resource::getResourcePath($path, $imageName);
         if (!file_exists(dirname($imagePath)))
             @mkdir(dirname($imagePath));
         
@@ -116,7 +116,7 @@ class ResourcesModel {
     static function listResources ($path=null, $recrusive=false) {
   
         $result = array();
-        $resourcePath = ResourcesModel::getBasePath().Config::getResourcePath();
+        $resourcePath = Resource::getBasePath().Config::getResourcePath();
         if ($path != null) {
             $resourcePath .= $path.'/';
         }

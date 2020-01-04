@@ -258,7 +258,7 @@ class Context {
         } else if (Context::isAjaxRequest()) {
             $renderer = new AJaxRenderer();
         } else if (Context::isTemplatePreviewRequest()) {
-            $renderer = TemplateModel::getTemplatePreviewObj(self::getPage());
+            $renderer = TemplateModel::getTemplatePreviewFromTemplateId($_GET["templatePreview"]);
         } else {
             $renderer = TemplateModel::getTemplateObj(self::getPage());
         }

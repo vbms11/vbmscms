@@ -28,7 +28,7 @@ class AdminMenusModule extends AdminPagesBaseModule {
                 case "deleteMenu":
                     
                     $this->deleteMenuAction();
-                    $selectedMenu = current(MenuModel::getMenuInstances());
+                    $selectedMenu = current(MenuModel::getMenuInstancesAssocId());
                     if ($selectedMenu !== false) {
                         $_SESSION["adminMenuId"] = $selectedMenu->id;
                     }

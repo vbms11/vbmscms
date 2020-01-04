@@ -574,7 +574,7 @@ class ShopBasketView extends XModule {
                                             <tr>
                                                 <td class='nowrap' style='text-align:right;'><b><?php echo $product->quantity; ?> x </b></td>
                                                 <td><?php echo $product->titel; ?></td>
-                                                <td><img class="cartProductImage" src="<?php echo ResourcesModel::createResourceLink("products", $product->img); ?>" alt=""/></td>
+                                                <td><img class="cartProductImage" src="<?php echo Resource::createResourceLink("products", $product->img); ?>" alt=""/></td>
                                                 <td><?php echo number_format($product->price * $product->quantity, 2).Config::getCurrency(); ?></td>
                                                 <td>
                                                 <?php

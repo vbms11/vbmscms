@@ -106,7 +106,7 @@ class Captcha {
             $char = substr($captcha->answer, $i, 1);
             $charXPos = floor($posx + (Common::rand() % $maxHorizontalDisplace));
             $charYPos = 4+floor($posy + (Common::rand() % $maxVerticalDisplace) + ($maxVerticalDisplace / 2));
-            imagettftext($img, 20, 0, $charXPos, $charYPos, $colors[Common::rand() % $countColors], ResourcesModel::getBasePath()."resource/css/fonts/OptimusPrinceps.ttf", $char);
+            imagettftext($img, 20, 0, $charXPos, $charYPos, $colors[Common::rand() % $countColors], Resource::getBasePath()."resource/css/fonts/OptimusPrinceps.ttf", $char);
             $posx += $characterSpaceing;
             
         }

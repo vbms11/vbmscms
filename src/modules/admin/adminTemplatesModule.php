@@ -14,12 +14,11 @@ class AdminTemplatesModule extends XModule {
                     parent::redirect();
                     break;
                 case "save":
-                    $site = DomainsModel::getCurrentSite();
-                    TemplateModel::saveTemplate(parent::get('id'), parent::post("name"), parent::post("html"), parent::post("js"), parent::post("css"), parent::post("type"), parent::get("packId"));
-                    parent::redirect(array("action"=>"editTemplate","id"=>$_GET['id']));
+                    TemplateModel::saveTemplate(parent::get("id"), parent::post("name"), parent::post("html"), parent::post("js"), parent::post("css"), parent::post("type"), parent::get("packId"));
+                    parent::redirect(array("action"=>"editTemplate","id"=>parent::get("id")));
                     break;
                 case "create":
-                    $templateId = TemplateModel::createTemplate(parent::post("name"), null, null, parent::post("type"), parent::get("packId"));
+                    $templateId = TemplateModel::createTemplate(parent::post("name"), null, null, null, parent::post("type"), parent::get("packId"));
                     parent::redirect(array("action"=>"editTemplate","id"=>$templateId));
                     break;
                 case "remove":
@@ -35,9 +34,6 @@ class AdminTemplatesModule extends XModule {
                     break;
                 case "deleteTemplatePack":
                     TemplateModel::deleteTemplatePack(parent::get("id"));
-                    
-                case "deleteTemplatePack":
-                    TemplateController::deleteTemplatePack($packId);
                     parent::redirect();
                     break;
                 case "copyTemplatePack":
@@ -47,7 +43,7 @@ class AdminTemplatesModule extends XModule {
                 case "switchTemplatePack":
                     TemplateController::switchTemplatePack(parent::get("packId"),Context::getSiteId());
                     parent::redirect();
-                break;
+                    break;
             }
         }
     }
@@ -81,6 +77,7 @@ class AdminTemplatesModule extends XModule {
                 break;
             case "newTemplate":
                 $this->renderNewTemplate(parent::get("packId"));
+                break;
             default:
                 if (Context::hasRole("template.view")) {
                     $this->renderMainView();
@@ -97,6 +94,7 @@ class AdminTemplatesModule extends XModule {
     }
     
     function renderPreviewInstalledTemplateView ($templateId) {
+        $template = TemplateModel::getTemplate($templateId);
         ?>
         <div class="panel">
             <div id="templatePreviewTabs">
@@ -105,13 +103,9 @@ class AdminTemplatesModule extends XModule {
                 </ul>
                 <div id="tabs-1">
                     <h3>Template Editor</h3>
-                    <iframe src="<?php NavigationModel::createPreviewPageLink($templateId); ?>">
-                    
-                    
-                    </iframe>
-
+                    <iframe src="<?php echo NavigationModel::createPreviewPageLink($templateId); ?>"></iframe>
                     <?php
-                    $templateCssPath = ResourcesModel::createResourceLink("template/".Common::hash($templateId,false,false), "template.css");
+                    $templateCssPath = Resource::createResourceLink("template/".$template->path, "template.css");
                     InputFeilds::printHtmlEditor("html", $template->html,$templateCssPath,array("action"=>"template","id"=>$template->id));
                     ?>
                 </div>
@@ -129,15 +123,10 @@ class AdminTemplatesModule extends XModule {
         Context::addRequiredScript("resource/js/elfinder/js/elfinder.min.js");
         Context::addRequiredStyle("resource/js/elfinder/css/elfinder.min.css");
         
-        $actionName = "";
-        if ($templateId != null) {
-            $template = TemplateModel::getTemplate($templateId);
-            $actionName = "save";
-        }
-        // edit
+        $template = TemplateModel::getTemplate($templateId);
         ?>
         <div class="panel">
-            <form id="<?php echo parent::alias("templatesForm"); ?>" action="<?php echo parent::link(array("action"=>$actionName,"id"=>$templateId)); ?>" method="post">
+            <form id="<?php echo parent::alias("templatesForm"); ?>" action="<?php echo parent::link(array("action"=>"save","id"=>$templateId)); ?>" method="post">
                 <div id="tabs">
                     <ul>
                         <li><a href="#tabs-2">Editor</a></li>
@@ -149,7 +138,7 @@ class AdminTemplatesModule extends XModule {
                     <div id="tabs-2">
                         <h3>Template Editor</h3>
                         <?php
-                        $templateCssPath = ResourcesModel::createResourceLink("template/".Common::hash($templateId,false,false), "template.css");
+                        $templateCssPath = Resource::createResourceLink("template/".$template->path, "template.css");
                         InputFeilds::printHtmlEditor("html", $template->html,$templateCssPath,array("action"=>"template","id"=>$template->id));
                         ?>
                     </div>
@@ -224,7 +213,7 @@ class AdminTemplatesModule extends XModule {
                 </td></tr><tr><td>
                     <?php echo parent::getTranslation("template.create.type"); ?>
                 </td><td>
-                    <?php echo InputFeilds::printMultiSelect("type",TemplateModel::getTemplateTypes()); ?>
+                    <?php echo InputFeilds::printSelect("type",null,TemplateModel::getTemplateTypes()); ?>
                 </td></tr>
                 </table>
                 <hr/>
@@ -287,16 +276,16 @@ class AdminTemplatesModule extends XModule {
     }
     
     function renderMainView() {
-        Context::addRequiredStyle("resource/js/datatables/css/demo_table_jui.css");
-        Context::addRequiredScript("resource/js/datatables/js/jquery.dataTables.min.js");
+        
         $templatePacks = TemplateModel::getTemplatePacks();
         ?>
-        <div class="panel templatesPanel">
+        <div class="panel templatePacksPanel">
             
             <div>
                 <h3>Template Packs:</h3>
+                <p>Here is a list of template packs that you can use on your website. Click use template pack to select.</p>
                 <div class="templatePackToolbar">
-                    <a href="<?php echo parent::link(array("action"=>"newTemplatePack")); ?>">Create Template Pack</a>
+                    <a class="jquiButton" href="<?php echo parent::link(array("action"=>"newTemplatePack")); ?>">Create Template Pack</a>
                 </div>
             </div>
             <div>
@@ -305,7 +294,15 @@ class AdminTemplatesModule extends XModule {
                     ?>
                     <div class="templatePack">
                         <div class="templatePackHeader">
-                            <?php echo htmlspecialchars($templatePack->name); ?>
+                            <div class="templateSetTools">
+                                <a href="<?php echo parent::link(array("action"=>"switchTemplatePack","packId"=>$templatePack->id)); ?>">Use Template</a>
+                                <a href="<?php echo parent::link(array("action"=>"renderCopyTemplatePack","packId"=>$templatePack->id)); ?>">Copy Template</a>
+                                <a href="<?php echo parent::link(array("action"=>"newTemplate","packId"=>$templatePack->id)); ?>">Create Template</a>
+                                <a href="<?php echo parent::link(array("action"=>"deleteTemplatePack","id"=>$templatePack->id)); ?>">Delete Template Pack</a>
+                            </div>
+                            <h3>
+                                <?php echo htmlspecialchars($templatePack->name); ?>    
+                            </h3>
                         </div>
                         <div class="templatePackBody">
                             <?php
@@ -322,141 +319,20 @@ class AdminTemplatesModule extends XModule {
                                         <iframe class="templatePreviewIframe" src="<?php echo $previewLink; ?>"></iframe>
                                     </div>
                                     <div class="templatePreviewTools">
-                                        <a href="<?php echo parent::link(array("action"=>"editTemplate","id"=>$template->id)); ?>" ><?php echo parent::getTranslation("template.edit"); ?></a>
-                                        <a onclick='doIfConfirm("<?php echo parent::getTranslation("template.deleteConfigMessage"); ?>","<?php echo parent::link(array("action"=>"editTemplate","id"=>$template->id)); ?>");'><?php echo parent::getTranslation("template.delete"); ?></a>
+                                        <a href="<?php echo parent::link(array("action"=>"editTemplate","id"=>$template->id)); ?>" ><img src="resource/img/preferences.png" alt="" /></a>
+                                        <a onclick='doIfConfirm("<?php echo parent::getTranslation("template.deleteConfigMessage"); ?>","<?php echo parent::link(array("action"=>"editTemplate","id"=>$template->id)); ?>");'><img src="resource/img/delete.png" alt="" /></a>
                                     </div>
                                 </div>
                                 <?php
                             }
                             ?>
                         </div>
-                        <div class="templateSetTools">
-                            <a href="<?php echo parent::link(array("action"=>"switchTemplatePack","packId"=>$templatePack->id)); ?>">Use</a>
-                            <a href="<?php echo parent::link(array("action"=>"renderCopyTemplatePack","packId"=>$templatePack->id)); ?>">Copy</a>
-                            <a href="<?php echo parent::link(array("action"=>"createTemplate","packId"=>$templatePack->id)); ?>">Create Template</a>
-                            <a href="<?php echo parent::link(array("action"=>"deleteTemplatePack","id"=>$templatePack->id)); ?>">Detele Template Pack</a>
-                        </div>
                     </div>
                 <?php
                 }
                 ?>
             </div>
-            
-            
-            <div>
-                <div class="adminTableToolbar">
-                    <button id="btnCreateTemplate">Create</button>
-                    <button id="btnEditTemplate">Edit</button>
-                    <button id="btnAddTemplate">Add</button>
-                    <button id="btnRemoveTemplate">Remove</button>
-                </div>
-                <h3>Templates:</h3>
-            </div>
-            <div>
-                <table cellpadding="0" cellspacing="0" border="0" class="display" id="templates"></table>
-            </div>
         </div>
-        <div id="selectTemplateDialog" title="Add Template">
-            <?php 
-            InfoMessages::printInfoMessage("templates.add.select");
-            echo "<br/>";
-            $templates = array();
-            $allTemplates = TemplateModel::getTemplates();
-            foreach ($allTemplates as $template) {
-                $templates[$template->id] = $template->name;
-            }
-            InputFeilds::printSelect("template", null, $templates);
-            ?>
-        </div>
-        <div id="newTemplateDialog" title="New Template">
-            <form action="<?php echo parent::link(array("action"=>"create")); ?>" method="post" id="newTemplateDialogForm">
-                <p>Create a new template by filling out the following feilds then click on 'Edit Template'</p>
-                <table><tr><td>
-                    Template Name:
-                </td><td>
-                    <?php InputFeilds::printTextFeild("name"); ?>    
-                </td></tr></table>
-            </form>
-        </div>
-        <script type="text/javascript">
-        var userMessages = [
-            <?php
-            $site = DomainsModel::getCurrentSite();
-            $messages = TemplateModel::getTemplates($site->siteid);
-            $first = true;
-            foreach ($messages as $message) {
-                if (!$first)
-                    echo ",";
-                echo "['".Common::htmlEscape($message->id)."','".Common::htmlEscape($message->name)."','".Common::htmlEscape($message->template)."','".Common::htmlEscape($message->interface)."']";
-                $first = false;
-            }
-            ?>
-        ];
-        
-        var oTableTemplate = $('#templates').dataTable({
-            "bJQueryUI": true,
-            "sPaginationType": "full_numbers",
-            "iDisplayLength": 10,
-            "aLengthMenu": [[10, 20, 40, -1], [10, 20, 40, "All"]],
-            "aaData": userMessages,
-            "aoColumns": [
-                {'sTitle':'ID'},
-                {'sTitle':'Name'},
-                {'sTitle':'Path'},
-                {'sTitle':'Interface'}]
-        });
-        $("#templates tbody").click(function(event) {
-            $(oTableTemplate.fnSettings().aoData).each(function (){
-                $(this.nTr).removeClass('row_selected');
-            });
-            $(event.target.parentNode).addClass('row_selected');
-        });
-        $("#selectTemplateDialog").dialog({
-            autoOpen: false,
-            show: "blind",
-            hide: "explode",
-            modal: true,
-            buttons: {
-                "Add": function() {
-                    $(this).dialog("close");
-                    callUrl("<?php echo NavigationModel::createModuleLink(parent::getId(), array("action"=>"add"),false); ?>",{"id":$("#template").val()});
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $("#newTemplateDialog").dialog({
-            autoOpen: false,
-            show: "blind",
-            hide: "explode",
-            height: 300,
-            width: 400,
-            modal: true,
-            buttons: {
-                "Edit Template": function() {
-                    $(this).dialog("close");
-                    $("#newTemplateDialogForm").submit();
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        // the button actions
-        $("#btnAddTemplate").button().click(function () {
-            $("#selectTemplateDialog").dialog("open");
-        });
-        $("#btnRemoveTemplate").button().click(function () {
-            callUrl("<?php echo parent::link(array("action"=>"remove"),false) ?>",{"id":getSelectedRow(oTableTemplate)[0].childNodes[0].innerHTML});
-        });
-        $("#btnCreateTemplate").button().click(function () {
-            $("#newTemplateDialog").dialog("open");
-        });
-        $("#btnEditTemplate").button().click(function () {
-            callUrl("<?php echo parent::link(array("action"=>"editTemplate"),false) ?>",{"id":getSelectedRow(oTableTemplate)[0].childNodes[0].innerHTML});
-        });
-        </script>
         <?php
     }
     

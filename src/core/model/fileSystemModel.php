@@ -29,14 +29,14 @@ class FileSystemModel {
         $sizeLimit = Common::getMaximumUploadSize();
         
         $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
-        $result = $uploader->handleUpload(ResourcesModel::getResourcePath($directory->path));
+        $result = $uploader->handleUpload(Resource::getResourcePath($directory->path));
         
         if (!isset($result['success']) || !$result['success']) {
             return null;
         }
         
         $filename = $result['filename'];
-        $filePathFull = ResourcesModel::getResourcePath("files/", $filename);
+        $filePathFull = Resource::getResourcePath("files/", $filename);
         
         $newFileId = self::createFile($filename, $parent);
         

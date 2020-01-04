@@ -671,8 +671,8 @@ class UserWallModule extends XModule {
                 foreach ($sameTypeEvents as $sameTypeEvent) {
                     $image = GalleryModel::getImage($sameTypeEvent->typeid);
                     ?>
-                    <a href="<?php echo ResourcesModel::createResourceLink("gallery",$image->image); ?>">    
-                        <img src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
+                    <a href="<?php echo Resource::createResourceLink("gallery",$image->image); ?>">    
+                        <img src="<?php echo Resource::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
                     </a>
                     <?php
                 }

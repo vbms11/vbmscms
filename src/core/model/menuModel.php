@@ -30,12 +30,20 @@ class MenuModel {
         Database::queryAsObject("delete from t_menu_style where id = '$id'");
     }
     
-    static function getMenuInstances ($siteId=null) {
+    static function getMenuInstancesAssocId ($siteId=null) {
         if ($siteId == null) {
             $siteId = Context::getSiteId();
         }
         return Database::queryAsArray("select * from t_menu_instance where siteid = '$siteId'","id");
     }
+    
+    static function getMenuInstances ($siteId=null) {
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        }
+        return Database::queryAsArray("select * from t_menu_instance where siteid = '$siteId'");
+    }
+    
     
     static function getMenuInstance ($id) {
         $id = Database::escape($id);
@@ -251,7 +259,7 @@ class MenuModel {
         if ($position == null) {
             $position = MenuModel::getNextMenuPosition();
         }
-        Database::query("insert into t_menu(page,type,active,parent,lang,position) values('$pageId','$menuType','$active',$parentStr,'$lang','$nextPosition')");
+        Database::query("insert into t_menu(page,type,active,parent,lang,position) values('$pageId','$menuType','$active',$parentStr,'$lang','$position')");
     }
     
     static function updatePageInMenu ($pageId,$menuType,$menuParent,$lang) {
@@ -281,7 +289,7 @@ class MenuModel {
     
     static function getMenus ($siteId) {
         $siteId = Database::escape($siteId);
-        return Database::queryAsArray("select m.* from t_menu m join t_menu_instance mi on mi.id = m.type where mi.siteid = '1'");
+        return Database::queryAsArray("select m.* from t_menu m join t_menu_instance mi on mi.id = m.type where mi.siteid = '$siteId'");
     }
     
     

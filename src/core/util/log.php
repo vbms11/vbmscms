@@ -28,7 +28,7 @@ class Log {
     }
     
     static function writeLogFile () {
-        $path = ResourcesModel::getBasePath()."logs/";
+        $path = Resource::getBasePath()."logs/";
         if (!is_dir($path)) {
             mkdir($path);
         }

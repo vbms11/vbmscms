@@ -10,6 +10,15 @@ $.each([
 */
 //window.setTimeout("if(Math.random()*10000%30<1){smefCms.ajax('s321870024.online.de?static=system&action=track&href'+escape(document.location.href));}", 1000);
 
+
+$("div",{css:})
+window.addEventListener("message", function (m) {
+    alert("Frame Two Says: " + m.data);
+}, false);
+
+
+window.parent.postMessage({frame: "one framename", message: "Received message from frame two!"}, "*");
+
 $(function(){
     $(".jquiButton").button();
     $( ".jquiDate" ).each(function(index,object){

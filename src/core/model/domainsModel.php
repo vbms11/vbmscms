@@ -22,7 +22,7 @@ class DomainsModel {
     static function getDomainSite ($domain) {
         $cleanDomain = self::cleanDomainName($domain);
         $sqlDomain = Database::escape($cleanDomain);
-        return Database::queryAsObject("select d.url, d.siteid, s.cmscustomerid, s.sitetrackerscript, d.domaintrackerscript, s.facebookappid, s.facebooksecret, s.googleclientid, s.googleclientsecret, s.twitterkey, s.twittersecret
+        return Database::queryAsObject("select d.url, d.siteid, s.cmscustomerid, s.sitetrackerscript, s.templatepackid, d.domaintrackerscript, s.facebookappid, s.facebooksecret, s.googleclientid, s.googleclientsecret, s.twitterkey, s.twittersecret
             from t_domain d 
             join t_site s on s.id = d.siteid 
             where d.url = '$sqlDomain'");

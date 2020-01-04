@@ -90,7 +90,7 @@ class InputFeilds {
         echo "</select>";
     }
     
-    static function printMultiSelect ($name,$options,$selection,$styled=true) {
+    static function printMultiSelect ($name,$options,$selection=null,$styled=true) {
         
         echo "<select class='multiselect' multiple='multiple' id='".htmlspecialchars($name,ENT_QUOTES)."' name='".htmlspecialchars($name,ENT_QUOTES)."[]'>";
         if (!empty($selection)) {

@@ -142,7 +142,7 @@ class CommentsView extends XModule {
                     $comment->name = $user->username;
                     $comment->email = $user->email;
                     if (!empty($user->image)) {
-                        $commentImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
+                        $commentImage = Resource::createResourceLink("gallery/small", $user->image);
                     }
                 }
                 
@@ -187,7 +187,7 @@ class CommentsView extends XModule {
                     $user = Context::getUser();
                     $userName = $user->username;
                     if (!empty($user->image)) {
-                        $userImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
+                        $userImage = Resource::createResourceLink("gallery/small", $user->image);
                     }
                 }
                 ?>
@@ -264,7 +264,7 @@ class CommentsView extends XModule {
                     $user = UsersModel::getUser($comment->userid);
                     $comment->name = $user->username;
                     if (!empty($user->image)) {
-                        $commentImage = ResourcesModel::createResourceLink("gallery/small", $user->image);
+                        $commentImage = Resource::createResourceLink("gallery/small", $user->image);
                     }
                 }
                 ?>

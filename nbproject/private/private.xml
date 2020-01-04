@@ -3,41 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/plugin.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/users/loginModule.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/resource/js/main.js</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/main.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/users/usersPageView.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/menuModule.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/css/admin.css</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/model/usersModel.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminSitesModule.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/css/pages.css</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/util/input.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/hosting/hostingSiteList.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/util/common.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/context.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/model/templateModel.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminPagesModule.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/model/rolesModel.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminDomainsModule.php</file>
             <file>file:/C:/vbms/workspace/vbmscms/src/core/includes.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/controller/moduleController.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/core/plugin.php</file>
             <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminTemplatesModule.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/controller/installerController.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/hosting/hostingCreateSite.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/gallery/galleryView.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminPackageModule.php</file>
             <file>file:/C:/vbms/workspace/vbmscms/src/core/model/pagesModel.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/controller/layoutController.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/video/videoListModule.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/core/util/database.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/core/serialize/roleSerializer.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminSitesModule.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/payment/paymentModel.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminMenuModule.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/core/session.php</file>
             <file>file:/C:/vbms/workspace/vbmscms/src/core/controller/templateController.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/controller/siteController.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/users/registerModule.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/modelModule.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/users/loginNetworksModule.php</file>
             <file>file:/C:/vbms/workspace/vbmscms/src/core/model/sitesModel.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/model/domainsModel.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/users/userSitesModule.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/core/util/video.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/video/videoController.php</file>
-            <file>file:/C:/vbms/workspace/vbmscms/src/modules/video/videoModel.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/core/serialize/siteSerializer.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/core/database/objectFactory.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/core/model/templateModel.php</file>
+            <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/adminPagesBaseModule.php</file>
             <file>file:/C:/vbms/workspace/vbmscms/src/modules/admin/css/templates.css</file>
         </group>
     </open-files>

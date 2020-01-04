@@ -1,8 +1,11 @@
 .templatePack {
-    
+    border: 1px solid silver;
 }
 .templatePackHeader {
     
+}
+.templateSetTools {
+    float: right;
 }
 .templatePackBody {
     display: flex;
@@ -23,7 +26,7 @@
     
 }
 .templatePreviewTools {
-
+    text-align: center;
 }
 .templatePreviewIframe {
     position: relative;

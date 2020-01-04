@@ -86,7 +86,7 @@ class RolesView extends XModule {
     
     function printMainView () {
         $roleGroups = RolesModel::getCustomRoles();
-        $allRoles = Common::toMap(RolesModel::getModuleRoles());
+        $allRoles = Common::toMap(RolesModel::getModuleRolesFromModules());
         $roleGroupIds = array_keys($roleGroups);
         $group = parent::get('group') != null ? parent::get('group') : current($roleGroupIds); 
         $pageRoles = Common::toMap(RolesModel::getCustomRoleModuleRoles($group),"modulerole","modulerole");

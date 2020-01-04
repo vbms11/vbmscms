@@ -11,6 +11,12 @@ include_once __DIR__.'/config.class.php';
 
 Config::load();
 
+
+require_once __DIR__.'/database/sdbau.php';
+
+$db = sdbau\getDatabaseConnection(Config::getDBHost(),Config::getDBUser(),Config::getDBPassword(),Config::getDBName());
+$db->driver->tablePrefix = Config::getDbTablePrefix();
+
 require_once __DIR__.'/errorHandler.php';
 require_once __DIR__.'/selection.php';
 require_once __DIR__.'/template/templateParser.php';
@@ -31,6 +37,7 @@ require_once __DIR__.'/util/input.php';
 require_once __DIR__.'/util/email.php';
 require_once __DIR__.'/util/common.php';
 require_once __DIR__.'/util/countries.php';
+require_once __DIR__.'/util/fileSystem.php';
 
 require_once 'resource/js/valums-file-uploader/server/php.php';
 
@@ -61,11 +68,19 @@ include_once __DIR__.'/model/userFriendModel.php';
 include_once __DIR__.'/model/eventsModel.php';
 include_once __DIR__.'/model/languagesModel.php';
 
+include_once __DIR__.'/serialize/serializer.php';
+include_once __DIR__.'/serialize/roleSerializer.php';
+include_once __DIR__.'/serialize/userSerializer.php';
+include_once __DIR__.'/serialize/siteSerializer.php';
+include_once __DIR__.'/serialize/moduleSerializer.php';
+include_once __DIR__.'/serialize/templateSerializer.php';
+
 include_once __DIR__.'/controller/installerController.php';
 include_once __DIR__.'/controller/socialController.php';
 include_once __DIR__.'/controller/navigationController.php';
 include_once __DIR__.'/controller/templateController.php';
 include_once __DIR__.'/controller/moduleController.php';
+include_once __DIR__.'/controller/siteController.php';
 
 include_once __DIR__.'/context.php';
 include_once __DIR__.'/session.php';
@@ -76,4 +91,6 @@ include_once __DIR__.'/ddm/dmSerializer.php';
 include_once __DIR__.'/ddm/dataModel.php';
 include_once __DIR__.'/ddm/dataView.php';
 
-?>
+//SiteController::exportSite(Context::getSiteId(), ResourcesModel::getResourcePath("export/test"));
+                    
+//exit;

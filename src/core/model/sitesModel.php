@@ -87,6 +87,34 @@ class SiteModel {
         return Database::queryAsArray("select * from t_site where cmscustomerid = '$cmsCustomerId'");
     }
     
+    static function setTemplatepackidById ($siteId, $templatePackId) {
+        $siteId = Database::escape($siteId);
+        $templatePackId = Database::escape($templatePackId);
+        Database::query("update t_site set templatepackid = '$templatePackId' where id = '$siteId'");
+        
+    }
+    
+    function saveSiteType($id,$title,$description,$imageFile,$siteArchive) {
+        $title = Database::escape($title);
+        $description = Database::escape($description);
+        $imageFile = Database::escape($imageFile);
+        $siteArchive = Database::escape($siteArchive);
+        if ($id != null) {
+            $id = Database::escape($id);
+            Database::query("update t_site_type set title = '$title', description = '$description', image = '$imageFile', archive = '$siteArchive' where id = '$id'");
+        } else {
+            Database::query("insert into t_site_type (title,description,image,archive) values ('$title','$description','$image','$archive')");
+        }
+    }
+    
+    function deleteSiteType ($id) {
+        $id = Database::escape($id);
+        Database::query("delete from t_site_type where id = '$id'");
+    }
+    
+    function getSiteTypes () {
+        return Database::queryAsArray("select * from t_site_type");
+    }
 }
 
 ?>

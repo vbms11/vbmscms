@@ -89,7 +89,7 @@ class SlideshowView extends XModule {
         if (count($images) > 0) {
             $slides = array();
             foreach ($images as $image) {
-                $slides[] = "{image : '".ResourcesModel::createResourceLink("gallery",$image->image)."', title : '".Common::htmlEscape($image->title)."', thumb : '".ResourcesModel::createResourceLink("gallery/small",$image->image)."', url : ''}";
+                $slides[] = "{image : '".Resource::createResourceLink("gallery",$image->image)."', title : '".Common::htmlEscape($image->title)."', thumb : '".Resource::createResourceLink("gallery/small",$image->image)."', url : ''}";
             }
             $slideshowArgs = implode(",", $slides);
         }

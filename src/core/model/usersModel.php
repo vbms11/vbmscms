@@ -337,7 +337,7 @@ class UsersModel {
                     "h"         => $user->imageh
                 ),false,false);
             } else {
-                $imageUrl = ResourcesModel::createResourceLink("gallery/small",$image->image);
+                $imageUrl = Resource::createResourceLink("gallery/small",$image->image);
             }
         } else if (!empty($user->facebook_uid)) {
             $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture?type=large";
@@ -366,7 +366,7 @@ class UsersModel {
                     "h"         => $user->imageh
                 ));
             } else {
-                $imageUrl = ResourcesModel::createResourceLink("gallery/tiny",$image->image);
+                $imageUrl = Resource::createResourceLink("gallery/tiny",$image->image);
             }
         } else if (!empty($user->facebook_uid)) {
             $imageUrl = "https://graph.facebook.com/".$user->facebook_uid."/picture";

@@ -150,7 +150,7 @@ class AdminPagesBaseModule extends XModule {
                     } else {
                         $template = $page->template;
                     }
-                    $valuesNames = Common::toMap(TemplateModel::getTemplates(DomainsModel::getCurrentSite()->siteid),"id","name");
+                    $valuesNames = Common::toMap(TemplateModel::getTemplatesByPack(Context::getSite()->templatepackid),"id","name");
                     InputFeilds::printSelect("template",  $template, $valuesNames);
                     ?>
                 </td></tr><tr><td>

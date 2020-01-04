@@ -13,7 +13,7 @@ class LanguagesModule extends XModule {
                 foreach ($languages as $language) {
                     $uploadedFile = $language->flag;
                     $uploadedFile = $_FILES["flag_".$language->local]['name'];
-                    $targetPath = ResourcesModel::getResourcePath("flags",$uploadedFile);
+                    $targetPath = Resource::getResourcePath("flags",$uploadedFile);
                     if(!move_uploaded_file($_FILES["flag_".$language->local]['tmp_name'], $targetPath)) {
                         echo "error moving uploaded file!";
                     } else {
@@ -55,7 +55,7 @@ class LanguagesModule extends XModule {
             foreach ($languages as $language) {
                 ?>
                 <a class="langSelectLink" href="<?php echo NavigationModel::createLangSelectLink($language->name); ?>">
-                    <img class="imageLink" src="<?php echo ResourcesModel::createResourceLink("flags",$language->flag); ?>" alt="" />
+                    <img class="imageLink" src="<?php echo Resource::createResourceLink("flags",$language->flag); ?>" alt="" />
                 </a>
                 <?php
             }
@@ -87,7 +87,7 @@ class LanguagesModule extends XModule {
 			</td><td>
 				<?php echo $language->local; ?>
 			</td><td>
-				<img src="<?php echo ResourcesModel::createResourceLink("flags",$language->flag); ?>" alt="" />
+				<img src="<?php echo Resource::createResourceLink("flags",$language->flag); ?>" alt="" />
 			</td><td>
 				<?php InputFeilds::printFileUpload("flag_".$language->local,$language->flag); ?>
 			</td></tr>

@@ -26,12 +26,15 @@ class AdminSitesModule extends XModule {
                     parent::redirect();
                     break;
                 case "viewSite":
-                	$siteId = parent::get("id");
-                	//TODO validate cmsuseid
-                	// $site = SitesModel::getSite($siteId);
-                	// if (Context::getSite()->cmscustomerid == $site->cmscustomerid)
-                	Context::setSiteId($siteId);
-                	break;
+                    $siteId = parent::get("id");
+                    //TODO validate cmsuseid
+                    // $site = SitesModel::getSite($siteId);
+                    // if (Context::getSite()->cmscustomerid == $site->cmscustomerid)
+                    Context::setSiteId($siteId);
+                    break;
+                case "doExport":
+                    SiteController::exportSite(parent::get("id"), Resource::getResourcePath("types",));
+                    break;
             }
         }
     }
@@ -49,6 +52,11 @@ class AdminSitesModule extends XModule {
                 if (Context::hasRole("site.edit")) {
                     $site = SiteModel::getSite(parent::get("id"));
                     $this->renderEditTabs($site);
+                }
+                break;
+            case "export":
+                if (Context::hasRole("site.edit")) {
+                    $this->renderExportView(parent::get("id"));
                 }
                 break;
             default:
@@ -236,6 +244,34 @@ class AdminSitesModule extends XModule {
         <?php
     }
     
+    function renderExportView ($siteId) {
+        ?>
+        <h3><?php echo parent::getTranslation("admin.sites.title.export"); ?></h3>
+        <form method="post" action="<?php echo parent::link(array("action"=>"doExport","id"=>$siteId)); ?>">
+            <table class="formTable"><tr><td>
+                <?php echo parent::getTranslation("admin.sites.label.title"); ?>
+            </td><td>
+                <?php InputFeilds::printTextFeild("title"); ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("admin.sites.label.description"); ?>
+            </td><td>
+                <?php InputFeilds::printTextArea("description"); ?>
+            </td></tr><tr><td>
+                <?php echo parent::getTranslation("admin.sites.label.image"); ?>
+            </td><td>
+                <?php InputFeilds::printFileUpload("image"); ?>
+            </td></tr>
+            </table>
+            <hr/>
+            <div class="alignRight">
+                <button class="jquiButton" type="submit">
+                    <?php echo parent::getTranslation("admin.sites.export"); ?>
+                </button>
+            </div>
+        </form>
+        <?php
+    }
+    
     function renderMainView() {
         ?>
         <h3><?php echo parent::getTranslation("admin.sites.title"); ?></h3>
@@ -249,7 +285,7 @@ class AdminSitesModule extends XModule {
             <thead><tr>
                 <td>ID</td>
                 <td class="expand">Name</td>
-                <td colspan="3">Tools</td>
+                <td colspan="4">Tools</td>
             </tr></thead>
             <tbody>
             <?php
@@ -259,6 +295,7 @@ class AdminSitesModule extends XModule {
                 <tr>
                     <td><?php echo $site->id; ?></td>
                     <td><?php echo $site->name; ?></td>
+                    <td><a href="<?php echo parent::link(array("action"=>"export","id"=>$site->id)); ?>">export</a></td>
                     <td><a href="<?php echo parent::link(array("action"=>"viewSite","id"=>$site->id),false); ?>"><img src="resource/img/view.png" alt="" /></a></td>
                     <td><a href="<?php echo parent::link(array("action"=>"editSite","id"=>$site->id)); ?>"><img src="resource/img/preferences.png" alt="" /></a></td>
                     <td><img src="resource/img/delete.png" alt="" onclick="doIfConfirm('<?php echo parent::getTranslation("admin.sites.confirm.delete"); ?>','<?php echo parent::link(array("action"=>"deleteSite","id"=>$site->id),false); ?>');" /></td>

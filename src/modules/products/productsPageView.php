@@ -205,7 +205,7 @@ class ProductsPageView extends XModule {
                     ?>
 
                     <tr><td valign="top" align="left">
-                        <a href="<?php echo parent::link(array("action"=>"viewProduct","id"=>$products[$i]->id)) ?>"><img class="productsImage imageLink" src="<?php echo ResourcesModel::createResourceLink("products", $products[$i]->img); ?>" alt=""/></a>
+                        <a href="<?php echo parent::link(array("action"=>"viewProduct","id"=>$products[$i]->id)) ?>"><img class="productsImage imageLink" src="<?php echo Resource::createResourceLink("products", $products[$i]->img); ?>" alt=""/></a>
                     </td><td valign="top">
                         <div class="productTitel">
                             <?php
@@ -332,7 +332,7 @@ class ProductsPageView extends XModule {
                         ?>
                         <div class="productsGridTile shadow">
                             <div class="productsGridImage">
-                                <a href="<?php echo parent::link(array("action"=>"viewProduct","id"=>$products[$i]->id)) ?>"><img class="productsImage imageLink" width="228" height="228" src="<?php echo ResourcesModel::createResourceLink("products", $products[$i]->img); ?>" alt=""/></a>
+                                <a href="<?php echo parent::link(array("action"=>"viewProduct","id"=>$products[$i]->id)) ?>"><img class="productsImage imageLink" width="228" height="228" src="<?php echo Resource::createResourceLink("products", $products[$i]->img); ?>" alt=""/></a>
                             </div>
                             <div class="productsGridTitle">
                                 <?php
@@ -386,7 +386,7 @@ class ProductsPageView extends XModule {
                 if (!empty($product->gallery)) {
                     $images = GalleryModel::getImages($product->galleryid);
                     foreach ($images as $image) {
-                        $imageLink = ResourcesModel::createResourceLink("gallery",$image->image);
+                        $imageLink = Resource::createResourceLink("gallery",$image->image);
                         ?>
                         <div class="productGalleryImages shadow">
                             <a href="<?php echo $imageLink; ?>">
@@ -397,7 +397,7 @@ class ProductsPageView extends XModule {
                     }
                 } else {
                     ?>
-                    <img class="productImage shadow imageLink" src="<?php echo ResourcesModel::createResourceLink("products", $product->img); ?>" alt=""/>
+                    <img class="productImage shadow imageLink" src="<?php echo Resource::createResourceLink("products", $product->img); ?>" alt=""/>
                     <?php
                 }
                 ?>

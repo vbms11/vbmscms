@@ -322,7 +322,7 @@ class InstallView extends XModule {
             <div class="divTable">
                 <?php
                 foreach ($backups as $backup) {
-                    $fullPath = ResourcesModel::resourcePath("backup", $backup);
+                    $fullPath = Resource::resourcePath("backup", $backup);
                     ?>
                     <div>
                         <div>

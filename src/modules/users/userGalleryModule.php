@@ -354,7 +354,7 @@ class UserGalleryModule extends XModule {
                                     if (empty($category->filename)) {
                                         echo "resource/img/icons/Clipboard.png";
                                     } else {
-                                        echo ResourcesModel::createResourceLink("gallery/small",$category->filename);
+                                        echo Resource::createResourceLink("gallery/small",$category->filename);
                                     }
                                 ?>" alt=""/>
                             </a>
@@ -387,7 +387,7 @@ class UserGalleryModule extends XModule {
                     <div class="galleryGrid <?php echo $imageCss; ?>">
                         <div class="galleryGridImage galleryImages shadow">
                             <a href="<?php echo parent::link(array("action"=>"viewImage","category"=>$selectedCategoryId,"id"=>$image->id)); ?>">
-                                <img class="imageLink" width="170" height="170" src="<?php echo ResourcesModel::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
+                                <img class="imageLink" width="170" height="170" src="<?php echo Resource::createResourceLink("gallery/small",$image->image); ?>" alt=""/>
                             </a>
                         </div>
                         <?php
@@ -432,7 +432,7 @@ class UserGalleryModule extends XModule {
             </a>
             <hr/>
             <div class="imageContainer">
-                <img src="<?php echo ResourcesModel::createResourceLink("gallery",$image->image); ?>" alt="">
+                <img src="<?php echo Resource::createResourceLink("gallery",$image->image); ?>" alt="">
             </div>
             <div class="imageComments">
                 

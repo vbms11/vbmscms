@@ -1,0 +1,1160 @@
+<?xml version="1.0"?>
+<tables>
+    <table name="t_roles_custom">
+        <data>
+            <cell name="id" value="7"/>
+            <cell name="name" value="guest"/>
+            <cell name="system" value="1"/>
+        </data>
+        <data>
+            <cell name="id" value="8"/>
+            <cell name="name" value="user"/>
+            <cell name="system" value="1"/>
+        </data>
+        <data>
+            <cell name="id" value="9"/>
+            <cell name="name" value="moderator"/>
+            <cell name="system" value="1"/>
+        </data>
+        <data>
+            <cell name="id" value="10"/>
+            <cell name="name" value="admin"/>
+            <cell name="system" value="1"/>
+        </data>
+        <data>
+            <cell name="id" value="13"/>
+            <cell name="name" value="newsletter"/>
+            <cell name="system" value="1"/>
+        </data>
+        <data>
+            <cell name="id" value="15"/>
+            <cell name="name" value="root"/>
+            <cell name="system" value="0"/>
+        </data>
+    </table>
+    <table name="t_roles_rights">
+        <data>
+            <cell name="id" value="1"/>
+            <cell name="customroleid" value="10"/>
+            <cell name="customrolerightid" value="7"/>
+        </data>
+        <data>
+            <cell name="id" value="2"/>
+            <cell name="customroleid" value="10"/>
+            <cell name="customrolerightid" value="8"/>
+        </data>
+        <data>
+            <cell name="id" value="3"/>
+            <cell name="customroleid" value="10"/>
+            <cell name="customrolerightid" value="9"/>
+        </data>
+        <data>
+            <cell name="id" value="4"/>
+            <cell name="customroleid" value="10"/>
+            <cell name="customrolerightid" value="10"/>
+        </data>
+        <data>
+            <cell name="id" value="5"/>
+            <cell name="customroleid" value="10"/>
+            <cell name="customrolerightid" value="13"/>
+        </data>
+        <data>
+            <cell name="id" value="28"/>
+            <cell name="customroleid" value="15"/>
+            <cell name="customrolerightid" value="15"/>
+        </data>
+        <data>
+            <cell name="id" value="27"/>
+            <cell name="customroleid" value="15"/>
+            <cell name="customrolerightid" value="13"/>
+        </data>
+        <data>
+            <cell name="id" value="26"/>
+            <cell name="customroleid" value="15"/>
+            <cell name="customrolerightid" value="10"/>
+        </data>
+        <data>
+            <cell name="id" value="25"/>
+            <cell name="customroleid" value="15"/>
+            <cell name="customrolerightid" value="9"/>
+        </data>
+        <data>
+            <cell name="id" value="24"/>
+            <cell name="customroleid" value="15"/>
+            <cell name="customrolerightid" value="8"/>
+        </data>
+        <data>
+            <cell name="id" value="23"/>
+            <cell name="customroleid" value="15"/>
+            <cell name="customrolerightid" value="7"/>
+        </data>
+    </table>
+    <table name="t_module_roles">
+        <data>
+            <cell name="id" value="2458"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="wysiwyg.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2459"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="login.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2460"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="newsletter.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2461"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="newsletter.send"/>
+        </data>
+        <data>
+            <cell name="id" value="2462"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="products.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2463"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="products.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2464"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="roles.register.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2465"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="users.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2466"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="sitemap.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2467"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="modules.insert"/>
+        </data>
+        <data>
+            <cell name="id" value="2468"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="forum.topic.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2469"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="forum.thread.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2470"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="forum.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2471"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="forum.admin"/>
+        </data>
+        <data>
+            <cell name="id" value="2472"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="forum.moderator"/>
+        </data>
+        <data>
+            <cell name="id" value="2473"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="forum.thread.post"/>
+        </data>
+        <data>
+            <cell name="id" value="2474"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="chat.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2475"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="chat.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2476"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="comment.post"/>
+        </data>
+        <data>
+            <cell name="id" value="2477"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="comment.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2478"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="comment.delete"/>
+        </data>
+        <data>
+            <cell name="id" value="2479"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="comment.show.email"/>
+        </data>
+        <data>
+            <cell name="id" value="2480"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="backup.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2481"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="backup.load"/>
+        </data>
+        <data>
+            <cell name="id" value="2482"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="backup.delete"/>
+        </data>
+        <data>
+            <cell name="id" value="2483"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="users.register.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2484"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.info.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2485"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.info.admin"/>
+        </data>
+        <data>
+            <cell name="id" value="2486"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.info.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2487"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="admin.roles.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2488"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="gallery.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2489"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="gallery.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2490"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="gallery.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2491"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="message.inbox"/>
+        </data>
+        <data>
+            <cell name="id" value="2492"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="events.callender"/>
+        </data>
+        <data>
+            <cell name="id" value="2493"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="events.list"/>
+        </data>
+        <data>
+            <cell name="id" value="2494"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="events.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2495"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="template.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2496"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="template.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2497"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="domains.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2498"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="domains.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2499"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="orders.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2500"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="orders.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2501"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="orders.all"/>
+        </data>
+        <data>
+            <cell name="id" value="2502"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="orders.confirm"/>
+        </data>
+        <data>
+            <cell name="id" value="2503"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="orders.finnish"/>
+        </data>
+        <data>
+            <cell name="id" value="2504"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="dm.tables.config"/>
+        </data>
+        <data>
+            <cell name="id" value="2505"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="dm.forms.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2506"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="shop.basket.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2507"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="shop.basket.status.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2508"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="shop.basket.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2509"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="shop.basket.details.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2510"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="shop.basket.details.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2511"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="slideshow.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2512"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="filesystem.all"/>
+        </data>
+        <data>
+            <cell name="id" value="2513"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="filesystem.user"/>
+        </data>
+        <data>
+            <cell name="id" value="2514"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="filesystem.www"/>
+        </data>
+        <data>
+            <cell name="id" value="2515"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="filesystem.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2516"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="events.users.all"/>
+        </data>
+        <data>
+            <cell name="id" value="2517"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="menu.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2518"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="pages.editmenu"/>
+        </data>
+        <data>
+            <cell name="id" value="2519"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="pages.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2520"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="payment.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2521"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="social.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2522"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="admin.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2523"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="site.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2524"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="site.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2525"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="translations.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2526"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="emailList.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2527"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="emailSent.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2528"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="ukash.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2529"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.profile.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2530"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.profile.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2531"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.profile.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2532"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="message.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2533"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.search.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2534"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.search.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2535"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.friend.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2536"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.friend.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2537"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.friendRequest.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2538"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.friendRequest.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2539"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.image.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2540"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.image.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2541"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="adminSocialNotifications.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2542"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="user.profile.privateDetails"/>
+        </data>
+        <data>
+            <cell name="id" value="2543"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="pinboardMap.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2544"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="pinboardMap.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2545"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="pinboard.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2546"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="pinboard.admin"/>
+        </data>
+        <data>
+            <cell name="id" value="2547"/>
+            <cell name="customrole" value="15"/>
+            <cell name="modulerole" value="pinboard.createNote"/>
+        </data>
+        <data>
+            <cell name="id" value="2548"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="products.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2549"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="forum.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2550"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="comment.post"/>
+        </data>
+        <data>
+            <cell name="id" value="2551"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="gallery.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2552"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="shop.basket.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2553"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="shop.basket.details.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2554"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="user.profile.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2555"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="user.search.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2556"/>
+            <cell name="customrole" value="7"/>
+            <cell name="modulerole" value="video.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2557"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="forum.thread.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2558"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="forum.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2559"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="forum.thread.post"/>
+        </data>
+        <data>
+            <cell name="id" value="2560"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="chat.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2561"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="comment.post"/>
+        </data>
+        <data>
+            <cell name="id" value="2562"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="gallery.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2563"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="gallery.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2564"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="message.inbox"/>
+        </data>
+        <data>
+            <cell name="id" value="2565"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="events.callender"/>
+        </data>
+        <data>
+            <cell name="id" value="2566"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="events.list"/>
+        </data>
+        <data>
+            <cell name="id" value="2567"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="shop.basket.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2568"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="shop.basket.details.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2569"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="user.profile.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2570"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="user.profile.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2571"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="user.search.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2572"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="user.friend.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2573"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="user.friendRequest.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2574"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="user.image.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2575"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="pinboardMap.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2576"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="pinboard.createNote"/>
+        </data>
+        <data>
+            <cell name="id" value="2577"/>
+            <cell name="customrole" value="8"/>
+            <cell name="modulerole" value="video.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2578"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="wysiwyg.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2579"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="login.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2580"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="newsletter.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2581"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="newsletter.send"/>
+        </data>
+        <data>
+            <cell name="id" value="2582"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="products.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2583"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="products.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2584"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="roles.register.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2585"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="users.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2586"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="sitemap.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2587"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="modules.insert"/>
+        </data>
+        <data>
+            <cell name="id" value="2588"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="forum.topic.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2589"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="forum.thread.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2590"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="forum.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2591"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="forum.admin"/>
+        </data>
+        <data>
+            <cell name="id" value="2592"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="forum.moderator"/>
+        </data>
+        <data>
+            <cell name="id" value="2593"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="forum.thread.post"/>
+        </data>
+        <data>
+            <cell name="id" value="2594"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="chat.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2595"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="chat.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2596"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="comment.post"/>
+        </data>
+        <data>
+            <cell name="id" value="2597"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="comment.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2598"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="comment.delete"/>
+        </data>
+        <data>
+            <cell name="id" value="2599"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="comment.show.email"/>
+        </data>
+        <data>
+            <cell name="id" value="2600"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="backup.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2601"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="backup.load"/>
+        </data>
+        <data>
+            <cell name="id" value="2602"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="backup.delete"/>
+        </data>
+        <data>
+            <cell name="id" value="2603"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="users.register.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2604"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.info.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2605"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.info.admin"/>
+        </data>
+        <data>
+            <cell name="id" value="2606"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.info.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2607"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="admin.roles.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2608"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="gallery.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2609"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="gallery.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2610"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="gallery.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2611"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="message.inbox"/>
+        </data>
+        <data>
+            <cell name="id" value="2612"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="events.callender"/>
+        </data>
+        <data>
+            <cell name="id" value="2613"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="events.list"/>
+        </data>
+        <data>
+            <cell name="id" value="2614"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="events.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2615"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="template.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2616"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="template.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2617"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="domains.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2618"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="domains.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2619"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="orders.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2620"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="orders.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2621"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="orders.all"/>
+        </data>
+        <data>
+            <cell name="id" value="2622"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="orders.confirm"/>
+        </data>
+        <data>
+            <cell name="id" value="2623"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="orders.finnish"/>
+        </data>
+        <data>
+            <cell name="id" value="2624"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="dm.tables.config"/>
+        </data>
+        <data>
+            <cell name="id" value="2625"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="dm.forms.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2626"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="shop.basket.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2627"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="shop.basket.status.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2628"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="shop.basket.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2629"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="shop.basket.details.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2630"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="shop.basket.details.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2631"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="slideshow.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2632"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="filesystem.all"/>
+        </data>
+        <data>
+            <cell name="id" value="2633"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="filesystem.user"/>
+        </data>
+        <data>
+            <cell name="id" value="2634"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="filesystem.www"/>
+        </data>
+        <data>
+            <cell name="id" value="2635"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="filesystem.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2636"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="events.users.all"/>
+        </data>
+        <data>
+            <cell name="id" value="2637"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="menu.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2638"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="pages.editmenu"/>
+        </data>
+        <data>
+            <cell name="id" value="2639"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="pages.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2640"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="payment.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2641"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="social.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2642"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="admin.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2643"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="site.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2644"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="site.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2645"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="translations.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2646"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="emailList.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2647"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="emailSent.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2648"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="ukash.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2649"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.profile.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2650"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.profile.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2651"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.profile.owner"/>
+        </data>
+        <data>
+            <cell name="id" value="2652"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="message.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2653"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.search.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2654"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.search.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2655"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.friend.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2656"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.friend.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2657"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.friendRequest.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2658"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.friendRequest.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2659"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.image.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2660"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.image.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2661"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="adminSocialNotifications.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2662"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="user.profile.privateDetails"/>
+        </data>
+        <data>
+            <cell name="id" value="2663"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="pinboardMap.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2664"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="pinboardMap.create"/>
+        </data>
+        <data>
+            <cell name="id" value="2665"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="pinboard.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2666"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="pinboard.admin"/>
+        </data>
+        <data>
+            <cell name="id" value="2667"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="pinboard.createNote"/>
+        </data>
+        <data>
+            <cell name="id" value="2668"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="video.edit"/>
+        </data>
+        <data>
+            <cell name="id" value="2669"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="video.view"/>
+        </data>
+        <data>
+            <cell name="id" value="2670"/>
+            <cell name="customrole" value="10"/>
+            <cell name="modulerole" value="video.upload"/>
+        </data>
+    </table>
+</tables>
+<files/>

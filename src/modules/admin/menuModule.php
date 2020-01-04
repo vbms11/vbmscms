@@ -121,7 +121,7 @@ class MenuView extends AdminPagesBaseModule {
         // get parent
         $parent = (isset($_GET['parent']) ? $_GET['parent'] : null);
         // menus
-        $menus = MenuModel::getMenuInstances();
+        $menus = MenuModel::getMenuInstancesAssocId();
         $selectedMenuName = "";
         if (count($menus) > 0) {
             if (parent::param("selectedMenu") != null && isset($menus[parent::param("selectedMenu")])) {

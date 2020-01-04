@@ -2,12 +2,16 @@
 
 class RolesModel {
     
-    static function getModuleRoles ($moduleObj = null) {
+    static function getModuleRoles () {
+        return Database::queryAsArray("select * from t_module_roles");
+    }
+    
+    static function getModuleRolesFromModules ($moduleObj = null) {
         
         $roles = array();
         if ($moduleObj == null) {
             foreach (ModuleModel::getModules() as $module) {
-                $roles = array_merge($roles,RolesModel::getModuleRoles($module));
+                $roles = array_merge($roles,RolesModel::getModuleRolesFromModules($module));
             }
         } else {
             $troles = ModuleModel::getModuleClass($moduleObj)->getRoles();
@@ -90,6 +94,14 @@ class RolesModel {
         return $newRole->newid;
     }
     
+    static function insertCustomRole ($id, $name, $system) {
+        $id = Database::escape($id);
+        $name = Database::escape($name);
+        $system = Database::escape($system);
+        Database::query("insert into t_roles_custom (id,name,system) values ('$id','$name','$system')");
+        return $id;
+    }
+    
     static function deleteCustomRole ($id) {
         $id = Database::escape($id);
         Database::query("delete from t_roles_custom where id = '$id' and system = '0'");
@@ -98,6 +110,14 @@ class RolesModel {
     static function getCustomRoleModuleRoles ($customRoleId) {
         $customRoleId = Database::escape($customRoleId);
         return Database::queryAsArray("select * from t_module_roles where customrole = '$customRoleId'", "modulerole");
+    }
+    
+    static function insertModuleRoleToCustomRole ($id,$moduleRoleName,$customRoleId) {
+        
+        $id = Database::escape($id);
+        $moduleRoleName = Database::escape($moduleRoleName);
+        $customRoleId = Database::escape($customRoleId);
+        $query = "insert into t_module_roles (id,modulerole,customrole) values ('$id','$moduleRoleName','$customRoleId')";
     }
     
     static function addModuleRoleToCustomRole ($moduleRoleName,$customRoleId) {
@@ -205,9 +225,13 @@ class RolesModel {
     
     // roles rights
     
-    static function getRoleRights ($customRoleId) {
-        $customRoleId = Database::escape($customRoleId);
-        return Database::queryAsArray("select * from t_roles_rights where customroleid = '$customRoleId'");
+    static function getRoleRights ($customRoleId=null) {
+        if ($customRoleId == null) {
+            return Database::queryAsArray("select * from t_roles_rights");
+        } else {
+            $customRoleId = Database::escape($customRoleId);
+            return Database::queryAsArray("select * from t_roles_rights where customroleid = '$customRoleId'");
+        }
     }
 
     static function deleteRoleRights ($customRoleId) {
@@ -225,6 +249,13 @@ class RolesModel {
             $customRoleRightId = Database::escape($customRoleRightId);
             Database::query("insert into t_roles_rights (customroleid,customrolerightid) values ('$customRoleId', '$customRoleRightId')");
         }
+    }
+    
+    static function insertRoleRights ($id, $customRoleId,$customRoleRightId) {
+        $id = Database::escape($id);
+        $customRoleId = Database::escape($customRoleId);
+        $customRoleRightId = Database::escape($customRoleRightId);
+        Database::query("insert into t_roles_rights (id,customroleid,customrolerightid) values ('$id','$customRoleId', '$customRoleRightId')");
     }
 }
 

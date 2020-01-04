@@ -19,8 +19,8 @@ class Gradient {
         
         // create names and paths
         $filename = "grad-$width-$height-$startR-$startG-$startB-$endR-$endG-$endB-".($vertical ? "v" : "h").".png";
-        $url = ResourcesModel::createResourceLink("cache/gradients", $filename);
-        $filePath = ResourcesModel::getResourcePath("cache/gradients", $filename);
+        $url = Resource::createResourceLink("cache/gradients", $filename);
+        $filePath = Resource::getResourcePath("cache/gradients", $filename);
         
         // create file in cache if it dosent exist
         if (!file_exists($filePath)) {

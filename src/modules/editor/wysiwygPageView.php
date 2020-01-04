@@ -108,6 +108,10 @@ class WysiwygPageView extends XModule {
 	</script>
         <?php
     }
+    
+    function export ($siteId) {
+        SiteSerializer::addTable("t_wysiwygpage", WysiwygPageModel::getWysiwygPageBySiteId($siteId));
+    }
 }
 
 ?>

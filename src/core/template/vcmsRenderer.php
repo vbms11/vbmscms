@@ -28,13 +28,13 @@ class VcmsRenderer extends BaseRenderer {
             $styles = $moduleObj->getStyles();
             if ($styles != null || count($styles) != 0) {
                 foreach ($styles as $style) {
-                    echo '<style href="'.ResourcesModel::createModuleResourceLink($module, $style).'" />'.PHP_EOL;
+                    echo '<style href="'.Resource::createModuleResourceLink($module, $style).'" />'.PHP_EOL;
                 }
             }
             $scripts = $moduleObj->getScripts();
             if ($scripts != null || count($scripts) != 0) {
                 foreach ($scripts as $script) {
-                    echo '<script src="'.ResourcesModel::createModuleResourceLink($module, $script).'" />'.PHP_EOL;
+                    echo '<script src="'.Resource::createModuleResourceLink($module, $script).'" />'.PHP_EOL;
                 }
             }
         }
@@ -42,13 +42,13 @@ class VcmsRenderer extends BaseRenderer {
         $styles = $template->getStyles();
         if ($styles != null || count($scripts) != 0) {
             foreach ($styles as $style) {
-                echo '<link href="'.ResourcesModel::createTemplateResourceLink($style).'" />'.PHP_EOL;
+                echo '<link href="'.Resource::createTemplateResourceLink($style).'" />'.PHP_EOL;
             }
         }
         $scripts = $template->getScripts();
         if ($scripts != null || count($scripts) != 0) {
             foreach ($scripts as $script) {
-                echo '<script src="'.ResourcesModel::createTemplateResourceLink($script).'" />'.PHP_EOL;
+                echo '<script src="'.Resource::createTemplateResourceLink($script).'" />'.PHP_EOL;
             }
         }
         

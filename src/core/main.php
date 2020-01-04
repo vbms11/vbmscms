@@ -43,14 +43,14 @@ try {
 		}
 	
 	} catch (Exception $e) {
-            echo 'Error on line '.$e->getLine().' in '.$e->getFile() .': <b>'.$e->getMessage().'</b>';
+            printStackTrace($e);
 	}
 	
 	// end the request context
 	Context::endRequest();
 	
 } catch (Exception $e) {
-    echo 'Error on line '.$e->getLine().' in '.$e->getFile() .': <b>'.$e->getMessage().'</b>';
+    printStackTrace($e);
 }
 
 ?>

@@ -8,6 +8,28 @@ class SiteController {
     const site_forum = 5;
     const site_calendar = 6;
     
+    static function saveSiteType ($siteId, $title, $description, $fileInputName) {
+        
+        $tmp_name = $_FILES[$fileInputName]["tmp_name"];
+        $name = basename($_FILES[$fileInputName]["name"]);
+        $path = Resource::getResourcePath("type");
+        $randName = null;
+        $ext = pathinfo($name)["extension"];
+        do {
+            $filename = Common::randHash(20,false);
+        } while (!is_file("$path/$filename.$ext"));
+        $imageFile = "$path/$filename.$ext";
+        $siteArchive = "$path/$filename.gz";
+        move_uploaded_file($tmp_name, $imageFile);
+        self::exportSite($siteId, $siteArchive);
+        
+        SiteModel::createSiteType($title,$description,$imageFile,$siteArchive);
+        SiteModel::deleteSiteType();
+        SiteModel::getSiteTypes();
+        
+        
+    }
+    
     static function createSite ($siteTemplate, $name, $description,  $cmsCustomerId) {
         
         // create inital site
@@ -16,7 +38,7 @@ class SiteController {
         
         TemplateModel::addTemplatePack();
             // create site user
-            Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
+        Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
         // add templates
         $defaultTemplates = TemplateModel::getTemplates();
         foreach ($defaultTemplates as $template) {
@@ -35,15 +57,15 @@ class SiteController {
     
     static function deleteSite ($siteId) {
         
+        SiteModel::deleteSite($siteId);
+        MenuModel::deleteMenuInstance($id);
         $site = Sitemodel::getSite($siteId);
         $menus = MenuModel::getMenus($siteId);
-        $menuInstances = MenuModel::getMenuInstances($siteId);
+        $menuInstances = MenuModel::getMenuInstancesAssocId($siteId);
         $pages = PagesModel::getPagesBySiteId($siteId);
         $pageRoles = RolesModel::getPageRolesBySiteId($siteId);
         
-        
         $pageNames = PagesModel::getCodesBySiteId($siteId);
-        
         
         $moduleInstances = ModuleModel::getModuleInstancesBySiteId($siteId);
         foreach ($moduleInstances as $moduleInstance) {
@@ -58,6 +80,8 @@ class SiteController {
             TemplateModel::deleteTemplateAreaById($templateInclude->id);
         }
         
+        UsersModel::deleteSiteUser(Context::getUserId(), $siteId);
+        
     }
     
     static function exportSite ($siteId, $archiveName) {
@@ -65,7 +89,7 @@ class SiteController {
         
         SiteSerializer::clear();
         
-        $site = Sitemodel::getSite($siteId);
+        $site = array(SiteModel::getSite($siteId));
         $menus = MenuModel::getMenus($siteId);
         $menuInstances = MenuModel::getMenuInstances($siteId);
         $pages = PagesModel::getPagesBySiteId($siteId);
@@ -87,9 +111,12 @@ class SiteController {
         
         // export each module
         foreach ($moduleInstances as $moduleInstance) {
-            $module = ModuleModel::getModule($moduleInstance);
-            $moduleClass = ModuleModel::getModuleClass($moduleObj);
-            $moduleExport = $moduleClass->export();
+            $module = ModuleModel::getModule($moduleInstance->moduleid);
+            if (empty($module)) {
+                continue;
+            }
+            $moduleClass = ModuleModel::getModuleClass($module);
+            $moduleExport = $moduleClass->export($siteId);
         }
         
         SiteSerializer::createArchive($archiveName);
@@ -111,7 +138,7 @@ class SiteController {
         
         $firstSite = current($site);
         $siteId = SiteModel::createSite($firstSite->name,$firstSite->cmscustomerid,$firstSite->description);
-        SiteModel::updateSite($firstSite->id, $firstSite->name, $description, $trackerScript, $facebookAppId, $facebookSecret, $googleClientId, $googleClientSecret, $twitterKey, $twitterSecret)$siteId, $name, $description, $trackerScript, $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = ''
+        //SiteModel::updateSite($firstSite->id, $firstSite->name, $description, $trackerScript, $facebookAppId, $facebookSecret, $googleClientId, $googleClientSecret, $twitterKey, $twitterSecret)$siteId, $name, $description, $trackerScript, $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = ''
         $nameCodeOldNewCode = CodeModel::createCodes($pageNames);
         
         $pagesOldIdNewId = array();

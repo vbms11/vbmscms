@@ -105,7 +105,7 @@ class CustomFileManagerModule extends XModule {
                         RecursiveIteratorIterator::LEAVES_ONLY
                     );
                     
-                    $tempFilePath = ResourcesModel::createResourceLink("fileSystem/temp");
+                    $tempFilePath = Resource::createResourceLink("fileSystem/temp");
                     $tempFileName = null;
                     do {
                         $tempFileName = md5(rand())."zip";

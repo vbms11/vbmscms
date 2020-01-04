@@ -179,7 +179,7 @@ class ShopBillsView extends XModule {
                         $nextImageId = md5(microtime());
                         $uploadedFile = $_FILES['productimage']['name'];
                         $type = strtolower(substr($uploadedFile,strrpos($uploadedFile,".")+1,3));
-                        $targetPath = ResourcesModel::getResourcePath("products", "$nextImageId.$type");
+                        $targetPath = Resource::getResourcePath("products", "$nextImageId.$type");
                         if(!move_uploaded_file($_FILES['productimage']['tmp_name'], $targetPath)) {
                             echo "error moving uploaded file!";
                         }
@@ -198,7 +198,7 @@ class ShopBillsView extends XModule {
                         $nextImageId = md5(microtime());
                         $uploadedFile = $_FILES['productimage']['name'];
                         $type = strtolower(substr($uploadedFile,strrpos($uploadedFile,".")+1,3));
-                        $targetPath = ResourcesModel::getResourcePath("products", "$nextImageId.$type");
+                        $targetPath = Resource::getResourcePath("products", "$nextImageId.$type");
                         if(!move_uploaded_file($_FILES['productimage']['tmp_name'], $targetPath)) {
                             $imageFile = $_POST['oldproductimage'];
                         } else {
@@ -688,7 +688,7 @@ class ShopBillsView extends XModule {
                     <?php
                     if ($article != null) {
                         ?>
-                        <img class="productsImage imageLink" src="<?php echo ResourcesModel::createResourceLink("products", $article->img); ?>" alt=""/>
+                        <img class="productsImage imageLink" src="<?php echo Resource::createResourceLink("products", $article->img); ?>" alt=""/>
                         <?php
                     }
                     ?>

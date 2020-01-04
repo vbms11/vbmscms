@@ -214,7 +214,7 @@ class TemplateRenderer extends BaseRenderer {
         }
 
         ?>
-        <link rel="shortcut icon" href="<?php echo ResourcesModel::createTemplateResourceLink("favicon.ico"); ?>" type="image/x-icon" />
+        <link rel="shortcut icon" href="<?php echo Resource::createTemplateResourceLink("favicon.ico"); ?>" type="image/x-icon" />
         <link type="text/css" href="resource/js/jquery/css/base/jquery.ui.all.css" media="all" rel="stylesheet"/>
         <script type="text/javascript" src="resource/js/jquery/js/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="resource/js/cookie/jquery.cookie.js"></script>

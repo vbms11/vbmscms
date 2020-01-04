@@ -49,6 +49,10 @@ function mDoOpenMenuLayer (id) {
     if (item && (item.hasClass("sddmShow") == false)) {
         item.removeClass("sddmHide");
         item.addClass("sddmShow");
+        
+        if (item.offset().top + item.height() > $(window).height()) {
+            item.css({"top":"-"+item.height()+"px"});
+        }
     }
 }
 
