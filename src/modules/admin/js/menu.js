@@ -50,8 +50,10 @@ function mDoOpenMenuLayer (id) {
         item.removeClass("sddmHide");
         item.addClass("sddmShow");
         
-        if (item.offset().top + item.height() > $(window).height()) {
-            item.css({"top":"-"+item.height()+"px"});
+        if (item.offset()) {
+            if (item.offset().top + item.height() > $(window).height()) {
+                item.css({"top":"-"+item.height()+"px"});
+            }
         }
     }
 }

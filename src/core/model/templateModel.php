@@ -141,11 +141,11 @@ class TemplateModel {
             from t_templatearea a 
             join t_module_instance mi on a.instanceid = mi.id
             join t_module m on m.id = mi.moduleid
-            where m.sysname = '$sysName' and name = '$areaName'");
-        if (empty($result)) {
-            TemplateModel::createStaticModule($areaName,$sysName);
-            return TemplateModel::getStaticModule($areaName,$sysName);
-        }
+            where m.sysname = '$sysName' and a.name = '$areaName'");
+        //if (empty($result)) {
+        //    TemplateModel::createStaticModule($areaName,$sysName);
+        //    return TemplateModel::getStaticModule($areaName,$sysName);
+        //}
         return $result;
     }
     
@@ -192,13 +192,13 @@ class TemplateModel {
         return Database::queryAsArray("select ta.* from t_templatearea ta join t_page p on p.id = ta.pageid and p.siteid = '$siteId'");
     }
 
-    static function getTemplateModule ($moduleId) {
-        $moduleId = Database::escape($moduleId);
+    static function getTemplateModule ($moduleInstanceId) {
+        $moduleInstanceId = Database::escape($moduleInstanceId);
         $result = Database::queryAsObject("select mi.id, a.id as includeid, a.name, a.pageid, a.position, m.id as typeid, m.include, m.interface, m.sysname, m.name as modulename
             from t_templatearea a
             join t_module_instance mi on a.instanceid = mi.id 
             join t_module m on m.id = mi.moduleid
-            where mi.id = '$moduleId'");
+            where mi.id = '$moduleInstanceId'");
         return $result;
     }
 
@@ -236,9 +236,9 @@ class TemplateModel {
         $position = Database::escape($position);
         $instanceId = ModuleInstanceModel::createModuleInstance($moduleId);
         Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$area','$instanceId','$pageId','$position')");
-        $module = ModuleModel::getModule($instanceId);
+        $moduleObj = self::getTemplateModule($instanceId);
         $moduleClass = ModuleModel::getModuleClass($moduleObj);
-        $moduleClass->create();
+        $moduleClass->create($instanceId);
         return $instanceId;
     }
 

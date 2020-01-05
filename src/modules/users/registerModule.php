@@ -449,13 +449,7 @@ class RegisterModule extends XModule {
             </form>
             <script type="text/javascript">
             var submitButton = $("#<?php echo parent::alias("registerUserForm"); ?>").find("button[type=submit]");
-		if ($("#<?php echo parent::alias("registerUserForm"); ?>").find("input[name=x]").val().length === 0
-			&& $("#<?php echo parent::alias("registerUserForm"); ?>").find("input[name=y]").val().length === 0) {
-			submitButton.button({ disabled: true });
-		} else {
-			submitButton.button();
-		}
-	submitButton.click(function (e) {
+            submitButton.click(function (e) {
                 if ($(".registerPanel input[name=password1]").val() !== $(".registerPanel input[name=password2]").val()) {
                     alert("<?php echo parent::getTranslation("register.missmatch"); ?>");
                     e.preventDefault();

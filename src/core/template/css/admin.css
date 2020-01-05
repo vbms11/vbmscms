@@ -55,13 +55,11 @@
     right: 0px;
     overflow: auto;
 }
-.adminHeaderLogoDiv {
-    background: url("../../../resource/img/vbmscmslogo.png");
+.adminHeaderLeftDiv {
     height: 40px;
-    left: 0px;
     position: absolute;
+    left: 0px;
     top: 0;
-    width: 195px;
 }
 .adminHeaderModesDiv {
     float: right;

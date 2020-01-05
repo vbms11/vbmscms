@@ -1,24 +1,67 @@
 
-/*
-$.each([
-    "resource/js/jresize/resize.js",
-    "resource/js/smefcms/smefcms.js"
-],function (index,value) {
-    $.getScript(value, function() {
+var adminFrameTimer = null;
+function checkAdminIframe () {
+    //window.parent.postMessage("confirm", "*");
+    adminFrameTimer = window.setTimeout(function(){
+        //document.location.href = "/vbmscms/src/?adminIframe=1";
+    },10000);
+}
+
+function onMessage (m) {
+    //alert("message: "+m.data);
+    if (m.data == "confirm") {
+        alert(m.data+":"+m.origin);
+        //m.source.postMessage("",e.origin);
+    }
+    switch (m.data) {
+        case "confirmDone":
+            window.clearTimeout(adminFrameTimer);
+            break;
+        case "close":
+            document.location.href = $(".adminIframe")[0].location.href;
+            break;
+        case "moduleMenu":
+            showModuleMenu();
+            break;
+    }
+}
+
+if ( window.addEventListener ) {
+    window.addEventListener('message', onMessage, false);
+} else if ( window.attachEvent ) { // ie8
+    window.attachEvent('onmessage', onMessage);
+}
+
+function initSortableAreas (moduleId, sortLink) {
+    
+    var vcmsArea = $(".vcms_area");
+    $("#vcms_module_"+moduleId).addClass("vcms_module_show_move_border");
+    $(".vcms_module:not(#vcms_module_"+moduleId+")").each(function(index,object){
+        $(object).click(function(){
+            $(".vcms_module_show_move_border").removeClass("vcms_module_show_move_border");
+            vcmsArea.sortable("destroy");
+        });
     });
-});
-*/
-//window.setTimeout("if(Math.random()*10000%30<1){smefCms.ajax('s321870024.online.de?static=system&action=track&href'+escape(document.location.href));}", 1000);
-
-
-$("div",{css:})
-window.addEventListener("message", function (m) {
-    alert("Frame Two Says: " + m.data);
-}, false);
-
-
-window.parent.postMessage({frame: "one framename", message: "Received message from frame two!"}, "*");
-
+    $.each(vcmsArea,function (index,object) {
+        $(object).sortable({
+            connectWith: ".vcms_area",
+            cancel: ".toolButtonDiv, vcms_module:not(#vcms_module_"+moduleId+")",
+            update: function(event, ui) {
+                var areaId = $(object).attr("id").substr(10);
+                var moduleId = ui.item.attr("id").substr(12);
+                $("#vcms_area_"+areaId+" #vcms_module_"+moduleId).each(function (index,o) {
+                    $(object).find(".vcms_module").each(function (i,child) {
+                        if (moduleId === $(child).attr("id").substr(12)) {
+                             ajaxRequest(sortLink,function(data){},{"id":moduleId,"area":areaId,"pos":i});
+                        }
+                    });
+                });
+            }
+        });
+    });
+}
+                
+/*
 $(function(){
     $(".jquiButton").button();
     $( ".jquiDate" ).each(function(index,object){
@@ -101,68 +144,6 @@ function callUrl (url,replace,anchor) {
     document.location.href = url;
 }
 
-function checkIfAdminIframNeeded () {
-	//TODO the admin iframe needs a place to poll to know when to close
-	
-	if ($.cookie("adminIframe") == "0") {
-		window.parent.postMessage("close");
-	} else if ($.cookie("adminIframe") == "1") {
-		if (!window.parent) {
-			$.cookie("adminIframe","0");
-		}
-	}
-}
-checkIfAdminIframNeeded();
-
-function initSortableAreas (moduleId, sortLink) {
-    
-    var vcmsArea = $(".vcms_area");
-    $("#vcms_module_"+moduleId).addClass("vcms_module_show_move_border");
-    $(".vcms_module:not(#vcms_module_"+moduleId+")").each(function(index,object){
-        $(object).click(function(){
-            $(".vcms_module_show_move_border").removeClass("vcms_module_show_move_border");
-            vcmsArea.sortable("destroy");
-        });
-    });
-    $.each(vcmsArea,function (index,object) {
-        $(object).sortable({
-            connectWith: ".vcms_area",
-            cancel: ".toolButtonDiv, vcms_module:not(#vcms_module_"+moduleId+")",
-            update: function(event, ui) {
-                var areaId = $(object).attr("id").substr(10);
-                var moduleId = ui.item.attr("id").substr(12);
-                $("#vcms_area_"+areaId+" #vcms_module_"+moduleId).each(function (index,o) {
-                    $(object).find(".vcms_module").each(function (i,child) {
-                        if (moduleId === $(child).attr("id").substr(12)) {
-                             ajaxRequest(sortLink,function(data){},{"id":moduleId,"area":areaId,"pos":i});
-                        }
-                    });
-                });
-                /*
-                var toolbar = $("#vcms_area_"+areaId+", .toolButtonDiv");
-                if ($("#vcms_area_"+areaId+" .vcms_module").length > 0) {
-                    if (toolbar.hasClass("show")) {
-                        toolbar.fadeOut("fast", function () {
-                            toolbar.addClass("hide");
-                            toolbar.removeClass("show");
-                        });
-                    }
-                } else if (toolbar.hasClass("hide")) {
-                    toolbar.fadeIn("fast", function () {
-                        toolbar.addClass("show");
-                        toolbar.removeClass("hide");
-                    });
-                }
-                 */
-            }
-        });
-    });
-}
-                
-
-
-/* datatable util */
-
 function getSelectedRow (oTableLocal) {
     var aReturn = [];
     var aTrs = oTableLocal.fnGetNodes();     
@@ -215,3 +196,5 @@ function getSelectedRow (oTableLocal) {
 
     jQuery.browser = browser;
 })();
+            
+ */

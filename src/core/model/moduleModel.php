@@ -24,7 +24,7 @@ class ModuleModel {
     }
     
     static function getModuleCategorys () {
-        return Database::queryAsArray("select * from t_module_category");
+        return Database::queryAsArray("select * from t_module_category order by position asc");
     }
     
     static function getModulesInMenu () {
@@ -34,7 +34,7 @@ class ModuleModel {
     static function getAvailableModules () {
         return array();
     }
-
+    
     static function createModule ($name,$description,$include,$interface,$inmenu,$sysname,$category,$position,$static) {
         $name = Database::escape($name);
         $description = Database::escape($description);
@@ -48,6 +48,21 @@ class ModuleModel {
         Database::query("insert into t_module(name,description,include,interface,inmenu,sysname,category,position,static) values ('$name','$description','$include','$interface','$inmenu','$sysname','$category','$position','$static')");
         $newObj = Database::query("select max(id) as lastid from t_module");
         return $newObj->lastid;
+    }
+    
+    static function saveModule ($id, $name, $description, $inmenu, $category) {
+        $id = Database::escape($id);
+        $name = Database::escape($name);
+        $description = Database::escape($description);
+        $inmenu = Database::escape($inmenu);
+        $category = Database::escape($category);
+        Database::query("update t_module set name = '$name', description = '$description', inmenu = '$inmenu', category = '$category' where id = '$id'");
+    }
+    
+    static function setModuleCategory ($id, $category) {
+        $id = Database::escape($id);
+        $category = Database::escape($category);
+        Database::query("update t_module set category = '$category' where id = '$id'");
     }
     
     static function addModule ($siteId,$moduleId) {

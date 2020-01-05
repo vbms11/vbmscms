@@ -141,15 +141,19 @@ class TemplateRenderer extends BaseRenderer {
         // create module if it dose not exist
         if (empty($targetModule)) {
             if ($static) {
-                TemplateModel::createStaticModule($areaName, $moduleType);
-                $targetModule = TemplateModel::getStaticModule($moduleType, $moduleType);
+                $targetModule = TemplateModel::getStaticModule($areaName, $moduleType);
+                if (empty($targetModule)) {
+                    TemplateModel::createStaticModule($areaName, $moduleType);
+                    $targetModule = TemplateModel::getStaticModule($areaName, $moduleType);
+                }
             } else {
-                $module = ModuleModel::getModuleByName($moduleType);
-                $newModuleId = TemplateModel::insertTemplateModule($pageId, $areaName, $module->id);
-                $targetModule = ModuleModel::getTemplateModule($newModuleId);
+                //$module = ModuleModel::getModuleByName($moduleType);
+                //$newModuleId = TemplateModel::insertTemplateModule($pageId, $areaName, $module->id);
+                //$targetModule = ModuleModel::getTemplateModule($newModuleId);
             }
+            $targetModule = ModuleModel::getModuleClass($targetModule);
             $this->addModule($targetModule);
-            $modules = $this->getModules($areaName);
+            $modules []= $targetModule;
         }
         // render area with module in it
         echo "<div id='vcms_area_$areaName' >";
@@ -270,7 +274,14 @@ class TemplateRenderer extends BaseRenderer {
         //if (Context::hasRoleGroup("admin")) {
         //    AdminTemplate::renderAdminFooter();
         //}
-        
+        if (Context::hasRoleGroup("admin")) {
+            $this->renderStaticModule("moduleMenu");
+            ?>
+            <script>
+            checkAdminIframe();
+            </script>
+            <?php
+        }
         if (Context::hasRole("pages.edit")) {
             Context::addRequiredScript("resource/js/contextmenu/jquery.contextmenu.js");
             Context::addRequiredStyle("resource/js/contextmenu/jquery.contextmenu.css");

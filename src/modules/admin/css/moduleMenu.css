@@ -1,0 +1,33 @@
+
+.moduleMenuPanel {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+}
+.moduleMenuCategory {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    padding: 0px 10px 10px 10px;
+}
+.moduleMenuCategory:first-child {
+    padding-top: 10px;
+}
+.moduleMenuGroup {
+    position: absolute;
+    top: 0px;
+    background-color: white;
+}
+.moduleMenuItem {
+    padding: 0px 10px 10px 10px;
+}
+.moduleMenuItem:first-child {
+    padding-top: 10px;
+}
+.moduleName {
+    white-space: nowrap;
+}
+.moduleDescription {
+    
+}

@@ -20,31 +20,28 @@ class AdminIframeRenderer extends XTemplate {
     	$adminPageId = Context::getPageId();
     	?>
     	<div class="ui-widget-header adminHeaderDiv">
-			<div class="adminHeaderModesDiv">
-				<div class="ui-widget-header <?php echo !Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
-					<a href="<?php echo NavigationModel::createPageLink($adminPageId,array("setAdminMode"=>"0")); ?>">
-						<?php echo parent::getTranslation("admin.template.header.view"); ?>
-					</a>
-				</div>
-				<div class="ui-widget-header <?php echo Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
-					<a href="<?php echo NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","setAdminMode"=>"adminPages","adminPageId"=>$adminPageId)); ?>">
-						<?php echo parent::getTranslation("admin.template.header.edit"); ?>
-					</a>
-				</div>
-			</div>
-			<div class="adminHeaderLogoDiv"></div>
-		</div>
+            <div class="adminHeaderModesDiv">
+                <div class="ui-widget-header <?php echo !Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
+                    <a href="<?php echo NavigationModel::createPageLink($adminPageId,array("setAdminMode"=>"0")); ?>">
+                        <?php echo parent::getTranslation("admin.template.header.view"); ?>
+                    </a>
+                </div>
+                <div class="ui-widget-header <?php echo Context::isAdminMode() ? "ui-state-hover" : ""; ?> adminHeaderModeDiv">
+                    <a href="<?php echo NavigationModel::createStaticPageLink("adminPages", array("action"=>"editPage","setAdminMode"=>"adminPages","adminPageId"=>$adminPageId)); ?>">
+                        <?php echo parent::getTranslation("admin.template.header.edit"); ?>
+                    </a>
+                </div>
+            </div>
+            <div class="adminHeaderLeftDiv">
+                
+                <a id="addContent">
+                    <?php echo parent::getTranslation("admin.template.header.addContent"); ?>
+                </a>
+            </div>
+        </div>
     	<div class="adminContentDiv">
-    		<iframe class="adminIframe" src="<?php echo $href; ?>" />
+            <iframe id="adminIframe" class="adminIframe" src="<?php echo $href; ?>" />
     	</div>
-    	<script type="text/javascript">
-		// register event handeler
-		window.addEventListener('message', function (m) {
-			if (m.action == "close") {
-				document.location.href = $(".adminIframe")[0].location.href;
-			}
-		}, false);
-    	</script>
     	<?php
     }
 	

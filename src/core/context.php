@@ -250,9 +250,12 @@ class Context {
 
     static function loadRenderer () {
         
-        if (self::hasRoleGroup("admin") && (!isset($_COOKIE["adminIframe"]) || $_COOKIE["adminIframe"] != "1")) {
-        	$renderer = new AdminIframeRenderer();
-        	setcookie("adminIframe", "1", 0, "/");
+        if (self::hasRoleGroup("admin") && isset($_GET["adminIframe"]) && $_GET["adminIframe"] == "1") {
+            $renderer = new AdminIframeRenderer();
+            $adminTemplate = TemplateModel::getAdminTemplate();
+            $_REQUEST["req.page"]->templateinclude = $adminTemplate->template;
+            $_REQUEST["req.page"]->interface = $adminTemplate->interface;
+            $_REQUEST["req.page"]->template = $adminTemplate->template;
         } else if (Context::isRenderRequest()) {
             $renderer = new VCmsRenderer();
         } else if (Context::isAjaxRequest()) {
