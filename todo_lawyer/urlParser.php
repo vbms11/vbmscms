@@ -2,14 +2,14 @@
 
 class UrlParser {
 	
-    $selectionSubDomain;
-    $domain;
-    $requestType;
-    $language;
-    $pageId;
-    $moduleId;
-    $code;
-    $staticName;
+    public $selectionSubDomain;
+    public $domain;
+    public $requestType;
+    public $language;
+    public $pageId;
+    public $moduleId;
+    public $code;
+    public $staticName;
 	
 	function parse () {
 		
@@ -26,8 +26,8 @@ class UrlParser {
 		
 		// selection sub domain
 		if ($domain !== $_SERVER["SERVER_NAME"]) {
-			$subDomain = str_str($_SERVER["SERVER_NAME"], 0, (len($_SERVER["SERVER_NAME"]) - len($domain)) - 1)
-			$this->parseSubDomainSelection($subDomain);
+			$subDomain = str_str($_SERVER["SERVER_NAME"], 0, (len($_SERVER["SERVER_NAME"]) - len($domain)) - 1);
+			//$this->parseSubDomainSelection($subDomain);
 		}
 		
 		// has path
@@ -42,7 +42,7 @@ class UrlParser {
 			// 	is first language
 			$selectedLanguage = null;
 			$siteLanguages = LanguagesModel::getSiteLanguages();
-			for ($siteLanguages as $lang) {
+			foreach ($siteLanguages as $lang) {
 				if ($lang->urlname === $pathParts[0]) {
 					$selectedLanguage = $lang;
 					$pathPartsPosition = 1;
@@ -84,7 +84,7 @@ class UrlParser {
 			$pathGetParameters = array();
 			for ($i=$pathPartsPosition; $i<$pathPartsCount; $i+=2) {
 				$pathGetParameters[$pathParts[$pathPartsPosition]] = "";
-				if ($i+1 !< $pathPartsCount) {
+				if ($i+1 > $pathPartsCount) {
 					break;
 				}
 				$pathGetParameters[$pathParts[$pathPartsPosition]] = $pathParts[$pathPartsPosition+1];
@@ -106,10 +106,10 @@ class UrlParser {
 		$serverNamePartsCount = count($serverNameParts);
 		foreach ($serverNameParts as $position => $namePart) {
 			$domainName = $namePart;
-			for ($i=$position + 1; $i<$serverNamePartsCount, $i++) {
+			for ($i=$position + 1; $i<$serverNamePartsCount; $i++) {
 				$domainName .= ".".$serverNameParts[$i];
 			}
-			$domainNames []= $domainName
+			$domainNames []= $domainName;
 		}
 		$site = DomainModel::getSite($domainNames);
 		
@@ -133,7 +133,7 @@ class UrlParser {
 		
 		// if state sub domain active
 		$country = null;
-		ivf (empty($continent) && $site->subdomainforcountry) {
+		if (empty($continent) && $site->subdomainforcountry) {
 			$country = PlacesModel::getCountryByUrlName($subDomain);
 		} else {
 			$country = PlacesModel::getCountryByContinentId($continent->id);

@@ -7,7 +7,7 @@ if (!defined("vbmscms_allowAccess") || vbmscms_allowAccess != true) {
 
 // @set_magic_quotes_runtime(0);
 
-include_once __DIR__.'/config.class.php';
+include_once __DIR__.'/config.php';
 
 Config::load();
 

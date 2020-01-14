@@ -9,6 +9,8 @@ class TemplateSerializer extends Serializer {
         parent::clear();
         parent::addTable("t_template_pack", TemplateModel::getTemplatePacks());
         parent::addTable("t_template", TemplateModel::getTemplates());
+        //TODO t_menu_style 
+        
         
         /*
         $templatePath = "template/".Common::hash($id,false,false);
