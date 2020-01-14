@@ -337,7 +337,6 @@ class PagesModel {
         $siteId = Database::escape($siteId);
         $nameCode = Database::escape($nameCode);
         $type = Database::escape($type);
-        $lang = Database::escape($lang);
         $welcome = Database::escape($welcome);
         $title = Database::escape($title);
         $keywords = Database::escape($keywords);
@@ -346,7 +345,7 @@ class PagesModel {
         $code = Database::escape($code);
         $parentModuleInstanceId = $parentModuleInstanceId == null ? "null" : "'".Database::escape($parentModuleInstanceId)."'";
         // create page
-        Database::query("insert into t_page(welcome,namecode,type,title,keywords,template,description,siteid,code,parentmoduleinstanceid) values('$welcome','$namecode','$type','$title','$keywords','$template','$description','$siteId','$code',$parentModuleInstanceId)");
+        Database::query("insert into t_page(welcome,namecode,type,title,keywords,template,description,siteid,code,parentmoduleinstanceid) values('$welcome','$nameCode','$type','$title','$keywords','$template','$description','$siteId','$code',$parentModuleInstanceId)");
         $result = Database::queryAsObject("select max(id) as max from t_page");
         return $result->max;
     }
@@ -386,6 +385,8 @@ class PagesModel {
         Database::query("delete from t_menu where page = '".$pageId."'");
         // delete page
         Database::query("delete from t_page where id = '".$pageId."'");
+        // delete page roles
+        RolesModel::clearPageRoles($pageId);
         // delete template areas
         TemplateModel::deleteTemplateAreas($pageId);
     }
@@ -411,7 +412,7 @@ class PagesModel {
     
     static function getCodesBySiteId ($siteId) {
         $siteId = Database::escape($siteId);
-        return Database::queryAsArray("select c.* from t_code c join t_page p on p.namecode = c.id and p.siteid = '$siteId'");
+        return Database::queryAsArray("select c.* from t_code c join t_page p on p.namecode = c.code and p.siteid = '$siteId'");
     }
 }
 

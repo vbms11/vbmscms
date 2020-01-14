@@ -17,7 +17,8 @@
 .moduleMenuGroup {
     position: absolute;
     top: 0px;
-    background-color: white;
+    background-color: rgb(70,70,70);
+    color: white;
 }
 .moduleMenuItem {
     padding: 0px 10px 10px 10px;

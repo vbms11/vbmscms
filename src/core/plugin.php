@@ -17,12 +17,12 @@ interface IModule {
     /**
      * called when module is created
      */
-    function create ($moduleId);
+    function create ();
     
     /**
      * called when page is destroyed
      */
-    function destroy ($moduleId);
+    function destroy ();
 
     /**
      * called when module is installed
@@ -47,12 +47,17 @@ interface IModule {
     /**
      * imports data for this module on a site
      */
-    //function import ($siteId, $tableNameTableData);
+    function import (&$siteSerializer);
 
     /**
      * returns the tables data that this site uses
      */
-    function export ($siteId);
+    function export (&$siteSerializer);
+    
+    /**
+     * called after importCopy because modules must update the ids in there parameters
+     */
+    function updateParameters (&$siteSerializer);
     
 }
 
@@ -67,6 +72,21 @@ interface ITranslatable {
      * returns the translation for a code specified by getTranslations
      */
     static function getTranslation ($key,$escape=true,$lang=null);
+}
+
+class DatabaseIdParameter {
+    
+    public $value = null;
+    public $tableName = null;
+    
+    function __construct($tableName, $id) {
+        $this->tableName = $tableName;
+        $this->value = $id;
+    }
+    
+    function __toString () {
+        return $this->value;
+    }
 }
 
 /*
@@ -115,8 +135,18 @@ abstract class XModule implements IModule, ITranslatable {
                 ModuleModel::setModuleParam($this->getId(),$name,$value);
             }
         } else {
-            return isset($this->params[$name]) ? $this->params[$name] : "";
+            if (!isset($this->params[$name])) {
+                $value = "";
+            } else if ($this->params[$name] instanceof DatabaseIdParameter) {
+                $value = $this->params[$name]->value;
+            } else {
+                $value = $this->params[$name];
+            }
+            return $value;
         }
+    }
+    function idParam ($type, $name, $value) {
+        $this->param($name, new DatabaseIdParameter($type, $value));
     }
     function setParams ($params) {
         $this->params = $params;
@@ -214,9 +244,9 @@ abstract class XModule implements IModule, ITranslatable {
     function blur () {
         Context::setFocusedArea(null);
     }
-    function create ($moduleId) {
+    function create () {
     }
-    function destroy ($moduleId) {
+    function destroy () {
     }
     function install () {
     }
@@ -341,22 +371,27 @@ abstract class XModule implements IModule, ITranslatable {
         return null;
     }
     
-    
-    /**
-     * imports data for this module on a site
-     */
-    function import ($siteId, $tableNameTableData) {
-         
-        
-    }
-
-    /**
-     * returns the tables data that this site uses
-     */
-    function export ($siteId) {
-        
+    function hasMessage ($key) {
+        return isset($_SESSION["message.".$this->moduleId]);
     }
     
+    
+    function import (&$siteSerializer) {
+    }
+    
+    function importCopy (&$siteSerializer) {
+    }
+    
+    function export (&$siteSerializer) {
+    }
+    
+    function updateParameters (&$siteSerializer) {
+        foreach ($this->params as $name => $param) {
+            if ($param instanceof DatabaseIdParameter) {
+                $this->param($name, $siteSerializer->getNewId($param->tableName, $param->value));
+            }
+        }
+    }
 }
 
 interface ITemplate {

@@ -347,7 +347,7 @@ class ProductsPageView extends XModule {
                 <?php
             }
             ?>
-            <hr class="hrClear">
+            <div class="clear"></div>
         </div>
         <?php
         if ($orderDone == true) {
@@ -427,7 +427,7 @@ class ProductsPageView extends XModule {
             <div id="checkValidDialog" title="Please Check Your input">
                 <p class="validateTips"><?php echo parent::getTranslation("products.dialog.minimum"); ?></p>
             </div>
-            <hr class="hrClear"/>
+            <div class="clear"></div>
             <script>
             $("#backToCategory").button().click(function (event) {
                 callUrl("<?php echo parent::link(); ?>");

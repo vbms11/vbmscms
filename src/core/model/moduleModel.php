@@ -180,6 +180,16 @@ class ModuleModel {
         $siteId = Database::escape($siteId);
         return Database::queryAsArray("select mip.* from t_module_instance_params mip join t_module_instance mi on mip.instanceid = mi.id join t_templatearea ta on mi.id = ta.instanceid join t_page p on ta.pageid = p.id where p.siteid = '$siteId'");
     }
+    
+    static function deleteModuleInstanceParamById ($id) {
+        $id = Database::escape($id);
+        Database::query("delete from t_module_instance_params where id = '$id'");
+    }
+    
+    static function deleteModuleInstanceById ($id) {
+        $id = Database::escape($id);
+        Database::query("delete from t_module_instance where id = '$id'");
+    }
 }
 
 ?>

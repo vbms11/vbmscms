@@ -109,8 +109,37 @@ class WysiwygPageView extends XModule {
         <?php
     }
     
-    function export ($siteId) {
-        SiteSerializer::addTable("t_wysiwygpage", WysiwygPageModel::getWysiwygPageBySiteId($siteId));
+    
+    /**
+     * imports data for this module on a site
+     */
+    function import (&$siteSerializer) {
+        
+        foreach ($siteSerializer->getTable("t_wysiwygpage") as $table) {
+            WysiwygPageModel::insertWysiwygPage($table->id, $table->moduleid, $table->lang, $table->content, $table->siteid);
+        }
+    }
+
+    /**
+     * copys data for this module and updates parameters to point to the copys id
+     */
+    function importCopy (&$siteSerializer) {
+        
+        foreach ($siteSerializer->getTable("t_wysiwygpage") as $table) {
+            $moduleId = $siteSerializer->getNewId("t_module_instance",$table->moduleid);
+            if ($moduleId == null) {
+                continue;
+            }
+            WysiwygPageModel::createWysiwygPage($moduleId, $table->lang, $table->content, $siteSerializer->siteId);
+        }
+    }
+
+    /**
+     * returns the tables data that this site uses
+     */
+    function export (&$siteSerializer) {
+        
+        $siteSerializer->addTable("t_wysiwygpage",WysiwygPageModel::getWysiwygPageBySiteId($siteSerializer->siteId));
     }
 }
 

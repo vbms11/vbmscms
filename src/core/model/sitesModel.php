@@ -115,6 +115,7 @@ class SiteModel {
     function getSiteTypes () {
         return Database::queryAsArray("select * from t_site_type");
     }
+    
 }
 
 ?>

@@ -20,7 +20,8 @@ abstract class AbstractTable {
     const type_text = 4;
     const type_boolean = 5;
     const type_date = 6;
-    const type_timestamp = 7;
+    const type_datetime = 7;
+    const type_timestamp = 8;
     
     const validator_number = 1;
     const validator_email = 2;
@@ -208,6 +209,9 @@ abstract class AbstractTable {
                     break;
                 case self::type_boolean:
                     $feild .= "boolean ";
+                    break;
+                case self::type_datetime:
+                    $feild .= "datetime ";
                     break;
                 case self::type_date:
                     $feild .= "date ";

@@ -11,7 +11,7 @@ class LogoutModule extends XModule {
                 parent::focus();
                 break;
             case "save":
-                parent::param("success", parent::post("success") ? parent::post("success") : null);
+                parent::idParam("t_page","success", parent::post("success") ? parent::post("success") : null);
                 parent::blur();
                 break;
             case "logout":
@@ -94,5 +94,4 @@ class LogoutModule extends XModule {
         </div>
         <?php
     }
-    
 }

@@ -39,6 +39,11 @@ class CommentsModel {
         $id = Database::escape($id);
         Database::query("delete from t_comment where id = '$id'");
     }
+    
+    static function deleteCommentByModuleId ($moduleId) {
+        $id = Database::escape($id);
+        Database::query("delete from t_comment where moduleid = '$moduleId'");
+    }
 }
 
 ?>

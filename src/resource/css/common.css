@@ -1,7 +1,4 @@
 
-
-@import url("fonts.css") all;
-
 /* common element styles */
 
 div {
@@ -12,11 +9,9 @@ body {
     font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";
     font-size: 14px;
 }
-/*
-.ui-widget {
-    font-size: 0.7em;
-}
-*/
+
+/**/
+
 input {
     border: 1px solid gray;
     background: url('../img/common/grad_vert.gif') repeat-x white;
@@ -42,13 +37,6 @@ a {
     text-decoration: underline;
 }
 
-.textbox {
-    width: 100%;
-}
-.button {
-}
-
-
 hr {
     border: 0px none;
     padding: 0px;
@@ -57,11 +45,6 @@ hr {
     height: 1px;
 }
 
-.hrClear {
-	clear:both;
-	height:0px;
-	border:0px;
-}
 .clear {
     clear: both;
 }
@@ -93,7 +76,7 @@ hr {
     text-align: left;
 }
 .alignTop {
-	vertical-align:top;
+    vertical-align:top;
 }
 .hide {
     display: none;
@@ -101,7 +84,6 @@ hr {
 .show {
     display: block;
 }
-
 
 /* forms */
 
@@ -134,78 +116,6 @@ formActionsToolbar button {
 }
 
 .panel {
-}
-
-
-
-/* admin */
-/*
-.resultTable {
-    border: 0px;
-    border-top: 1px;
-    border-left: 1px;
-    border-style: solid;
-    border-color: silver;
-}
-.resultTableHeader {
-    background: url('../img/common/grad_vert.gif') repeat-x;
-}
-.resultTableCell {
-    border: 0px;
-    border-right: 1px;
-    border-bottom: 1px;
-    border-style: solid;
-    border-color: silver;
-    background-color: rgb(240,240,240);
-}
-*/
-
-.resultTable {
-    margin-top: 10px;
-    border-width: 1px 0px 0px 1px;
-    border-style: solid;
-    border-color: silver;
-    text-align: center;
-    white-space: nowrap;
-}
-.resultTable td {
-    border-width: 0px 1px 1px 0px;
-    border-style: solid;
-    border-color: silver;
-    height: 30px;
-}
-.resultTable thead td {
-    background: url('../img/common/grad_vert.gif') repeat-x;
-}
-.resultTable tbody td {
-    background: #f0f0f0;
-}
-.resultTable tbody tr:hover td {
-    background: url('../img/common/grad_vert.gif') repeat-x;
-}
-
-
-
-
-.formTable {
-    width: 100%;
-}
-.formTable td {
-    width: 99%;
-    vertical-align: top;
-}
-.formTable td:first-child {
-    width: 1%;
-    white-space: nowrap;
-}
-.formTable input, .formTable select, .formTable textarea, .formTable .ui-spinner {
-    width: 99%;
-}
-.formTable input[type="checkbox"] {
-    width: 1%;
-}
-.formTable select[multiple="multiple"] {
-    width: 500px;
 }
 
 
@@ -301,6 +211,79 @@ a img {
     padding: 5px;
 }
 
+
+
+/* admin */
+/*
+.resultTable {
+    border: 0px;
+    border-top: 1px;
+    border-left: 1px;
+    border-style: solid;
+    border-color: silver;
+}
+.resultTableHeader {
+    background: url('../img/common/grad_vert.gif') repeat-x;
+}
+.resultTableCell {
+    border: 0px;
+    border-right: 1px;
+    border-bottom: 1px;
+    border-style: solid;
+    border-color: silver;
+    background-color: rgb(240,240,240);
+}
+*/
+
+.resultTable {
+    border-width: 1px 0px 0px 1px;
+    border-style: solid;
+    border-color: silver;
+    text-align: center;
+    white-space: nowrap;
+}
+.resultTable td {
+    border-width: 0px 1px 1px 0px;
+    border-style: solid;
+    border-color: silver;
+    height: 30px;
+}
+.resultTable thead td {
+    background: url('../img/common/grad_vert.gif') repeat-x;
+}
+.resultTable tbody td {
+    background: #f0f0f0;
+}
+.resultTable tbody tr:hover td {
+    background: url('../img/common/grad_vert.gif') repeat-x;
+}
+
+
+
+
+.formTable {
+    width: 100%;
+}
+.formTable td {
+    width: 99%;
+    vertical-align: top;
+}
+.formTable td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+.formTable input, .formTable select, .formTable textarea, .formTable .ui-spinner {
+    width: 99%;
+}
+.formTable input[type="checkbox"] {
+    width: 1%;
+}
+.formTable select[multiple="multiple"] {
+    width: 500px;
+}
+
+/* div table */
+
 div.table {
 	display: table;
 }
@@ -312,8 +295,11 @@ div.table div div {
 	width: 100%;
 }
 div.table div div:first-child {
-	text-align: right;
-	padding-right: 10px;
-	width: 1%;
+        text-align: right;
+        padding-right: 10px;
+        width: 1%;
 	vertical-align: top;
 }
+
+/* div form */
+

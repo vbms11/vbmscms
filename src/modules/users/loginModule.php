@@ -16,7 +16,7 @@ class LoginModule extends XModule {
             case "save":
                 parent::param("register", parent::post("register") == "1" ? true : false);
                 parent::param("reset", parent::post("reset") == "1" ? true : false);
-                parent::param("success", parent::post("success"));
+                parent::idParam("t_page", "success", parent::post("success"));
                 parent::blur();
                 break;
             case "register":

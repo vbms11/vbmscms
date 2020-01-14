@@ -13,6 +13,17 @@ class FileSystem {
         return $files;
     }
     
+    static function getFiles ($directory) {
+        $files = array();
+        foreach (scandir($directory) as $file) {
+            if ($file == "." || $file == "..") {
+                continue;
+            }
+            $files []= $file;
+        }
+        return $files;
+    }
+    
     
     
     

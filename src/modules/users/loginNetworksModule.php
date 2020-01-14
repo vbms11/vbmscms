@@ -19,7 +19,7 @@ class LoginNetworksModule extends XModule {
                 break;
             case "save":
                 parent::param("networks", parent::post("networks"));
-                parent::param("success", parent::post("success"));
+                parent::param("t_page", "success", parent::post("success"));
                 parent::blur();
                 break;
             case "facebookLogin":
@@ -180,4 +180,5 @@ class LoginNetworksModule extends XModule {
         </div>
         <?php
     }
+    
 }

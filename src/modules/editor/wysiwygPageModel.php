@@ -46,11 +46,26 @@ class WysiwygPageModel {
         Database::query("update t_wysiwygpage set content = '$content' where moduleid = '$moduleId' and lang = '$language'");
     }
 
-    static function createWysiwygPage ($moduleId, $language, $content) {
+    static function createWysiwygPage ($moduleId, $language, $content, $siteId=null) {
         $moduleId = Database::escape($moduleId);
  	$language = Database::escape($language);
  	$content = Database::escape($content);
-        $siteId = Context::getSiteId();
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        } else {
+            $siteId = Database::escape($siteId);
+        }
+ 	Database::query("insert into t_wysiwygpage(moduleid,lang,content,siteid) values('$moduleId', '$language', '$content','$siteId')");
+        $result = Database::queryAsObject("select max(id) as id from t_wysiwygpage");
+        return $result->id;
+    }
+    
+    static function insertWysiwygPage ($id, $moduleId, $language, $content, $siteId) {
+        $id = Database::escape($id);
+        $moduleId = Database::escape($moduleId);
+ 	$language = Database::escape($language);
+ 	$content = Database::escape($content);
+        $siteId = Database::escape($siteId);
  	Database::query("insert into t_wysiwygpage(moduleid,lang,content,siteid) values('$moduleId', '$language', '$content','$siteId')");
     }
 

@@ -68,7 +68,7 @@ var SceneTypeMoon = {
         gl.bindTexture(gl.GL_TEXTURE_2D, texture[loop+4]);		// Gen Tex 4 and 5
         gl.texParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR);
         gl.texParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR_MIPMAP_NEAREST);
-        glu.build2DMipmaps(gl.GL_TEXTURE_2D, 3, TextureImage[loop]->sizeX, TextureImage[loop]->sizeY, gl.GL_RGB, gl.GL_UNSIGNED_BYTE, TextureImage[loop]->data);
+        //glu.build2DMipmaps(gl.GL_TEXTURE_2D, 3, TextureImage[loop]->sizeX, TextureImage[loop]->sizeY, gl.GL_RGB, gl.GL_UNSIGNED_BYTE, TextureImage[loop]->data);
         
         quadratic = glu.newQuadric();
         glu.quadricNormals(quadratic, glu.GLU_SMOOTH);

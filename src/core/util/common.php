@@ -71,11 +71,6 @@ class Common {
         if (!is_array($objArray) || count($objArray) < 1) {
             return $result;
         }
-        // echo "key:".$keyName;
-        // echo " - ";
-        // echo "value:".$valueName;
-        // echo " - ";
-        // var_dump($objArray);
         if ($keyName == null) {
             foreach ($objArray as $obj) {
                 $result[$obj] = $obj;

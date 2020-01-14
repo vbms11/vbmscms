@@ -1,0 +1,107 @@
+body {
+    margin: 60px 30px;
+}
+.page {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    max-width: 1200px;
+    min-width: 850px;
+    border: 1px solid silver;
+    -webkit-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+}
+.pageMargin {
+    position: relative;
+    -webkit-box-shadow: inset 0px 0px 27px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 0px 27px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 0px 27px 0px rgba(0,0,0,0.75);
+}
+.main {
+    position: relative;
+    padding-top: 70px;
+}
+.content {
+    position: relative;
+}
+.contentMargin {
+    margin: 0px 30px;
+    min-height: 200px;
+    padding-bottom: 30px;
+}
+.contentWithLeft {
+    margin-left: 200px;
+}
+.contentWithRight {
+    margin-right: 200px;
+}
+.contentLeft {
+    float: left;
+    width: 200px;
+}
+.contentLeftMargin {
+    margin: 0px 30px;
+}
+.contentRight {
+    float: right;
+    width: 200px;
+}
+.contentRightMargin {
+    margin: 0px 30px;
+}
+.bottom {
+    background-color: black;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 30px;
+    position: fixed;
+    border-top: 1px solid grey;
+    padding: 0px 30px;
+    -webkit-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+}
+.top {
+    background-color: black;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 30px;
+    position: fixed;
+    border-bottom: 1px solid grey;
+    padding: 0px 30px;
+}
+.header {
+    height: 100px;
+}
+.menu {
+    height: 40px;
+}
+.menuHolder {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: auto;
+    background-color: black;
+    border-bottom: 1px solid silver;
+    -webkit-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+}
+.clear {
+    clear: both;
+}
+.menuConstrain {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
+    min-width: 850px;
+}
+.footer {
+    margin: 0px auto;
+}

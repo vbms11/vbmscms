@@ -311,6 +311,9 @@ class CommentsView extends XModule {
         <?php
     }
     
+    function destroy($moduleId) {
+        CommentsModel::deleteCommentByModuleId($moduleId);
+    }
 }
 
 ?>

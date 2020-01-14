@@ -195,6 +195,11 @@ class RolesModel {
         Database::query("delete from t_module_roles where customrole = '$groupId'");
     }
     
+    static function deletePageRole ($id) {
+        $id = Database::escape($id);
+        Database::query("delete from t_page_roles where id = '$id'");
+    }
+    
     static function removePageRole ($pageId,$roleId) {
         $pageId = Database::escape($pageId);
         $roleId = Database::escape($roleId);

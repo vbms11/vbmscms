@@ -169,7 +169,7 @@ class TemplateModel {
         $instanceId = Database::escape($instanceId);
         $pageId = Database::escape($pageId);
         $position = Database::escape($position);
-        Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$area','$instanceId','$pageId','$position')");
+        Database::query("insert into t_templatearea(name,instanceid,pageid,position) values('$name','$instanceId','$pageId','$position')");
         
     }
 

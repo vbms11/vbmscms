@@ -7,22 +7,39 @@ class MenuModel {
         return Database::queryAsObject("select * from t_menu_style where id = '$id'");
     }
     
-    static function getMenuStyles () {
-        return Database::queryAsArray("select * from t_menu_style","id");
+    static function getMenuStyles ($siteId=null) {
+        if ($siteId == null) {
+            return Database::queryAsArray("select * from t_menu_style","id");
+        } else {
+            $siteId = Database::escape($siteId);
+            return Database::queryAsArray("select * from t_menu_style where siteid = '$siteId'");
+        }
     }
     
-    static function saveMenuStyle ($id,$name,$cssname,$cssstyle) {
+    static function saveMenuStyle ($id,$name,$cssname,$cssstyle,$siteId=null) {
         $name = Database::escape($name);
         $cssname = Database::escape($cssname);
         $cssstyle = Database::escape($cssstyle);
+        if ($siteId == null) {
+            $siteId = Context::getSiteId();
+        }
         if ($id == null) {
-            Database::query("insert into t_menu_style(name,cssclass,cssstyle) values('$name','$cssname','$cssstyle')");
+            Database::query("insert into t_menu_style(name,cssclass,cssstyle,siteid) values('$name','$cssname','$cssstyle','$siteId')");
             $result = Database::queryAsObject("select max(id) as lastid from t_menu_style");
             return $result->lastid;
         } else {
             $id = Database::escape($id);
-            Database::query("update t_menu_style set name = '$name', cssclass = '$cssname', cssstyle = '$cssstyle' where id = '$id'");
+            Database::query("update t_menu_style set name = '$name', cssclass = '$cssname', cssstyle = '$cssstyle', siteid = '$siteId' where id = '$id'");
         }
+    }
+    
+    static function insertMenuStyle ($id,$name,$cssname,$cssstyle,$siteId) {
+        $id = Database::escape($id);
+        $name = Database::escape($name);
+        $cssname = Database::escape($cssname);
+        $cssstyle = Database::escape($cssstyle);
+        $siteId = Database::escape($siteId);
+        Database::query("insert into t_menu_style(id,name,cssclass,cssstyle,siteid) values('$id','$name','$cssname','$cssstyle','$siteId')");
     }
     
     static function deleteMenuStyle ($id) {
@@ -245,10 +262,10 @@ class MenuModel {
     }
     
     static function createPageInMenu ($pageId,$menuType,$menuParent,$lang,$active=0,$position=null) {
-        $pageId = Database::escape($pageId);
         $menuType = Database::escape($menuType);
         $lang = Database::escape($lang);
         $active = Database::escape($active);
+        $pageId = Database::escape($pageId);
         // add page to menu
         if (empty($menuParent)) {
             $parentStr = "null";
@@ -260,6 +277,8 @@ class MenuModel {
             $position = MenuModel::getNextMenuPosition();
         }
         Database::query("insert into t_menu(page,type,active,parent,lang,position) values('$pageId','$menuType','$active',$parentStr,'$lang','$position')");
+        $result = Database::queryAsObject("select max(id) as id from t_menu");
+        return $result->id;
     }
     
     static function updatePageInMenu ($pageId,$menuType,$menuParent,$lang) {
@@ -292,6 +311,10 @@ class MenuModel {
         return Database::queryAsArray("select m.* from t_menu m join t_menu_instance mi on mi.id = m.type where mi.siteid = '$siteId'");
     }
     
+    static function deleteMenu ($menuId) {
+        $menuId = Database::escape($menuId);
+        Database::query("delete from t_menu where id = '$menuId'");
+    }
     
 }
 

@@ -44,12 +44,11 @@ class MenuView extends AdminPagesBaseModule {
                     parent::redirect(array("action"=>"edit"));
                     break;
                 case "selectStyle":
-                    parent::param("selectedStyle",$_GET['id']);
-                    // parent::redirect(array("action"=>"edit"));
+                    parent::idParam("t_menu_style","selectedStyle",parent::get('id'));
+                    parent::redirect(array("action"=>"edit"));
                     break;
                 case "deleteStyle":
-                    
-                    MenuModel::deleteMenuStyle($_GET['id']);
+                    MenuModel::deleteMenuStyle(parent::get('id'));
                     parent::redirect(array("action"=>"edit"));
                     break;
                 
@@ -136,12 +135,12 @@ class MenuView extends AdminPagesBaseModule {
         $styles = MenuModel::getMenuStyles();
         $selectedStyle = null;
         if (count($styles) > 0) {
-            if (parent::param("selectedStyle") != null && isset($styles[parent::param("selectedStyle")])) {
+            $styleId = parent::param("selectedStyle");
+            if ($styleId != null && isset($styles[$styleId])) {
                 $selectedStyle = MenuModel::getMenuStyle(parent::param("selectedStyle"));
             } else {
-                $keys = array_keys($styles);
-                parent::param("selectedStyle",$styles[$keys[0]]->id);
-                $selectedStyle = MenuModel::getMenuStyle($styles[$keys[0]]->id);
+                parent::idParam("t_menu_style","selectedStyle",current($styles)->id);
+                $selectedStyle = MenuModel::getMenuStyle(current($styles)->id);
             }
         }
         

@@ -61,7 +61,7 @@ function initSortableAreas (moduleId, sortLink) {
     });
 }
                 
-/*
+
 $(function(){
     $(".jquiButton").button();
     $( ".jquiDate" ).each(function(index,object){
@@ -115,13 +115,21 @@ function doIfConfirm (text,action,replace) {
     });
 }
 
-function ajaxRequest (url,onCompleteHandler,replace) {
+function ajaxRequest (url,onCompleteHandler,replace,post) {
+    if (typeof(replace) === "function" || typeof(onCompleteHandler) === "object") {
+        var temp = replace;
+        replace = onCompleteHandler;
+        onCompleteHandler = temp;
+    }
+    replace["moduleAjaxRequest"] = "1";
     if (typeof(replace) !== "undefined") {
         for (var key in replace) {
             url += "&"+key+"="+replace[key];
         }
+    } else {
+        replace = {};
     }
-    $.ajax({
+    var params = {
         "url": url,
         "context": document.body,
         "success": function(data){
@@ -129,7 +137,15 @@ function ajaxRequest (url,onCompleteHandler,replace) {
                 onCompleteHandler(data);
             }
         }
-    });
+    };
+    if (typeof(post) !== "undefined") {
+        params.type = "POST",
+        params.data = post,
+        params.dataType = "html",
+        params.contentType = "multipart/form-data"
+    }
+    $.ajax(params);
+    
 }
 
 function callUrl (url,replace,anchor) {
@@ -197,4 +213,4 @@ function getSelectedRow (oTableLocal) {
     jQuery.browser = browser;
 })();
             
- */
+ 

@@ -52,7 +52,6 @@ class ModuleMenuModule extends XModule {
 
                 ?>
                 <div class="moduleMenuCategory">
-                    <img src="<?php echo $category->icon; ?>" alt="<?php echo $category->description; ?>" />
                     <?php echo $category->name; ?>
                 </div>
                 <div class="moduleMenuGroup hide">

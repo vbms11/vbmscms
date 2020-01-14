@@ -164,7 +164,8 @@ class Context {
     // current request
 
     static function isAjaxRequest () {
-        return ((isset($_GET["moduleAjaxRequest"]) && $_GET["moduleAjaxRequest"] == "true") || (isset($_GET["moduleAjaxRequest"]) && $_GET["moduleAjaxRequest"] == "1"));
+        return ((isset($_GET["moduleAjaxRequest"]) && $_GET["moduleAjaxRequest"] == "true") || 
+                (isset($_GET["moduleAjaxRequest"]) && $_GET["moduleAjaxRequest"] == "1"));
     }
     
     static function isRenderRequest () {

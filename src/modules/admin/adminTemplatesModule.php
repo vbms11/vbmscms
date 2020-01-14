@@ -139,7 +139,7 @@ class AdminTemplatesModule extends XModule {
                         <h3>Template Editor</h3>
                         <?php
                         $templateCssPath = Resource::createResourceLink("template/".$template->path, "template.css");
-                        InputFeilds::printHtmlEditor("html", $template->html,$templateCssPath,array("action"=>"template","id"=>$template->id));
+                        InputFeilds::printHtmlEditor("html", $template->html,$templateCssPath."?rand=".rand(),array("action"=>"template","id"=>$template->id));
                         ?>
                     </div>
                     <div id="tabs-3">

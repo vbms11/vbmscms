@@ -1,10 +1,23 @@
 .loginNetworksPanel a {
     width: 250px;
     display: block;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    margin-top: 5px;
+    padding: 7px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid silver;
+}
+.loginNetworksPanel a:first-child {
+    margin-top: 0px;
 }
 .facebookLoginButton {
     background: url('../../../?service=images&action=gradient&width=5&height=30&startR=0&startG=0&startB=255&endR=100&endG=100&endB=100') repeat-x;
-    padding: 7px;
+    
 }
 .googleLoginButton {
+    background: url('../../../?service=images&action=gradient&width=5&height=30&startR=0&startG=0&startB=0&endR=200&endG=200&endB=200') repeat-x;
 }

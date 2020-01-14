@@ -26,7 +26,7 @@ class RegisterModule extends XModule {
                     parent::param("expiredays",parent::post('expiredays'));
                     parent::param("confirmEmail",parent::post('confirmEmail'));
                     parent::param("requireConfirmEmail",isset($_POST['requireConfirmEmail']) ? "1" : "0");
-                    parent::param("success",parent::post("success"));
+                    parent::idParam("t_page","success",parent::post("success"));
                 }
                 break;
             case "register":
@@ -477,5 +477,3 @@ class RegisterModule extends XModule {
         <?php
     }
 }
-
-?>

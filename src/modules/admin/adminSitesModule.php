@@ -33,7 +33,26 @@ class AdminSitesModule extends XModule {
                     Context::setSiteId($siteId);
                     break;
                 case "doExport":
-                    SiteController::exportSite(parent::get("id"), Resource::getResourcePath("types",));
+                    $validation = array();
+                    $filename = parent::post("filename");
+                    $filename = basename($filename).".gz";
+                    $path = Resource::getResourcePath("types",$filename);
+                    if (is_file($path)) {
+                        $validation["filename"] = "A file with that name already exists.";
+                        parent::setMessages($validation);
+                        parent::redirect(array("action"=>"export","id"=>parent::get("id")));
+                    } else {
+                        SiteController::exportSite(parent::get("id"),$path);
+                        parent::redirect();
+                    }
+                    break;
+                case "doImport":
+                    $directory = Resource::getResourcePath("export/types");
+                    $import = parent::post("filename");
+                    if (in_array($import, FileSystem::getFiles($directory))) {
+                        SiteController::importSiteCopy($directory."/".$import);
+                    }
+                    parent::redirect();
                     break;
             }
         }
@@ -57,6 +76,11 @@ class AdminSitesModule extends XModule {
             case "export":
                 if (Context::hasRole("site.edit")) {
                     $this->renderExportView(parent::get("id"));
+                }
+                break;
+            case "import":
+                if (Context::hasRole("site.edit")) {
+                    $this->renderImportView();
                 }
                 break;
             default:
@@ -219,11 +243,11 @@ class AdminSitesModule extends XModule {
             </td></tr><tr><td>
                 <label for="googleClientId"><?php echo parent::getTranslation("admin.sites.label.googleClientId"); ?></label>
             </td><td>
-                <?php InputFeilds::printTextFeild("googleClientId", $site->googleclientid); ?>
+                <?php InputFeilds::printTextFeild("googleClientId"); ?>
             </td></tr><tr><td>
                 <label for="googleClientSecret"><?php echo parent::getTranslation("admin.sites.label.googleClientSecret"); ?></label>
             </td><td>
-                <?php InputFeilds::printTextFeild("googleClientSecret", $site->googleclientsecret); ?>
+                <?php InputFeilds::printTextFeild("googleClientSecret"); ?>
             </td></tr><tr><td>
                 <label for="twitterKey"><?php echo parent::getTranslation("admin.sites.label.twitterKey"); ?></label>
             </td><td>
@@ -245,27 +269,46 @@ class AdminSitesModule extends XModule {
     }
     
     function renderExportView ($siteId) {
+        
         ?>
         <h3><?php echo parent::getTranslation("admin.sites.title.export"); ?></h3>
         <form method="post" action="<?php echo parent::link(array("action"=>"doExport","id"=>$siteId)); ?>">
             <table class="formTable"><tr><td>
                 <?php echo parent::getTranslation("admin.sites.label.title"); ?>
             </td><td>
-                <?php InputFeilds::printTextFeild("title"); ?>
-            </td></tr><tr><td>
-                <?php echo parent::getTranslation("admin.sites.label.description"); ?>
-            </td><td>
-                <?php InputFeilds::printTextArea("description"); ?>
-            </td></tr><tr><td>
-                <?php echo parent::getTranslation("admin.sites.label.image"); ?>
-            </td><td>
-                <?php InputFeilds::printFileUpload("image"); ?>
-            </td></tr>
-            </table>
+                <?php 
+                InputFeilds::printTextFeild("filename");
+                if (parent::getMessage("filename") != null) {
+                    echo '<span class="validateTips">'.parent::getMessage("filename").'</span>';
+                }
+                ?>
+            </td></tr></table>
             <hr/>
             <div class="alignRight">
                 <button class="jquiButton" type="submit">
                     <?php echo parent::getTranslation("admin.sites.export"); ?>
+                </button>
+            </div>
+        </form>
+        <?php
+    }
+    
+    function renderImportView () {
+        $files = Common::toMap(FileSystem::getFiles(Resource::getResourcePath("types")));
+        ?>
+        <h3><?php echo parent::getTranslation("admin.sites.title.import"); ?></h3>
+        <form method="post" action="<?php echo parent::link(array("action"=>"doImport")); ?>">
+            <table class="formTable"><tr><td>
+                <?php echo parent::getTranslation("admin.sites.label.file"); ?>
+            </td><td>
+                <?php 
+                InputFeilds::printSelect("filename",null,$files);
+                ?>
+            </td></tr></table>
+            <hr/>
+            <div class="alignRight">
+                <button class="jquiButton" type="submit">
+                    <?php echo parent::getTranslation("admin.sites.import"); ?>
                 </button>
             </div>
         </form>
@@ -313,12 +356,14 @@ class AdminSitesModule extends XModule {
         <hr/>
         <div class="alignRight">
             <button class="btnCreateSite"><?php echo parent::getTranslation("admin.sites.create"); ?></button>
+            <button class="btnImportSite"><?php echo parent::getTranslation("admin.sites.import "); ?></button>
         </div>
         <script type="text/javascript">
-        $(".btnCreateSite").each(function (index,object) {
-            $(object).button().click(function () {
-                callUrl("<?php echo parent::link(array("action"=>"newSite")); ?>");
-            });
+        $(".btnCreateSite").click(function () {
+            callUrl("<?php echo parent::link(array("action"=>"newSite")); ?>");
+        });
+        $(".btnImportSite").click(function () {
+            callUrl("<?php echo parent::link(array("action"=>"import")); ?>");
         });
         </script>
         <?php

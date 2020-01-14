@@ -107,42 +107,5 @@ class CodeModel {
         CodeModel::$codes[$lang][$code] = $value;
     }
     
-    // translations
     
-    static function addTranslation ($key,$lang,$value) {
-        //if (isset(CodeModel::$keys[$key]))
-    }
-    
-    static function getTranslation ($key,$lang=null) {
-        if ($lang == null) {
-            $lang = Context::getLang();
-        }
-        $lang = Database::escape($lang);
-        $strKey = "";
-        $isFirst = true;
-        if (is_array($key)) {
-            foreach ($key as $k) {
-                if ($isFirst == true) {
-                    
-                    $isFirst = false;
-                } else {
-                    $strKey .= ",";
-                }
-                $strKey .= "'$k'";
-            }
-        } else {
-            $strKey .= "'$key'";
-        }
-        $objAr = Database::queryAsArray("select c.value, ck.key from t_code_key ck join t_code on ck.code = c.code and c.lang = '$lang' where ck.key in ($strKey)");
-    }
-    
-    static function getTranslations ($lang) {
-        
-    }
-    
-    static function saveTranslations () {
-        
-    }
 }
-
-?>

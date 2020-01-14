@@ -30,206 +30,50 @@ class SiteController {
         
     }
     
-    static function createSite ($siteTemplate, $name, $description,  $cmsCustomerId) {
+    static function createSite ($name, $description, $siteTemplate, $cmsCustomerId) {
         
         // create inital site
-        $siteId = SiteModel::createSite($name, $cmsCustomerId, $description, DomainsModel::getDomainName());
-        UsersModel::createSiteUser(Context::getUserId(), $siteId);
+        $siteId = SiteModel::createSite($name, $cmsCustomerId, $description);
         
-        TemplateModel::addTemplatePack();
-            // create site user
-        Database::query("insert into t_site_users (userid,siteid) values('$id','$siteId')");
-        // add templates
-        $defaultTemplates = TemplateModel::getTemplates();
-        foreach ($defaultTemplates as $template) {
-            if (!empty($template->interface)) {
-                continue;
-            }
-            TemplateModel::addTemplate($siteId, $template->id, $template->main);
+        // create site user with roles
+        $userId = CmsCustomerModel::getCmsCustomerUser($cmsCustomerId)->id;
+        UsersModel::createSiteUser($userId, $siteId);
+        $customRoles = RolesModel::getCustomRoles();
+        foreach ($customRoles as $customRole) {
+            RolesModel::saveRole(null, $customRole->id, $userId, $customRole->id, $siteId);
         }
         
-        // creatae the site template
-        
+        // set template pack
+        SiteModel::setTemplatepackidById($siteId, $siteTemplate);
         
         return $siteId;
-    
     }
     
     static function deleteSite ($siteId) {
         
-        SiteModel::deleteSite($siteId);
-        MenuModel::deleteMenuInstance($id);
-        $site = Sitemodel::getSite($siteId);
-        $menus = MenuModel::getMenus($siteId);
-        $menuInstances = MenuModel::getMenuInstancesAssocId($siteId);
-        $pages = PagesModel::getPagesBySiteId($siteId);
-        $pageRoles = RolesModel::getPageRolesBySiteId($siteId);
-        
-        $pageNames = PagesModel::getCodesBySiteId($siteId);
-        
-        $moduleInstances = ModuleModel::getModuleInstancesBySiteId($siteId);
-        foreach ($moduleInstances as $moduleInstance) {
-            $module = ModuleModel::getModule($moduleInstance);
-            $moduleClass = ModuleModel::getModuleClass($moduleObj);
-            $moduleExport = $moduleClass->delete();
-            ModuleInstanceModel::deleteModuleInstance($moduleInstance->id);
-        }
-        
-        $templateIncludes = TemplateModel::getTemplateAreasBySiteId($siteId);
-        foreach ($templateIncludes as $templateInclude) {
-            TemplateModel::deleteTemplateAreaById($templateInclude->id);
-        }
-        
-        UsersModel::deleteSiteUser(Context::getUserId(), $siteId);
-        
+        $serializer = new SiteSerializer($siteId);
+        $serializer->deleteSite($siteId);
     }
     
-    static function exportSite ($siteId, $archiveName) {
-        // site, domain,
+    static function exportSite ($siteId, $archive) {
         
-        SiteSerializer::clear();
-        
-        $site = array(SiteModel::getSite($siteId));
-        $menus = MenuModel::getMenus($siteId);
-        $menuInstances = MenuModel::getMenuInstances($siteId);
-        $pages = PagesModel::getPagesBySiteId($siteId);
-        $pageRoles = RolesModel::getPageRolesBySiteId($siteId);
-        $pageNames = PagesModel::getCodesBySiteId($siteId);
-        $templateIncludes = TemplateModel::getTemplateAreasBySiteId($siteId);
-        $moduleInstances = ModuleModel::getModuleInstancesBySiteId($siteId);
-        $moduleInstanceParams = ModuleModel::getModuleInstanceParamsBySiteId($siteId);
-        
-        SiteSerializer::addTable("t_site",$site);
-        SiteSerializer::addTable("t_menu",$menus);
-        SiteSerializer::addTable("t_menu_instance",$menuInstances);
-        SiteSerializer::addTable("t_page",$pages);
-        SiteSerializer::addTable("t_page_roles",$pageRoles);
-        SiteSerializer::addTable("t_code",$pageNames);
-        SiteSerializer::addTable("t_templatearea",$templateIncludes);
-        SiteSerializer::addTable("t_module_instance",$moduleInstances);
-        SiteSerializer::addTable("t_module_instance_param",$moduleInstanceParams);
-        
-        // export each module
-        foreach ($moduleInstances as $moduleInstance) {
-            $module = ModuleModel::getModule($moduleInstance->moduleid);
-            if (empty($module)) {
-                continue;
-            }
-            $moduleClass = ModuleModel::getModuleClass($module);
-            $moduleExport = $moduleClass->export($siteId);
-        }
-        
-        SiteSerializer::createArchive($archiveName);
+        $serializer = new SiteSerializer($siteId);
+        $serializer->exportSite();
+        $serializer->createArchive($archive);
     }
     
     static function importSite ($archive) {
         
-        SiteSerializer::loadArchive($archive);
-        
-        $site = SiteSerializer::getTable("t_site");
-        $menus = SiteSerializer::getTable("t_menu");
-        $menuInstances = SiteSerializer::getTable("t_menu_instance");
-        $pages = SiteSerializer::getTable("t_page");
-        $pageRoles = SiteSerializer::getTable("t_page_roles");
-        $pageNames = SiteSerializer::getTable("t_code");
-        $templateAreas = SiteSerializer::getTable("t_templatearea");
-        $moduleInstances = SiteSerializer::getTable("t_module_instance");
-        $moduleInstanceParams = SiteSerializer::getTable("t_module_instance_param");
-        
-        $firstSite = current($site);
-        $siteId = SiteModel::createSite($firstSite->name,$firstSite->cmscustomerid,$firstSite->description);
-        //SiteModel::updateSite($firstSite->id, $firstSite->name, $description, $trackerScript, $facebookAppId, $facebookSecret, $googleClientId, $googleClientSecret, $twitterKey, $twitterSecret)$siteId, $name, $description, $trackerScript, $facebookAppId = '', $facebookSecret = '', $googleClientId = '', $googleClientSecret = '', $twitterKey = '', $twitterSecret = ''
-        $nameCodeOldNewCode = CodeModel::createCodes($pageNames);
-        
-        $pagesOldIdNewId = array();
-        foreach ($pages as $page) {
-            $pagesOldIdNewId[$page->id] = PagesModel::createPageBasic($siteId,$nameCodeOldNewCode[$nameCode],$page->type,$page->welcome,$page->title,$page->keywords,$page->template,$page->description,$page->code,$page->parentmoduleinstanceid);
-        }
-        
-        foreach ($pageRoles as $pageRole) {
-            RolesModel::savePageRole($pagesOldIdNewId[$pageRole->pageid],$pageRole->roleid);
-        }
-        
-        foreach ($menus as $menu) {
-            MenuModel::createPageInMenu($pagesOldIdNewId[$menu->page], $menu->type, $menu->parent, $menu->lang, $menu->active, $menu->position);
-        }
-        
-        foreach ($menuInstances as $menuInstance) {
-            MenuModel::saveMenuInstance(null, $menuInstance->name, $siteId);
-        }
-        
-        $instancesOldIdNewId = array();
-        foreach ($moduleInstances as $moduleInstance) {
-            $instancesOldIdNewId[$moduleInstance->id] = ModuleInstanceModel::createModuleInstance($moduleInstance->moduleid);
-        }
-        
-        foreach ($moduleInstanceParams as $moduleInstanceParam) {
-            ModuleInstanceModel::addModuleInstanceParam($instancesOldIdNewId[$moduleInstanceParam->instanceid], $moduleInstanceParam->name, $moduleInstanceParam->value);
-        }
-        
-        foreach ($templateAreas as $templateArea) {
-            TemplateModel::createTemplateArea($templateArea->name, $instancesOldIdNewId[$templateArea->instanceid], $pagesOldIdNewId[$templateArea->pageid], $templateArea->position);
-        }
-        
-        
-        
-        $modules = ModuleModel::getModules();
-        foreach ($modules as $i => $module) {
-            
-        }
+        $serializer = new SiteSerializer();
+        $serializer->loadArchive($archive);
+        $serializer->importSite();
     }
     
     static function importSiteCopy ($archive) {
         
-        $user = Context::getUser();
-        
-        SiteSerializer::loadArchive($archive);
-        
-        $site = SiteSerializer::getTable("t_site");
-        $menus = SiteSerializer::getTable("t_menu");
-        $menuInstances = SiteSerializer::getTable("t_menu_instance");
-        $pages = SiteSerializer::getTable("t_page");
-        $pageRoles = SiteSerializer::getTable("t_page_roles");
-        $pageNames = SiteSerializer::getTable("t_code");
-        $templateAreas = SiteSerializer::getTable("t_templatearea");
-        $moduleInstances = SiteSerializer::getTable("t_module_instance");
-        $moduleInstanceParams = SiteSerializer::getTable("t_module_instance_param");
-        
-        $firstSite = current($site);
-        $siteId = SiteModel::createSite($firstSite->name,$firstSite->cmscustomerid,$firstSite->description);
-        
-        $nameCodeOldNewCode = CodeModel::createCodes($pageNames);
-        
-        $pagesOldIdNewId = array();
-        foreach ($pages as $page) {
-            $pagesOldIdNewId[$page->id] = PagesModel::createPageBasic($siteId,$nameCodeOldNewCode[$nameCode],$page->type,$page->welcome,$page->title,$page->keywords,$page->template,$page->description,$page->code,$page->parentmoduleinstanceid);
-        }
-        
-        foreach ($pageRoles as $pageRole) {
-            RolesModel::savePageRole($pagesOldIdNewId[$pageRole->pageid],$pageRole->roleid);
-        }
-        
-        foreach ($menus as $menu) {
-            MenuModel::createPageInMenu($pagesOldIdNewId[$menu->page], $menu->type, $menu->parent, $menu->lang, $menu->active, $menu->position);
-        }
-        
-        foreach ($menuInstances as $menuInstance) {
-            MenuModel::saveMenuInstance(null, $menuInstance->name, $siteId);
-        }
-        
-        $instancesOldIdNewId = array();
-        foreach ($moduleInstances as $moduleInstance) {
-            $instancesOldIdNewId[$moduleInstance->id] = ModuleInstanceModel::createModuleInstance($moduleInstance->moduleid);
-        }
-        
-        foreach ($moduleInstanceParams as $moduleInstanceParam) {
-            ModuleInstanceModel::addModuleInstanceParam($instancesOldIdNewId[$moduleInstanceParam->instanceid], $moduleInstanceParam->name, $moduleInstanceParam->value);
-        }
-        
-        foreach ($templateAreas as $templateArea) {
-            TemplateModel::createTemplateArea($templateArea->name, $instancesOldIdNewId[$templateArea->instanceid], $pagesOldIdNewId[$templateArea->pageid], $templateArea->position);
-        }
-        
+        $serializer = new SiteSerializer();
+        $serializer->loadArchive($archive);
+        $serializer->importCopySite();
     }
     
 }
